@@ -1,7 +1,7 @@
 # Thoughts — ProjectName
 
-**Last updated:** 2025-01-01 00:00
-**Author**: Your Name
+**Last updated:** 2026-04-20 00:00
+**Author**: Julián Calderón Almendros
 
 > This is an informal design journal. Record ideas, alternatives considered,
 > open questions, and future directions here. Not normative — purely exploratory.

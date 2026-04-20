@@ -29,7 +29,7 @@ NEW_NAME="$1"
 AUTHOR="$2"
 GH_USER="${3:-your-username}"
 YEAR=$(date +%Y)
-OLD_NAME="ProjectName"
+OLD_NAME="MyProject"
 
 # Validate: project name must be a valid Lean identifier
 if ! echo "$NEW_NAME" | grep -qE '^[A-Za-z][A-Za-z0-9_]*$'; then

@@ -1,7 +1,7 @@
 # Next Steps — ProjectName
 
-**Last updated:** 2025-01-01 00:00
-**Author**: Your Name
+**Last updated:** 2026-04-20 00:00
+**Author**: Julián Calderón Almendros
 
 > This file tracks planned development phases. Each phase includes
 > objectives, modules to create, dependencies, and estimated complexity.

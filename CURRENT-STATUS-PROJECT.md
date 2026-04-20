@@ -1,7 +1,7 @@
 # Current Project Status — ProjectName
 
-**Last updated:** 2025-01-01 00:00
-**Author**: Your Name
+**Last updated:** 2026-04-20 00:00
+**Author**: Julián Calderón Almendros
 
 ---
 
@@ -75,8 +75,8 @@ ProjectName/
 
 ---
 
-**Author**: Your Name
-*Last updated: 2025-01-01 00:00*
+**Author**: Julián Calderón Almendros
+*Last updated: 2026-04-20 00:00*
 
 [![License](https://img.shields.io/badge/license-MIT-green)](LICENSE)
 

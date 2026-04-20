@@ -1,6 +1,6 @@
 /-
-Copyright (c) 2025. All rights reserved.
-Author: Your Name
+Copyright (c) 2026. All rights reserved.
+Author: Julián Calderón Almendros
 License: MIT
 -/
 

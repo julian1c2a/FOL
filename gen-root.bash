@@ -30,7 +30,7 @@ fi
 ROOT_FILE="${PROJECT_NAME}.lean"
 MODULE_DIR="${PROJECT_NAME}"
 YEAR=$(date +%Y)
-AUTHOR=$(git config user.name 2>/dev/null || echo "Your Name")
+AUTHOR=$(git config user.name 2>/dev/null || echo "Julián Calderón Almendros")
 
 # Collect barrel-covered subdirectories
 declare -A BARREL_DIRS

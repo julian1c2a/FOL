@@ -3,7 +3,7 @@ open Lake DSL
 
 -- Replace «ProjectName» with your project name (must match directory name)
 -- and update the package name accordingly
-package «MyProject» where
+package «FOL» where
   -- Disable auto-implicit to enforce explicit type annotations everywhere
   moreServerArgs := #["-DautoImplicit=false"]
 
@@ -26,5 +26,5 @@ package «MyProject» where
 -- ─────────────────────────────────────────────────────────────────────────────
 
 @[default_target]
-lean_lib «MyProject» where
+lean_lib «FOL» where
 

@@ -1,7 +1,7 @@
 # AI Assistant Guide — Documentation Standards
 
-**Last updated:** 2025-01-01 00:00
-**Author**: Your Name
+**Last updated:** 2026-04-20 00:00
+**Author**: Julián Calderón Almendros
 
 This document establishes requirements and standards for technical documentation of this Lean 4 project.
 
@@ -88,8 +88,8 @@ Purpose: Track how outdated a file is relative to REFERENCE.md, even within a si
 
 ```lean
 /-
-Copyright (c) 2025. All rights reserved.
-Author: Your Name
+Copyright (c) 2026. All rights reserved.
+Author: Julián Calderón Almendros
 License: MIT
 -/
 ```
@@ -168,7 +168,7 @@ When a frozen module `Foo.lean` needs new content:
    ```lean
    /-
    Copyright (c) YYYY. All rights reserved.
-   Author: Your Name
+   Author: Julián Calderón Almendros
    License: MIT
    -/
    import ProjectName.Foo

@@ -1,7 +1,7 @@
 # Technical Reference — ProjectName
 
-**Last updated:** 2025-01-01 00:00
-**Author**: Your Name
+**Last updated:** 2026-04-20 00:00
+**Author**: Julián Calderón Almendros
 **Lean version**: v4.28.0
 
 ---
@@ -111,7 +111,7 @@ graph TD
 
 **Namespace**: top-level (no namespace wrapper)
 **Dependencies**: `Init.Classical`
-**Last updated**: 2025-01-01 00:00
+**Last updated**: 2026-04-20 00:00
 **Status**: ✅ Completo
 **@axiom_system**: `none`
 **@importance**: `foundational`

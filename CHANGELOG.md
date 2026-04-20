@@ -1,7 +1,7 @@
 # Changelog
 
-**Last updated:** 2025-01-01 00:00
-**Author**: Your Name
+**Last updated:** 2026-04-20 00:00
+**Author**: Julián Calderón Almendros
 
 All notable changes to this project will be documented in this file.
 
@@ -10,13 +10,13 @@ this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ## [Unreleased]
 
-### Added (2025-01-01 00:00)
+### Added (2026-04-20 00:00)
 
 - Initial project structure from lean4-project-template
 
 ---
 
-## [0.2.0] - 2025-01-01
+## [0.2.0] - 2026-04-20
 
 ### Added
 
@@ -40,7 +40,7 @@ this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ---
 
-## [0.1.0] - 2025-01-01
+## [0.1.0] - 2026-04-20
 
 ### Added
 
@@ -56,5 +56,5 @@ this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ## Links
 
-- [Repository](https://github.com/your-username/ProjectName)
-- [Issues](https://github.com/your-username/ProjectName/issues)
+- [Repository](https://github.com/julian1c2a/ProjectName)
+- [Issues](https://github.com/julian1c2a/ProjectName/issues)

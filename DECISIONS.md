@@ -1,7 +1,7 @@
 # Design Decisions — ProjectName
 
-**Last updated:** 2025-01-01 00:00
-**Author**: Your Name
+**Last updated:** 2026-04-20 00:00
+**Author**: Julián Calderón Almendros
 
 Architectural Decision Records (ADR) for this project.
 Each entry records *what* was decided and *why*, for future reference.
@@ -10,7 +10,7 @@ Each entry records *what* was decided and *why*, for future reference.
 
 ## ADR-001: No Mathlib dependency
 
-**Date**: 2025-01-01
+**Date**: 2026-04-20
 **Status**: Accepted
 
 **Decision**: This project does not depend on Mathlib.
@@ -23,7 +23,7 @@ Each entry records *what* was decided and *why*, for future reference.
 
 ## ADR-002: autoImplicit = false
 
-**Date**: 2025-01-01
+**Date**: 2026-04-20
 **Status**: Accepted
 
 **Decision**: `moreServerArgs := #["-DautoImplicit=false"]` is set in `lakefile.lean`.
@@ -36,7 +36,7 @@ Each entry records *what* was decided and *why*, for future reference.
 
 ## ADR-003: File locking system
 
-**Date**: 2025-01-01
+**Date**: 2026-04-20
 **Status**: Accepted
 
 **Decision**: Use `git-lock.bash` + `locked_files.txt` + pre-commit hook to prevent accidental edits to completed modules.
@@ -49,7 +49,7 @@ Each entry records *what* was decided and *why*, for future reference.
 
 ## ADR-004: Mathlib naming conventions
 
-**Date**: 2025-01-01
+**Date**: 2026-04-20
 **Status**: Accepted
 
 **Decision**: All identifiers follow Mathlib4 naming conventions as documented in NAMING-CONVENTIONS.md.
@@ -62,7 +62,7 @@ Each entry records *what* was decided and *why*, for future reference.
 
 ## ADR-005: Directory-aligned namespaces
 
-**Date**: 2025-01-01
+**Date**: 2026-04-20
 **Status**: Accepted
 
 **Decision**: Each subdirectory corresponds to a sub-namespace: `ProjectName/Foo/Bar.lean` → `namespace ProjectName.Foo.Bar`.
@@ -75,7 +75,7 @@ Each entry records *what* was decided and *why*, for future reference.
 
 ## ADR-006: Annotation system in REFERENCE.md
 
-**Date**: 2025-01-01
+**Date**: 2026-04-20
 **Status**: Accepted
 
 **Decision**: REFERENCE.md entries include `@axiom_system` and `@importance` annotations.
@@ -88,7 +88,7 @@ Each entry records *what* was decided and *why*, for future reference.
 
 ## ADR-007: Separate NAMING-CONVENTIONS.md file
 
-**Date**: 2025-01-01
+**Date**: 2026-04-20
 **Status**: Accepted
 
 **Decision**: Naming conventions live in a dedicated NAMING-CONVENTIONS.md file, with a summary in AI-GUIDE.md and REFERENCE.md §0.
