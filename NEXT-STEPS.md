@@ -1,97 +1,71 @@
-# Next Steps — ProjectName
+# Próximos Pasos — FOL
 
-**Last updated:** 2026-04-20 00:00
-**Author**: Julián Calderón Almendros
+**Última actualización:** 2026-04-21
+**Autor**: Julián Calderón Almendros
 
-> This file tracks planned development phases. Each phase includes
-> objectives, modules to create, dependencies, and estimated complexity.
-
----
-
-## Phase 1: Foundations
-
-**Objective**: Establish core infrastructure in `Prelim.lean`.
-
-**Modules**:
-
-- [ ] `Prelim.lean` — ExistsUnique, basic infrastructure
-
-**Dependencies**: None (Level 0)
-**Complexity**: Simple
+> Este archivo hace un seguimiento de las fases de desarrollo planificadas para el proyecto de Lógica de Primer Orden (FOL). 
+> **Nota:** Para el detalle exhaustivo de reglas lógicas y teoremas a demostrar, consulta [STARTING_FOL.md](STARTING_FOL.md).
 
 ---
 
-## Phase 2: Core Modules
+## Fase 1: Fundamentos Lógicos (Deducción Natural)
 
-**Objective**: Build the first domain-specific modules.
+**Objetivo**: Completar las reglas base de deducción en `FOL/FOL.lean`.
 
-**Modules**:
+**Tareas**:
+- [ ] Implementar la regla de Reductio ad Absurdum (RAA) en `Derives` para habilitar la lógica clásica.
+- [ ] Implementar la regla de debilitamiento (Weakening).
+- [ ] Refinar las reglas de cuantificadores ($\forall$ y $\exists$) con gestión de variables libres (índices de De Bruijn).
 
-- [ ] `Topic/Basic.lean` — Core definitions
-- [ ] `Topic/Properties.lean` — Fundamental properties
-
-**Dependencies**: Phase 1 complete
-**Complexity**: Medium
-
----
-
-## Phase 3: Naming Migration
-
-**Objective**: Ensure all identifiers follow Mathlib naming conventions.
-
-**Modules**: All existing modules
-**Reference**: [NAMING-CONVENTIONS.md](NAMING-CONVENTIONS.md)
-
-**Steps**:
-
-1. Audit all exported names against NAMING-CONVENTIONS.md
-2. Rename definitions: `UpperCamelCase` for Prop, `lowerCamelCase` for functions
-3. Rename theorems: `subject_predicate` pattern with standard suffixes
-4. Verify full compilation after each rename batch
-5. Update REFERENCE.md with new names
-
-**Dependencies**: Phase 2 substantially complete
-**Complexity**: Medium (mechanical but requires full recompilation)
+**Dependencias**: Ninguna (Nivel 0)
+**Complejidad**: Media
 
 ---
 
-## Phase 4: Annotations and Documentation
+## Fase 2: Primeros Teoremas (Nivel 1 y 2)
 
-**Objective**: Add `@importance` and `@axiom_system` annotations to REFERENCE.md.
+**Objetivo**: Demostrar las tautologías fundamentales descritas en `STARTING_FOL.md`.
 
-**Steps**:
+**Módulos propuestos**:
+- [ ] `FOL/Theorems/Impl.lean` — Tautologías de implicación (Identidad, K, S, Silogismo).
+- [ ] `FOL/Theorems/Neg.lean` — Propiedades de la negación (Doble negación, Contrapositivas, Explosión).
 
-1. Classify each module by axiom system
-2. Rate importance of each theorem (high/medium/low)
-3. Update REFERENCE.md §3 with annotations
-
-**Dependencies**: Phase 3 complete
-**Complexity**: Simple
+**Dependencias**: Fase 1 completada.
+**Complejidad**: Media
 
 ---
 
-## Future Phases
+## Fase 3: Conectivos Derivados y Cuantificadores (Nivel 3 y 4)
 
-*(Add new phases here as the project grows)*
+**Objetivo**: Establecer y demostrar el comportamiento de $\land$, $\lor$, $\Leftrightarrow$ y la interacción de $\forall$ / $\exists$.
 
-### Phase N: [Title]
+**Módulos propuestos**:
+- [ ] `FOL/Theorems/Derived.lean` — Leyes de De Morgan, Conmutatividad, Tercio Excluso.
+- [ ] `FOL/Theorems/Quantifiers.lean` — Dualidad y distribución de cuantificadores.
 
-**Objective**: ...
-
-**Modules**:
-
-- [ ] ...
-
-**Dependencies**: Phase N-1
-**Complexity**: Simple | Medium | Complex
+**Dependencias**: Fase 2 completada.
+**Complejidad**: Media / Alta (por la gestión de sustituciones y De Bruijn).
 
 ---
 
-## Phase Status Summary
+## Fase 4: Automatización y Tácticas
 
-| Phase | Description | Status |
+**Objetivo**: Facilitar la escritura de pruebas mediante metaprogramación o automatización básica en Lean 4.
+
+**Tareas**:
+- [ ] Investigar la creación de una táctica que aplique `rewrite_at` automáticamente buscando posiciones válidas.
+- [ ] Automatizar la regla de identidad y debilitamiento.
+
+**Dependencias**: Fase 3 avanzada.
+**Complejidad**: Alta
+
+---
+
+## Resumen de Estado
+
+| Fase | Descripción | Estado |
 |-------|-------------|--------|
-| 1 | Foundations | 🔄 In progress |
-| 2 | Core Modules | ❌ Pending |
-| 3 | Naming Migration | ❌ Pending |
-| 4 | Annotations | ❌ Pending |
+| 1 | Fundamentos Lógicos | 🔄 En progreso |
+| 2 | Primeros Teoremas | ❌ Pendiente |
+| 3 | Conectivos y Cuantificadores | ❌ Pendiente |
+| 4 | Automatización | ❌ Pendiente |

@@ -19,8 +19,33 @@ inductive Formula where
   | forall : Formula → Formula
   deriving Repr, BEq
 
--- Definición de negación como (A → ⊥)
+-- Definición de conectores lógicos derivados
 def neg (f : Formula) : Formula := Formula.impl f Formula.bottom
+
+def top : Formula := neg Formula.bottom
+
+def lor (f1 f2 : Formula) : Formula := Formula.impl (neg f1) f2
+
+def land (f1 f2 : Formula) : Formula := neg (Formula.impl f1 (neg f2))
+
+def iff (f1 f2 : Formula) : Formula := land (Formula.impl f1 f2) (Formula.impl f2 f1)
+
+def ex (f : Formula) : Formula := neg (Formula.forall (neg f))
+
+-- Notaciones para hacer las fórmulas legibles
+notation "⊥" => Formula.bottom
+notation "⊤" => top
+prefix:75 "¬ " => neg
+infixr:70 " ∧ " => land
+infixr:65 " ∨ " => lor
+infixr:60 " ⇒ " => Formula.impl
+infix:55 " ⇔ " => iff
+prefix:80 "∀. " => Formula.forall
+prefix:80 "∃. " => ex
+
+-- Coerción para escribir átomos proposicionales más fácilmente (ej. "P" en lugar de .atom "P" [])
+instance : Coe String Formula where
+  coe s := Formula.atom s []
 
 -- 2. NAVEGACIÓN: Posiciones en el árbol (AST)
 -- Una posición es un camino desde la raíz hasta una subfórmula.
