@@ -47,6 +47,56 @@ prefix:80 "∃. " => ex
 instance : Coe String Formula where
   coe s := Formula.atom s []
 
+-- Notación para variables de De Bruijn
+prefix:max "#" => Term.var
+
+-- 1.5. LIFT Y SUSTITUCIÓN (De Bruijn)
+
+-- LIFT (Desplazamiento de índices libres)
+-- Aumenta en 1 las variables libres a partir de la profundidad 'c'
+mutual
+def liftTerm (c : Nat) (t : Term) : Term :=
+  match t with
+  | .var n => if n < c then .var n else .var (n + 1)
+  | .func f ts => .func f (liftTerms c ts)
+
+def liftTerms (c : Nat) (ts : List Term) : List Term :=
+  match ts with
+  | [] => []
+  | t :: ts' => liftTerm c t :: liftTerms c ts'
+end
+
+def liftFormula (c : Nat) (f : Formula) : Formula :=
+  match f with
+  | .bottom => .bottom
+  | .atom p ts => .atom p (liftTerms c ts)
+  | .impl f1 f2 => .impl (liftFormula c f1) (liftFormula c f2)
+  | .forall f1 => .forall (liftFormula (c + 1) f1)
+
+-- SUSTITUCIÓN
+-- Reemplaza la variable libre 'v' con el término 's'
+mutual
+def substTerm (v : Nat) (s : Term) (t : Term) : Term :=
+  match t with
+  | .var n => 
+      if n = v then s
+      else if n > v then .var (n - 1)
+      else .var n
+  | .func f ts => .func f (substTerms v s ts)
+
+def substTerms (v : Nat) (s : Term) (ts : List Term) : List Term :=
+  match ts with
+  | [] => []
+  | t :: ts' => substTerm v s t :: substTerms v s ts'
+end
+
+def substFormula (v : Nat) (s : Term) (f : Formula) : Formula :=
+  match f with
+  | .bottom => .bottom
+  | .atom p ts => .atom p (substTerms v s ts)
+  | .impl f1 f2 => .impl (substFormula v s f1) (substFormula v s f2)
+  | .forall f1 => .forall (substFormula (v + 1) (liftTerm 0 s) f1)
+
 -- 2. NAVEGACIÓN: Posiciones en el árbol (AST)
 -- Una posición es un camino desde la raíz hasta una subfórmula.
 
@@ -107,7 +157,16 @@ inductive Derives : List Formula → Formula → Prop where
   -- Reglas estándar de Deducción Natural
   | intro_impl : ∀ Γ A B, Derives (A :: Γ) B → Derives Γ (.impl A B)
   | elim_impl  : ∀ Γ A B, Derives Γ (.impl A B) → Derives Γ A → Derives Γ B
-  | intro_forall : ∀ Γ A, Derives Γ A → Derives Γ (.forall A) -- Simplificado (sin manejo de scope)
+  
+  -- Reglas de Cuantificadores
+  | intro_forall : ∀ Γ A, Derives (Γ.map (liftFormula 0)) A → Derives Γ (.forall A)
+  | elim_forall  : ∀ Γ A t, Derives Γ (.forall A) → Derives Γ (substFormula 0 t A)
+
+  -- Lógica Clásica (Reductio ad Absurdum)
+  | raa : ∀ Γ A, Derives (neg A :: Γ) ⊥ → Derives Γ A
+
+  -- Debilitamiento (Weakening)
+  | weakening : ∀ Γ Γ' f, Derives Γ f → (∀ x, x ∈ Γ → x ∈ Γ') → Derives Γ' f
 
   -- REGLA MAESTRA: Aplicación de regla en subexpresión exacta
   -- Permite transformar 'f' en 'f'' si existe una posición 'p' donde 'sub' se transforma en 'sub''
@@ -117,6 +176,8 @@ inductive Derives : List Formula → Formula → Prop where
       LocalRule sub sub' →
       f' = replaceAt f p sub' →
       Derives Γ f'
+
+infix:50 " ⊢ " => Derives
 
 -- 5. EJEMPLO DE USO
 -- Vamos a ver cómo se vería la estructura de una fórmula y su manipulación.

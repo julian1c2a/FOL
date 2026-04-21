@@ -13,9 +13,9 @@
 **Objetivo**: Completar las reglas base de deducción en `FOL/FOL.lean`.
 
 **Tareas**:
-- [ ] Implementar la regla de Reductio ad Absurdum (RAA) en `Derives` para habilitar la lógica clásica.
-- [ ] Implementar la regla de debilitamiento (Weakening).
-- [ ] Refinar las reglas de cuantificadores ($\forall$ y $\exists$) con gestión de variables libres (índices de De Bruijn).
+- [x] Implementar la regla de Reductio ad Absurdum (RAA) en `Derives` para habilitar la lógica clásica.
+- [x] Implementar la regla de debilitamiento (Weakening).
+- [x] Refinar las reglas de cuantificadores ($\forall$ y $\exists$) con gestión de variables libres (índices de De Bruijn).
 
 **Dependencias**: Ninguna (Nivel 0)
 **Complejidad**: Media
@@ -27,8 +27,8 @@
 **Objetivo**: Demostrar las tautologías fundamentales descritas en `STARTING_FOL.md`.
 
 **Módulos propuestos**:
-- [ ] `FOL/Theorems/Impl.lean` — Tautologías de implicación (Identidad, K, S, Silogismo).
-- [ ] `FOL/Theorems/Neg.lean` — Propiedades de la negación (Doble negación, Contrapositivas, Explosión).
+- [x] `FOL/Theorems/Impl.lean` — Tautologías de implicación (Identidad, K, S, Silogismo).
+- [x] `FOL/Theorems/Neg.lean` — Propiedades de la negación (Doble negación, Contrapositivas, Explosión).
 
 **Dependencias**: Fase 1 completada.
 **Complejidad**: Media
@@ -40,8 +40,8 @@
 **Objetivo**: Establecer y demostrar el comportamiento de $\land$, $\lor$, $\Leftrightarrow$ y la interacción de $\forall$ / $\exists$.
 
 **Módulos propuestos**:
-- [ ] `FOL/Theorems/Derived.lean` — Leyes de De Morgan, Conmutatividad, Tercio Excluso.
-- [ ] `FOL/Theorems/Quantifiers.lean` — Dualidad y distribución de cuantificadores.
+- [x] `FOL/Theorems/Derived.lean` — Leyes de De Morgan, Conmutatividad, Tercio Excluso.
+- [x] `FOL/Theorems/Quantifiers.lean` — Dualidad y distribución de cuantificadores.
 
 **Dependencias**: Fase 2 completada.
 **Complejidad**: Media / Alta (por la gestión de sustituciones y De Bruijn).
@@ -53,8 +53,8 @@
 **Objetivo**: Facilitar la escritura de pruebas mediante metaprogramación o automatización básica en Lean 4.
 
 **Tareas**:
-- [ ] Investigar la creación de una táctica que aplique `rewrite_at` automáticamente buscando posiciones válidas.
-- [ ] Automatizar la regla de identidad y debilitamiento.
+- [x] Investigar la creación de una táctica que aplique `rewrite_at` automáticamente buscando posiciones válidas.
+- [x] Automatizar la regla de identidad y debilitamiento.
 
 **Dependencias**: Fase 3 avanzada.
 **Complejidad**: Alta
@@ -65,7 +65,7 @@
 
 | Fase | Descripción | Estado |
 |-------|-------------|--------|
-| 1 | Fundamentos Lógicos | 🔄 En progreso |
-| 2 | Primeros Teoremas | ❌ Pendiente |
-| 3 | Conectivos y Cuantificadores | ❌ Pendiente |
-| 4 | Automatización | ❌ Pendiente |
+| 1 | Fundamentos Lógicos | ✅ Completo |
+| 2 | Primeros Teoremas | ✅ Completo |
+| 3 | Conectivos y Cuantificadores | ✅ Completo |
+| 4 | Automatización | ✅ Completo |

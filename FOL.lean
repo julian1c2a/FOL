@@ -10,3 +10,8 @@ License: MIT
 
 import FOL.FOL
 import FOL.Prelim
+import FOL.Tactics
+import FOL.Theorems.Derived
+import FOL.Theorems.Impl
+import FOL.Theorems.Neg
+import FOL.Theorems.Quantifiers

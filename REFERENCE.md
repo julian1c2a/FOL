@@ -1,6 +1,6 @@
 # Technical Reference — ProjectName
 
-**Last updated:** 2026-04-20 00:00
+**Last updated:** 2026-04-21 00:00
 **Author**: Julián Calderón Almendros
 **Lean version**: v4.28.0
 
@@ -55,7 +55,7 @@ Below are the keys for reading and searching theorems.
 
 *(Update this section as the project evolves. Example:)*
 
-✅ **Phase N completed** (date): Names migrated to Mathlib conventions. Examples: ...
+✅ **Phase 3 completed** (2026-04-21): Names migrated to Mathlib conventions. All FOL modules follow naming conventions perfectly.
 
 ---
 
@@ -89,6 +89,11 @@ This document complies with all requirements specified in [AI-GUIDE.md](AI-GUIDE
 | Module | Namespace | Dependencies | Status |
 |--------|-----------|--------------|--------|
 | `Prelim.lean` | top-level | `Init.Classical` | ✅ Completo |
+| `FOL.lean` | top-level | none | ✅ Completo |
+| `Theorems/Impl.lean` | `FOL.Theorems.Impl` | `FOL.FOL`, `FOL.Prelim` | ✅ Completo |
+| `Theorems/Neg.lean` | `FOL.Theorems.Neg` | `FOL.FOL`, `FOL.Prelim` | ✅ Completo |
+| `Theorems/Derived.lean` | `FOL.Theorems.Derived`| `FOL.FOL`, `FOL.Prelim` | ✅ Completo |
+| `Theorems/Quantifiers.lean` | `FOL.Theorems.Quantifiers`| `FOL.FOL`, `FOL.Theorems.Impl`, `FOL.Theorems.Neg`, `FOL.Theorems.Derived` | ✅ Completo |
 
 *Status codes*: ✅ Complete · 🧊 Frozen · 🔶 Partial · 🔄 In progress · ❌ Pending
 
@@ -99,6 +104,16 @@ This document complies with all requirements specified in [AI-GUIDE.md](AI-GUIDE
 ```mermaid
 graph TD
     IC[Init.Classical] --> P[Prelim.lean]
+    P --> I[Theorems/Impl.lean]
+    F[FOL.lean] --> I
+    P --> N[Theorems/Neg.lean]
+    F --> N
+    P --> D[Theorems/Derived.lean]
+    F --> D
+    I --> Q[Theorems/Quantifiers.lean]
+    N --> Q
+    D --> Q
+    F --> Q
 ```
 
 *(Update this diagram as modules are added)*
@@ -143,42 +158,156 @@ def ExistsUnique {α : Sort u} (p : α → Prop) : Prop :=
 | `ExistsUnique.choose_spec h` | `choose_spec_unique h` | witness satisfies p |
 | `ExistsUnique.unique h y hy` | `choose_uniq h hy` | uniqueness: `y = witness` |
 
-**Lean 4 signatures**:
+---
 
-```lean
-theorem ExistsUnique.intro {α : Sort u} {p : α → Prop} (w : α)
-    (hw : p w) (h : ∀ y, p y → y = w) : ExistsUnique p
+### 3.2 FOL.lean
 
-theorem ExistsUnique.exists {α : Sort u} {p : α → Prop}
-    (h : ExistsUnique p) : ∃ x, p x
+**Namespace**: top-level
+**Dependencies**: none
+**Last updated**: 2026-04-21
+**Status**: ✅ Completo
+**@axiom_system**: `classical`
+**@importance**: `foundational`
 
-noncomputable def ExistsUnique.choose {α : Sort u} {p : α → Prop}
-    (h : ExistsUnique p) : α
+Provides the core syntax, substitution operations using De Bruijn indices, AST navigation, and the Natural Deduction system with a local rewrite rule mechanism.
 
-theorem ExistsUnique.choose_spec {α : Sort u} {p : α → Prop}
-    (h : ExistsUnique p) : p (h.choose)
+**Definitions**:
+- `Term`: Inductive type for terms (variables via `#n` and functions).
+- `Formula`: Inductive type for formulas (`⊥`, `atom`, `⇒`, `∀.`).
+- `neg`, `top`, `lor`, `land`, `iff`, `ex`: Derived logical connectives.
+- `liftTerm`, `liftTerms`, `liftFormula`: De Bruijn lifting.
+- `substTerm`, `substTerms`, `substFormula`: Substitution of De Bruijn indices.
+- `Pos`: Abstract Syntax Tree position path for subformula targeting.
+- `getAt?`, `replaceAt`: Operations to query and modify formulas at exact positions.
+- `LocalRule`: Allows localized rewrites (e.g., double negation elimination).
+- `Derives`: Inductive predicate `Γ ⊢ f` representing natural deduction derivations.
 
-theorem ExistsUnique.unique {α : Sort u} {p : α → Prop}
-    (h : ExistsUnique p) : ∀ y, p y → y = h.choose
+**Notations**:
+- `⊥` => `Formula.bottom`
+- `⊤` => `top`
+- `¬ ` => `neg`
+- ` ∧ ` => `land`
+- ` ∨ ` => `lor`
+- ` ⇒ ` => `Formula.impl`
+- ` ⇔ ` => `iff`
+- `∀. ` => `Formula.forall`
+- `∃. ` => `ex`
+- `#` => `Term.var`
+- ` ⊢ ` => `Derives`
 
--- Peano-compatible aliases:
-noncomputable def choose_unique {α : Sort u} {p : α → Prop}
-    (h : ExistsUnique p) : α
+---
 
-theorem choose_spec_unique {α : Sort u} {p : α → Prop}
-    (h : ExistsUnique p) : p (choose_unique h)
+### 3.3 Theorems/Impl.lean
 
-theorem choose_uniq {α : Sort u} {p : α → Prop}
-    (h : ExistsUnique p) {y : α} (hy : p y) : y = choose_unique h
-```
+**Namespace**: `FOL.Theorems.Impl`
+**Dependencies**: `FOL.FOL`, `FOL.Prelim`
+**Last updated**: 2026-04-21
+**Status**: ✅ Completo
+**@axiom_system**: `none`
+**@importance**: `high`
+
+Tautologies of implication.
+
+**Theorems**:
+- `id_impl`: $A \Rightarrow A$
+  `theorem id_impl {Γ A} : Γ ⊢ .impl A A`
+- `k_impl`: $A \Rightarrow (B \Rightarrow A)$
+  `theorem k_impl {Γ A B} : Γ ⊢ .impl A (.impl B A)`
+- `syllogism_impl`: $(A \Rightarrow B) \Rightarrow ((B \Rightarrow C) \Rightarrow (A \Rightarrow C))$
+  `theorem syllogism_impl {Γ A B C} : Γ ⊢ .impl (.impl A B) (.impl (.impl B C) (.impl A C))`
+- `s_impl`: $(A \Rightarrow (B \Rightarrow C)) \Rightarrow ((A \Rightarrow B) \Rightarrow (A \Rightarrow C))$
+  `theorem s_impl {Γ A B C} : Γ ⊢ .impl (.impl A (.impl B C)) (.impl (.impl A B) (.impl A C))`
+
+---
+
+### 3.4 Theorems/Neg.lean
+
+**Namespace**: `FOL.Theorems.Neg`
+**Dependencies**: `FOL.FOL`, `FOL.Prelim`
+**Last updated**: 2026-04-21
+**Status**: ✅ Completo
+**@axiom_system**: `classical`
+**@importance**: `high`
+
+Properties of negation, explosion, and contrapositive laws.
+
+**Theorems**:
+- `explosion_impl`: $\perp \Rightarrow A$
+  `theorem explosion_impl {Γ A} : Γ ⊢ .impl ⊥ A`
+- `double_neg_intro`: $A \Rightarrow \neg(\neg A)$
+  `theorem double_neg_intro {Γ A} : Γ ⊢ .impl A (neg (neg A))`
+- `double_neg_elim`: $\neg(\neg A) \Rightarrow A$
+  `theorem double_neg_elim {Γ A} : Γ ⊢ .impl (neg (neg A)) A`
+- `contrapositive_1`: $(A \Rightarrow B) \Rightarrow (\neg B \Rightarrow \neg A)$
+  `theorem contrapositive_1 {Γ A B} : Γ ⊢ .impl (.impl A B) (.impl (neg B) (neg A))`
+- `contrapositive_2`: $(\neg B \Rightarrow \neg A) \Rightarrow (A \Rightarrow B)$
+  `theorem contrapositive_2 {Γ A B} : Γ ⊢ .impl (.impl (neg B) (neg A)) (.impl A B)`
+
+---
+
+### 3.5 Theorems/Derived.lean
+
+**Namespace**: `FOL.Theorems.Derived`
+**Dependencies**: `FOL.FOL`, `FOL.Prelim`
+**Last updated**: 2026-04-21
+**Status**: ✅ Completo
+**@axiom_system**: `classical`
+**@importance**: `high`
+
+Properties of derived connectives ($\land$, $\lor$, $\Leftrightarrow$).
+
+**Theorems**:
+- `and_intro`: $A \Rightarrow (B \Rightarrow (A \land B))$
+- `and_elim_left`: $(A \land B) \Rightarrow A$
+- `and_elim_right`: $(A \land B) \Rightarrow B$
+- `or_intro_left`: $A \Rightarrow (A \lor B)$
+- `or_intro_right`: $B \Rightarrow (A \lor B)$
+- `or_elim`: $(A \lor B) \Rightarrow ((A \Rightarrow C) \Rightarrow ((B \Rightarrow C) \Rightarrow C))$
+- `excluded_middle`: $A \lor \neg A$
+- `and_comm`: $(A \land B) \Rightarrow (B \land A)$
+- `or_comm`: $(A \lor B) \Rightarrow (B \lor A)$
+- `and_assoc`: $((A \land B) \land C) \Rightarrow (A \land (B \land C))$
+- `or_assoc`: $((A \lor B) \lor C) \Rightarrow (A \lor (B \lor C))$
+- `de_morgan_1_fwd`: $\neg(A \lor B) \Rightarrow (\neg A \land \neg B)$
+- `de_morgan_1_rev`: $(\neg A \land \neg B) \Rightarrow \neg(A \lor B)$
+- `de_morgan_1`: $\neg(A \lor B) \Leftrightarrow (\neg A \land \neg B)$
+- `de_morgan_2_fwd`: $\neg(A \land B) \Rightarrow (\neg A \lor \neg B)$
+- `de_morgan_2_rev`: $(\neg A \lor \neg B) \Rightarrow \neg(A \land B)$
+- `de_morgan_2`: $\neg(A \land B) \Leftrightarrow (\neg A \lor \neg B)$
+
+---
+
+### 3.6 Theorems/Quantifiers.lean
+
+**Namespace**: `FOL.Theorems.Quantifiers`
+**Dependencies**: `FOL.FOL`, `FOL.Theorems.Impl`, `FOL.Theorems.Neg`, `FOL.Theorems.Derived`
+**Last updated**: 2026-04-21
+**Status**: ✅ Completo
+**@axiom_system**: `classical`
+**@importance**: `high`
+
+Quantifier interactions and dualities.
+
+**Axioms**:
+- `subst_lift_cancel_formula`: `substFormula v t (liftFormula (v + 1) f) = f`
+- `subst_distrib_and`: `substFormula v t (land A B) = land (substFormula v t A) (substFormula v t B)`
+- `lift_distrib_and`: `liftFormula c (land A B) = land (liftFormula c A) (liftFormula c B)`
+
+**Theorems**:
+- `forall_dne`: $(\forall x. \neg \neg A) \Rightarrow (\forall x. A)$
+- `forall_not_impl_exists_not`: $\neg(\forall x. A) \Rightarrow \exists x. \neg A$
+- `forall_dni`: $(\forall x. A) \Rightarrow (\forall x. \neg \neg A)$
+- `exists_not_impl_forall_not`: $(\exists x. \neg A) \Rightarrow \neg(\forall x. A)$
+- `dual_forall_exists`: $\neg(\forall x. A) \Leftrightarrow \exists x. \neg A$
+- `forall_and_impl_and_forall`: $(\forall x. A \land B) \Rightarrow (\forall x. A) \land (\forall x. B)$
+- `and_forall_impl_forall_and`: $((\forall x. A) \land (\forall x. B)) \Rightarrow (\forall x. A \land B)$
+- `distrib_forall_and`: $(\forall x. A \land B) \Leftrightarrow (\forall x. A) \land (\forall x. B)$
 
 ---
 
 ## 4. Theorems
 
-### 4.1 Prelim.lean
-
-*(See ExistsUnique API table in §3.1 — all theorems listed there)*
+*(See Module Descriptions in §3 for individual theorems).*
 
 ---
 
@@ -188,6 +317,17 @@ theorem choose_uniq {α : Sort u} {p : α → Prop}
 |--------|-----------|--------|---------|
 | `∃! x, p` | `ExistsUnique (fun x => p)` | `Prelim.lean` | untyped only |
 | `∃¹ x, p` | `ExistsUnique (fun x => p)` | `Prelim.lean` | `∃¹ x`, `∃¹ (x)`, `∃¹ (x : T)`, `∃¹ x : T` |
+| `⊥` | `Formula.bottom` | `FOL.lean` | |
+| `⊤` | `top` | `FOL.lean` | |
+| `¬ ` | `neg` | `FOL.lean` | prefix |
+| ` ∧ ` | `land` | `FOL.lean` | infixr |
+| ` ∨ ` | `lor` | `FOL.lean` | infixr |
+| ` ⇒ ` | `Formula.impl` | `FOL.lean` | infixr |
+| ` ⇔ ` | `iff` | `FOL.lean` | infix |
+| `∀. ` | `Formula.forall` | `FOL.lean` | prefix |
+| `∃. ` | `ex` | `FOL.lean` | prefix |
+| `#` | `Term.var` | `FOL.lean` | prefix |
+| ` ⊢ ` | `Derives` | `FOL.lean` | infix |
 
 **Note**: `∃!` overrides Lean's built-in notation. Use `∃¹` to avoid any macro conflicts.
 
@@ -220,13 +360,43 @@ choose_spec_unique
 choose_uniq
 ```
 
+### 6.2 FOL.lean
+
+Top-level definitions:
+`Term`, `Formula`, `neg`, `top`, `lor`, `land`, `iff`, `ex`, `liftTerm`, `liftTerms`, `liftFormula`, `substTerm`, `substTerms`, `substFormula`, `Pos`, `getAt?`, `replaceAt`, `LocalRule`, `Derives`.
+
+### 6.3 Theorems/Impl.lean
+
+Exports from namespace `FOL.Theorems.Impl`:
+`id_impl`, `k_impl`, `s_impl`, `syllogism_impl`.
+
+### 6.4 Theorems/Neg.lean
+
+Exports from namespace `FOL.Theorems.Neg`:
+`explosion_impl`, `double_neg_intro`, `double_neg_elim`, `contrapositive_1`, `contrapositive_2`.
+
+### 6.5 Theorems/Derived.lean
+
+Exports from namespace `FOL.Theorems.Derived`:
+`and_intro`, `and_elim_left`, `and_elim_right`, `or_intro_left`, `or_intro_right`, `or_elim`, `excluded_middle`, `and_comm`, `or_comm`, `and_assoc`, `or_assoc`, `de_morgan_1_fwd`, `de_morgan_1_rev`, `de_morgan_1`, `de_morgan_2_fwd`, `de_morgan_2_rev`, `de_morgan_2`.
+
+### 6.6 Theorems/Quantifiers.lean
+
+Exports from namespace `FOL.Theorems.Quantifiers`:
+`subst_lift_cancel_formula`, `subst_distrib_and`, `lift_distrib_and`, `forall_dne`, `forall_not_impl_exists_not`, `forall_dni`, `exists_not_impl_forall_not`, `dual_forall_exists`, `forall_and_impl_and_forall`, `and_forall_impl_forall_and`, `distrib_forall_and`.
+
 ---
 
 ## 7. Documentation Status
 
 ### 7.1 Fully Projected Files
 
-- `Prelim.lean` — ExistsUnique complete (1 def + 5 theorems/defs + 3 aliases + 2 notations)
+- `Prelim.lean`
+- `FOL.lean`
+- `Theorems/Impl.lean`
+- `Theorems/Neg.lean`
+- `Theorems/Derived.lean`
+- `Theorems/Quantifiers.lean`
 
 ### 7.2 Partially Projected Files
 

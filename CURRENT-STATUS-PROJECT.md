@@ -9,11 +9,11 @@
 
 | Metric | Value |
 |--------|-------|
-| Total modules | 1 |
-| Modules with 0 sorry | 0 / 1 |
-| Total theorems proven | 0 |
-| Total definitions | 0 |
-| Total notations | 0 |
+| Total modules | 6 |
+| Modules with 0 sorry | 6 / 6 |
+| Total theorems proven | 32 |
+| Total definitions | 6 |
+| Total notations | 8 |
 | Build status | ✅ Passing |
 | Lean version | v4.28.0 |
 | Naming convention | Mathlib-style (see NAMING-CONVENTIONS.md) |
@@ -24,7 +24,12 @@
 
 | Module | Theorems | Definitions | Sorry | Status |
 |--------|----------|-------------|-------|--------|
-| `Prelim.lean` | 0 | 0 | 0 | 🔄 In progress |
+| `Prelim.lean` | 5 | 1 | 0 | ✅ Complete |
+| `FOL.lean` | 0 | 5 | 0 | ✅ Complete |
+| `Impl.lean` | 4 | 0 | 0 | ✅ Complete |
+| `Neg.lean` | 5 | 0 | 0 | ✅ Complete |
+| `Derived.lean` | 17 | 0 | 0 | ✅ Complete |
+| `Quantifiers.lean` | 10 | 0 | 0 | ✅ Complete |
 
 *Status codes*: ✅ Complete · 🧊 Frozen · 🔶 Partial · 🔄 In progress · ❌ Pending
 
@@ -33,14 +38,15 @@
 ## Recent Achievements
 
 - Project initialized from lean4-project-template
+- Implemented core FOL definitions and natural deduction rules (Fase 1)
+- Proved Nivel 1 & 2 theorems (Impl, Neg) (Fase 2)
+- Proved Nivel 3 & 4 theorems (Derived, Quantifiers) (Fase 3)
 
 ---
 
 ## Pending Work
 
-- [ ] Define `Prelim.lean` content
-- [ ] Add first proof modules
-- [ ] Design module dependency hierarchy
+- [ ] Plantear nueva Fase 5 (si aplica) o declarar proyecto finalizado.
 
 ---
 
@@ -49,7 +55,12 @@
 ```
 ProjectName/
 ├── Prelim.lean              # Level 0: foundations
-└── (subdirectories as project grows)
+├── FOL.lean                 # Level 1: syntax and Derives
+└── Theorems/                # Level 2-4: theorems
+    ├── Impl.lean
+    ├── Neg.lean
+    ├── Derived.lean
+    └── Quantifiers.lean
 ```
 
 ---
@@ -58,10 +69,10 @@ ProjectName/
 
 | Phase | Description | Status |
 |-------|-------------|--------|
-| Phase 1: Foundations | `Prelim.lean` + core definitions | 🔄 In progress |
-| Phase 2: First modules | Core theorems and constructions | ❌ Pending |
-| Phase 3: Naming migration | Adopt Mathlib naming conventions | ❌ Pending |
-| Phase 4: Annotations | Add @importance/@axiom_system metadata | ❌ Pending |
+| Phase 1: Foundations | `Prelim.lean` + core definitions | ✅ Complete |
+| Phase 2: First modules | Core theorems and constructions | ✅ Complete |
+| Phase 3: Naming migration | Adopt Mathlib naming conventions | ✅ Complete |
+| Phase 4: Automatización | Investigar y automatizar identidad, debilitamiento y rewrite_at | ✅ Complete |
 
 > See [NEXT-STEPS.md](NEXT-STEPS.md) for detailed phase planning.
 
