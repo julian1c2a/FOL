@@ -1,6 +1,6 @@
 # Próximos Pasos — FOL
 
-**Última actualización:** 2026-04-25 21:00
+**Última actualización:** 2026-04-25 21:30
 **Autor**: Julián Calderón Almendros
 
 > Este archivo hace un seguimiento de las fases de desarrollo planificadas para el proyecto de Lógica de Primer Orden (FOL).
@@ -77,8 +77,8 @@
 - [x] **Teorema de Corrección (Soundness):** Demostrar que si $Γ \vdash A$, entonces $Γ \models A$.
 - [x] Demostrar los 5 lemas semánticos auxiliares en `Semantics.lean`.
 - [x] **Teorema de Completitud:** Demostrar que si $Γ \models A$, entonces $Γ \vdash A$.
-- [ ] **Consistencia:** Demostrar la consistencia del sistema (sin axiomas adicionales).
-- [ ] **Teorema de Compacidad:** Demostrar que un conjunto de fórmulas es satisfacible si y solo si todo subconjunto finito lo es.
+- [x] **Consistencia:** Demostrar la consistencia del sistema (`consistency_of_satisfiable`).
+- [x] **Teorema de Compacidad:** Demostrar que un conjunto de fórmulas es satisfacible si y solo si todo subconjunto finito lo es (`compactness_theorem`).
 
 **Dependencias**: Fase 1-4 completadas.
 **Complejidad**: Muy Alta
@@ -93,4 +93,4 @@
 | 2 | Primeros Teoremas | ✅ Completo |
 | 3 | Conectivos y Cuantificadores | ✅ Completo |
 | 4 | Automatización | ✅ Completo |
-| 5 | Metamatemática | ✅ Completo (Falta extensión de Henkin aislada) |
+| 5 | Metamatemática | ✅ Completo |

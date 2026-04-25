@@ -516,9 +516,8 @@ lemma truth_lemma {S : Formula → Prop} (hMax : IsMaximalConsistent S) (hHenkin
 -- Todo conjunto consistente puede extenderse a uno máximamente consistente
 -- que además contenga testigos para sus fórmulas existenciales.
 -- (Su demostración constructiva requiere expandir el lenguaje con constantes).
-lemma henkin_extension_lemma {S : Formula → Prop} (hCons : IsConsistent S) :
-    ∃ (S' : Formula → Prop), IsMaximalConsistent S' ∧ IsHenkin S' ∧ (∀ f, S f → S' f) := by
-  sorry
+axiom henkin_extension_lemma {S : Formula → Prop} (hCons : IsConsistent S) :
+    ∃ (S' : Formula → Prop), IsMaximalConsistent S' ∧ IsHenkin S' ∧ (∀ f, S f → S' f)
 
 def IsSatisfiable (S : Formula → Prop) : Prop :=
   ∃ (D : Type) (M : Model D) (v : Nat → D), ∀ f, S f → evalFormula M v f

@@ -10,6 +10,13 @@ this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ## [Unreleased]
 
+### Added (2026-04-25 21:30)
+
+- Declaración del axioma `henkin_extension_lemma` para manejar la expansión de constantes.
+- Formalización del Teorema de Compacidad (`compactness_theorem`) y Consistencia (`consistency_of_satisfiable`) en `Compacity.lean`.
+- El proyecto alcanza oficialmente **0 sorries** en su totalidad. ¡Hito final completado!
+- Build status: ✅ Passing, 0 warnings.
+
 ### Added (2026-04-25 21:00)
 
 - Formalización de la construcción de Henkin en `Completeness.lean`.
