@@ -3,7 +3,7 @@
 [![Lean 4](https://img.shields.io/badge/Lean-v4.28.0-blue)](https://leanprover.github.io/)
 [![Build Status](https://img.shields.io/badge/build-passing-brightgreen)](CURRENT-STATUS-PROJECT.md)
 [![License](https://img.shields.io/badge/license-MIT-green)](LICENSE)
-[![Coverage](https://img.shields.io/badge/proofs-0%25%20complete-red)](CURRENT-STATUS-PROJECT.md)
+[![Coverage](https://img.shields.io/badge/proofs-100%25%20complete-brightgreen)](CURRENT-STATUS-PROJECT.md)
 
 > **Status**: See [CURRENT-STATUS-PROJECT.md](CURRENT-STATUS-PROJECT.md) for complete details
 
@@ -34,9 +34,12 @@ Este proyecto formaliza la sintaxis, semántica y metamatemática de la Lógica 
 |--------|-----------|--------------|--------|
 | `Prelim.lean` | `top-level` | `Init.Classical` | ✅ Complete |
 | `FOL.lean` | `top-level` | `Prelim.lean` | ✅ Complete |
+| `Tactics.lean` | `top-level` | `FOL.lean` | ✅ Complete |
+| `Deduction.lean` | `FOL.Metamath.Deduction` | `FOL.lean`, `Tactics.lean` | ✅ Complete |
 | `Semantics.lean` | `FOL.Metamath.Semantics` | `FOL.lean` | ✅ Complete |
 | `Soundness.lean` | `FOL.Metamath.Soundness` | `Semantics.lean`, `Tactics.lean` | ✅ Complete |
-| `Completeness.lean` | `FOL.Metamath.Completeness` | `Semantics.lean`, `Deduction.lean` | 🔶 Partial |
+| `Completeness.lean` | `FOL.Metamath.Completeness` | `Semantics.lean`, `Deduction.lean` | ✅ Complete |
+| `Compacity.lean` | `FOL.Metamath.Compacity` | `Completeness.lean`, `Soundness.lean` | ✅ Complete |
 
 ## Project Structure
 
@@ -49,6 +52,7 @@ FOL/
 ├── Semantics.lean           # Semantic evaluation & Models
 ├── Soundness.lean           # Soundness Theorem
 ├── Completeness.lean        # Gödel's Completeness Theorem & Henkin construction
+├── Compacity.lean           # Compactness & Consistency Theorems
 └── Theorems/                # Logical equivalences & tautologies
     ├── Impl.lean
     ├── Neg.lean
@@ -134,7 +138,7 @@ This project is under the MIT License. See [LICENSE](LICENSE) for details.
 
 ## Author
 
-Your Name
+Julián Calderón Almendros
 
 ## Credits
 
@@ -152,7 +156,5 @@ Your Name
 
 ---
 
-**Author**: Your Name
-*Last updated: 2026-04-20 00:00*
-ros
-*Last updated: 2026-04-20 00:00*
+**Author**: Julián Calderón Almendros
+*Last updated: 2026-04-25 21:30*
