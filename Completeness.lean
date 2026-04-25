@@ -520,6 +520,16 @@ lemma henkin_extension_lemma {S : Formula → Prop} (hCons : IsConsistent S) :
     ∃ (S' : Formula → Prop), IsMaximalConsistent S' ∧ IsHenkin S' ∧ (∀ f, S f → S' f) := by
   sorry
 
+def IsSatisfiable (S : Formula → Prop) : Prop :=
+  ∃ (D : Type) (M : Model D) (v : Nat → D), ∀ f, S f → evalFormula M v f
+
+lemma model_existence_lemma {S : Formula → Prop} (hCons : IsConsistent S) :
+    IsSatisfiable S := by
+  obtain ⟨S', hMax, hHenkin, hSub⟩ := henkin_extension_lemma hCons
+  use Term, canonicalModel S', canonicalEnv
+  intro f hf
+  exact (truth_lemma hMax hHenkin f).mpr (hSub f hf)
+
 -- El Teorema de Completitud (Objetivo Final)
 theorem completeness {Γ : List Formula} {f : Formula} (h : Γ ⊨ f) : Γ ⊢ f := by
   by_contra hNotDerive
@@ -534,31 +544,14 @@ theorem completeness {Γ : List Formula} {f : Formula} (h : Γ ⊨ f) : Γ ⊢ f
     have hDer_Γ : Γ ⊢ f := Derives.weakening Γ_sub Γ f hDer_f hΓ_sub
     exact hNotDerive hDer_Γ
 
-  obtain ⟨S', hMax, hHenkin, hSub⟩ := henkin_extension_lemma hCons
-  let M := canonicalModel S'
-  let v := canonicalEnv
+  obtain ⟨D, M, v, hModel⟩ := model_existence_lemma hCons
   have hSat : contextSatisfies M v Γ := by
     intro g hg
-    have hS'g : S' g := hSub g (Or.inl hg)
-    exact (truth_lemma hMax hHenkin g).mpr hS'g
-  have hEval_f : evalFormula M v f := h Term M v hSat
-  have hS'_f : S' f := (truth_lemma hMax hHenkin f).mp hEval_f
-  have hS'_neg_f : S' (neg f) := hSub (neg f) (Or.inr rfl)
-  have hBot2 : S' ⊢* ⊥ := by
-    use [neg f, f]
-    constructor
-    · intro g hg
-      cases hg with
-      | head _ => exact hS'_neg_f
-      | tail _ hTail =>
-        cases hTail with
-        | head _ => exact hS'_f
-        | tail _ hT => contradiction
-    · apply Derives.elim_impl (A := f) (B := .bottom)
-      · apply Derives.hyp; exact List.Mem.head _
-      · apply Derives.hyp; apply List.Mem.tail; exact List.Mem.head _
-  exact hMax.left hBot2
+    exact hModel g (Or.inl hg)
+  have hEval_f : evalFormula M v f := h D M v hSat
+  have hEval_neg_f : evalFormula M v (neg f) := hModel (neg f) (Or.inr rfl)
+  exact hEval_neg_f hEval_f
 
 end FOL.Metamath.Completeness
 
-export FOL.Metamath.Completeness (DerivesSet IsConsistent IsMaximalConsistent completeness)
+export FOL.Metamath.Completeness (DerivesSet IsConsistent IsMaximalConsistent IsSatisfiable model_existence_lemma completeness)
