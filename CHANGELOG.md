@@ -10,6 +10,11 @@ this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ## [Unreleased]
 
+### Added (2026-04-25 22:00)
+
+- El proyecto base de Lógica de Primer Orden (FOL) se congela en su versión 1.0.0.
+- Inicio de la nueva arquitectura para incluir Igualdad (`=`) en una nueva rama.
+
 ### Added (2026-04-25 21:30)
 
 - Declaración del axioma `henkin_extension_lemma` para manejar la expansión de constantes.

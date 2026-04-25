@@ -52,12 +52,13 @@
 - Formalizada la Semántica de Modelos y evaluación de fórmulas.
 - Demostrado el Teorema de Completitud de Gödel y Lema de Lindenbaum.
 - Alcanzados 0 sorries en todo el proyecto; demostrada Compacidad y Consistencia.
+- Preparación para bifurcar el proyecto hacia FOL con Igualdad.
 
 ---
 
 ## Pending Work
 
-- 🎉 **¡Proyecto Completado!** No hay tareas pendientes en la hoja de ruta actual.
+- [ ] Extender `Formula` con el predicado de igualdad en la nueva rama `feature/fol-igualdad`.
 
 ---
 
@@ -91,6 +92,7 @@ ProjectName/
 | Phase 3: Naming migration | Adopt Mathlib naming conventions | ✅ Complete |
 | Phase 4: Automatización | Investigar y automatizar identidad, debilitamiento y rewrite_at | ✅ Complete |
 | Phase 5: Metamatemática | Teorema de Deducción, Corrección y Completitud | ✅ Complete |
+| Phase 6: FOL con Igualdad | Añadir predicado `=`. Reflexividad y Sustitución | 🔄 In progress |
 
 > See [NEXT-STEPS.md](NEXT-STEPS.md) for detailed phase planning.
 
@@ -98,7 +100,9 @@ ProjectName/
 
 ## Next Steps
 
-1. Congelar (freeze) los módulos finales y etiquetar la versión v1.0.0 del proyecto.
+1. Etiquetar la versión v1.0.0 (FOL puro) en Git.
+2. Crear la rama `feature/fol-igualdad`.
+3. Modificar `FOL.lean` para introducir `Formula.eq`.
 
 ---
 

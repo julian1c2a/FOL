@@ -85,6 +85,22 @@
 
 ---
 
+## Fase 6: FOL con Igualdad (FOL=)
+
+**Objetivo**: Extender el lenguaje y el sistema deductivo para soportar el predicado de igualdad lógica (`=`).
+
+**Tareas**:
+
+- [ ] Modificar la sintaxis en `FOL.lean` añadiendo el constructor de igualdad a `Formula` (`eq : Term → Term → Formula`).
+- [ ] Añadir las reglas de inferencia para la igualdad (Reflexividad y Sustitución de Leibniz) en `Derives`.
+- [ ] Actualizar la semántica en `Semantics.lean` para que la igualdad sintáctica coincida con la igualdad semántica del modelo.
+- [ ] Adaptar las pruebas de Soundness y Completeness a la nueva sintaxis y reglas.
+
+**Dependencias**: Fase 5 completada.
+**Complejidad**: Alta
+
+---
+
 ## Resumen de Estado
 
 | Fase | Descripción | Estado |
@@ -94,3 +110,4 @@
 | 3 | Conectivos y Cuantificadores | ✅ Completo |
 | 4 | Automatización | ✅ Completo |
 | 5 | Metamatemática | ✅ Completo |
+| 6 | FOL con Igualdad | 🔄 En progreso |
