@@ -10,6 +10,12 @@ this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ## [Unreleased]
 
+### Added (2026-04-25 20:30)
+
+- Demostración completa de los lemas de sustitución semántica y reescritura en `FOL/Semantics.lean`, resolviendo la "trampa de De Bruijn" mediante inducción generalizada.
+- El proyecto alcanza 0 sorries en toda la formalización de la sintaxis, deducción natural y corrección semántica (Soundness).
+- Estado del Build: 0 errores, 0 sorries activos.
+
 ### Added (2026-04-25 20:00)
 
 - Demostración completa del Teorema de Deducción en `FOL/Deduction.lean`.

@@ -1,6 +1,6 @@
 # Technical Reference — ProjectName
 
-**Last updated:** 2026-04-25 20:00
+**Last updated:** 2026-04-25 20:30
 **Author**: Julián Calderón Almendros
 **Lean version**: v4.28.0
 
@@ -96,7 +96,7 @@ This document complies with all requirements specified in [AI-GUIDE.md](AI-GUIDE
 | `Theorems/Quantifiers.lean` | `FOL.Theorems.Quantifiers`| `FOL.FOL`, `FOL.Theorems.Impl`, `FOL.Theorems.Neg`, `FOL.Theorems.Derived` | ✅ Completo |
 | `Tactics.lean` | `FOL.Tactics` | `FOL.FOL`, `Lean` | ✅ Completo |
 | `Deduction.lean` | `FOL.Metamath.Deduction` | `FOL.FOL`, `FOL.Tactics` | ✅ Completo |
-| `Semantics.lean` | `FOL.Metamath.Semantics` | `FOL.FOL` | 🔶 Partial |
+| `Semantics.lean` | `FOL.Metamath.Semantics` | `FOL.FOL` | ✅ Completo |
 | `Soundness.lean` | `FOL.Metamath.Soundness` | `FOL.FOL`, `FOL.Metamath.Semantics`, `FOL.Tactics` | ✅ Completo |
 
 *Status codes*: ✅ Complete · 🧊 Frozen · 🔶 Partial · 🔄 In progress · ❌ Pending
@@ -367,8 +367,8 @@ Metaprogramming and macros to automate repetitive natural deduction tasks.
 
 **Namespace**: `FOL.Metamath.Semantics`
 **Dependencies**: `FOL.FOL`
-**Last updated**: 2026-04-25
-**Status**: 🔶 Partial
+**Last updated**: 2026-04-25 20:30
+**Status**: ✅ Completo
 **@axiom_system**: `classical`
 **@importance**: `high`
 
@@ -378,13 +378,16 @@ Metaprogramming and macros to automate repetitive natural deduction tasks.
 - `evalTerm`: Evaluates a `Term` into the model's domain.
 - `evalTerms`: Evaluates a list of terms.
 - `shiftEnv`: Shifts De Bruijn variable environment.
+- `updateEnv`: Updates variable environment at a specific depth $c$.
 - `evalFormula`: Computes the truth value of a `Formula`.
 - `contextSatisfies`: Checks if an environment satisfies a context $\Gamma$.
 - `satisfies`: $Γ \models f$. `def satisfies (Γ : List Formula) (f : Formula) : Prop`
 
-**Theorems (Pending / sorry)**:
+**Theorems**:
 
-- `eval_liftFormula_zero`, `eval_substFormula_zero`, `contextSatisfies_lift_zero`, `rule_soundness`, `replaceAt_soundness`.
+- Substitution & Lifting generalizations: `eval_liftTerm_ext`, `eval_liftTerms_ext`, `eval_substTerm_ext`, `eval_substTerms_ext`, `eval_liftFormula_ext`, `eval_substFormula_ext`.
+- Base Semantics Lemmas: `updateEnv_zero`, `shiftEnv_updateEnv_comm`, `eval_liftFormula_zero`, `eval_substFormula_zero`, `contextSatisfies_lift_zero`.
+- Rewrite Correctness: `rule_soundness`, `replaceAt_soundness`.
 
 ---
 
@@ -497,7 +500,8 @@ Exports from namespace `FOL.Metamath.Deduction`:
 
 ### 6.9 Semantics.lean
 
-*(No explicit exports defined yet, but symbols are accessible under `FOL.Metamath.Semantics`)*
+Exports from namespace `FOL.Metamath.Semantics`:
+`eval_liftFormula_zero`, `eval_substFormula_zero`, `contextSatisfies_lift_zero`, `rule_soundness`, `replaceAt_soundness`, `updateEnv_zero`, `shiftEnv_updateEnv_comm`.
 
 ### 6.10 Soundness.lean
 

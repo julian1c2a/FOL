@@ -1,6 +1,6 @@
 # Current Project Status — ProjectName
 
-**Last updated:** 2026-04-25 20:00
+**Last updated:** 2026-04-25 20:30
 **Author**: Julián Calderón Almendros
 
 ---
@@ -10,9 +10,9 @@
 | Metric | Value |
 |--------|-------|
 | Total modules | 10 |
-| Modules with 0 sorry | 9 / 10 |
-| Total theorems proven | 34 |
-| Total definitions | 14 |
+| Modules with 0 sorry | 10 / 10 |
+| Total theorems proven | 47 |
+| Total definitions | 15 |
 | Total notations | 9 |
 | Build status | ✅ Passing |
 | Lean version | v4.28.0 |
@@ -32,7 +32,7 @@
 | `Quantifiers.lean` | 10 | 0 | 0 | ✅ Complete |
 | `Tactics.lean` | 0 | 1 | 0 | ✅ Complete |
 | `Deduction.lean` | 1 | 0 | 0 | ✅ Complete |
-| `Semantics.lean` | 0 | 7 | 5 | 🔶 Partial |
+| `Semantics.lean` | 13 | 8 | 0 | ✅ Complete |
 | `Soundness.lean` | 1 | 0 | 0 | ✅ Complete |
 
 *Status codes*: ✅ Complete · 🧊 Frozen · 🔶 Partial · 🔄 In progress · ❌ Pending
@@ -53,7 +53,7 @@
 
 ## Pending Work
 
-- [ ] Demostrar los 5 lemas de reescritura y sustitución semántica en `Semantics.lean`.
+- [x] Demostrar los 5 lemas de reescritura y sustitución semántica en `Semantics.lean`.
 - [ ] Abordar Teorema de Completitud.
 
 ---
@@ -93,8 +93,8 @@ ProjectName/
 
 ## Next Steps
 
-1. Resolver los 5 `sorry` restantes en `Semantics.lean`.
-2. Estructurar la prueba del Teorema de Completitud.
+1. Investigar la formalización de conjuntos consistentes máximos (construcción de Henkin).
+2. Iniciar la prueba del Teorema de Completitud.
 
 ---
 
