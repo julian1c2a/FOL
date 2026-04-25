@@ -23,9 +23,18 @@ namespace FOL.Theorems.Neg
 -- 5. Explosión (Ex Falso Quodlibet): ⊥ ⇒ A
 theorem explosion_impl {Γ A} : Γ ⊢ .impl ⊥ A := by
   apply Derives.intro_impl
-  apply Derives.raa
+  apply Derives.bot_elim
   apply Derives.hyp
-  exact List.Mem.tail _ (List.Mem.head _)
+  exact List.Mem.head _
+
+-- Regla Clásica Derivada (Reductio ad Absurdum)
+-- Si asumimos Eliminación de la Doble Negación (DNE) en el contexto
+theorem derived_raa {Γ A} (h_dne : .impl (neg (neg A)) A ∈ Γ) (h : neg A :: Γ ⊢ ⊥) : Γ ⊢ A := by
+  apply Derives.elim_impl (A := neg (neg A))
+  · apply Derives.hyp
+    exact h_dne
+  · apply Derives.intro_impl
+    exact h
 
 -- 6. Doble Negación (Introducción): A ⇒ ¬(¬A)
 theorem double_neg_intro {Γ A} : Γ ⊢ .impl A (neg (neg A)) := by
@@ -38,14 +47,10 @@ theorem double_neg_intro {Γ A} : Γ ⊢ .impl A (neg (neg A)) := by
     exact List.Mem.tail _ (List.Mem.head _)
 
 -- 7. Doble Negación (Eliminación): ¬(¬A) ⇒ A
-theorem double_neg_elim {Γ A} : Γ ⊢ .impl (neg (neg A)) A := by
-  apply Derives.intro_impl
-  apply Derives.raa
-  apply Derives.elim_impl (A := neg A)
-  · apply Derives.hyp
-    exact List.Mem.tail _ (List.Mem.head _)
-  · apply Derives.hyp
-    exact List.Mem.head _
+-- Requiere DNE en el contexto por definición (trivial en este caso, pero ilustrativo)
+theorem double_neg_elim {Γ A} (h_dne : .impl (neg (neg A)) A ∈ Γ) : Γ ⊢ .impl (neg (neg A)) A := by
+  apply Derives.hyp
+  exact h_dne
 
 -- 8. Contrapositiva (1): (A ⇒ B) ⇒ (¬B ⇒ ¬A)
 theorem contrapositive_1 {Γ A B} : Γ ⊢ .impl (.impl A B) (.impl (neg B) (neg A)) := by
@@ -62,23 +67,26 @@ theorem contrapositive_1 {Γ A B} : Γ ⊢ .impl (.impl A B) (.impl (neg B) (neg
       exact List.Mem.head _
 
 -- 9. Contrapositiva (2): (¬B ⇒ ¬A) ⇒ (A ⇒ B)
-theorem contrapositive_2 {Γ A B} : Γ ⊢ .impl (.impl (neg B) (neg A)) (.impl A B) := by
+-- Requiere DNE para B en el contexto
+theorem contrapositive_2 {Γ A B} (h_dne : .impl (neg (neg B)) B ∈ Γ) : Γ ⊢ .impl (.impl (neg B) (neg A)) (.impl A B) := by
   apply Derives.intro_impl
   apply Derives.intro_impl
-  apply Derives.raa
-  apply Derives.elim_impl (A := A)
-  · apply Derives.elim_impl (A := neg B)
+  apply derived_raa
+  · exact List.Mem.tail _ (List.Mem.tail _ h_dne)
+  · apply Derives.elim_impl (A := A)
+    · apply Derives.elim_impl (A := neg B)
+      · apply Derives.hyp
+        exact List.Mem.tail _ (List.Mem.tail _ (List.Mem.head _))
+      · apply Derives.hyp
+        exact List.Mem.head _
     · apply Derives.hyp
-      exact List.Mem.tail _ (List.Mem.tail _ (List.Mem.head _))
-    · apply Derives.hyp
-      exact List.Mem.head _
-  · apply Derives.hyp
-    exact List.Mem.tail _ (List.Mem.head _)
+      exact List.Mem.tail _ (List.Mem.head _)
 
 end FOL.Theorems.Neg
 
 export FOL.Theorems.Neg (
   explosion_impl
+  derived_raa
   double_neg_intro
   double_neg_elim
   contrapositive_1

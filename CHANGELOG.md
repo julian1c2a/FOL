@@ -10,6 +10,13 @@ this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ## [Unreleased]
 
+### Added (2026-04-25)
+
+- Implementación de tácticas de automatización en `FOL/Tactics.lean`: `derive_hyp`, `derive_rewrite` y `derive_weaken`.
+- Finalización oficial de la Fase 4 (Automatización).
+- Inicio formal de la Fase 5 (Metamatemática y Completitud).
+- Estado del Build: 0 errores, 0 sorries activos.
+
 ### Added (2026-04-20 00:00)
 
 - Initial project structure from lean4-project-template

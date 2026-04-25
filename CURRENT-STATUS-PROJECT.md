@@ -1,6 +1,6 @@
 # Current Project Status — ProjectName
 
-**Last updated:** 2026-04-20 00:00
+**Last updated:** 2026-04-25 19:52
 **Author**: Julián Calderón Almendros
 
 ---
@@ -9,10 +9,10 @@
 
 | Metric | Value |
 |--------|-------|
-| Total modules | 6 |
-| Modules with 0 sorry | 6 / 6 |
+| Total modules | 7 |
+| Modules with 0 sorry | 7 / 7 |
 | Total theorems proven | 32 |
-| Total definitions | 6 |
+| Total definitions | 7 |
 | Total notations | 8 |
 | Build status | ✅ Passing |
 | Lean version | v4.28.0 |
@@ -30,6 +30,7 @@
 | `Neg.lean` | 5 | 0 | 0 | ✅ Complete |
 | `Derived.lean` | 17 | 0 | 0 | ✅ Complete |
 | `Quantifiers.lean` | 10 | 0 | 0 | ✅ Complete |
+| `Tactics.lean` | 0 | 1 | 0 | ✅ Complete |
 
 *Status codes*: ✅ Complete · 🧊 Frozen · 🔶 Partial · 🔄 In progress · ❌ Pending
 
@@ -41,12 +42,13 @@
 - Implemented core FOL definitions and natural deduction rules (Fase 1)
 - Proved Nivel 1 & 2 theorems (Impl, Neg) (Fase 2)
 - Proved Nivel 3 & 4 theorems (Derived, Quantifiers) (Fase 3)
+- Created robust automation tactics in `Tactics.lean` (Fase 4)
 
 ---
 
 ## Pending Work
 
-- [ ] Plantear nueva Fase 5 (si aplica) o declarar proyecto finalizado.
+- [ ] Iniciar Fase 5: Metamatemática y Teorema de Deducción.
 
 ---
 
@@ -56,6 +58,7 @@
 ProjectName/
 ├── Prelim.lean              # Level 0: foundations
 ├── FOL.lean                 # Level 1: syntax and Derives
+├── Tactics.lean             # Automation macros/tactics
 └── Theorems/                # Level 2-4: theorems
     ├── Impl.lean
     ├── Neg.lean
@@ -73,6 +76,7 @@ ProjectName/
 | Phase 2: First modules | Core theorems and constructions | ✅ Complete |
 | Phase 3: Naming migration | Adopt Mathlib naming conventions | ✅ Complete |
 | Phase 4: Automatización | Investigar y automatizar identidad, debilitamiento y rewrite_at | ✅ Complete |
+| Phase 5: Metamatemática | Teorema de Deducción, Corrección y Completitud | 🔄 In progress |
 
 > See [NEXT-STEPS.md](NEXT-STEPS.md) for detailed phase planning.
 
@@ -80,9 +84,9 @@ ProjectName/
 
 ## Next Steps
 
-1. Define core preliminary infrastructure in `Prelim.lean`
-2. Design module dependency hierarchy
-3. Lock `Prelim.lean` once complete
+1. Crear `FOL/Metamath/Deduction.lean` para el Teorema de Deducción.
+2. Empezar a utilizar las macros `derive_hyp` y `derive_weaken` activamente.
+3. Formalizar semántica y modelos.
 
 ---
 

@@ -17,6 +17,9 @@ inductive Formula where
   | atom   : String → List Term → Formula
   | impl   : Formula → Formula → Formula
   | forall : Formula → Formula
+  | and    : Formula → Formula → Formula
+  | or     : Formula → Formula → Formula
+  | ex     : Formula → Formula
   deriving Repr, BEq
 
 -- Definición de conectores lógicos derivados
@@ -24,24 +27,18 @@ def neg (f : Formula) : Formula := Formula.impl f Formula.bottom
 
 def top : Formula := neg Formula.bottom
 
-def lor (f1 f2 : Formula) : Formula := Formula.impl (neg f1) f2
-
-def land (f1 f2 : Formula) : Formula := neg (Formula.impl f1 (neg f2))
-
-def iff (f1 f2 : Formula) : Formula := land (Formula.impl f1 f2) (Formula.impl f2 f1)
-
-def ex (f : Formula) : Formula := neg (Formula.forall (neg f))
+def iff (f1 f2 : Formula) : Formula := Formula.and (Formula.impl f1 f2) (Formula.impl f2 f1)
 
 -- Notaciones para hacer las fórmulas legibles
 notation "⊥" => Formula.bottom
 notation "⊤" => top
 prefix:75 "¬ " => neg
-infixr:70 " ∧ " => land
-infixr:65 " ∨ " => lor
+infixr:70 " ∧ " => Formula.and
+infixr:65 " ∨ " => Formula.or
 infixr:60 " ⇒ " => Formula.impl
 infix:55 " ⇔ " => iff
 prefix:80 "∀. " => Formula.forall
-prefix:80 "∃. " => ex
+prefix:80 "∃. " => Formula.ex
 
 -- Coerción para escribir átomos proposicionales más fácilmente (ej. "P" en lugar de .atom "P" [])
 instance : Coe String Formula where
@@ -72,6 +69,9 @@ def liftFormula (c : Nat) (f : Formula) : Formula :=
   | .atom p ts => .atom p (liftTerms c ts)
   | .impl f1 f2 => .impl (liftFormula c f1) (liftFormula c f2)
   | .forall f1 => .forall (liftFormula (c + 1) f1)
+  | .and f1 f2 => .and (liftFormula c f1) (liftFormula c f2)
+  | .or f1 f2 => .or (liftFormula c f1) (liftFormula c f2)
+  | .ex f1 => .ex (liftFormula (c + 1) f1)
 
 -- SUSTITUCIÓN
 -- Reemplaza la variable libre 'v' con el término 's'
@@ -96,15 +96,18 @@ def substFormula (v : Nat) (s : Term) (f : Formula) : Formula :=
   | .atom p ts => .atom p (substTerms v s ts)
   | .impl f1 f2 => .impl (substFormula v s f1) (substFormula v s f2)
   | .forall f1 => .forall (substFormula (v + 1) (liftTerm 0 s) f1)
+  | .and f1 f2 => .and (substFormula v s f1) (substFormula v s f2)
+  | .or f1 f2 => .or (substFormula v s f1) (substFormula v s f2)
+  | .ex f1 => .ex (substFormula (v + 1) (liftTerm 0 s) f1)
 
 -- 2. NAVEGACIÓN: Posiciones en el árbol (AST)
 -- Una posición es un camino desde la raíz hasta una subfórmula.
 
 inductive Pos where
   | root  : Pos
-  | left  : Pos → Pos   -- Lado izquierdo de una implicación
-  | right : Pos → Pos   -- Lado derecho de una implicación
-  | body  : Pos → Pos   -- Dentro de un cuantificador universal
+  | left  : Pos → Pos   -- Lado izquierdo de op binaria
+  | right : Pos → Pos   -- Lado derecho de op binaria
+  | body  : Pos → Pos   -- Dentro de un cuantificador
   deriving Repr
 
 -- Función para obtener la subfórmula en una posición dada
@@ -112,15 +115,15 @@ def getAt? (f : Formula) : Pos → Option Formula
   | .root => some f
   | .left p =>
       match f with
-      | .impl f1 _ => getAt? f1 p
+      | .impl f1 _ | .and f1 _ | .or f1 _ => getAt? f1 p
       | _ => none
   | .right p =>
       match f with
-      | .impl _ f2 => getAt? f2 p
+      | .impl _ f2 | .and _ f2 | .or _ f2 => getAt? f2 p
       | _ => none
   | .body p =>
       match f with
-      | .forall f1 => getAt? f1 p
+      | .forall f1 | .ex f1 => getAt? f1 p
       | _ => none
 
 -- Función para reemplazar una subfórmula en una posición exacta
@@ -130,21 +133,25 @@ def replaceAt (f : Formula) (p : Pos) (newSub : Formula) : Formula :=
   | .left p' =>
       match f with
       | .impl f1 f2 => .impl (replaceAt f1 p' newSub) f2
+      | .and f1 f2 => .and (replaceAt f1 p' newSub) f2
+      | .or f1 f2 => .or (replaceAt f1 p' newSub) f2
       | _ => f
   | .right p' =>
       match f with
       | .impl f1 f2 => .impl f1 (replaceAt f2 p' newSub)
+      | .and f1 f2 => .and f1 (replaceAt f2 p' newSub)
+      | .or f1 f2 => .or f1 (replaceAt f2 p' newSub)
       | _ => f
   | .body p' =>
       match f with
       | .forall f1 => .forall (replaceAt f1 p' newSub)
+      | .ex f1 => .ex (replaceAt f1 p' newSub)
       | _ => f
 
 -- 3. REGLAS DE TRANSFORMACIÓN
 -- Definimos reglas de reescritura lógica que pueden aplicarse localmente.
 
 inductive LocalRule : Formula → Formula → Prop where
-  | doubleNegElim : ∀ A, LocalRule (neg (neg A)) A
   | commuteImpl   : ∀ A B C, LocalRule (.impl A (.impl B C)) (.impl B (.impl A C))
   -- Se pueden añadir más reglas como De Morgan, etc.
 
@@ -158,12 +165,25 @@ inductive Derives : List Formula → Formula → Prop where
   | intro_impl : ∀ Γ A B, Derives (A :: Γ) B → Derives Γ (.impl A B)
   | elim_impl  : ∀ Γ A B, Derives Γ (.impl A B) → Derives Γ A → Derives Γ B
   
+  -- Reglas de conjunción
+  | intro_and  : ∀ Γ A B, Derives Γ A → Derives Γ B → Derives Γ (.and A B)
+  | elim_and_l : ∀ Γ A B, Derives Γ (.and A B) → Derives Γ A
+  | elim_and_r : ∀ Γ A B, Derives Γ (.and A B) → Derives Γ B
+
+  -- Reglas de disyunción
+  | intro_or_l : ∀ Γ A B, Derives Γ A → Derives Γ (.or A B)
+  | intro_or_r : ∀ Γ A B, Derives Γ B → Derives Γ (.or A B)
+  | elim_or    : ∀ Γ A B C, Derives Γ (.or A B) → Derives (A :: Γ) C → Derives (B :: Γ) C → Derives Γ C
+
   -- Reglas de Cuantificadores
   | intro_forall : ∀ Γ A, Derives (Γ.map (liftFormula 0)) A → Derives Γ (.forall A)
   | elim_forall  : ∀ Γ A t, Derives Γ (.forall A) → Derives Γ (substFormula 0 t A)
 
-  -- Lógica Clásica (Reductio ad Absurdum)
-  | raa : ∀ Γ A, Derives (neg A :: Γ) ⊥ → Derives Γ A
+  | intro_ex : ∀ Γ A t, Derives Γ (substFormula 0 t A) → Derives Γ (.ex A)
+  | elim_ex  : ∀ Γ A B, Derives Γ (.ex A) → Derives (A :: Γ.map (liftFormula 0)) (liftFormula 0 B) → Derives Γ B
+
+  -- Lógica Intuicionista (Ex Falso Quodlibet)
+  | bot_elim : ∀ Γ A, Derives Γ ⊥ → Derives Γ A
 
   -- Debilitamiento (Weakening)
   | weakening : ∀ Γ Γ' f, Derives Γ f → (∀ x, x ∈ Γ → x ∈ Γ') → Derives Γ' f

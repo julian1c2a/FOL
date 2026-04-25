@@ -1,6 +1,6 @@
 # Technical Reference — ProjectName
 
-**Last updated:** 2026-04-21 00:00
+**Last updated:** 2026-04-25 19:52
 **Author**: Julián Calderón Almendros
 **Lean version**: v4.28.0
 
@@ -94,6 +94,7 @@ This document complies with all requirements specified in [AI-GUIDE.md](AI-GUIDE
 | `Theorems/Neg.lean` | `FOL.Theorems.Neg` | `FOL.FOL`, `FOL.Prelim` | ✅ Completo |
 | `Theorems/Derived.lean` | `FOL.Theorems.Derived`| `FOL.FOL`, `FOL.Prelim` | ✅ Completo |
 | `Theorems/Quantifiers.lean` | `FOL.Theorems.Quantifiers`| `FOL.FOL`, `FOL.Theorems.Impl`, `FOL.Theorems.Neg`, `FOL.Theorems.Derived` | ✅ Completo |
+| `Tactics.lean` | `FOL.Tactics` | `FOL.FOL`, `Lean` | ✅ Completo |
 
 *Status codes*: ✅ Complete · 🧊 Frozen · 🔶 Partial · 🔄 In progress · ❌ Pending
 
@@ -114,6 +115,7 @@ graph TD
     N --> Q
     D --> Q
     F --> Q
+    F --> T[Tactics.lean]
 ```
 
 *(Update this diagram as modules are added)*
@@ -172,6 +174,7 @@ def ExistsUnique {α : Sort u} (p : α → Prop) : Prop :=
 Provides the core syntax, substitution operations using De Bruijn indices, AST navigation, and the Natural Deduction system with a local rewrite rule mechanism.
 
 **Definitions**:
+
 - `Term`: Inductive type for terms (variables via `#n` and functions).
 - `Formula`: Inductive type for formulas (`⊥`, `atom`, `⇒`, `∀.`).
 - `neg`, `top`, `lor`, `land`, `iff`, `ex`: Derived logical connectives.
@@ -183,15 +186,16 @@ Provides the core syntax, substitution operations using De Bruijn indices, AST n
 - `Derives`: Inductive predicate `Γ ⊢ f` representing natural deduction derivations.
 
 **Notations**:
+
 - `⊥` => `Formula.bottom`
 - `⊤` => `top`
-- `¬ ` => `neg`
+- `¬` => `neg`
 - ` ∧ ` => `land`
 - ` ∨ ` => `lor`
 - ` ⇒ ` => `Formula.impl`
 - ` ⇔ ` => `iff`
-- `∀. ` => `Formula.forall`
-- `∃. ` => `ex`
+- `∀.` => `Formula.forall`
+- `∃.` => `ex`
 - `#` => `Term.var`
 - ` ⊢ ` => `Derives`
 
@@ -209,6 +213,7 @@ Provides the core syntax, substitution operations using De Bruijn indices, AST n
 Tautologies of implication.
 
 **Theorems**:
+
 - `id_impl`: $A \Rightarrow A$
   `theorem id_impl {Γ A} : Γ ⊢ .impl A A`
 - `k_impl`: $A \Rightarrow (B \Rightarrow A)$
@@ -232,6 +237,7 @@ Tautologies of implication.
 Properties of negation, explosion, and contrapositive laws.
 
 **Theorems**:
+
 - `explosion_impl`: $\perp \Rightarrow A$
   `theorem explosion_impl {Γ A} : Γ ⊢ .impl ⊥ A`
 - `double_neg_intro`: $A \Rightarrow \neg(\neg A)$
@@ -257,6 +263,7 @@ Properties of negation, explosion, and contrapositive laws.
 Properties of derived connectives ($\land$, $\lor$, $\Leftrightarrow$).
 
 **Theorems**:
+
 - `and_intro`: $A \Rightarrow (B \Rightarrow (A \land B))$
 - `and_elim_left`: $(A \land B) \Rightarrow A$
 - `and_elim_right`: $(A \land B) \Rightarrow B$
@@ -289,11 +296,13 @@ Properties of derived connectives ($\land$, $\lor$, $\Leftrightarrow$).
 Quantifier interactions and dualities.
 
 **Axioms**:
+
 - `subst_lift_cancel_formula`: `substFormula v t (liftFormula (v + 1) f) = f`
 - `subst_distrib_and`: `substFormula v t (land A B) = land (substFormula v t A) (substFormula v t B)`
 - `lift_distrib_and`: `liftFormula c (land A B) = land (liftFormula c A) (liftFormula c B)`
 
 **Theorems**:
+
 - `forall_dne`: $(\forall x. \neg \neg A) \Rightarrow (\forall x. A)$
 - `forall_not_impl_exists_not`: $\neg(\forall x. A) \Rightarrow \exists x. \neg A$
 - `forall_dni`: $(\forall x. A) \Rightarrow (\forall x. \neg \neg A)$
@@ -319,13 +328,13 @@ Quantifier interactions and dualities.
 | `∃¹ x, p` | `ExistsUnique (fun x => p)` | `Prelim.lean` | `∃¹ x`, `∃¹ (x)`, `∃¹ (x : T)`, `∃¹ x : T` |
 | `⊥` | `Formula.bottom` | `FOL.lean` | |
 | `⊤` | `top` | `FOL.lean` | |
-| `¬ ` | `neg` | `FOL.lean` | prefix |
+| `¬` | `neg` | `FOL.lean` | prefix |
 | ` ∧ ` | `land` | `FOL.lean` | infixr |
 | ` ∨ ` | `lor` | `FOL.lean` | infixr |
 | ` ⇒ ` | `Formula.impl` | `FOL.lean` | infixr |
 | ` ⇔ ` | `iff` | `FOL.lean` | infix |
-| `∀. ` | `Formula.forall` | `FOL.lean` | prefix |
-| `∃. ` | `ex` | `FOL.lean` | prefix |
+| `∀.` | `Formula.forall` | `FOL.lean` | prefix |
+| `∃.` | `ex` | `FOL.lean` | prefix |
 | `#` | `Term.var` | `FOL.lean` | prefix |
 | ` ⊢ ` | `Derives` | `FOL.lean` | infix |
 
