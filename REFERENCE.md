@@ -1,6 +1,6 @@
 # Technical Reference — ProjectName
 
-**Last updated:** 2026-04-25 20:30
+**Last updated:** 2026-04-25 21:00
 **Author**: Julián Calderón Almendros
 **Lean version**: v4.28.0
 
@@ -98,6 +98,7 @@ This document complies with all requirements specified in [AI-GUIDE.md](AI-GUIDE
 | `Deduction.lean` | `FOL.Metamath.Deduction` | `FOL.FOL`, `FOL.Tactics` | ✅ Completo |
 | `Semantics.lean` | `FOL.Metamath.Semantics` | `FOL.FOL` | ✅ Completo |
 | `Soundness.lean` | `FOL.Metamath.Soundness` | `FOL.FOL`, `FOL.Metamath.Semantics`, `FOL.Tactics` | ✅ Completo |
+| `Completeness.lean` | `FOL.Metamath.Completeness` | `FOL.FOL`, `FOL.Semantics`, `FOL.Deduction`, `FOL.Theorems.Neg`, `FOL.Theorems.Quantifiers` | 🔶 Partial |
 
 *Status codes*: ✅ Complete · 🧊 Frozen · 🔶 Partial · 🔄 In progress · ❌ Pending
 
@@ -124,6 +125,11 @@ graph TD
     F --> Sem[Semantics.lean]
     Sem --> S[Soundness.lean]
     F --> S
+    Sem --> C[Completeness.lean]
+    Ded --> C
+    N --> C
+    Q --> C
+    F --> C
 ```
 
 *(Update this diagram as modules are added)*

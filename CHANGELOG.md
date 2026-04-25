@@ -10,6 +10,13 @@ this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ## [Unreleased]
 
+### Added (2026-04-25 21:00)
+
+- Formalización de la construcción de Henkin en `Completeness.lean`.
+- Demostración formal del Lema de Lindenbaum (`lindenbaum_lemma`) y Compacidad Sintáctica.
+- Demostración del Lema de la Verdad (`truth_lemma`) mediante inducción fuerte sobre la complejidad de fórmulas.
+- Demostración del Teorema de Completitud de Gödel (`completeness`).
+
 ### Added (2026-04-25 20:30)
 
 - Demostración completa de los lemas de sustitución semántica y reescritura en `FOL/Semantics.lean`, resolviendo la "trampa de De Bruijn" mediante inducción generalizada.
