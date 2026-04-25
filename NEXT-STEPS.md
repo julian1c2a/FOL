@@ -72,9 +72,10 @@
 
 **Tareas**:
 
-- [ ] **Teorema de Deducción:** Demostrar que si $Γ, A \vdash B$, entonces $Γ \vdash A \Rightarrow B$.
-- [ ] **Semántica y Modelos (Opción B):** Definir noción de modelo y relación de satisfacción ($\models$).
-- [ ] **Teorema de Corrección (Soundness):** Demostrar que si $Γ \vdash A$, entonces $Γ \models A$.
+- [x] **Teorema de Deducción:** Demostrar que si $Γ, A \vdash B$, entonces $Γ \vdash A \Rightarrow B$.
+- [x] **Semántica y Modelos (Opción B):** Definir noción de modelo y relación de satisfacción ($\models$).
+- [x] **Teorema de Corrección (Soundness):** Demostrar que si $Γ \vdash A$, entonces $Γ \models A$.
+- [ ] Demostrar los 5 lemas semánticos auxiliares en `Semantics.lean`.
 - [ ] **Teorema de Completitud:** Demostrar que si $Γ \models A$, entonces $Γ \vdash A$.
 - [ ] **Consistencia:** Demostrar la consistencia del sistema (sin axiomas adicionales).
 - [ ] **Teorema de Compacidad:** Demostrar que un conjunto de fórmulas es satisfacible si y solo si todo subconjunto finito lo es.

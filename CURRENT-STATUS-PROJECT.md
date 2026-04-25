@@ -1,6 +1,6 @@
 # Current Project Status — ProjectName
 
-**Last updated:** 2026-04-25 19:52
+**Last updated:** 2026-04-25 20:00
 **Author**: Julián Calderón Almendros
 
 ---
@@ -9,11 +9,11 @@
 
 | Metric | Value |
 |--------|-------|
-| Total modules | 7 |
-| Modules with 0 sorry | 7 / 7 |
-| Total theorems proven | 32 |
-| Total definitions | 7 |
-| Total notations | 8 |
+| Total modules | 10 |
+| Modules with 0 sorry | 9 / 10 |
+| Total theorems proven | 34 |
+| Total definitions | 14 |
+| Total notations | 9 |
 | Build status | ✅ Passing |
 | Lean version | v4.28.0 |
 | Naming convention | Mathlib-style (see NAMING-CONVENTIONS.md) |
@@ -31,6 +31,9 @@
 | `Derived.lean` | 17 | 0 | 0 | ✅ Complete |
 | `Quantifiers.lean` | 10 | 0 | 0 | ✅ Complete |
 | `Tactics.lean` | 0 | 1 | 0 | ✅ Complete |
+| `Deduction.lean` | 1 | 0 | 0 | ✅ Complete |
+| `Semantics.lean` | 0 | 7 | 5 | 🔶 Partial |
+| `Soundness.lean` | 1 | 0 | 0 | ✅ Complete |
 
 *Status codes*: ✅ Complete · 🧊 Frozen · 🔶 Partial · 🔄 In progress · ❌ Pending
 
@@ -43,12 +46,15 @@
 - Proved Nivel 1 & 2 theorems (Impl, Neg) (Fase 2)
 - Proved Nivel 3 & 4 theorems (Derived, Quantifiers) (Fase 3)
 - Created robust automation tactics in `Tactics.lean` (Fase 4)
+- Demostrado Teorema de Deducción y Teorema de Corrección (Fase 5)
+- Formalizada la Semántica de Modelos y evaluación de fórmulas.
 
 ---
 
 ## Pending Work
 
-- [ ] Iniciar Fase 5: Metamatemática y Teorema de Deducción.
+- [ ] Demostrar los 5 lemas de reescritura y sustitución semántica en `Semantics.lean`.
+- [ ] Abordar Teorema de Completitud.
 
 ---
 
@@ -59,6 +65,9 @@ ProjectName/
 ├── Prelim.lean              # Level 0: foundations
 ├── FOL.lean                 # Level 1: syntax and Derives
 ├── Tactics.lean             # Automation macros/tactics
+├── Deduction.lean           # Teorema de Deducción
+├── Semantics.lean           # Modelos y satisfacción
+├── Soundness.lean           # Teorema de Corrección
 └── Theorems/                # Level 2-4: theorems
     ├── Impl.lean
     ├── Neg.lean
@@ -84,9 +93,8 @@ ProjectName/
 
 ## Next Steps
 
-1. Crear `FOL/Metamath/Deduction.lean` para el Teorema de Deducción.
-2. Empezar a utilizar las macros `derive_hyp` y `derive_weaken` activamente.
-3. Formalizar semántica y modelos.
+1. Resolver los 5 `sorry` restantes en `Semantics.lean`.
+2. Estructurar la prueba del Teorema de Completitud.
 
 ---
 

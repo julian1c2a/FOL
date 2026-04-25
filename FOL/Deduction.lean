@@ -22,7 +22,8 @@ namespace FOL.Metamath.Deduction
 -- ============================================================
 
 theorem deduction_theorem {Γ A B} (h : A :: Γ ⊢ B) : Γ ⊢ .impl A B := by
-  sorry
+  apply Derives.intro_impl
+  exact h
 
 end FOL.Metamath.Deduction
 

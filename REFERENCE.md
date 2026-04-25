@@ -1,6 +1,6 @@
 # Technical Reference — ProjectName
 
-**Last updated:** 2026-04-25 19:52
+**Last updated:** 2026-04-25 20:00
 **Author**: Julián Calderón Almendros
 **Lean version**: v4.28.0
 
@@ -95,6 +95,9 @@ This document complies with all requirements specified in [AI-GUIDE.md](AI-GUIDE
 | `Theorems/Derived.lean` | `FOL.Theorems.Derived`| `FOL.FOL`, `FOL.Prelim` | ✅ Completo |
 | `Theorems/Quantifiers.lean` | `FOL.Theorems.Quantifiers`| `FOL.FOL`, `FOL.Theorems.Impl`, `FOL.Theorems.Neg`, `FOL.Theorems.Derived` | ✅ Completo |
 | `Tactics.lean` | `FOL.Tactics` | `FOL.FOL`, `Lean` | ✅ Completo |
+| `Deduction.lean` | `FOL.Metamath.Deduction` | `FOL.FOL`, `FOL.Tactics` | ✅ Completo |
+| `Semantics.lean` | `FOL.Metamath.Semantics` | `FOL.FOL` | 🔶 Partial |
+| `Soundness.lean` | `FOL.Metamath.Soundness` | `FOL.FOL`, `FOL.Metamath.Semantics`, `FOL.Tactics` | ✅ Completo |
 
 *Status codes*: ✅ Complete · 🧊 Frozen · 🔶 Partial · 🔄 In progress · ❌ Pending
 
@@ -116,6 +119,11 @@ graph TD
     D --> Q
     F --> Q
     F --> T[Tactics.lean]
+    F --> Ded[Deduction.lean]
+    T --> Ded
+    F --> Sem[Semantics.lean]
+    Sem --> S[Soundness.lean]
+    F --> S
 ```
 
 *(Update this diagram as modules are added)*
@@ -314,6 +322,88 @@ Quantifier interactions and dualities.
 
 ---
 
+### 3.7 Tactics.lean
+
+**Namespace**: top-level
+**Dependencies**: `FOL.FOL`, `Lean`
+**Last updated**: 2026-04-25
+**Status**: ✅ Completo
+**@axiom_system**: `none`
+**@importance**: `high`
+
+Metaprogramming and macros to automate repetitive natural deduction tasks.
+
+**Tactics**:
+
+- `derive_hyp`: Closes goals of the form `Γ ⊢ f` if `f ∈ Γ` via `Derives.hyp` and `List.Mem` resolution.
+- `derive_rewrite rule at pos`: Automates the application of a local rewrite rule `LocalRule` at a specific AST position using `Derives.rewrite_at`.
+- `derive_weaken thm`: Automatically weakens a theorem `thm`'s context to the current goal's context by resolving `List.Subset` goals automatically.
+- `derive_raa`: Applies the Reductio ad Absurdum (`Derives.raa`) rule to change a goal `Γ ⊢ A` into `Γ, ¬A ⊢ ⊥`.
+
+**Definitions**:
+
+- `getAllPositions`: Extracts all valid path positions (`List Pos`) from a given `Formula`.
+- `tryMem`: MetaM tactic to prove list membership automatically.
+
+---
+
+### 3.8 Deduction.lean
+
+**Namespace**: `FOL.Metamath.Deduction`
+**Dependencies**: `FOL.FOL`, `FOL.Tactics`
+**Last updated**: 2026-04-25
+**Status**: ✅ Completo
+**@axiom_system**: `classical`
+**@importance**: `high`
+
+**Theorems**:
+
+- `deduction_theorem`: $(A :: \Gamma \vdash B) \Rightarrow (\Gamma \vdash A \Rightarrow B)$
+  `theorem deduction_theorem {Γ A B} (h : A :: Γ ⊢ B) : Γ ⊢ .impl A B`
+
+---
+
+### 3.9 Semantics.lean
+
+**Namespace**: `FOL.Metamath.Semantics`
+**Dependencies**: `FOL.FOL`
+**Last updated**: 2026-04-25
+**Status**: 🔶 Partial
+**@axiom_system**: `classical`
+**@importance**: `high`
+
+**Definitions**:
+
+- `Model`: Evaluates logic terms and predicates. `structure Model (D : Type)`
+- `evalTerm`: Evaluates a `Term` into the model's domain.
+- `evalTerms`: Evaluates a list of terms.
+- `shiftEnv`: Shifts De Bruijn variable environment.
+- `evalFormula`: Computes the truth value of a `Formula`.
+- `contextSatisfies`: Checks if an environment satisfies a context $\Gamma$.
+- `satisfies`: $Γ \models f$. `def satisfies (Γ : List Formula) (f : Formula) : Prop`
+
+**Theorems (Pending / sorry)**:
+
+- `eval_liftFormula_zero`, `eval_substFormula_zero`, `contextSatisfies_lift_zero`, `rule_soundness`, `replaceAt_soundness`.
+
+---
+
+### 3.10 Soundness.lean
+
+**Namespace**: `FOL.Metamath.Soundness`
+**Dependencies**: `FOL.FOL`, `FOL.Metamath.Semantics`, `FOL.Tactics`
+**Last updated**: 2026-04-25
+**Status**: ✅ Completo
+**@axiom_system**: `classical`
+**@importance**: `high`
+
+**Theorems**:
+
+- `soundness`: Si $\Gamma \vdash f$, entonces $\Gamma \models f$.
+  `theorem soundness {Γ f} (h : Γ ⊢ f) : Γ ⊨ f`
+
+---
+
 ## 4. Theorems
 
 *(See Module Descriptions in §3 for individual theorems).*
@@ -337,6 +427,7 @@ Quantifier interactions and dualities.
 | `∃.` | `ex` | `FOL.lean` | prefix |
 | `#` | `Term.var` | `FOL.lean` | prefix |
 | ` ⊢ ` | `Derives` | `FOL.lean` | infix |
+| ` ⊨ ` | `satisfies` | `Soundness.lean` | infix |
 
 **Note**: `∃!` overrides Lean's built-in notation. Use `∃¹` to avoid any macro conflicts.
 
@@ -394,6 +485,25 @@ Exports from namespace `FOL.Theorems.Derived`:
 Exports from namespace `FOL.Theorems.Quantifiers`:
 `subst_lift_cancel_formula`, `subst_distrib_and`, `lift_distrib_and`, `forall_dne`, `forall_not_impl_exists_not`, `forall_dni`, `exists_not_impl_forall_not`, `dual_forall_exists`, `forall_and_impl_and_forall`, `and_forall_impl_forall_and`, `distrib_forall_and`.
 
+### 6.7 Tactics.lean
+
+Metaprogramming macros globally registered into the environment:
+`derive_hyp`, `derive_rewrite`, `derive_weaken`, `derive_raa`, `getAllPositions`, `tryMem`.
+
+### 6.8 Deduction.lean
+
+Exports from namespace `FOL.Metamath.Deduction`:
+`deduction_theorem`.
+
+### 6.9 Semantics.lean
+
+*(No explicit exports defined yet, but symbols are accessible under `FOL.Metamath.Semantics`)*
+
+### 6.10 Soundness.lean
+
+Exports from namespace `FOL.Metamath.Soundness`:
+`soundness`.
+
 ---
 
 ## 7. Documentation Status
@@ -406,10 +516,13 @@ Exports from namespace `FOL.Theorems.Quantifiers`:
 - `Theorems/Neg.lean`
 - `Theorems/Derived.lean`
 - `Theorems/Quantifiers.lean`
+- `Tactics.lean`
+- `Deduction.lean`
+- `Soundness.lean`
 
 ### 7.2 Partially Projected Files
 
-*(None)*
+- `Semantics.lean` (Awaiting proofs for semantic replacement lemmas)
 
 ### 7.3 Notes
 
