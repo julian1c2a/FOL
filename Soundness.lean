@@ -107,8 +107,12 @@ theorem soundness {Γ f} (h : Γ ⊢ f) : Γ ⊨ f := by
     have hB := ih_B D M (shiftEnv v d) hCtx
     exact (eval_liftFormula_zero M v d B).mp hB
   | rewrite_at Γ' f' f'' p sub sub' _ h_get h_rule h_replace ih =>
-    -- Fase 5: Demostración pendiente para la reescritura semántica
-    sorry
+    intro D M v hΓ
+    have hEvalF := ih D M v hΓ
+    have hSubEq : ∀ v', evalFormula M v' sub ↔ evalFormula M v' sub' := fun v' => rule_soundness M v' h_rule
+    have hEquiv := replaceAt_soundness M v h_get hSubEq
+    rw [h_replace]
+    exact hEquiv.mp hEvalF
 
 end FOL.Metamath.Soundness
 
