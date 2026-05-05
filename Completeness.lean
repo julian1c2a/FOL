@@ -130,7 +130,7 @@ noncomputable def LindenbaumStep (S : Formula → Prop) : Nat → (Formula → P
 def LindenbaumLimit (S : Formula → Prop) (f : Formula) : Prop :=
   ∃ n, LindenbaumStep S n f
 
-lemma lindenbaum_step_consistent {S : Formula → Prop} (hCons : IsConsistent S) (n : Nat) :
+theorem lindenbaum_step_consistent {S : Formula → Prop} (hCons : IsConsistent S) (n : Nat) :
     IsConsistent (LindenbaumStep S n) := by
   induction n with
   | zero => exact hCons
@@ -141,20 +141,20 @@ lemma lindenbaum_step_consistent {S : Formula → Prop} (hCons : IsConsistent S)
       exact h
     · exact ih
 
-lemma lindenbaum_step_subset {S : Formula → Prop} (n : Nat) {x : Formula}
+theorem lindenbaum_step_subset {S : Formula → Prop} (n : Nat) {x : Formula}
     (h : LindenbaumStep S n x) : LindenbaumStep S (n + 1) x := by
   simp only [LindenbaumStep]
   split
   · exact Or.inl h
   · exact h
 
-lemma lindenbaum_step_mono {S : Formula → Prop} {n m : Nat} (hle : n ≤ m) {x : Formula}
+theorem lindenbaum_step_mono {S : Formula → Prop} {n m : Nat} (hle : n ≤ m) {x : Formula}
     (hx : LindenbaumStep S n x) : LindenbaumStep S m x := by
   induction hle with
   | refl => exact hx
   | step _ ih => exact lindenbaum_step_subset _ ih
 
-lemma lindenbaum_limit_bound {S : Formula → Prop} (Γ : List Formula)
+theorem lindenbaum_limit_bound {S : Formula → Prop} (Γ : List Formula)
     (hΓ : ∀ g ∈ Γ, LindenbaumLimit S g) : ∃ N, ∀ g ∈ Γ, LindenbaumStep S N g := by
   induction Γ with
   | nil =>
@@ -215,11 +215,11 @@ theorem lindenbaum_lemma {S : Formula → Prop} (hCons : IsConsistent S) :
 -- Propiedades de Conjuntos Máximamente Consistentes
 -- ============================================================
 
-lemma max_cons_bot {S : Formula → Prop} (hMax : IsMaximalConsistent S) : ¬ S ⊥ := by
+theorem max_cons_bot {S : Formula → Prop} (hMax : IsMaximalConsistent S) : ¬ S ⊥ := by
   intro h
   exact hMax.left (DerivesSet_hyp h)
 
-lemma max_cons_contains {S : Formula → Prop} (hMax : IsMaximalConsistent S) {f : Formula} (h : S ⊢* f) : S f := by
+theorem max_cons_contains {S : Formula → Prop} (hMax : IsMaximalConsistent S) {f : Formula} (h : S ⊢* f) : S f := by
   by_contra hNot
   have hInconsist : (fun x => S x ∨ x = f) ⊢* ⊥ := by
     by_contra hC
@@ -228,7 +228,7 @@ lemma max_cons_contains {S : Formula → Prop} (hMax : IsMaximalConsistent S) {f
   have hBot : S ⊢* ⊥ := DerivesSet_elim_impl hImpl h
   exact hMax.left hBot
 
-lemma max_cons_impl {S : Formula → Prop} (hMax : IsMaximalConsistent S) {A B : Formula} :
+theorem max_cons_impl {S : Formula → Prop} (hMax : IsMaximalConsistent S) {A B : Formula} :
     S (.impl A B) ↔ (S A → S B) := by
   constructor
   · intro hImpl hA
@@ -248,7 +248,7 @@ lemma max_cons_impl {S : Formula → Prop} (hMax : IsMaximalConsistent S) {A B :
       use Γ
       exact ⟨hΓ, Derives.bot_elim Γ B hDer⟩
 
-lemma max_cons_and {S : Formula → Prop} (hMax : IsMaximalConsistent S) {A B : Formula} :
+theorem max_cons_and {S : Formula → Prop} (hMax : IsMaximalConsistent S) {A B : Formula} :
     S (.and A B) ↔ (S A ∧ S B) := by
   constructor
   · intro hAnd
@@ -272,7 +272,7 @@ lemma max_cons_and {S : Formula → Prop} (hMax : IsMaximalConsistent S) {A B : 
       · apply Derives.weakening _ _ _ hDer2
         intro x hx; exact List.mem_append.mpr (Or.inr hx)
 
-lemma max_cons_or {S : Formula → Prop} (hMax : IsMaximalConsistent S) {A B : Formula} :
+theorem max_cons_or {S : Formula → Prop} (hMax : IsMaximalConsistent S) {A B : Formula} :
     S (.or A B) ↔ (S A ∨ S B) := by
   constructor
   · intro hOr
@@ -329,7 +329,7 @@ def canonicalModel (S : Formula → Prop) : Model Term where
 def canonicalEnv : Nat → Term := Term.var
 
 mutual
-lemma evalTerm_canonical (S : Formula → Prop) (t : Term) :
+theorem evalTerm_canonical (S : Formula → Prop) (t : Term) :
     evalTerm (canonicalModel S) canonicalEnv t = t := by
   match t with
   | .var n => rfl
@@ -338,7 +338,7 @@ lemma evalTerm_canonical (S : Formula → Prop) (t : Term) :
     have ih := evalTerms_canonical S ts
     rw [ih]
 
-lemma evalTerms_canonical (S : Formula → Prop) (ts : List Term) :
+theorem evalTerms_canonical (S : Formula → Prop) (ts : List Term) :
     evalTerms (canonicalModel S) canonicalEnv ts = ts := by
   match ts with
   | [] => rfl
@@ -363,7 +363,7 @@ def formulaComplexity : Formula → Nat
   | .ex f1 => formulaComplexity f1 + 1
 
 @[simp]
-lemma complexity_substFormula (v : Nat) (t : Term) (f : Formula) :
+theorem complexity_substFormula (v : Nat) (t : Term) (f : Formula) :
     formulaComplexity (substFormula v t f) = formulaComplexity f := by
   induction f generalizing v t with
   | bottom => rfl
@@ -374,7 +374,7 @@ lemma complexity_substFormula (v : Nat) (t : Term) (f : Formula) :
   | forall f1 ih => simp only [formulaComplexity, substFormula, ih]
   | ex f1 ih => simp only [formulaComplexity, substFormula, ih]
 
-lemma max_cons_ex {S : Formula → Prop} (hMax : IsMaximalConsistent S) (hHenkin : IsHenkin S) {A : Formula} :
+theorem max_cons_ex {S : Formula → Prop} (hMax : IsMaximalConsistent S) (hHenkin : IsHenkin S) {A : Formula} :
     S (.ex A) ↔ ∃ t, S (substFormula 0 t A) := by
   constructor
   · intro hEx
@@ -391,7 +391,7 @@ lemma max_cons_ex {S : Formula → Prop} (hMax : IsMaximalConsistent S) (hHenkin
       apply Derives.hyp
       exact List.Mem.head _
 
-lemma max_cons_forall {S : Formula → Prop} (hMax : IsMaximalConsistent S) (hHenkin : IsHenkin S) {A : Formula} :
+theorem max_cons_forall {S : Formula → Prop} (hMax : IsMaximalConsistent S) (hHenkin : IsHenkin S) {A : Formula} :
     S (.forall A) ↔ ∀ t, S (substFormula 0 t A) := by
   constructor
   · intro hAll t
@@ -435,7 +435,7 @@ lemma max_cons_forall {S : Formula → Prop} (hMax : IsMaximalConsistent S) (hHe
         · apply Derives.hyp; exact List.Mem.tail _ (List.Mem.head _)
     exact hMax.left hBot
 
-lemma truth_lemma_aux {S : Formula → Prop} (hMax : IsMaximalConsistent S) (hHenkin : IsHenkin S)
+theorem truth_lemma_aux {S : Formula → Prop} (hMax : IsMaximalConsistent S) (hHenkin : IsHenkin S)
     (n : Nat) (f : Formula) (hEq : formulaComplexity f = n) :
     evalFormula (canonicalModel S) canonicalEnv f ↔ S f := by
   induction n using Nat.strongInductionOn generalizing f with
@@ -505,7 +505,7 @@ lemma truth_lemma_aux {S : Formula → Prop} (hMax : IsMaximalConsistent S) (hHe
       exact (max_cons_ex hMax hHenkin).symm
 
 -- Lema de la Verdad (Truth Lemma): La semántica coincide con la sintaxis en el modelo canónico.
-lemma truth_lemma {S : Formula → Prop} (hMax : IsMaximalConsistent S) (hHenkin : IsHenkin S) (f : Formula) :
+theorem truth_lemma {S : Formula → Prop} (hMax : IsMaximalConsistent S) (hHenkin : IsHenkin S) (f : Formula) :
     evalFormula (canonicalModel S) canonicalEnv f ↔ S f :=
   truth_lemma_aux hMax hHenkin (formulaComplexity f) f rfl
 
@@ -522,7 +522,7 @@ axiom henkin_extension_lemma {S : Formula → Prop} (hCons : IsConsistent S) :
 def IsSatisfiable (S : Formula → Prop) : Prop :=
   ∃ (D : Type) (M : Model D) (v : Nat → D), ∀ f, S f → evalFormula M v f
 
-lemma model_existence_lemma {S : Formula → Prop} (hCons : IsConsistent S) :
+theorem model_existence_lemma {S : Formula → Prop} (hCons : IsConsistent S) :
     IsSatisfiable S := by
   obtain ⟨S', hMax, hHenkin, hSub⟩ := henkin_extension_lemma hCons
   use Term, canonicalModel S', canonicalEnv
