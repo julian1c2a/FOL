@@ -163,7 +163,7 @@ theorem eval_liftFormula_ext {D : Type} (M : Model D) (v : Nat → D) (d : D) (c
     rw [eval_liftTerms_ext]
   case eq t1 t2 =>
     unfold liftFormula evalFormula
-    rw [eval_liftTerm_ext]
+    rw [eval_liftTerm_ext, eval_liftTerm_ext]
   case impl f1 f2 ih1 ih2 =>
     unfold liftFormula evalFormula
     rw [ih1, ih2]
@@ -204,7 +204,7 @@ theorem eval_substFormula_ext {D : Type} (M : Model D) (v : Nat → D) (t : Term
     rw [eval_substTerms_ext]
   case eq t1 t2 =>
     unfold substFormula evalFormula
-    rw [eval_substTerm_ext]
+    rw [eval_substTerm_ext, eval_substTerm_ext]
   case impl f1 f2 ih1 ih2 =>
     unfold substFormula evalFormula
     rw [ih1, ih2]
