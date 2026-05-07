@@ -14,7 +14,7 @@ License: MIT
 
 import FOL.FOL
 import FOL.Tactics
-import FOL.Metamath.Semantics
+import FOL.Semantics
 
 namespace FOL.Metamath.Soundness
 
