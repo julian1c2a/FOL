@@ -58,7 +58,8 @@
 
 ## Pending Work
 
-- [ ] Extender `Formula` con el predicado de igualdad en la nueva rama `feature/fol-igualdad`.
+- [x] Extender `Formula` con el predicado de igualdad en la nueva rama `feature/fol-igualdad`.
+- [ ] Actualizar la semántica (`Semantics.lean`) y reparar pruebas de soundness/completeness.
 
 ---
 

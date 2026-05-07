@@ -15,6 +15,7 @@ inductive Term where
 inductive Formula where
   | bottom : Formula
   | atom   : String → List Term → Formula
+  | eq     : Term → Term → Formula
   | impl   : Formula → Formula → Formula
   | forall : Formula → Formula
   | and    : Formula → Formula → Formula
@@ -35,6 +36,7 @@ notation "⊤" => top
 prefix:75 "¬ " => neg
 infixr:70 " ∧ " => Formula.and
 infixr:65 " ∨ " => Formula.or
+infix:50 " ≐ " => Formula.eq
 infixr:60 " ⇒ " => Formula.impl
 infix:55 " ⇔ " => iff
 prefix:80 "∀. " => Formula.forall
@@ -67,6 +69,7 @@ def liftFormula (c : Nat) (f : Formula) : Formula :=
   match f with
   | .bottom => .bottom
   | .atom p ts => .atom p (liftTerms c ts)
+  | .eq t1 t2 => .eq (liftTerm c t1) (liftTerm c t2)
   | .impl f1 f2 => .impl (liftFormula c f1) (liftFormula c f2)
   | .forall f1 => .forall (liftFormula (c + 1) f1)
   | .and f1 f2 => .and (liftFormula c f1) (liftFormula c f2)
@@ -78,7 +81,7 @@ def liftFormula (c : Nat) (f : Formula) : Formula :=
 mutual
 def substTerm (v : Nat) (s : Term) (t : Term) : Term :=
   match t with
-  | .var n => 
+  | .var n =>
       if n = v then s
       else if n > v then .var (n - 1)
       else .var n
@@ -94,6 +97,7 @@ def substFormula (v : Nat) (s : Term) (f : Formula) : Formula :=
   match f with
   | .bottom => .bottom
   | .atom p ts => .atom p (substTerms v s ts)
+  | .eq t1 t2 => .eq (substTerm v s t1) (substTerm v s t2)
   | .impl f1 f2 => .impl (substFormula v s f1) (substFormula v s f2)
   | .forall f1 => .forall (substFormula (v + 1) (liftTerm 0 s) f1)
   | .and f1 f2 => .and (substFormula v s f1) (substFormula v s f2)
@@ -164,7 +168,7 @@ inductive Derives : List Formula → Formula → Prop where
   -- Reglas estándar de Deducción Natural
   | intro_impl : ∀ Γ A B, Derives (A :: Γ) B → Derives Γ (.impl A B)
   | elim_impl  : ∀ Γ A B, Derives Γ (.impl A B) → Derives Γ A → Derives Γ B
-  
+
   -- Reglas de conjunción
   | intro_and  : ∀ Γ A B, Derives Γ A → Derives Γ B → Derives Γ (.and A B)
   | elim_and_l : ∀ Γ A B, Derives Γ (.and A B) → Derives Γ A
@@ -196,6 +200,10 @@ inductive Derives : List Formula → Formula → Prop where
       LocalRule sub sub' →
       f' = replaceAt f p sub' →
       Derives Γ f'
+
+  -- Reglas de Igualdad
+  | refl  : ∀ Γ t, Derives Γ (.eq t t)
+  | subst : ∀ Γ t₁ t₂ f, Derives Γ (.eq t₁ t₂) → Derives Γ (substFormula 0 t₁ f) → Derives Γ (substFormula 0 t₂ f)
 
 infix:50 " ⊢ " => Derives
 
