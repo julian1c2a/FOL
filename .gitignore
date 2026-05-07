@@ -6,8 +6,6 @@
 *.log
 build/
 out/
-.vscode
-.vscode/
 
 # ALTAMENTE PROHIBIDO
 *.exe
@@ -22,7 +20,6 @@ out/
 Thumbs.db
 
 # Editor
-.vscode/settings.json
 *.swp
 *~
 
