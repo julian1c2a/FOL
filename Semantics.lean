@@ -77,6 +77,7 @@ def evalFormula {D : Type} (M : Model D) (v : Nat → D) (f : Formula) : Prop :=
   match f with
   | .bottom => False
   | .atom p ts => M.rel p (evalTerms M v ts)
+  | .eq t1 t2 => evalTerm M v t1 = evalTerm M v t2
   | .impl f1 f2 => evalFormula M v f1 → evalFormula M v f2
   | .forall f1 => ∀ (d : D), evalFormula M (shiftEnv v d) f1
   | .and f1 f2 => evalFormula M v f1 ∧ evalFormula M v f2
@@ -168,6 +169,8 @@ theorem eval_liftFormula_ext {D : Type} (M : Model D) (v : Nat → D) (d : D) (c
   | bottom => rfl
   | atom p ts =>
     simp only [evalFormula, liftFormula, eval_liftTerms_ext]
+  | eq t1 t2 =>
+    simp only [evalFormula, liftFormula, eval_liftTerm_ext]
   | impl f1 f2 ih1 ih2 =>
     simp only [evalFormula, liftFormula, ih1, ih2]
   | and f1 f2 ih1 ih2 =>
@@ -203,6 +206,8 @@ theorem eval_substFormula_ext {D : Type} (M : Model D) (v : Nat → D) (t : Term
   | bottom => rfl
   | atom p ts =>
     simp only [evalFormula, substFormula, eval_substTerms_ext]
+  | eq t1 t2 =>
+    simp only [evalFormula, substFormula, eval_substTerm_ext]
   | impl f1 f2 ih1 ih2 =>
     simp only [evalFormula, substFormula, ih1, ih2]
   | and f1 f2 ih1 ih2 =>

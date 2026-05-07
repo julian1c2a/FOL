@@ -113,6 +113,17 @@ theorem soundness {Γ f} (h : Γ ⊢ f) : Γ ⊨ f := by
     have hEquiv := replaceAt_soundness M v h_get hSubEq
     rw [h_replace]
     exact hEquiv.mp hEvalF
+  | refl Γ' t =>
+    intro D M v hΓ
+    rfl
+  | subst Γ' t1 t2 f' _ _ ih_eq ih_f =>
+    intro D M v hΓ
+    have heq := ih_eq D M v hΓ
+    have hf := ih_f D M v hΓ
+    have h1 := (eval_substFormula_zero M v t1 f').mp hf
+    have heq_eval : evalTerm M v t1 = evalTerm M v t2 := heq
+    rw [heq_eval] at h1
+    exact (eval_substFormula_zero M v t2 f').mpr h1
 
 end FOL.Metamath.Soundness
 
