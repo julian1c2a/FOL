@@ -277,55 +277,58 @@ theorem replaceAt_soundness {D : Type} (M : Model D) (v : Nat → D) {f sub sub'
     evalFormula M v f ↔ evalFormula M v (replaceAt f p sub') := by
   induction p generalizing f with
   | root =>
-    simp [getAt?] at hGet
-    rw [← hGet]
-    simp [replaceAt, hEq]
+    simp only [getAt?, Option.some.injEq] at hGet
+    subst hGet
+    simp only [replaceAt]
+    exact hEq
   | left p ih =>
     match f with
     | .impl f1 f2 =>
-      simp [getAt?] at hGet
-      simp [replaceAt, evalFormula]
-      constructor
-      · intro h hf1; exact h ((ih hGet hEq).mp hf1)
-      · intro h hf1; exact h ((ih hGet hEq).mpr hf1)
+      simp only [getAt?] at hGet
+      simp only [replaceAt, evalFormula]
+      exact ⟨fun h hf1' => h ((ih hGet).mpr hf1'),
+             fun h hf1  => h ((ih hGet).mp  hf1)⟩
     | .and f1 f2 =>
-      simp [getAt?] at hGet
-      simp [replaceAt, evalFormula]
-      exact ⟨fun ⟨h1, h2⟩ => ⟨(ih hGet hEq).mp h1, h2⟩,
-             fun ⟨h1, h2⟩ => ⟨(ih hGet hEq).mpr h1, h2⟩⟩
+      simp only [getAt?] at hGet
+      simp only [replaceAt, evalFormula]
+      exact ⟨fun ⟨h1, h2⟩ => ⟨(ih hGet).mp  h1, h2⟩,
+             fun ⟨h1, h2⟩ => ⟨(ih hGet).mpr h1, h2⟩⟩
     | .or f1 f2 =>
-      simp [getAt?] at hGet
-      simp [replaceAt, evalFormula]
-      exact ⟨fun h => h.imp (ih hGet hEq).mp id,
-             fun h => h.imp (ih hGet hEq).mpr id⟩
+      simp only [getAt?] at hGet
+      simp only [replaceAt, evalFormula]
+      exact ⟨fun h => h.imp (ih hGet).mp  id,
+             fun h => h.imp (ih hGet).mpr id⟩
+    | _ => simp only [getAt?] at hGet
   | right p ih =>
     match f with
     | .impl f1 f2 =>
-      simp [getAt?] at hGet
-      simp [replaceAt, evalFormula]
-      exact ⟨fun h hf1 => (ih hGet hEq).mp (h hf1),
-             fun h hf1 => (ih hGet hEq).mpr (h hf1)⟩
+      simp only [getAt?] at hGet
+      simp only [replaceAt, evalFormula]
+      exact ⟨fun h hf1 => (ih hGet).mp  (h hf1),
+             fun h hf1 => (ih hGet).mpr (h hf1)⟩
     | .and f1 f2 =>
-      simp [getAt?] at hGet
-      simp [replaceAt, evalFormula]
-      exact ⟨fun ⟨h1, h2⟩ => ⟨h1, (ih hGet hEq).mp h2⟩,
-             fun ⟨h1, h2⟩ => ⟨h1, (ih hGet hEq).mpr h2⟩⟩
+      simp only [getAt?] at hGet
+      simp only [replaceAt, evalFormula]
+      exact ⟨fun ⟨h1, h2⟩ => ⟨h1, (ih hGet).mp  h2⟩,
+             fun ⟨h1, h2⟩ => ⟨h1, (ih hGet).mpr h2⟩⟩
     | .or f1 f2 =>
-      simp [getAt?] at hGet
-      simp [replaceAt, evalFormula]
-      exact ⟨fun h => h.imp id (ih hGet hEq).mp,
-             fun h => h.imp id (ih hGet hEq).mpr⟩
+      simp only [getAt?] at hGet
+      simp only [replaceAt, evalFormula]
+      exact ⟨fun h => h.imp id (ih hGet).mp,
+             fun h => h.imp id (ih hGet).mpr⟩
+    | _ => simp only [getAt?] at hGet
   | body p ih =>
     match f with
     | .forall f1 =>
-      simp [getAt?] at hGet
-      simp [replaceAt, evalFormula]
-      exact ⟨fun h d => (ih hGet hEq).mp (h d),
-             fun h d => (ih hGet hEq).mpr (h d)⟩
+      simp only [getAt?] at hGet
+      simp only [replaceAt, evalFormula]
+      exact ⟨fun h d => (ih hGet).mp  (h d),
+             fun h d => (ih hGet).mpr (h d)⟩
     | .ex f1 =>
-      simp [getAt?] at hGet
-      simp [replaceAt, evalFormula]
-      exact ⟨fun ⟨d, hd⟩ => ⟨d, (ih hGet hEq).mp hd⟩,
-             fun ⟨d, hd⟩ => ⟨d, (ih hGet hEq).mpr hd⟩⟩
+      simp only [getAt?] at hGet
+      simp only [replaceAt, evalFormula]
+      exact ⟨fun ⟨d, hd⟩ => ⟨d, (ih hGet).mp  hd⟩,
+             fun ⟨d, hd⟩ => ⟨d, (ih hGet).mpr hd⟩⟩
+    | _ => simp only [getAt?] at hGet
 
 end FOL.Metamath.Semantics
