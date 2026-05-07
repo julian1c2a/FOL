@@ -356,6 +356,7 @@ def IsHenkin (S : Formula → Prop) : Prop :=
 def formulaComplexity : Formula → Nat
   | .bottom => 0
   | .atom _ _ => 0
+  | .eq _ _ => 0
   | .impl f1 f2 => max (formulaComplexity f1) (formulaComplexity f2) + 1
   | .forall f1 => formulaComplexity f1 + 1
   | .and f1 f2 => max (formulaComplexity f1) (formulaComplexity f2) + 1
@@ -368,6 +369,7 @@ theorem complexity_substFormula (v : Nat) (t : Term) (f : Formula) :
   induction f generalizing v t with
   | bottom => rfl
   | atom p ts => rfl
+  | eq t1 t2 => rfl
   | impl f1 f2 ih1 ih2 => simp only [formulaComplexity, substFormula, ih1, ih2]
   | and f1 f2 ih1 ih2 => simp only [formulaComplexity, substFormula, ih1, ih2]
   | or f1 f2 ih1 ih2 => simp only [formulaComplexity, substFormula, ih1, ih2]
@@ -451,6 +453,8 @@ theorem truth_lemma_aux {S : Formula → Prop} (hMax : IsMaximalConsistent S) (h
       have hEval := evalTerms_canonical S ts
       rw [hEval]
       rfl
+    | eq t1 t2 =>
+      sorry -- 🚧 ¡Alerta Matemática! Aquí falla el modelo de Henkin básico. Necesitamos el Modelo Cociente.
     | impl f1 f2 =>
       have ih1 := ih (formulaComplexity f1) (by omega) f1 rfl
       have ih2 := ih (formulaComplexity f2) (by omega) f2 rfl
