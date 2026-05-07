@@ -570,13 +570,13 @@ theorem model_existence_lemma {S : Formula → Prop} (hCons : IsConsistent S) :
 theorem completeness {Γ : List Formula} {f : Formula} (h : Γ ⊨ f) : Γ ⊢ f := by
   apply Classical.byContradiction
   intro hNotDerive
-  let S : Formula → Prop := fun x => x ∈ Γ ∨ x = neg f
+  let S : Formula → Prop := fun x => (x ∈ Γ) ∨ (x = (neg f))
   have hCons : IsConsistent S := by
     intro hBot
     have hInconsist : (fun x => (fun y => y ∈ Γ) x ∨ x = neg f) ⊢* ⊥ := hBot
     have hImpl : (fun y => y ∈ Γ) ⊢* .impl (neg f) ⊥ := DerivesSet_intro_impl hInconsist
     have ⟨Γ_sub, hΓ_sub, hDer_impl⟩ := hImpl
-    have hDNE : Γ_sub ⊢ .impl (neg (neg f)) f := FOL.Theorems.Neg.double_neg_elim
+    have hDNE : Γ_sub ⊢ .impl (neg (neg f)) f := FOL.Theorems.Neg.double_neg_elim f Γ_sub
     have hDer_f : Γ_sub ⊢ f := Derives.elim_impl Γ_sub (neg (neg f)) f hDNE hDer_impl
     have hDer_Γ : Γ ⊢ f := Derives.weakening Γ_sub Γ f hDer_f hΓ_sub
     exact hNotDerive hDer_Γ
