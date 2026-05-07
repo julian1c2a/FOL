@@ -23,7 +23,7 @@ namespace FOL.Metamath.Completeness
 open FOL.Metamath.Semantics
 open Classical
 
-local instance : DecidableEq Formula := Classical.decEq
+noncomputable local instance : DecidableEq Formula := fun a b => Classical.propDecidable (a = b)
 
 local notation:50 Γ " ⊨ " f => FOL.Metamath.Semantics.satisfies Γ f
 
@@ -51,7 +51,7 @@ def IsMaximalConsistent (S : Formula → Prop) : Prop :=
 -- ============================================================
 
 theorem DerivesSet_hyp {S : Formula → Prop} {f : Formula} (h : S f) : S ⊢* f := by
-  use [f]
+  exists [f]
   constructor
   · intro g hg
     cases hg with
@@ -62,22 +62,23 @@ theorem DerivesSet_hyp {S : Formula → Prop} {f : Formula} (h : S f) : S ⊢* f
 
 theorem DerivesSet_weakening {S S' : Formula → Prop} {f : Formula}
     (h : S ⊢* f) (hSub : ∀ x, S x → S' x) : S' ⊢* f := by
-  obtain ⟨Γ, hΓ, hDer⟩ := h
-  use Γ
+  have ⟨Γ, hΓ, hDer⟩ := h
+  exists Γ
   exact ⟨fun g hg => hSub g (hΓ g hg), hDer⟩
 
 theorem DerivesSet_intro_impl {S : Formula → Prop} {A B : Formula}
     (h : (fun x => S x ∨ x = A) ⊢* B) : S ⊢* .impl A B := by
-  obtain ⟨Γ, hΓ, hDer⟩ := h
-  let Γ' := Γ.filter (fun x => x ≠ A)
-  use Γ'
+  have ⟨Γ, hΓ, hDer⟩ := h
+  let Γ' := Γ.filter (fun x => decide (x ≠ A))
+  exists Γ'
   constructor
   · intro g hg
     have h1 := List.mem_filter.mp hg
     have h2 := hΓ g h1.1
+    have hNeq := of_decide_eq_true h1.2
     cases h2 with
     | inl hS => exact hS
-    | inr hEq => exfalso; exact h1.2 hEq
+    | inr hEq => exfalso; exact hNeq hEq
   · apply FOL.Metamath.Deduction.deduction_theorem
     apply Derives.weakening _ _ _ hDer
     intro x hx
@@ -86,13 +87,13 @@ theorem DerivesSet_intro_impl {S : Formula → Prop} {A B : Formula}
       exact List.Mem.head _
     · apply List.Mem.tail
       apply List.mem_filter.mpr
-      exact ⟨hx, heq⟩
+      exact ⟨hx, decide_eq_true heq⟩
 
 theorem DerivesSet_elim_impl {S : Formula → Prop} {A B : Formula}
     (hImpl : S ⊢* .impl A B) (hA : S ⊢* A) : S ⊢* B := by
-  obtain ⟨Γ1, hΓ1, hDer1⟩ := hImpl
-  obtain ⟨Γ2, hΓ2, hDer2⟩ := hA
-  use Γ1 ++ Γ2
+  have ⟨Γ1, hΓ1, hDer1⟩ := hImpl
+  have ⟨Γ2, hΓ2, hDer2⟩ := hA
+  exists Γ1 ++ Γ2
   constructor
   · intro g hg
     have h_or := List.mem_append.mp hg
@@ -135,18 +136,21 @@ theorem lindenbaum_step_consistent {S : Formula → Prop} (hCons : IsConsistent 
   induction n with
   | zero => exact hCons
   | succ n ih =>
-    unfold LindenbaumStep
-    split
-    · rename_i h
+    simp only [LindenbaumStep]
+    by_cases h : IsConsistent (fun x => LindenbaumStep S n x ∨ x = formula_enum n)
+    · rw [if_pos h]
       exact h
-    · exact ih
+    · rw [if_neg h]
+      exact ih
 
 theorem lindenbaum_step_subset {S : Formula → Prop} (n : Nat) {x : Formula}
     (h : LindenbaumStep S n x) : LindenbaumStep S (n + 1) x := by
   simp only [LindenbaumStep]
-  split
-  · exact Or.inl h
-  · exact h
+  by_cases hCons : IsConsistent (fun x => LindenbaumStep S n x ∨ x = formula_enum n)
+  · rw [if_pos hCons]
+    exact Or.inl h
+  · rw [if_neg hCons]
+    exact h
 
 theorem lindenbaum_step_mono {S : Formula → Prop} {n m : Nat} (hle : n ≤ m) {x : Formula}
     (hx : LindenbaumStep S n x) : LindenbaumStep S m x := by
@@ -158,15 +162,15 @@ theorem lindenbaum_limit_bound {S : Formula → Prop} (Γ : List Formula)
     (hΓ : ∀ g ∈ Γ, LindenbaumLimit S g) : ∃ N, ∀ g ∈ Γ, LindenbaumStep S N g := by
   induction Γ with
   | nil =>
-    use 0
+    exists 0
     intro g hIn
     contradiction
   | cons g Γ' ih =>
     have hg_lim := hΓ g (List.Mem.head _)
-    obtain ⟨n_g, hn_g⟩ := hg_lim
+    have ⟨n_g, hn_g⟩ := hg_lim
     have hΓ'_lim : ∀ g' ∈ Γ', LindenbaumLimit S g' := fun g' hg' => hΓ g' (List.Mem.tail _ hg')
-    obtain ⟨N', hN'⟩ := ih hΓ'_lim
-    use max n_g N'
+    have ⟨N', hN'⟩ := ih hΓ'_lim
+    exists max n_g N'
     intro g' hg'
     cases hg' with
     | head _ =>
@@ -179,34 +183,32 @@ theorem lindenbaum_limit_bound {S : Formula → Prop} (Γ : List Formula)
 -- Todo conjunto consistente puede extenderse a un conjunto máximamente consistente.
 theorem lindenbaum_lemma {S : Formula → Prop} (hCons : IsConsistent S) :
     ∃ (S' : Formula → Prop), IsMaximalConsistent S' ∧ (∀ f, S f → S' f) := by
-  use LindenbaumLimit S
+  exists LindenbaumLimit S
   constructor
   · constructor
     · -- Consistencia del límite (Compacidad sintáctica)
       intro hBot
-      obtain ⟨Γ, hΓ, hDer⟩ := hBot
+      have ⟨Γ, hΓ, hDer⟩ := hBot
       have ⟨N, hN⟩ := lindenbaum_limit_bound Γ hΓ
       have hConsN := lindenbaum_step_consistent hCons N
       apply hConsN
-      use Γ
+      exists Γ
       exact ⟨hN, hDer⟩
     · -- Maximalidad del límite
       intro f hNotLim hConsExt
-      obtain ⟨n, hn⟩ := formula_enum_surj f
+      have ⟨n, hn⟩ := formula_enum_surj f
       have hConsN : IsConsistent (fun x => LindenbaumStep S n x ∨ x = formula_enum n) := by
-        rw [hn]
         intro hBot
         apply hConsExt
         apply DerivesSet_weakening hBot
         intro x hx
         cases hx with
         | inl hStep => exact Or.inl ⟨n, hStep⟩
-        | inr hEq => exact Or.inr hEq
+        | inr hEq => exact Or.inr (by rw [← hn]; exact hEq)
       have hStep : LindenbaumStep S (n + 1) f := by
         simp only [LindenbaumStep]
-        split
-        · exact Or.inr hn.symm
-        · contradiction
+        rw [if_pos hConsN]
+        exact Or.inr hn.symm
       exact hNotLim ⟨n + 1, hStep⟩
   · intro f hf
     exact ⟨0, hf⟩
@@ -220,9 +222,11 @@ theorem max_cons_bot {S : Formula → Prop} (hMax : IsMaximalConsistent S) : ¬ 
   exact hMax.left (DerivesSet_hyp h)
 
 theorem max_cons_contains {S : Formula → Prop} (hMax : IsMaximalConsistent S) {f : Formula} (h : S ⊢* f) : S f := by
-  by_contra hNot
+  apply Classical.byContradiction
+  intro hNot
   have hInconsist : (fun x => S x ∨ x = f) ⊢* ⊥ := by
-    by_contra hC
+    apply Classical.byContradiction
+    intro hC
     exact hMax.right f hNot hC
   have hImpl : S ⊢* .impl f ⊥ := DerivesSet_intro_impl hInconsist
   have hBot : S ⊢* ⊥ := DerivesSet_elim_impl hImpl h
@@ -242,25 +246,26 @@ theorem max_cons_impl {S : Formula → Prop} (hMax : IsMaximalConsistent S) {A B
       intro x hx
       exact Or.inl hx
     · have hInconsist : (fun x => S x ∨ x = A) ⊢* ⊥ := by
-        by_contra hC
+        apply Classical.byContradiction
+        intro hC
         exact hMax.right A hA hC
-      obtain ⟨Γ, hΓ, hDer⟩ := hInconsist
-      use Γ
+      have ⟨Γ, hΓ, hDer⟩ := hInconsist
+      exists Γ
       exact ⟨hΓ, Derives.bot_elim Γ B hDer⟩
 
 theorem max_cons_and {S : Formula → Prop} (hMax : IsMaximalConsistent S) {A B : Formula} :
     S (.and A B) ↔ (S A ∧ S B) := by
   constructor
   · intro hAnd
-    obtain ⟨Γ, hΓ, hDer⟩ := DerivesSet_hyp hAnd
+    have ⟨Γ, hΓ, hDer⟩ := DerivesSet_hyp hAnd
     have hA : S ⊢* A := ⟨Γ, hΓ, Derives.elim_and_l Γ A B hDer⟩
     have hB : S ⊢* B := ⟨Γ, hΓ, Derives.elim_and_r Γ A B hDer⟩
     exact ⟨max_cons_contains hMax hA, max_cons_contains hMax hB⟩
   · intro ⟨hA, hB⟩
-    obtain ⟨Γ1, hΓ1, hDer1⟩ := DerivesSet_hyp hA
-    obtain ⟨Γ2, hΓ2, hDer2⟩ := DerivesSet_hyp hB
+    have ⟨Γ1, hΓ1, hDer1⟩ := DerivesSet_hyp hA
+    have ⟨Γ2, hΓ2, hDer2⟩ := DerivesSet_hyp hB
     apply max_cons_contains hMax
-    use Γ1 ++ Γ2
+    exists Γ1 ++ Γ2
     constructor
     · intro g hg
       cases List.mem_append.mp hg with
@@ -281,11 +286,11 @@ theorem max_cons_or {S : Formula → Prop} (hMax : IsMaximalConsistent S) {A B :
     have hNotB : ¬ S B := fun h => hNot (Or.inr h)
     have hInconsistA : (fun x => S x ∨ x = A) ⊢* ⊥ := by by_contra hC; exact hMax.right A hNotA hC
     have hInconsistB : (fun x => S x ∨ x = B) ⊢* ⊥ := by by_contra hC; exact hMax.right B hNotB hC
-    obtain ⟨ΓOr, hΓOr, hDerOr⟩ := DerivesSet_hyp hOr
-    obtain ⟨ΓA, hΓA, hDerA⟩ := DerivesSet_intro_impl hInconsistA
-    obtain ⟨ΓB, hΓB, hDerB⟩ := DerivesSet_intro_impl hInconsistB
+    have ⟨ΓOr, hΓOr, hDerOr⟩ := DerivesSet_hyp hOr
+    have ⟨ΓA, hΓA, hDerA⟩ := DerivesSet_intro_impl hInconsistA
+    have ⟨ΓB, hΓB, hDerB⟩ := DerivesSet_intro_impl hInconsistB
     have hBot : S ⊢* ⊥ := by
-      use ΓOr ++ ΓA ++ ΓB
+      exists ΓOr ++ ΓA ++ ΓB
       constructor
       · intro g hg
         cases List.mem_append.mp hg with
@@ -308,14 +313,14 @@ theorem max_cons_or {S : Formula → Prop} (hMax : IsMaximalConsistent S) {A B :
   · intro hOr
     cases hOr with
     | inl hA =>
-      obtain ⟨Γ, hΓ, hDer⟩ := DerivesSet_hyp hA
+      have ⟨Γ, hΓ, hDer⟩ := DerivesSet_hyp hA
       apply max_cons_contains hMax
-      use Γ
+      exists Γ
       exact ⟨hΓ, Derives.intro_or_l Γ A B hDer⟩
     | inr hB =>
-      obtain ⟨Γ, hΓ, hDer⟩ := DerivesSet_hyp hB
+      have ⟨Γ, hΓ, hDer⟩ := DerivesSet_hyp hB
       apply max_cons_contains hMax
-      use Γ
+      exists Γ
       exact ⟨hΓ, Derives.intro_or_r Γ A B hDer⟩
 
 -- ============================================================
@@ -331,18 +336,18 @@ def canonicalEnv : Nat → Term := Term.var
 mutual
 theorem evalTerm_canonical (S : Formula → Prop) (t : Term) :
     evalTerm (canonicalModel S) canonicalEnv t = t := by
-  match t with
-  | .var n => rfl
-  | .func f ts =>
+  cases t with
+  | var n => rfl
+  | func f ts =>
     unfold evalTerm
     have ih := evalTerms_canonical S ts
     rw [ih]
 
 theorem evalTerms_canonical (S : Formula → Prop) (ts : List Term) :
     evalTerms (canonicalModel S) canonicalEnv ts = ts := by
-  match ts with
-  | [] => rfl
-  | t :: ts' =>
+  cases ts with
+  | nil => rfl
+  | cons t ts' =>
     unfold evalTerms
     have ih1 := evalTerm_canonical S t
     have ih2 := evalTerms_canonical S ts'
@@ -373,7 +378,7 @@ theorem complexity_substFormula (v : Nat) (t : Term) (f : Formula) :
   | impl f1 f2 ih1 ih2 => simp only [formulaComplexity, substFormula, ih1, ih2]
   | and f1 f2 ih1 ih2 => simp only [formulaComplexity, substFormula, ih1, ih2]
   | or f1 f2 ih1 ih2 => simp only [formulaComplexity, substFormula, ih1, ih2]
-  | forall f1 ih => simp only [formulaComplexity, substFormula, ih]
+  | «forall» f1 ih => simp only [formulaComplexity, substFormula, ih]
   | ex f1 ih => simp only [formulaComplexity, substFormula, ih]
 
 theorem max_cons_ex {S : Formula → Prop} (hMax : IsMaximalConsistent S) (hHenkin : IsHenkin S) {A : Formula} :
@@ -383,7 +388,7 @@ theorem max_cons_ex {S : Formula → Prop} (hMax : IsMaximalConsistent S) (hHenk
     exact hHenkin A hEx
   · intro ⟨t, ht⟩
     apply max_cons_contains hMax
-    use [substFormula 0 t A]
+    exists [substFormula 0 t A]
     constructor
     · intro g hg
       cases hg with
@@ -398,7 +403,7 @@ theorem max_cons_forall {S : Formula → Prop} (hMax : IsMaximalConsistent S) (h
   constructor
   · intro hAll t
     apply max_cons_contains hMax
-    use [.forall A]
+    exists [.forall A]
     constructor
     · intro g hg
       cases hg with
@@ -408,22 +413,25 @@ theorem max_cons_forall {S : Formula → Prop} (hMax : IsMaximalConsistent S) (h
       apply Derives.hyp
       exact List.Mem.head _
   · intro hAll
-    by_contra hNotAll
+    apply Classical.byContradiction
+    intro hNotAll
     have hInconsist : (fun x => S x ∨ x = .forall A) ⊢* ⊥ := by
-      by_contra hC; exact hMax.right (.forall A) hNotAll hC
+      apply Classical.byContradiction
+      intro hC
+      exact hMax.right (.forall A) hNotAll hC
     have hNegForall : S ⊢* neg (.forall A) := DerivesSet_intro_impl hInconsist
     have hExNeg_impl : S ⊢* .impl (neg (.forall A)) (.ex (neg A)) := by
-      use []
+      exists []
       constructor
       · intro g hg; contradiction
       · exact FOL.Theorems.Quantifiers.forall_not_impl_exists_not
     have hExNeg : S ⊢* .ex (neg A) := DerivesSet_elim_impl hExNeg_impl hNegForall
     have hS_ExNeg : S (.ex (neg A)) := max_cons_contains hMax hExNeg
-    obtain ⟨t, ht⟩ := hHenkin (neg A) hS_ExNeg
+    have ⟨t, ht⟩ := hHenkin (neg A) hS_ExNeg
     have hS_NegA : S (neg (substFormula 0 t A)) := ht
     have hS_A : S (substFormula 0 t A) := hAll t
     have hBot : S ⊢* ⊥ := by
-      use [neg (substFormula 0 t A), substFormula 0 t A]
+      exists [neg (substFormula 0 t A), substFormula 0 t A]
       constructor
       · intro g hg
         cases hg with
@@ -437,11 +445,14 @@ theorem max_cons_forall {S : Formula → Prop} (hMax : IsMaximalConsistent S) (h
         · apply Derives.hyp; exact List.Mem.tail _ (List.Mem.head _)
     exact hMax.left hBot
 
-theorem truth_lemma_aux {S : Formula → Prop} (hMax : IsMaximalConsistent S) (hHenkin : IsHenkin S)
-    (n : Nat) (f : Formula) (hEq : formulaComplexity f = n) :
-    evalFormula (canonicalModel S) canonicalEnv f ↔ S f := by
-  induction n using Nat.strongInductionOn generalizing f with
-  | ind n ih =>
+theorem truth_lemma_lt {S : Formula → Prop} (hMax : IsMaximalConsistent S) (hHenkin : IsHenkin S)
+    (n : Nat) : ∀ f, formulaComplexity f < n → (evalFormula (canonicalModel S) canonicalEnv f ↔ S f) := by
+  induction n with
+  | zero =>
+    intro f hLt
+    contradiction
+  | succ n_ih ih =>
+    intro f hLt
     cases f with
     | bottom =>
       simp only [evalFormula]
@@ -456,24 +467,30 @@ theorem truth_lemma_aux {S : Formula → Prop} (hMax : IsMaximalConsistent S) (h
     | eq t1 t2 =>
       sorry -- 🚧 ¡Alerta Matemática! Aquí falla el modelo de Henkin básico. Necesitamos el Modelo Cociente.
     | impl f1 f2 =>
-      have ih1 := ih (formulaComplexity f1) (by omega) f1 rfl
-      have ih2 := ih (formulaComplexity f2) (by omega) f2 rfl
+      have hLt1 : formulaComplexity f1 < n_ih := by simp only [formulaComplexity] at hLt; omega
+      have hLt2 : formulaComplexity f2 < n_ih := by simp only [formulaComplexity] at hLt; omega
+      have ih1 := ih f1 hLt1
+      have ih2 := ih f2 hLt2
       simp only [evalFormula]
       rw [ih1, ih2]
       exact (max_cons_impl hMax).symm
     | and f1 f2 =>
-      have ih1 := ih (formulaComplexity f1) (by omega) f1 rfl
-      have ih2 := ih (formulaComplexity f2) (by omega) f2 rfl
+      have hLt1 : formulaComplexity f1 < n_ih := by simp only [formulaComplexity] at hLt; omega
+      have hLt2 : formulaComplexity f2 < n_ih := by simp only [formulaComplexity] at hLt; omega
+      have ih1 := ih f1 hLt1
+      have ih2 := ih f2 hLt2
       simp only [evalFormula]
       rw [ih1, ih2]
       exact (max_cons_and hMax).symm
     | or f1 f2 =>
-      have ih1 := ih (formulaComplexity f1) (by omega) f1 rfl
-      have ih2 := ih (formulaComplexity f2) (by omega) f2 rfl
+      have hLt1 : formulaComplexity f1 < n_ih := by simp only [formulaComplexity] at hLt; omega
+      have hLt2 : formulaComplexity f2 < n_ih := by simp only [formulaComplexity] at hLt; omega
+      have ih1 := ih f1 hLt1
+      have ih2 := ih f2 hLt2
       simp only [evalFormula]
       rw [ih1, ih2]
       exact (max_cons_or hMax).symm
-    | forall f1 =>
+    | «forall» f1 =>
       simp only [evalFormula]
       have h_eq : (∀ d : Term, evalFormula (canonicalModel S) (shiftEnv canonicalEnv d) f1) ↔
                   (∀ d : Term, S (substFormula 0 d f1)) := by
@@ -482,11 +499,19 @@ theorem truth_lemma_aux {S : Formula → Prop} (hMax : IsMaximalConsistent S) (h
           have hSubst := eval_substFormula_zero (canonicalModel S) canonicalEnv d f1
           rw [evalTerm_canonical S d] at hSubst
           have hEval := hSubst.symm.mp (h d)
-          exact (ih (formulaComplexity f1) (by omega) (substFormula 0 d f1) (by simp)).mp hEval
+          have hLt_f1 : formulaComplexity (substFormula 0 d f1) < n_ih := by
+            rw [complexity_substFormula]
+            simp only [formulaComplexity] at hLt
+            omega
+          exact (ih (substFormula 0 d f1) hLt_f1).mp hEval
         · intro h d
           have hSubst := eval_substFormula_zero (canonicalModel S) canonicalEnv d f1
           rw [evalTerm_canonical S d] at hSubst
-          have hEval := (ih (formulaComplexity f1) (by omega) (substFormula 0 d f1) (by simp)).mpr (h d)
+          have hLt_f1 : formulaComplexity (substFormula 0 d f1) < n_ih := by
+            rw [complexity_substFormula]
+            simp only [formulaComplexity] at hLt
+            omega
+          have hEval := (ih (substFormula 0 d f1) hLt_f1).mpr (h d)
           exact hSubst.mpr hEval
       rw [h_eq]
       exact (max_cons_forall hMax hHenkin).symm
@@ -499,11 +524,19 @@ theorem truth_lemma_aux {S : Formula → Prop} (hMax : IsMaximalConsistent S) (h
           have hSubst := eval_substFormula_zero (canonicalModel S) canonicalEnv d f1
           rw [evalTerm_canonical S d] at hSubst
           have hEval := hSubst.symm.mp hd
-          exact ⟨d, (ih (formulaComplexity f1) (by omega) (substFormula 0 d f1) (by simp)).mp hEval⟩
+          have hLt_f1 : formulaComplexity (substFormula 0 d f1) < n_ih := by
+            rw [complexity_substFormula]
+            simp only [formulaComplexity] at hLt
+            omega
+          exact ⟨d, (ih (substFormula 0 d f1) hLt_f1).mp hEval⟩
         · intro ⟨d, hd⟩
           have hSubst := eval_substFormula_zero (canonicalModel S) canonicalEnv d f1
           rw [evalTerm_canonical S d] at hSubst
-          have hEval := (ih (formulaComplexity f1) (by omega) (substFormula 0 d f1) (by simp)).mpr hd
+          have hLt_f1 : formulaComplexity (substFormula 0 d f1) < n_ih := by
+            rw [complexity_substFormula]
+            simp only [formulaComplexity] at hLt
+            omega
+          have hEval := (ih (substFormula 0 d f1) hLt_f1).mpr hd
           exact ⟨d, hSubst.mpr hEval⟩
       rw [h_eq]
       exact (max_cons_ex hMax hHenkin).symm
@@ -511,7 +544,7 @@ theorem truth_lemma_aux {S : Formula → Prop} (hMax : IsMaximalConsistent S) (h
 -- Lema de la Verdad (Truth Lemma): La semántica coincide con la sintaxis en el modelo canónico.
 theorem truth_lemma {S : Formula → Prop} (hMax : IsMaximalConsistent S) (hHenkin : IsHenkin S) (f : Formula) :
     evalFormula (canonicalModel S) canonicalEnv f ↔ S f :=
-  truth_lemma_aux hMax hHenkin (formulaComplexity f) f rfl
+  truth_lemma_lt hMax hHenkin (formulaComplexity f + 1) f (by omega)
 
 -- ============================================================
 -- Extensión de Henkin
@@ -528,26 +561,27 @@ def IsSatisfiable (S : Formula → Prop) : Prop :=
 
 theorem model_existence_lemma {S : Formula → Prop} (hCons : IsConsistent S) :
     IsSatisfiable S := by
-  obtain ⟨S', hMax, hHenkin, hSub⟩ := henkin_extension_lemma hCons
-  use Term, canonicalModel S', canonicalEnv
-  intro f hf
-  exact (truth_lemma hMax hHenkin f).mpr (hSub f hf)
+  have ⟨S', hMax, hHenkin, hSub⟩ := henkin_extension_lemma hCons
+  exact ⟨Term, canonicalModel S', canonicalEnv, by
+    intro f hf
+    exact (truth_lemma hMax hHenkin f).mpr (hSub f hf)⟩
 
 -- El Teorema de Completitud (Objetivo Final)
 theorem completeness {Γ : List Formula} {f : Formula} (h : Γ ⊨ f) : Γ ⊢ f := by
-  by_contra hNotDerive
+  apply Classical.byContradiction
+  intro hNotDerive
   let S : Formula → Prop := fun x => x ∈ Γ ∨ x = neg f
   have hCons : IsConsistent S := by
     intro hBot
     have hInconsist : (fun x => (fun y => y ∈ Γ) x ∨ x = neg f) ⊢* ⊥ := hBot
     have hImpl : (fun y => y ∈ Γ) ⊢* .impl (neg f) ⊥ := DerivesSet_intro_impl hInconsist
-    obtain ⟨Γ_sub, hΓ_sub, hDer_impl⟩ := hImpl
+    have ⟨Γ_sub, hΓ_sub, hDer_impl⟩ := hImpl
     have hDNE : Γ_sub ⊢ .impl (neg (neg f)) f := FOL.Theorems.Neg.double_neg_elim
     have hDer_f : Γ_sub ⊢ f := Derives.elim_impl Γ_sub (neg (neg f)) f hDNE hDer_impl
     have hDer_Γ : Γ ⊢ f := Derives.weakening Γ_sub Γ f hDer_f hΓ_sub
     exact hNotDerive hDer_Γ
 
-  obtain ⟨D, M, v, hModel⟩ := model_existence_lemma hCons
+  have ⟨D, M, v, hModel⟩ := model_existence_lemma hCons
   have hSat : contextSatisfies M v Γ := by
     intro g hg
     exact hModel g (Or.inl hg)
