@@ -7,6 +7,14 @@
 build/
 out/
 
+# ALTAMENTE PROHIBIDO
+*.exe
+*.dll
+*.so
+*.dylib
+*.env
+.env
+
 # OS
 .DS_Store
 Thumbs.db
