@@ -6,6 +6,8 @@
 *.log
 build/
 out/
+.vscode
+.vscode/
 
 # ALTAMENTE PROHIBIDO
 *.exe
