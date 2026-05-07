@@ -591,4 +591,11 @@ theorem completeness {Γ : List Formula} {f : Formula} (h : Γ ⊨ f) : Γ ⊢ f
 
 end FOL.Metamath.Completeness
 
-export FOL.Metamath.Completeness (DerivesSet IsConsistent IsMaximalConsistent IsSatisfiable model_existence_lemma completeness)
+export FOL.Metamath.Completeness (
+  DerivesSet
+  IsConsistent
+  IsMaximalConsistent
+  IsSatisfiable
+  model_existence_lemma
+  completeness
+)
