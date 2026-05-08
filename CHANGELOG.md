@@ -10,6 +10,15 @@ this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ## [Unreleased]
 
+### Added (2026-05-08 18:22)
+
+- **Fase 6 Completada (FOL con Igualdad)**:
+  - Refactorización del modelo canónico a un modelo cociente (`CanonicalDomain`) basado en la equivalencia sintáctica (`termEqv`).
+  - Demostración de los teoremas de congruencia y "lift" de funciones y predicados al nuevo dominio.
+  - Adaptación y demostración del Lema de la Verdad (`truth_lemma`) para el modelo cociente.
+  - Demostración del Teorema de Completitud de Gödel para FOL con Igualdad.
+  - Demostración del Teorema de Compacidad Semántica como corolario en `Compacity.lean`.
+
 ### Added (2026-04-25 22:00)
 
 - El proyecto base de Lógica de Primer Orden (FOL) se congela en su versión 1.0.0.

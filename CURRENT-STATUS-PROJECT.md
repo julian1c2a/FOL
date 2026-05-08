@@ -1,6 +1,6 @@
 # Current Project Status — ProjectName
 
-**Last updated:** 2026-04-25 21:30
+**Last updated:** 2026-05-08 18:22
 **Author**: Julián Calderón Almendros
 
 ---
@@ -9,10 +9,10 @@
 
 | Metric | Value |
 |--------|-------|
-| Total modules | 12 |
-| Modules with 0 sorry | 12 / 12 |
-| Total theorems proven | 64 |
-| Total definitions | 22 |
+| Total modules | 14 |
+| Modules with 0 sorry | 14 / 14 |
+| Total theorems proven | ~75 |
+| Total definitions | 29 |
 | Total notations | 10 |
 | Build status | ✅ Passing |
 | Lean version | v4.28.0 |
@@ -36,6 +36,7 @@
 | `Soundness.lean` | 1 | 0 | 0 | ✅ Complete |
 | `Completeness.lean`| 22 | 8 | 0 | ✅ Complete |
 | `Compacity.lean`   | 2 | 0 | 0 | ✅ Complete |
+| `Theorems/Eq.lean` | ~3 | 0 | 0 | ✅ Complete |
 
 *Status codes*: ✅ Complete · 🧊 Frozen · 🔶 Partial · 🔄 In progress · ❌ Pending
 
@@ -51,15 +52,15 @@
 - Demostrado Teorema de Deducción y Teorema de Corrección (Fase 5)
 - Formalizada la Semántica de Modelos y evaluación de fórmulas.
 - Demostrado el Teorema de Completitud de Gödel y Lema de Lindenbaum.
-- Alcanzados 0 sorries en todo el proyecto; demostrada Compacidad y Consistencia.
-- Preparación para bifurcar el proyecto hacia FOL con Igualdad.
+- **Completada la Fase 6 (FOL con Igualdad)**: Refactorizado el sistema para incluir igualdad, adaptado el modelo canónico y demostrado de nuevo los teoremas de Completitud y Compacidad.
+- Alcanzados 0 sorries en todo el proyecto.
 
 ---
 
 ## Pending Work
 
-- [x] Extender `Formula` con el predicado de igualdad en la nueva rama `feature/fol-igualdad`.
-- [ ] Actualizar la semántica (`Semantics.lean`) y reparar pruebas de soundness/completeness.
+- [ ] **Fase 7**: Introducir los axiomas de la Aritmética de Peano en `Arithmetic.lean`.
+- [ ] **Fase 7**: Implementar la función de apareamiento de Cantor para codificar tuplas.
 
 ---
 

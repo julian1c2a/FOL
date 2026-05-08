@@ -24,9 +24,10 @@ Este proyecto formaliza la sintaxis, semántica y metamatemática de la Lógica 
 
 1. Tautologías clásicas y equivalencias (Doble Negación, De Morgan, Dualidad de Cuantificadores).
 2. **Teorema de Deducción**.
-3. **Teorema de Corrección (Soundness Theorem)**: $\Gamma \vdash A \implies \Gamma \models A$.
+3. **Teorema de Corrección (Soundness)**: $\Gamma \vdash A \implies \Gamma \models A$.
 4. **Construcción de Henkin y Lema de Lindenbaum**.
-5. **Teorema de Completitud de Gödel**: $\Gamma \models A \implies \Gamma \vdash A$.
+5. **Teorema de Completitud de Gödel (para FOL y FOL con Igualdad)**: $\Gamma \models A \implies \Gamma \vdash A$.
+6. **Teorema de Compacidad Semántica**.
 
 ## Modules
 
@@ -40,6 +41,7 @@ Este proyecto formaliza la sintaxis, semántica y metamatemática de la Lógica 
 | `Soundness.lean` | `FOL.Metamath.Soundness` | `Semantics.lean`, `Tactics.lean` | ✅ Complete |
 | `Completeness.lean` | `FOL.Metamath.Completeness` | `Semantics.lean`, `Deduction.lean` | ✅ Complete |
 | `Compacity.lean` | `FOL.Metamath.Compacity` | `Completeness.lean`, `Soundness.lean` | ✅ Complete |
+| `Theorems/Eq.lean` | `FOL.Theorems.Eq` | `FOL.FOL` | ✅ Complete |
 
 ## Project Structure
 
@@ -53,11 +55,12 @@ FOL/
 ├── Soundness.lean           # Soundness Theorem
 ├── Completeness.lean        # Gödel's Completeness Theorem & Henkin construction
 ├── Compacity.lean           # Compactness & Consistency Theorems
-└── Theorems/                # Logical equivalences & tautologies
+└── Theorems/                # Logical equivalences, tautologies, and rules
     ├── Impl.lean
     ├── Neg.lean
     ├── Derived.lean
-    └── Quantifiers.lean
+    ├── Quantifiers.lean
+    └── Eq.lean
 ```
 
 > As the project grows, organize modules into thematic subdirectories.

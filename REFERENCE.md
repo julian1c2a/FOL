@@ -1,6 +1,6 @@
 # Technical Reference — ProjectName
 
-**Last updated:** 2026-04-25 21:30
+**Last updated:** 2026-05-08 18:25
 **Author**: Julián Calderón Almendros
 **Lean version**: v4.28.0
 
@@ -100,6 +100,7 @@ This document complies with all requirements specified in [AI-GUIDE.md](AI-GUIDE
 | `Soundness.lean` | `FOL.Metamath.Soundness` | `FOL.FOL`, `FOL.Metamath.Semantics`, `FOL.Tactics` | ✅ Completo |
 | `Completeness.lean` | `FOL.Metamath.Completeness` | `FOL.FOL`, `FOL.Semantics`, `FOL.Deduction`, `FOL.Theorems.Neg`, `FOL.Theorems.Quantifiers` | ✅ Completo |
 | `Compacity.lean` | `FOL.Metamath.Compacity` | `FOL.FOL`, `FOL.Semantics`, `FOL.Soundness`, `FOL.Completeness` | ✅ Completo |
+| `Theorems/Eq.lean` | `FOL.Theorems.Eq` | `FOL.FOL` | ✅ Completo |
 
 *Status codes*: ✅ Complete · 🧊 Frozen · 🔶 Partial · 🔄 In progress · ❌ Pending
 
@@ -110,8 +111,9 @@ This document complies with all requirements specified in [AI-GUIDE.md](AI-GUIDE
 ```mermaid
 graph TD
     IC[Init.Classical] --> P[Prelim.lean]
+    F[FOL.lean]
     P --> I[Theorems/Impl.lean]
-    F[FOL.lean] --> I
+    F --> I
     P --> N[Theorems/Neg.lean]
     F --> N
     P --> D[Theorems/Derived.lean]
@@ -120,12 +122,14 @@ graph TD
     N --> Q
     D --> Q
     F --> Q
+    F --> Eq[Theorems/Eq.lean]
     F --> T[Tactics.lean]
     F --> Ded[Deduction.lean]
     T --> Ded
     F --> Sem[Semantics.lean]
     Sem --> S[Soundness.lean]
     F --> S
+    Eq --> C
     Sem --> C[Completeness.lean]
     Ded --> C
     N --> C
@@ -417,6 +421,64 @@ Metaprogramming and macros to automate repetitive natural deduction tasks.
 
 ---
 
+### 3.11 Completeness.lean
+
+**Namespace**: `FOL.Metamath.Completeness`
+**Dependencies**: `FOL.FOL`, `FOL.Semantics`, `FOL.Deduction`, `Theorems/Eq.lean`
+**Last updated**: 2026-05-08 18:25
+**Status**: ✅ Completo
+**@axiom_system**: `classical`
+**@importance**: `foundational`
+
+Demostración del Teorema de Completitud de Gödel para FOL con Igualdad. Construye una teoría de Henkin completa, define un modelo canónico basado en el cociente de términos por la relación de equivalencia sintáctica, y prueba el Lema de la Verdad.
+
+**Definitions**:
+
+- `termEqv`: Relación de equivalencia sintáctica. `t₁ ≈ t₂` si `S ⊢ t₁ = t₂`.
+  `def termEqv (S : Theory) (t₁ t₂ : Term) : Prop := S ⊢ .eq t₁ t₂`
+- `CanonicalDomain`: El dominio del modelo canónico, definido como el cociente de todos los términos por la relación `termEqv`.
+  `def CanonicalDomain (S : Theory) := Quotient (termSetoid S)`
+- `canonicalModel`: El modelo canónico para una teoría `S`.
+  `def canonicalModel (S : Theory) : Model (CanonicalDomain S)`
+- `canonicalEnv`: El entorno canónico que mapea variables a sus clases de equivalencia.
+  `def canonicalEnv (S : Theory) : Nat → CanonicalDomain S`
+
+**Theorems**:
+
+- `truth_lemma`: Lema de la Verdad. Una fórmula `f` es derivable si y solo si es verdadera en el modelo canónico.
+  `theorem truth_lemma {S : Theory} (hS : IsHenkinTheory S) (f : Formula) : evalFormula (canonicalModel S) (canonicalEnv S) f ↔ S ⊢ f`
+- `completeness`: Teorema de Completitud de Gödel. Si `S` satisface semánticamente a `f`, entonces `S` deriva `f`.
+  `theorem completeness {S : Theory} {f : Formula} (h : S ⊨ f) : S ⊢ f`
+
+---
+
+### 3.12 Compacity.lean
+
+**Namespace**: `FOL.Metamath.Compacity`
+**Dependencies**: `Completeness.lean`, `Soundness.lean`
+**Last updated**: 2026-05-08 18:25
+**Status**: ✅ Completo
+**@axiom_system**: `classical`
+**@importance**: `high`
+
+Demostración del Teorema de Compacidad Semántica como corolario de los teoremas de Completitud y Corrección.
+
+**Definitions**:
+
+- `IsSatisfiable`: Una teoría `S` es satisfacible si tiene un modelo.
+  `def IsSatisfiable (S : Theory) : Prop := ∃ (D : Type) (M : Model D) (E : Nat → D), ∀ f ∈ S, evalFormula M E f`
+- `IsConsistent`: Una teoría `S` es consistente si no puede derivar una contradicción.
+  `def IsConsistent (S : Theory) : Prop := S ⊬ ⊥`
+
+**Theorems**:
+
+- `isSatisfiable_iff_isConsistent`: Una teoría es satisfacible si y solo si es consistente.
+  `theorem isSatisfiable_iff_isConsistent {S : Theory} : IsSatisfiable S ↔ IsConsistent S`
+- `semantic_compactness`: Teorema de Compacidad Semántica. Una teoría `S` es satisfacible si y solo si todo subconjunto finito de `S` es satisfacible.
+  `theorem semantic_compactness {S : Theory} : IsSatisfiable S ↔ ∀ S_fin ⊆ S, S_fin.Finite → IsSatisfiable S_fin`
+
+---
+
 ## 4. Theorems
 
 *(See Module Descriptions in §3 for individual theorems).*
@@ -518,6 +580,16 @@ Exports from namespace `FOL.Metamath.Semantics`:
 Exports from namespace `FOL.Metamath.Soundness`:
 `soundness`.
 
+### 6.11 Completeness.lean
+
+Exports from namespace `FOL.Metamath.Completeness`:
+`termEqv`, `CanonicalDomain`, `canonicalModel`, `canonicalEnv`, `truth_lemma`, `completeness`.
+
+### 6.12 Compacity.lean
+
+Exports from namespace `FOL.Metamath.Compacity`:
+`IsSatisfiable`, `IsConsistent`, `isSatisfiable_iff_isConsistent`, `semantic_compactness`.
+
 ---
 
 ## 7. Documentation Status
@@ -533,10 +605,12 @@ Exports from namespace `FOL.Metamath.Soundness`:
 - `Tactics.lean`
 - `Deduction.lean`
 - `Soundness.lean`
+- `Completeness.lean`
+- `Compacity.lean`
 
 ### 7.2 Partially Projected Files
 
-- `Semantics.lean` (Awaiting proofs for semantic replacement lemmas)
+*(None)*
 
 ### 7.3 Notes
 
