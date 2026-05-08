@@ -17,6 +17,7 @@ import FOL.Semantics
 import FOL.Deduction
 import FOL.Theorems.Neg
 import FOL.Theorems.Quantifiers
+import FOL.Theorems.Eq
 
 namespace FOL.Metamath.Completeness
 
@@ -330,6 +331,51 @@ theorem max_cons_or {S : Formula → Prop} (hMax : IsMaximalConsistent S) {A B :
       apply max_cons_contains hMax
       exists Γ
       exact ⟨hΓ, Derives.intro_or_r Γ A B hDer⟩
+
+-- ============================================================
+-- Equivalencia Sintáctica y Modelo Cociente
+-- ============================================================
+
+def termEqv (S : Formula → Prop) (t1 t2 : Term) : Prop :=
+  S (.eq t1 t2)
+
+theorem termEqv_refl {S : Formula → Prop} (hMax : IsMaximalConsistent S) (t : Term) :
+    termEqv S t t := by
+  apply max_cons_contains hMax
+  exists []
+  constructor
+  · intro g hg; contradiction
+  · exact Derives.refl [] t
+
+theorem termEqv_symm {S : Formula → Prop} (hMax : IsMaximalConsistent S) {t1 t2 : Term}
+    (hEq : termEqv S t1 t2) : termEqv S t2 t1 := by
+  apply max_cons_contains hMax
+  have ⟨Γ, hΓ, hDer⟩ := DerivesSet_hyp hEq
+  exists Γ
+  exact ⟨hΓ, derive_eq_symm hDer⟩
+
+theorem termEqv_trans {S : Formula → Prop} (hMax : IsMaximalConsistent S) {t1 t2 t3 : Term}
+    (h12 : termEqv S t1 t2) (h23 : termEqv S t2 t3) : termEqv S t1 t3 := by
+  apply max_cons_contains hMax
+  have ⟨Γ1, hΓ1, hDer1⟩ := DerivesSet_hyp h12
+  have ⟨Γ2, hΓ2, hDer2⟩ := DerivesSet_hyp h23
+  exists Γ1 ++ Γ2
+  constructor
+  · intro g hg
+    cases List.mem_append.mp hg with
+    | inl h1 => exact hΓ1 g h1
+    | inr h2 => exact hΓ2 g h2
+  · have hDer1' := Derives.weakening Γ1 (Γ1 ++ Γ2) _ hDer1 (fun x hx => List.mem_append.mpr (Or.inl hx))
+    have hDer2' := Derives.weakening Γ2 (Γ1 ++ Γ2) _ hDer2 (fun x hx => List.mem_append.mpr (Or.inr hx))
+    exact derive_eq_trans hDer1' hDer2'
+
+def termSetoid (S : Formula → Prop) (hMax : IsMaximalConsistent S) : Setoid Term where
+  r := termEqv S
+  iseqv := {
+    refl := termEqv_refl hMax
+    symm := termEqv_symm hMax
+    trans := termEqv_trans hMax
+  }
 
 -- ============================================================
 -- Modelo Canónico de Henkin
