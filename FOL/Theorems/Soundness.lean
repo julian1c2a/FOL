@@ -6,6 +6,7 @@ License: MIT
 
 import FOL.FOL
 import FOL.Semantics
+import FOL.Soundness
 
 namespace FOL.Theorems.Soundness
 open FOL.Semantics
@@ -18,7 +19,7 @@ open FOL.Semantics
 -- Su demostración se realiza por inducción estructural sobre
 -- el árbol de derivación (h : Γ ⊢ f).
 
-theorem soundness {Γ f} (h : Γ ⊢ f) : Γ ⊨ f := by
-  sorry
+theorem soundness {Γ f} (h : Γ ⊢ f) : Γ ⊨ f := 
+  FOL.Metamath.Soundness.soundness h
 
 end FOL.Theorems.Soundness

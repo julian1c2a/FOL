@@ -52,7 +52,11 @@ theorem double_neg_elim {Γ A} (h_dne : .impl (neg (neg A)) A ∈ Γ) : Γ ⊢ .
   apply Derives.hyp
   exact h_dne
 
--- 8. Contrapositiva (1): (A ⇒ B) ⇒ (¬B ⇒ ¬A)
+-- 8. Doble Negación (Eliminación, axiomática): ¬¬A ⇒ A
+-- Axioma clásico: no es derivable intuicionísticamente; se postula como axioma del sistema.
+axiom dne {Γ : List Formula} {A : Formula} : Γ ⊢ .impl (neg (neg A)) A
+
+-- 9. Contrapositiva (1): (A ⇒ B) ⇒ (¬B ⇒ ¬A)
 theorem contrapositive_1 {Γ A B} : Γ ⊢ .impl (.impl A B) (.impl (neg B) (neg A)) := by
   apply Derives.intro_impl
   apply Derives.intro_impl
@@ -89,6 +93,7 @@ export FOL.Theorems.Neg (
   derived_raa
   double_neg_intro
   double_neg_elim
+  dne
   contrapositive_1
   contrapositive_2
 )

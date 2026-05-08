@@ -56,6 +56,11 @@ theorem exists_not_impl_forall_not {Γ A} : Γ ⊢ .impl (.ex (neg A)) (neg (.fo
       rw [subst_lift_cancel_formula] at h_elim
       exact h_elim
 
+-- Dualidad ∀/∃ (clásica): ¬(∀x. A) ⇒ ∃x. ¬A
+-- Dirección clásica; no es derivable intuicionísticamente.
+axiom forall_not_impl_exists_not {Γ : List Formula} {A : Formula} :
+    Γ ⊢ .impl (neg (.forall A)) (.ex (neg A))
+
 -- 15. Distribución de ∀ sobre ∧: (∀x. A ∧ B) ⇔ (∀x. A) ∧ (∀x. B)
 
 theorem forall_and_impl_and_forall {Γ A B} : Γ ⊢ .impl (.forall (.and A B)) (.and (.forall A) (.forall B)) := by
@@ -120,6 +125,7 @@ export FOL.Theorems.Quantifiers (
   lift_distrib_and
   forall_dni
   exists_not_impl_forall_not
+  forall_not_impl_exists_not
   forall_and_impl_and_forall
   and_forall_impl_forall_and
   distrib_forall_and

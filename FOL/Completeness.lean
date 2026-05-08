@@ -191,9 +191,7 @@ theorem lindenbaum_lemma {S : Formula → Prop} (hCons : IsConsistent S) :
       have ⟨Γ, hΓ, hDer⟩ := hBot
       have ⟨N, hN⟩ := lindenbaum_limit_bound Γ hΓ
       have hConsN := lindenbaum_step_consistent hCons N
-      apply hConsN
-      exists Γ
-      exact ⟨hN, hDer⟩
+      exact hConsN ⟨Γ, hN, hDer⟩
     · -- Maximalidad del límite
       intro f hNotLim hConsExt
       have ⟨n, hn⟩ := formula_enum_surj f
@@ -281,11 +279,14 @@ theorem max_cons_or {S : Formula → Prop} (hMax : IsMaximalConsistent S) {A B :
     S (.or A B) ↔ (S A ∨ S B) := by
   constructor
   · intro hOr
-    by_contra hNot
+    apply Classical.byContradiction
+    intro hNot
     have hNotA : ¬ S A := fun h => hNot (Or.inl h)
     have hNotB : ¬ S B := fun h => hNot (Or.inr h)
-    have hInconsistA : (fun x => S x ∨ x = A) ⊢* ⊥ := by by_contra hC; exact hMax.right A hNotA hC
-    have hInconsistB : (fun x => S x ∨ x = B) ⊢* ⊥ := by by_contra hC; exact hMax.right B hNotB hC
+    have hInconsistA : (fun x => S x ∨ x = A) ⊢* ⊥ := by
+      apply Classical.byContradiction; intro hC; exact hMax.right A hNotA hC
+    have hInconsistB : (fun x => S x ∨ x = B) ⊢* ⊥ := by
+      apply Classical.byContradiction; intro hC; exact hMax.right B hNotB hC
     have ⟨ΓOr, hΓOr, hDerOr⟩ := DerivesSet_hyp hOr
     have ⟨ΓA, hΓA, hDerA⟩ := DerivesSet_intro_impl hInconsistA
     have ⟨ΓB, hΓB, hDerB⟩ := DerivesSet_intro_impl hInconsistB
@@ -293,21 +294,28 @@ theorem max_cons_or {S : Formula → Prop} (hMax : IsMaximalConsistent S) {A B :
       exists ΓOr ++ ΓA ++ ΓB
       constructor
       · intro g hg
+        -- ΓOr ++ ΓA ++ ΓB is (ΓOr ++ ΓA) ++ ΓB (left-associative)
         cases List.mem_append.mp hg with
-        | inl h1 => exact hΓOr g h1
-        | inr h23 => cases List.mem_append.mp h23 with
-          | inl h2 => exact hΓA g h2
-          | inr h3 => exact hΓB g h3
+        | inl h12 =>
+          cases List.mem_append.mp h12 with
+          | inl h1 => exact hΓOr g h1
+          | inr h2 => exact hΓA g h2
+        | inr h3 => exact hΓB g h3
       · apply Derives.elim_or (A := A) (B := B)
         · apply Derives.weakening _ _ _ hDerOr
-          intro x hx; exact List.mem_append.mpr (Or.inl hx)
+          intro x hx
+          exact List.mem_append.mpr (Or.inl (List.mem_append.mpr (Or.inl hx)))
         · apply Derives.elim_impl (A := A) (B := .bottom)
           · apply Derives.weakening _ _ _ hDerA
-            intro x hx; apply List.Mem.tail; apply List.mem_append.mpr; apply Or.inr; exact List.mem_append.mpr (Or.inl hx)
+            intro x hx
+            apply List.Mem.tail
+            exact List.mem_append.mpr (Or.inl (List.mem_append.mpr (Or.inr hx)))
           · exact Derives.hyp _ _ (List.Mem.head _)
         · apply Derives.elim_impl (A := B) (B := .bottom)
           · apply Derives.weakening _ _ _ hDerB
-            intro x hx; apply List.Mem.tail; apply List.mem_append.mpr; apply Or.inr; exact List.mem_append.mpr (Or.inr hx)
+            intro x hx
+            apply List.Mem.tail
+            exact List.mem_append.mpr (Or.inr hx)
           · exact Derives.hyp _ _ (List.Mem.head _)
     exact hMax.left hBot
   · intro hOr
@@ -341,7 +349,7 @@ theorem evalTerm_canonical (S : Formula → Prop) (t : Term) :
   | func f ts =>
     unfold evalTerm
     have ih := evalTerms_canonical S ts
-    rw [ih]
+    rw [ih]; rfl
 
 theorem evalTerms_canonical (S : Formula → Prop) (ts : List Term) :
     evalTerms (canonicalModel S) canonicalEnv ts = ts := by
@@ -512,7 +520,7 @@ theorem truth_lemma_lt {S : Formula → Prop} (hMax : IsMaximalConsistent S) (hH
             simp only [formulaComplexity] at hLt
             omega
           have hEval := (ih (substFormula 0 d f1) hLt_f1).mpr (h d)
-          exact hSubst.mpr hEval
+          exact hSubst.mp hEval
       rw [h_eq]
       exact (max_cons_forall hMax hHenkin).symm
     | ex f1 =>
@@ -537,7 +545,7 @@ theorem truth_lemma_lt {S : Formula → Prop} (hMax : IsMaximalConsistent S) (hH
             simp only [formulaComplexity] at hLt
             omega
           have hEval := (ih (substFormula 0 d f1) hLt_f1).mpr hd
-          exact ⟨d, hSubst.mpr hEval⟩
+          exact ⟨d, hSubst.mp hEval⟩
       rw [h_eq]
       exact (max_cons_ex hMax hHenkin).symm
 
@@ -576,7 +584,7 @@ theorem completeness {Γ : List Formula} {f : Formula} (h : Γ ⊨ f) : Γ ⊢ f
     have hInconsist : (fun x => (fun y => y ∈ Γ) x ∨ x = neg f) ⊢* ⊥ := hBot
     have hImpl : (fun y => y ∈ Γ) ⊢* .impl (neg f) ⊥ := DerivesSet_intro_impl hInconsist
     have ⟨Γ_sub, hΓ_sub, hDer_impl⟩ := hImpl
-    have hDNE : Γ_sub ⊢ .impl (neg (neg f)) f := FOL.Theorems.Neg.double_neg_elim f Γ_sub
+    have hDNE : Γ_sub ⊢ .impl (neg (neg f)) f := FOL.Theorems.Neg.dne
     have hDer_f : Γ_sub ⊢ f := Derives.elim_impl Γ_sub (neg (neg f)) f hDNE hDer_impl
     have hDer_Γ : Γ ⊢ f := Derives.weakening Γ_sub Γ f hDer_f hΓ_sub
     exact hNotDerive hDer_Γ

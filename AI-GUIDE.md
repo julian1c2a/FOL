@@ -115,6 +115,12 @@ theorem subset_refl (A : Type) : A ⊆ A := fun _ h => h
 
 ## Arquitectura de Exportaciones y Directorios
 
+### (16b.) Regla de Directorio Raíz (No-Root Rule)
+
+**NUNCA** debes crear módulos de trabajo (archivos `.lean` con teoremas, definiciones, etc.) en el directorio raíz del repositorio (la carpeta donde se encuentra `lakefile.lean`).
+Todos los módulos de trabajo deben estar contenidos estrictamente dentro del directorio del proyecto (ej. `FOL/`) o en subdirectorios temáticos dentro de él (ej. `FOL/Theorems/`). 
+El único archivo `.lean` permitido en la raíz es el módulo raíz autogenerado (`FOL.lean` o el nombre que reciba en `gen-root.bash`).
+
 ### (17.) Bloques de Exportación (*Export blocks*)
 
 Todo módulo de producción (hoja) **DEBE** terminar con un bloque `export` que liste todas las definiciones, teoremas y lemas públicos. Las declaraciones `private` (o con sufijo `_aux`) nunca se exportan.
