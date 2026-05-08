@@ -269,7 +269,7 @@ La IA debe obedecer estos comandos exactos cuando el usuario los invoque:
 
 ---
 
-### `dame situación`
+### `dame_situación`
 
 **Propósito:** Reporte de solo lectura del estado actual.
 
