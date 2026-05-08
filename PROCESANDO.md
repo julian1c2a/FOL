@@ -7,3 +7,4 @@ Siguientes pasos:
 3. **(Hecho)** Definir el nuevo dominio como el cociente del setoide.
 4. **(Hecho)** Hacer el lift hacia el conjunto cociente de las funciones y predicados.
 5. **(Hecho)** Redefinir el modelo canónico y refactorizar.
+6. **(Hecho)** Adaptar y demostrar el Lema de la Verdad (`truth_lemma`) para el nuevo `canonicalModel`.
