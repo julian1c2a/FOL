@@ -93,11 +93,28 @@
 
 - [x] Modificar la sintaxis en `FOL.lean` añadiendo el constructor de igualdad a `Formula` (`eq : Term → Term → Formula`).
 - [x] Añadir las reglas de inferencia para la igualdad (Reflexividad y Sustitución de Leibniz) en `Derives`.
-- [ ] Actualizar la semántica en `Semantics.lean` para que la igualdad sintáctica coincida con la igualdad semántica del modelo.
-- [ ] Adaptar las pruebas de Soundness y Completeness a la nueva sintaxis y reglas.
+- [x] Actualizar la semántica en `Semantics.lean` para que la igualdad sintáctica coincida con la igualdad semántica del modelo.
+- [x] Adaptar las pruebas de Soundness y Completeness a la nueva sintaxis y reglas.
 
 **Dependencias**: Fase 5 completada.
 **Complejidad**: Alta
+
+---
+
+## Fase 7: Fundamentación de la Aritmética y Gödelización
+
+**Objetivo**: Utilizar el sistema FOL= para construir una base para la aritmética, definir tuplas, listas y funciones, y establecer las bases para la autorreferencia.
+
+**Tareas**:
+
+- [ ] **Axiomatización**: Introducir los axiomas de la Aritmética de Peano (restringida, sin inducción general) en una nueva teoría.
+- [ ] **Codificación de Tuplas**: Implementar la función de apareamiento de Cantor para codificar pares de números naturales `⟨x,y⟩` como un único número.
+- [ ] **Codificación de Listas**: Definir listas finitas como una construcción sobre las tuplas (`Cons(h,t)`).
+- [ ] **Codificación de Funciones**: Definir funciones discretas como listas de pares (grafos funcionales).
+- [ ] **Gödelización**: Esbozar el mapeo de símbolos y fórmulas a números de Gödel, permitiendo que el sistema hable de sus propias fórmulas y derivaciones.
+
+**Dependencias**: Fase 6 completada.
+**Complejidad**: Muy Alta
 
 ---
 
@@ -110,4 +127,5 @@
 | 3 | Conectivos y Cuantificadores | ✅ Completo |
 | 4 | Automatización | ✅ Completo |
 | 5 | Metamatemática | ✅ Completo |
-| 6 | FOL con Igualdad | 🔄 En progreso |
+| 6 | FOL con Igualdad | ✅ Completo |
+| 7 | Fundamentación de la Aritmética | 🔄 En progreso |
