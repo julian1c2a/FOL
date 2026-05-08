@@ -1,3 +1,11 @@
+> **Nota de Contexto:** Este documento es la especificación formal para el sistema axiomático "Minimal" que se desarrollará como parte del proyecto `ROBINSON_PlusPlus`.
+>
+> El objetivo de este sistema es construir tuplas, listas y funciones discretas desde una base aritmética muy débil, sin un principio de inducción generalizado. Sirve como la primera etapa en una serie de sistemas axiomáticos de fortaleza creciente.
+>
+> Para una visión completa de la estrategia de desarrollo y cómo este documento encaja en la hoja de ruta general, consulte el archivo PLANNING.md.
+>
+> ---
+
 # FUNDAMENTACIÓN DE LAS MATEMÁTICAS EN UN ENTORNO DE PEANO Y FOL=
 
 ## PARTE I: EL MARCO TEÓRICO Y EL PROBLEMA FUNDACIONAL
