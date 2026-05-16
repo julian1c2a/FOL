@@ -1,6 +1,6 @@
-# Current Project Status — ProjectName
+# Current Project Status — FOL Ecosystem
 
-**Last updated:** 2026-05-08 18:22
+**Last updated:** 2026-05-16
 **Author**: Julián Calderón Almendros
 
 ---
@@ -9,78 +9,128 @@
 
 | Metric | Value |
 |--------|-------|
-| Total modules | 14 |
-| Modules with 0 sorry | 14 / 14 |
-| Total theorems proven | ~75 |
-| Total definitions | 29 |
-| Total notations | 10 |
-| Build status | ✅ Passing |
+| Lean libraries (`lean_lib`) | 4 |
+| Total modules | ~43 |
+| Modules with 0 sorry | ~42 / ~43 |
+| Total sorries | 1 (expected; FOL^= Completeness equality case) |
+| Build status | ✅ Passing (all 4 libs) |
 | Lean version | v4.28.0 |
 | Naming convention | Mathlib-style (see NAMING-CONVENTIONS.md) |
 
 ---
 
-## Status by Module
+## Libraries
 
-| Module | Theorems | Definitions | Sorry | Status |
-|--------|----------|-------------|-------|--------|
-| `Prelim.lean` | 5 | 1 | 0 | ✅ Complete |
-| `FOL.lean` | 0 | 5 | 0 | ✅ Complete |
-| `Impl.lean` | 4 | 0 | 0 | ✅ Complete |
-| `Neg.lean` | 5 | 0 | 0 | ✅ Complete |
-| `Derived.lean` | 17 | 0 | 0 | ✅ Complete |
-| `Quantifiers.lean` | 10 | 0 | 0 | ✅ Complete |
-| `Tactics.lean` | 0 | 1 | 0 | ✅ Complete |
-| `Deduction.lean` | 1 | 0 | 0 | ✅ Complete |
-| `Semantics.lean` | 13 | 8 | 0 | ✅ Complete |
-| `Soundness.lean` | 1 | 0 | 0 | ✅ Complete |
-| `Completeness.lean`| 22 | 8 | 0 | ✅ Complete |
-| `Compacity.lean`   | 2 | 0 | 0 | ✅ Complete |
-| `Theorems/Eq.lean` | ~3 | 0 | 0 | ✅ Complete |
+### `FOL` — Lógica de Primer Orden con Igualdad (FOL^=)
 
-*Status codes*: ✅ Complete · 🧊 Frozen · 🔶 Partial · 🔄 In progress · ❌ Pending
+| Module | Theorems | Sorry | Status |
+|--------|----------|-------|--------|
+| `Prelim.lean` | 5 | 0 | ✅ Complete |
+| `FOL.lean` | 0 | 0 | ✅ Complete |
+| `Tactics.lean` | 0 | 0 | ✅ Complete |
+| `Deduction.lean` | 1 | 0 | ✅ Complete |
+| `Semantics.lean` | 13 | 0 | ✅ Complete |
+| `Soundness.lean` | 1 | 0 | ✅ Complete |
+| `Completeness.lean` | 22 | 1 | ⚠️ 1 sorry (eq/Henkin) |
+| `Compacity.lean` | 2 | 0 | ✅ Complete |
+| `Theorems/Impl.lean` | 4 | 0 | ✅ Complete |
+| `Theorems/Neg.lean` | 5 | 0 | ✅ Complete |
+| `Theorems/Derived.lean` | 17 | 0 | ✅ Complete |
+| `Theorems/Quantifiers.lean` | 10 | 0 | ✅ Complete |
+| `Theorems/Eq.lean` | ~3 | 0 | ✅ Complete |
+
+> El `sorry` en `Completeness.lean` corresponde al caso de igualdad en la construcción de Henkin (modelo cociente para `Formula.eq`). Es matemáticamente correcto pero formalmente pendiente.
+
+### `FOLPure` — Lógica de Primer Orden sin Igualdad
+
+| Module | Sorry | Status |
+|--------|-------|--------|
+| `FOL.lean`, `Tactics.lean`, `Deduction.lean` | 0 | ✅ |
+| `Semantics.lean`, `Soundness.lean`, `Completeness.lean` | 0 | ✅ |
+| `Classical.lean`, `Compacity.lean` | 0 | ✅ |
+| `Theorems/Impl.lean`, `Neg.lean`, `Derived.lean`, `Quantifiers.lean` | 0 | ✅ |
+
+**0 sorries.** Completitud y Compacidad totalmente demostradas.
+
+### `PropLogic` — Lógica Proposicional (subconjunto sin cuantificadores)
+
+| Module | Sorry | Status |
+|--------|-------|--------|
+| `PL.lean`, `Tactics.lean`, `Deduction.lean` | 0 | ✅ |
+| `Semantics.lean`, `Soundness.lean`, `Completeness.lean` | 0 | ✅ |
+| `Classical.lean`, `Compacity.lean` | 0 | ✅ |
+| `Theorems/Impl.lean`, `Neg.lean`, `Derived.lean` | 0 | ✅ |
+
+**0 sorries.**
+
+### `TheoryFramework` — Marco Genérico para Teorías
+
+Capa de abstracción (`class LogicSystem`) sobre las tres lógicas base.
+
+| Module | Sorry | Status |
+|--------|-------|--------|
+| `Logic.lean` | 0 | ✅ |
+| `Theory.lean` | 0 | ✅ |
+| `Properties.lean` | 0 | ✅ |
+| `Relations.lean` | 0 | ✅ |
+| `MetaTheorems.lean` | 0 | ✅ |
+| `Instances/PropLogic.lean` | 0 | ✅ |
+| `Instances/FOLPure.lean` | 0 | ✅ |
+| `Instances/FOL.lean` | 1 (heredado) | ⚠️ |
+
+**0 sorries propios.** La instancia `FOL` hereda el sorry de `FOL.Completeness`.
 
 ---
 
 ## Recent Achievements
 
-- Project initialized from lean4-project-template
-- Implemented core FOL definitions and natural deduction rules (Fase 1)
-- Proved Nivel 1 & 2 theorems (Impl, Neg) (Fase 2)
-- Proved Nivel 3 & 4 theorems (Derived, Quantifiers) (Fase 3)
-- Created robust automation tactics in `Tactics.lean` (Fase 4)
-- Demostrado Teorema de Deducción y Teorema de Corrección (Fase 5)
-- Formalizada la Semántica de Modelos y evaluación de fórmulas.
-- Demostrado el Teorema de Completitud de Gödel y Lema de Lindenbaum.
-- **Completada la Fase 6 (FOL con Igualdad)**: Refactorizado el sistema para incluir igualdad, adaptado el modelo canónico y demostrado de nuevo los teoremas de Completitud y Compacidad.
-- Alcanzados 0 sorries en todo el proyecto.
+- **FOL^= completo** (Fases 1–6): sintaxis De Bruijn, deducción natural, corrección, completitud de Gödel con modelo cociente, compacidad.
+- **FOLPure añadida**: versión sin igualdad, 0 sorries, Completitud y Compacidad totales.
+- **PropLogic añadida**: subconjunto proposicional, 0 sorries, mismo stack metamatemático.
+- **TheoryFramework**: typeclass `LogicSystem (F : Type)` que unifica las tres lógicas. Metateorémas genéricos (monotonía, corrección↔completitud lifted, inconsistencia upward, equivalencia conservativa).
 
 ---
 
 ## Pending Work
 
-- [ ] **Fase 7**: Introducir los axiomas de la Aritmética de Peano en `Arithmetic.lean`.
-- [ ] **Fase 7**: Implementar la función de apareamiento de Cantor para codificar tuplas.
+- [ ] **Fase 7**: Proyecto `ROBINSON_PlusPlus` — Axiomas de Peano sobre `FOLPure`/`FOL`.
+- [ ] **Fase 7**: Función de Cantor, codificación de tuplas y listas.
+- [ ] **Fase 8**: Cerrar el sorry de igualdad en `FOL/Completeness.lean` con el modelo cociente completo.
+- [ ] **Fase 8**: Añadir teorías concretas usando `TheoryFramework` (ej. teoría de grupos, teoría de orden).
 
 ---
 
 ## Architecture
 
 ```
-ProjectName/
-├── Prelim.lean              # Level 0: foundations
-├── FOL.lean                 # Level 1: syntax and Derives
-├── Tactics.lean             # Automation macros/tactics
-├── Deduction.lean           # Teorema de Deducción
-├── Semantics.lean           # Modelos y satisfacción
-├── Soundness.lean           # Teorema de Corrección
-├── Completeness.lean        # Teorema de Completitud
-├── Compacity.lean           # Teorema de Compacidad y Consistencia
-└── Theorems/                # Level 2-4: theorems
-    ├── Impl.lean
-    ├── Neg.lean
-    ├── Derived.lean
-    └── Quantifiers.lean
+repo/
+├── FOL/                     # FOL^= (con igualdad)
+│   ├── FOL.lean             # Sintaxis + Derives (incl. eq, refl, subst)
+│   ├── Tactics.lean
+│   ├── Deduction.lean
+│   ├── Semantics.lean
+│   ├── Soundness.lean
+│   ├── Completeness.lean    # ⚠️ 1 sorry (eq/Henkin)
+│   ├── Compacity.lean
+│   └── Theorems/
+├── FOLPure/                 # FOL pura (sin igualdad) — 0 sorries
+│   └── [misma estructura]
+├── PropLogic/               # Lógica proposicional — 0 sorries
+│   └── [estructura análoga, sin Quantifiers]
+├── TheoryFramework/         # Marco genérico de teorías
+│   ├── Logic.lean           # class LogicSystem
+│   ├── Theory.lean          # structure Theory
+│   ├── Properties.lean      # IsConsistent, IsComplete, ...
+│   ├── Relations.lean       # LE, TheoryExtension, TheoryEquivalent, ...
+│   ├── MetaTheorems.lean    # proves_iff_models, monotonía, ...
+│   └── Instances/
+│       ├── PropLogic.lean
+│       ├── FOLPure.lean
+│       └── FOL.lean
+├── FOL.lean                 # Barrel FOL^=
+├── FOLPure.lean             # Barrel FOLPure
+├── PropLogic.lean           # Barrel PropLogic
+└── TheoryFramework.lean     # Barrel TheoryFramework (sin instancias)
 ```
 
 ---
@@ -89,28 +139,23 @@ ProjectName/
 
 | Phase | Description | Status |
 |-------|-------------|--------|
-| Phase 1: Foundations | `Prelim.lean` + core definitions | ✅ Complete |
-| Phase 2: First modules | Core theorems and constructions | ✅ Complete |
-| Phase 3: Naming migration | Adopt Mathlib naming conventions | ✅ Complete |
-| Phase 4: Automatización | Investigar y automatizar identidad, debilitamiento y rewrite_at | ✅ Complete |
-| Phase 5: Metamatemática | Teorema de Deducción, Corrección y Completitud | ✅ Complete |
-| Phase 6: FOL con Igualdad | Añadir predicado `=`. Reflexividad y Sustitución | 🔄 In progress |
+| 1 | Fundamentos Lógicos (Deducción Natural) | ✅ Complete |
+| 2 | Primeros Teoremas (Impl, Neg) | ✅ Complete |
+| 3 | Conectivos Derivados y Cuantificadores | ✅ Complete |
+| 4 | Automatización y Tácticas | ✅ Complete |
+| 5 | Metamatemática (Deducción, Corrección, Completitud) | ✅ Complete |
+| 6 | FOL con Igualdad (FOL^=) | ✅ Complete (1 sorry pendiente) |
+| 6b | FOLPure (sin igualdad, 0 sorries) | ✅ Complete |
+| 6c | PropLogic (subconjunto proposicional) | ✅ Complete |
+| 6d | TheoryFramework (marco genérico) | ✅ Complete |
+| 7 | ROBINSON_PlusPlus (Aritmética sobre FOL) | 🔄 Pendiente |
+| 8 | Cerrar sorry FOL^= + teorías concretas | 🔄 Pendiente |
 
-> See [NEXT-STEPS.md](NEXT-STEPS.md) for detailed phase planning.
-
----
-
-## Next Steps
-
-1. Etiquetar la versión v1.0.0 (FOL puro) en Git.
-2. Crear la rama `feature/fol-igualdad`.
-3. Modificar `FOL.lean` para introducir `Formula.eq`.
+> Ver [NEXT-STEPS.md](NEXT-STEPS.md) y [PLANNING.md](PLANNING.md) para el detalle.
 
 ---
 
 **Author**: Julián Calderón Almendros
-*Last updated: 2026-04-20 00:00*
-
-[![License](https://img.shields.io/badge/license-MIT-green)](LICENSE)
+*Last updated: 2026-05-16*
 
 [![License](https://img.shields.io/badge/license-MIT-green)](LICENSE)

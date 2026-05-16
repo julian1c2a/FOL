@@ -1,70 +1,100 @@
-# ProjectName
+# FOL Ecosystem — Formalización de Lógica en Lean 4
 
 [![Lean 4](https://img.shields.io/badge/Lean-v4.28.0-blue)](https://leanprover.github.io/)
 [![Build Status](https://img.shields.io/badge/build-passing-brightgreen)](CURRENT-STATUS-PROJECT.md)
 [![License](https://img.shields.io/badge/license-MIT-green)](LICENSE)
-[![Coverage](https://img.shields.io/badge/proofs-100%25%20complete-brightgreen)](CURRENT-STATUS-PROJECT.md)
+[![Sorries](https://img.shields.io/badge/sorries-1%20(expected)-yellow)](CURRENT-STATUS-PROJECT.md)
 
-> **Status**: See [CURRENT-STATUS-PROJECT.md](CURRENT-STATUS-PROJECT.md) for complete details
+> **Status**: Ver [CURRENT-STATUS-PROJECT.md](CURRENT-STATUS-PROJECT.md) para detalles completos.
 
-Una implementación formal de la **Lógica de Primer Orden (FOL)** en Lean 4, construida completamente desde cero sin dependencias de Mathlib.
+Cuatro librerías Lean 4 en un mismo repositorio, construidas desde cero sin dependencias de Mathlib:
+
+| Librería | Descripción | Sorries |
+|----------|-------------|---------|
+| `FOL` | Lógica de Primer Orden **con** igualdad (FOL^=) | 1 (esperado) |
+| `FOLPure` | Lógica de Primer Orden **sin** igualdad | 0 |
+| `PropLogic` | Lógica proposicional (subconjunto sin cuantificadores) | 0 |
+| `TheoryFramework` | Marco genérico de teorías sobre cualquiera de las tres lógicas | 0 |
 
 ## Description
 
-Este proyecto formaliza la sintaxis, semántica y metamatemática de la Lógica de Primer Orden clásica. El objetivo ha sido proporcionar una base rigurosa, computacionalmente clara y matemática del comportamiento del razonamiento lógico formal.
+Este ecosistema formaliza la sintaxis, semántica y metamatemática de la Lógica Clásica en múltiples capas, con el objetivo de proporcionar una base rigurosa para la fundamentación de la matemática.
 
 **Características principales:**
 
-- **Sintaxis Rigurosa**: Implementación de fórmulas y términos mediante índices de De Bruijn, resolviendo elegantemente el problema de la captura de variables en cuantificadores ($\forall, \exists$).
-- **Sistema Deductivo**: Formalización de un sistema de Deducción Natural extendido con reglas de reescritura locales.
-- **Automatización (Metaprogramación)**: Desarrollo de tácticas (`derive_hyp`, `derive_weaken`, `derive_rewrite`) utilizando el framework `MetaM` de Lean 4 para agilizar demostraciones.
-- **Semántica Tarskiana**: Definición precisa de Modelos, funciones de evaluación y la noción de satisfacción lógica ($\Gamma \models f$).
+- **Sintaxis De Bruijn**: Índices de De Bruijn en fórmulas y términos, evitando la captura de variables en cuantificadores.
+- **Deducción Natural**: Sistema extendido con reglas de reescritura local y RAA (lógica clásica).
+- **Automatización**: Tácticas `derive_hyp`, `derive_weaken`, `derive_rewrite` via `MetaM`.
+- **Semántica Tarskiana**: Modelos, evaluación de fórmulas, satisfacción `Γ ⊨ f`.
+- **Marco Genérico**: `class LogicSystem (F : Type)` que abstrae las tres lógicas con metateorémas reutilizables.
 
-**Hitos Metamatemáticos Demostrados:**
+**Hitos Metamatemáticos:**
 
-1. Tautologías clásicas y equivalencias (Doble Negación, De Morgan, Dualidad de Cuantificadores).
-2. **Teorema de Deducción**.
-3. **Teorema de Corrección (Soundness)**: $\Gamma \vdash A \implies \Gamma \models A$.
-4. **Construcción de Henkin y Lema de Lindenbaum**.
-5. **Teorema de Completitud de Gödel (para FOL y FOL con Igualdad)**: $\Gamma \models A \implies \Gamma \vdash A$.
-6. **Teorema de Compacidad Semántica**.
+1. Teorema de Deducción.
+2. **Teorema de Corrección** (Soundness): `Γ ⊢ A → Γ ⊨ A`.
+3. Construcción de Henkin + Lema de Lindenbaum.
+4. **Teorema de Completitud de Gödel**: `Γ ⊨ A → Γ ⊢ A` (FOL, FOLPure, PropLogic).
+5. **Teorema de Compacidad Semántica**.
+6. Metateorémas genéricos sobre cualquier `LogicSystem`: monotonía de pruebas, preservación de inconsistencia, extensiones conservativas.
 
 ## Modules
 
-| Module | Namespace | Dependencies | Status |
-|--------|-----------|--------------|--------|
-| `Prelim.lean` | `top-level` | `Init.Classical` | ✅ Complete |
-| `FOL.lean` | `top-level` | `Prelim.lean` | ✅ Complete |
-| `Tactics.lean` | `top-level` | `FOL.lean` | ✅ Complete |
-| `Deduction.lean` | `FOL.Metamath.Deduction` | `FOL.lean`, `Tactics.lean` | ✅ Complete |
-| `Semantics.lean` | `FOL.Metamath.Semantics` | `FOL.lean` | ✅ Complete |
-| `Soundness.lean` | `FOL.Metamath.Soundness` | `Semantics.lean`, `Tactics.lean` | ✅ Complete |
-| `Completeness.lean` | `FOL.Metamath.Completeness` | `Semantics.lean`, `Deduction.lean` | ✅ Complete |
-| `Compacity.lean` | `FOL.Metamath.Compacity` | `Completeness.lean`, `Soundness.lean` | ✅ Complete |
-| `Theorems/Eq.lean` | `FOL.Theorems.Eq` | `FOL.FOL` | ✅ Complete |
+### `FOL` — FOL con Igualdad
+
+| Module | Namespace | Status |
+|--------|-----------|--------|
+| `Prelim.lean` | top-level | ✅ |
+| `FOL.lean` | top-level | ✅ |
+| `Tactics.lean` | top-level | ✅ |
+| `Deduction.lean` | `FOL.Metamath.Deduction` | ✅ |
+| `Semantics.lean` | `FOL.Metamath.Semantics` | ✅ |
+| `Soundness.lean` | `FOL.Metamath.Soundness` | ✅ |
+| `Completeness.lean` | `FOL.Metamath.Completeness` | ⚠️ 1 sorry |
+| `Compacity.lean` | `FOL.Metamath.Compacity` | ✅ |
+| `Theorems/Impl.lean`, `Neg.lean`, `Derived.lean`, `Quantifiers.lean`, `Eq.lean` | — | ✅ |
+
+### `FOLPure` / `PropLogic` — estructura análoga, 0 sorries
+
+### `TheoryFramework`
+
+| Module | Purpose |
+|--------|---------|
+| `Logic.lean` | `class LogicSystem (F : Type)` |
+| `Theory.lean` | `structure Theory F`, `proves`, `models` |
+| `Properties.lean` | `IsConsistent`, `IsSyntacticallyComplete`, … |
+| `Relations.lean` | `LE`, `TheoryEquivalent`, `IsConservativeExtension`, … |
+| `MetaTheorems.lean` | `proves_iff_models`, `proves_monotone`, … |
+| `Instances/` | Instancias para PropLogic, FOLPure, FOL |
 
 ## Project Structure
 
 ```text
-FOL/
-├── Prelim.lean              # Preliminary definitions
-├── FOL.lean                 # Syntax, De Bruijn, and Natural Deduction
-├── Tactics.lean             # Metaprogramming macros
-├── Deduction.lean           # Deduction Theorem
-├── Semantics.lean           # Semantic evaluation & Models
-├── Soundness.lean           # Soundness Theorem
-├── Completeness.lean        # Gödel's Completeness Theorem & Henkin construction
-├── Compacity.lean           # Compactness & Consistency Theorems
-└── Theorems/                # Logical equivalences, tautologies, and rules
-    ├── Impl.lean
-    ├── Neg.lean
-    ├── Derived.lean
-    ├── Quantifiers.lean
-    └── Eq.lean
+repo/
+├── FOL/                     # FOL^= con igualdad
+│   ├── FOL.lean             # Sintaxis + Derives (incl. eq, refl, subst)
+│   ├── Tactics.lean
+│   ├── Deduction.lean
+│   ├── Semantics.lean
+│   ├── Soundness.lean
+│   ├── Completeness.lean    # ⚠️ 1 sorry (eq/Henkin)
+│   ├── Compacity.lean
+│   └── Theorems/
+├── FOLPure/                 # FOL sin igualdad — 0 sorries
+│   └── [misma estructura]
+├── PropLogic/               # Lógica proposicional — 0 sorries
+│   └── [estructura análoga]
+├── TheoryFramework/         # Marco genérico
+│   ├── Logic.lean
+│   ├── Theory.lean
+│   ├── Properties.lean
+│   ├── Relations.lean
+│   ├── MetaTheorems.lean
+│   └── Instances/
+├── FOL.lean                 # Barrel FOL^=
+├── FOLPure.lean             # Barrel FOLPure
+├── PropLogic.lean           # Barrel PropLogic
+└── TheoryFramework.lean     # Barrel TheoryFramework
 ```
-
-> As the project grows, organize modules into thematic subdirectories.
-> See AI-GUIDE.md §22 for the directory organization protocol.
 
 ## Installation
 
@@ -74,70 +104,70 @@ cd ProjectName
 lake build
 ```
 
+Para construir una sola librería:
+
+```bash
+lake build FOLPure
+lake build PropLogic
+lake build TheoryFramework
+```
+
+Para usar una instancia concreta del TheoryFramework:
+
+```lean
+import TheoryFramework
+import TheoryFramework.Instances.FOLPure  -- o PropLogic / FOL (no mezclar)
+```
+
 ## Requirements
 
-- **Lean 4**: v4.28.0 or later
-- **Lake**: Included with Lean 4
+- **Lean 4**: v4.28.0 o posterior
+- **Lake**: incluido con Lean 4
+- Sin dependencias de Mathlib.
 
 ## Development Workflow
 
 ```bash
-# Initialize lock system (first time only)
-bash git-lock.bash init
-
-# Create a new module (supports subdirectories)
+make build      # lake build
+make sorry      # check-sorry.bash
+make status     # locked files + sorry status
 bash new-module.bash ModuleName
-bash new-module.bash Topic/SubModule
-
-# Build
-make build
-
-# Check for sorry
-make sorry
-
-# Show locked files and sorry status
-make status
-
-# Regenerate root import file
 bash gen-root.bash
 ```
 
-> See [WORKFLOW.md](WORKFLOW.md) for the complete development workflow.
+> Ver [WORKFLOW.md](WORKFLOW.md) para el flujo completo.
 
 ## Documentation
 
 | Document | Purpose |
 |----------|---------|
-| [WORKFLOW.md](WORKFLOW.md) | ⭐ **Complete development workflow** (start here after setup) |
-| [REFERENCE.md](REFERENCE.md) | Technical reference for all definitions and theorems |
-| [AI-GUIDE.md](AI-GUIDE.md) | Documentation standards, naming conventions, and AI assistant guide |
-| [NAMING-CONVENTIONS.md](NAMING-CONVENTIONS.md) | Full Mathlib-style naming dictionary and formation rules |
-| [CHANGELOG.md](CHANGELOG.md) | Change history |
-| [DEPENDENCIES.md](DEPENDENCIES.md) | Module dependency diagrams |
-| [DECISIONS.md](DECISIONS.md) | Architectural Decision Records (ADR) |
-| [CURRENT-STATUS-PROJECT.md](CURRENT-STATUS-PROJECT.md) | Current project status and metrics |
-| [NEXT-STEPS.md](NEXT-STEPS.md) | Planned development phases |
-| [THOUGHTS.md](THOUGHTS.md) | Design journal and ideas |
+| [WORKFLOW.md](WORKFLOW.md) | ⭐ Flujo de desarrollo completo |
+| [CURRENT-STATUS-PROJECT.md](CURRENT-STATUS-PROJECT.md) | Estado actual y métricas |
+| [NEXT-STEPS.md](NEXT-STEPS.md) | Fases de desarrollo planificadas |
+| [PLANNING.md](PLANNING.md) | Hoja de ruta estratégica |
+| [REFERENCE.md](REFERENCE.md) | Referencia técnica de definiciones y teoremas |
+| [AI-GUIDE.md](AI-GUIDE.md) | Guía de convenciones y estándares |
+| [NAMING-CONVENTIONS.md](NAMING-CONVENTIONS.md) | Convenciones de nombres Mathlib-style |
+| [CHANGELOG.md](CHANGELOG.md) | Historial de cambios |
+| [DEPENDENCIES.md](DEPENDENCIES.md) | Diagramas de dependencias |
+| [DECISIONS.md](DECISIONS.md) | Architectural Decision Records |
+| [THOUGHTS.md](THOUGHTS.md) | Diario de diseño |
 
 ## Naming Conventions
 
-This project follows [Mathlib4 naming conventions](https://leanprover-community.github.io/contribute/naming.html).
-See [NAMING-CONVENTIONS.md](NAMING-CONVENTIONS.md) for the full reference.
-
-**Quick summary:**
+Este proyecto sigue las [convenciones de Mathlib4](https://leanprover-community.github.io/contribute/naming.html).
 
 | Entity | Convention | Example |
 |--------|------------|---------|
 | Module | `UpperCamelCase` | `CoreAxioms.lean` |
-| Namespace | `UpperCamelCase` | `ProjectName.Topic` |
-| Type / Prop predicate | `UpperCamelCase` | `IsSet`, `IsFun` |
-| Function / value def | `lowerCamelCase` | `powerset`, `dom` |
-| Axiom | `TAG_ShortName` | `ZF_Ext`, `MK_Pair` |
-| Theorem | `subject_predicate` | `mem_pair_iff` |
+| Namespace | `UpperCamelCase` | `FOL.Metamath.Soundness` |
+| Type / Prop predicate | `UpperCamelCase` | `IsConsistent`, `IsFun` |
+| Function / value def | `lowerCamelCase` | `neg`, `satisfies` |
+| Theorem | `subject_predicate` | `proves_iff_models` |
 
 ## License
 
-This project is under the MIT License. See [LICENSE](LICENSE) for details.
+MIT License. Ver [LICENSE](LICENSE).
 
 ## Author
 
@@ -145,19 +175,11 @@ Julián Calderón Almendros
 
 ## Credits
 
-### Educational Resources
-
-- [add resources here]
-
-### Bibliographic References
-
-- [add references here]
-
 ### AI Tools
 
-- Claude Code AI (Anthropic)
+- Claude (Anthropic) — vía GitHub Copilot CLI
 
 ---
 
 **Author**: Julián Calderón Almendros
-*Last updated: 2026-04-25 21:30*
+*Last updated: 2026-05-16*
