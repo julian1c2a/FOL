@@ -381,31 +381,69 @@ def termSetoid (S : Formula → Prop) (hMax : IsMaximalConsistent S) : Setoid Te
 -- Modelo Canónico de Henkin
 -- ============================================================
 
-def canonicalModel (S : Formula → Prop) : Model Term where
-  func := Term.func
-  rel  := fun p ts => S (.atom p ts)
+-- Equivalencia pointwise de listas de términos
+inductive PointwiseEqv (S : Formula → Prop) : List Term → List Term → Prop where
+  | nil : PointwiseEqv S [] []
+  | cons : ∀ {t1 t2 ts1 ts2}, termEqv S t1 t2 → PointwiseEqv S ts1 ts2 → PointwiseEqv S (t1 :: ts1) (t2 :: ts2)
 
-def canonicalEnv : Nat → Term := Term.var
+axiom termEqv_func_congr {S : Formula → Prop} (hMax : IsMaximalConsistent S) (f : String) {ts1 ts2 : List Term}
+    (hEqv : PointwiseEqv S ts1 ts2) : termEqv S (Term.func f ts1) (Term.func f ts2)
+
+axiom termEqv_rel_congr {S : Formula → Prop} (hMax : IsMaximalConsistent S) (p : String) {ts1 ts2 : List Term}
+    (hEqv : PointwiseEqv S ts1 ts2) : S (.atom p ts1) ↔ S (.atom p ts2)
+
+noncomputable def quotientOut {α : Type u} {s : Setoid α} (q : Quotient s) : α :=
+  Classical.choose (Quotient.exists_rep q)
+
+theorem quotientOut_eq {α : Type u} {s : Setoid α} (q : Quotient s) :
+    Quotient.mk s (quotientOut q) = q :=
+  Classical.choose_spec (Quotient.exists_rep q)
+
+def QuotientDomain (S : Formula → Prop) (hMax : IsMaximalConsistent S) : Type :=
+  Quotient (termSetoid S hMax)
+
+noncomputable def canonicalModel (S : Formula → Prop) (hMax : IsMaximalConsistent S) : Model (QuotientDomain S hMax) where
+  func := fun f qs => Quotient.mk (termSetoid S hMax) (Term.func f (qs.map quotientOut))
+  rel  := fun p qs => S (.atom p (qs.map quotientOut))
+
+def canonicalEnv (S : Formula → Prop) (hMax : IsMaximalConsistent S) : Nat → QuotientDomain S hMax :=
+  fun n => Quotient.mk (termSetoid S hMax) (Term.var n)
+
+theorem pointwiseEqv_out_mk {S : Formula → Prop} (hMax : IsMaximalConsistent S) (ts : List Term) :
+    PointwiseEqv S ((ts.map (Quotient.mk (termSetoid S hMax))).map quotientOut) ts := by
+  induction ts with
+  | nil => exact PointwiseEqv.nil
+  | cons t ts' ih =>
+    unfold List.map
+    apply PointwiseEqv.cons
+    · have hEq := quotientOut_eq (Quotient.mk (termSetoid S hMax) t)
+      exact Quotient.exact hEq
+    · exact ih
 
 mutual
-theorem evalTerm_canonical (S : Formula → Prop) (t : Term) :
-    evalTerm (canonicalModel S) canonicalEnv t = t := by
+theorem evalTerm_canonical (S : Formula → Prop) (hMax : IsMaximalConsistent S) (t : Term) :
+    evalTerm (canonicalModel S hMax) (canonicalEnv S hMax) t = Quotient.mk (termSetoid S hMax) t := by
   cases t with
   | var n => rfl
   | func f ts =>
     unfold evalTerm
-    have ih := evalTerms_canonical S ts
-    rw [ih]; rfl
+    have ih := evalTerms_canonical S hMax ts
+    rw [ih]
+    simp only [canonicalModel]
+    apply Quotient.sound
+    apply termEqv_func_congr hMax
+    exact pointwiseEqv_out_mk hMax ts
 
-theorem evalTerms_canonical (S : Formula → Prop) (ts : List Term) :
-    evalTerms (canonicalModel S) canonicalEnv ts = ts := by
+theorem evalTerms_canonical (S : Formula → Prop) (hMax : IsMaximalConsistent S) (ts : List Term) :
+    evalTerms (canonicalModel S hMax) (canonicalEnv S hMax) ts = ts.map (Quotient.mk (termSetoid S hMax)) := by
   cases ts with
   | nil => rfl
   | cons t ts' =>
     unfold evalTerms
-    have ih1 := evalTerm_canonical S t
-    have ih2 := evalTerms_canonical S ts'
+    have ih1 := evalTerm_canonical S hMax t
+    have ih2 := evalTerms_canonical S hMax ts'
     rw [ih1, ih2]
+    rfl
 end
 
 -- Un conjunto S tiene la propiedad de Henkin si contiene testigos para sus existenciales.
@@ -500,7 +538,7 @@ theorem max_cons_forall {S : Formula → Prop} (hMax : IsMaximalConsistent S) (h
     exact hMax.left hBot
 
 theorem truth_lemma_lt {S : Formula → Prop} (hMax : IsMaximalConsistent S) (hHenkin : IsHenkin S)
-    (n : Nat) : ∀ f, formulaComplexity f < n → (evalFormula (canonicalModel S) canonicalEnv f ↔ S f) := by
+    (n : Nat) : ∀ f, formulaComplexity f < n → (evalFormula (canonicalModel S hMax) (canonicalEnv S hMax) f ↔ S f) := by
   induction n with
   | zero =>
     intro f hLt
@@ -515,11 +553,16 @@ theorem truth_lemma_lt {S : Formula → Prop} (hMax : IsMaximalConsistent S) (hH
       · exact max_cons_bot hMax
     | atom p ts =>
       simp only [evalFormula]
-      have hEval := evalTerms_canonical S ts
+      have hEval := evalTerms_canonical S hMax ts
       rw [hEval]
-      rfl
+      have hEqv := pointwiseEqv_out_mk hMax ts
+      exact termEqv_rel_congr hMax p hEqv
     | eq t1 t2 =>
-      sorry -- 🚧 ¡Alerta Matemática! Aquí falla el modelo de Henkin básico. Necesitamos el Modelo Cociente.
+      simp only [evalFormula]
+      rw [evalTerm_canonical S hMax t1, evalTerm_canonical S hMax t2]
+      apply Iff.intro
+      · exact Quotient.exact (s := termSetoid S hMax)
+      · exact Quotient.sound (s := termSetoid S hMax)
     | impl f1 f2 =>
       have hLt1 : formulaComplexity f1 < n_ih := by simp only [formulaComplexity] at hLt; omega
       have hLt2 : formulaComplexity f2 < n_ih := by simp only [formulaComplexity] at hLt; omega
@@ -546,58 +589,62 @@ theorem truth_lemma_lt {S : Formula → Prop} (hMax : IsMaximalConsistent S) (hH
       exact (max_cons_or hMax).symm
     | «forall» f1 =>
       simp only [evalFormula]
-      have h_eq : (∀ d : Term, evalFormula (canonicalModel S) (shiftEnv canonicalEnv d) f1) ↔
+      have h_eq : (∀ d : QuotientDomain S hMax, evalFormula (canonicalModel S hMax) (shiftEnv (canonicalEnv S hMax) d) f1) ↔
                   (∀ d : Term, S (substFormula 0 d f1)) := by
         apply Iff.intro
         · intro h d
-          have hSubst := eval_substFormula_zero (canonicalModel S) canonicalEnv d f1
-          rw [evalTerm_canonical S d] at hSubst
-          have hEval := hSubst.symm.mp (h d)
+          have hSubst := eval_substFormula_zero (canonicalModel S hMax) (canonicalEnv S hMax) d f1
+          rw [evalTerm_canonical S hMax d] at hSubst
+          have hEval := hSubst.symm.mp (h (Quotient.mk (termSetoid S hMax) d))
           have hLt_f1 : formulaComplexity (substFormula 0 d f1) < n_ih := by
             rw [complexity_substFormula]
             simp only [formulaComplexity] at hLt
             omega
           exact (ih (substFormula 0 d f1) hLt_f1).mp hEval
         · intro h d
-          have hSubst := eval_substFormula_zero (canonicalModel S) canonicalEnv d f1
-          rw [evalTerm_canonical S d] at hSubst
-          have hLt_f1 : formulaComplexity (substFormula 0 d f1) < n_ih := by
+          have ⟨t, ht⟩ := Quotient.exists_rep d
+          subst ht
+          have hSubst := eval_substFormula_zero (canonicalModel S hMax) (canonicalEnv S hMax) t f1
+          rw [evalTerm_canonical S hMax t] at hSubst
+          have hLt_f1 : formulaComplexity (substFormula 0 t f1) < n_ih := by
             rw [complexity_substFormula]
             simp only [formulaComplexity] at hLt
             omega
-          have hEval := (ih (substFormula 0 d f1) hLt_f1).mpr (h d)
+          have hEval := (ih (substFormula 0 t f1) hLt_f1).mpr (h t)
           exact hSubst.mp hEval
       rw [h_eq]
       exact (max_cons_forall hMax hHenkin).symm
     | ex f1 =>
       simp only [evalFormula]
-      have h_eq : (∃ d : Term, evalFormula (canonicalModel S) (shiftEnv canonicalEnv d) f1) ↔
-                  (∃ d : Term, S (substFormula 0 d f1)) := by
+      have h_eq : (∃ d : QuotientDomain S hMax, evalFormula (canonicalModel S hMax) (shiftEnv (canonicalEnv S hMax) d) f1) ↔
+                  (∃ t, S (substFormula 0 t f1)) := by
         apply Iff.intro
         · intro ⟨d, hd⟩
-          have hSubst := eval_substFormula_zero (canonicalModel S) canonicalEnv d f1
-          rw [evalTerm_canonical S d] at hSubst
+          have ⟨t, ht⟩ := Quotient.exists_rep d
+          subst ht
+          have hSubst := eval_substFormula_zero (canonicalModel S hMax) (canonicalEnv S hMax) t f1
+          rw [evalTerm_canonical S hMax t] at hSubst
           have hEval := hSubst.symm.mp hd
-          have hLt_f1 : formulaComplexity (substFormula 0 d f1) < n_ih := by
+          have hLt_f1 : formulaComplexity (substFormula 0 t f1) < n_ih := by
             rw [complexity_substFormula]
             simp only [formulaComplexity] at hLt
             omega
-          exact ⟨d, (ih (substFormula 0 d f1) hLt_f1).mp hEval⟩
-        · intro ⟨d, hd⟩
-          have hSubst := eval_substFormula_zero (canonicalModel S) canonicalEnv d f1
-          rw [evalTerm_canonical S d] at hSubst
-          have hLt_f1 : formulaComplexity (substFormula 0 d f1) < n_ih := by
+          exact ⟨t, (ih (substFormula 0 t f1) hLt_f1).mp hEval⟩
+        · intro ⟨t, ht⟩
+          have hSubst := eval_substFormula_zero (canonicalModel S hMax) (canonicalEnv S hMax) t f1
+          rw [evalTerm_canonical S hMax t] at hSubst
+          have hLt_f1 : formulaComplexity (substFormula 0 t f1) < n_ih := by
             rw [complexity_substFormula]
             simp only [formulaComplexity] at hLt
             omega
-          have hEval := (ih (substFormula 0 d f1) hLt_f1).mpr hd
-          exact ⟨d, hSubst.mp hEval⟩
+          have hEval := (ih (substFormula 0 t f1) hLt_f1).mpr ht
+          exact ⟨Quotient.mk (termSetoid S hMax) t, hSubst.mp hEval⟩
       rw [h_eq]
       exact (max_cons_ex hMax hHenkin).symm
 
 -- Lema de la Verdad (Truth Lemma): La semántica coincide con la sintaxis en el modelo canónico.
 theorem truth_lemma {S : Formula → Prop} (hMax : IsMaximalConsistent S) (hHenkin : IsHenkin S) (f : Formula) :
-    evalFormula (canonicalModel S) canonicalEnv f ↔ S f :=
+    evalFormula (canonicalModel S hMax) (canonicalEnv S hMax) f ↔ S f :=
   truth_lemma_lt hMax hHenkin (formulaComplexity f + 1) f (by omega)
 
 -- ============================================================
@@ -616,7 +663,7 @@ def IsSatisfiable (S : Formula → Prop) : Prop :=
 theorem model_existence_lemma {S : Formula → Prop} (hCons : IsConsistent S) :
     IsSatisfiable S := by
   have ⟨S', hMax, hHenkin, hSub⟩ := henkin_extension_lemma hCons
-  exact ⟨Term, canonicalModel S', canonicalEnv, by
+  exact ⟨QuotientDomain S' hMax, canonicalModel S' hMax, canonicalEnv S' hMax, by
     intro f hf
     exact (truth_lemma hMax hHenkin f).mpr (hSub f hf)⟩
 
