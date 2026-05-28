@@ -1,40 +1,55 @@
 # Hoja de Ruta Fundacional — Plan Estratégico
 
-**Última actualización:** 2026-05-08 18:30
+**Última actualización:** 2026-05-16
 **Autor**: Julián Calderón Almendros
 
-> Este documento describe la visión estratégica y la planificación a largo plazo para los proyectos que se construirán sobre la base del sistema `FOL`.
+> Este documento describe la visión estratégica y la planificación a largo plazo. La arquitectura ha crecido: ahora hay **4 lean_libs** en el mismo repositorio.
 
 ---
 
 ## 1. Visión General
 
-El objetivo es trascender la lógica pura para abordar la **fundamentación de las matemáticas**. Esto implica usar el sistema `FOL=` como cimiento para construir, paso a paso, la aritmética, las estructuras de datos (tuplas, listas) y, eventualmente, teorías más complejas como la de conjuntos.
+El objetivo es trascender la lógica pura para abordar la **fundamentación de las matemáticas**. El ecosistema actual se compone de:
 
-Para mantener la claridad conceptual y la modularidad, este esfuerzo se dividirá en tres proyectos interconectados pero independientes.
+- **`FOL`** — FOL con igualdad (FOL^=), base estable.
+- **`FOLPure`** — FOL sin igualdad, 0 sorries, Completitud y Compacidad totales.
+- **`PropLogic`** — Lógica proposicional, 0 sorries.
+- **`TheoryFramework`** — Capa genérica (`class LogicSystem`) sobre las tres lógicas.
 
 ---
 
 ## 2. Arquitectura de Proyectos
 
-En lugar de expandir el proyecto `FOL` indefinidamente, adoptaremos una arquitectura de micro-proyectos, donde cada uno tiene un objetivo claro y depende de los anteriores.
+### Librería 1: `FOL` — FOL con Igualdad (FOL^=)
 
-### Proyecto 1: `FOL` (Este Proyecto)
+- **Rol**: Fundamento Lógico con igualdad.
+- **Estado**: Estable. 1 sorry en `Completeness.lean` (caso eq/Henkin, documentado).
 
-- **Rol**: **Fundamento Lógico**.
-- **Descripción**: Provee una formalización completa y verificada de la Lógica de Primer Orden con Igualdad (`FOL=`).
-- **Estado**: Se considera una dependencia estable y completa. Su desarrollo futuro se limitará a correcciones o mejoras internas, pero su API se mantendrá estable.
+### Librería 2: `FOLPure` — FOL sin Igualdad
 
-### Proyecto 2: `ROBINSON_PlusPlus` (Nuevo Proyecto)
+- **Rol**: FOL pura, sin predicado `=`. 0 sorries. Completitud y Compacidad completas.
+- **Estado**: ✅ Completo.
+
+### Librería 3: `PropLogic` — Lógica Proposicional
+
+- **Rol**: Subconjunto de FOL sin cuantificadores. Stack metamatemático completo.
+- **Estado**: ✅ Completo.
+
+### Librería 4: `TheoryFramework` — Marco Genérico
+
+- **Rol**: `class LogicSystem (F : Type)` que abstrae las tres lógicas. Permite definir teorías y demostrar propiedades genéricas (consistencia, independencia, extensiones conservativas).
+- **Estado**: ✅ Completo.
+
+### Proyecto Externo: `ROBINSON_PlusPlus` (Nuevo Proyecto)
 
 - **Rol**: **Fundamento Aritmético**.
-- **Descripción**: Un proyecto dedicado a explorar y formalizar diferentes sistemas axiomáticos para la aritmética, construidos sobre `FOL=`. Su objetivo es fundar rigurosamente los números naturales y, a partir de ellos, las tuplas y listas.
-- **Dependencia**: `FOL`.
+- **Descripción**: Proyecto dedicado a formalizar sistemas axiomáticos para la aritmética sobre `FOL`/`FOLPure`. Objetivo: fundar los naturales, las tuplas y listas.
+- **Dependencia**: `FOL` o `FOLPure` + `TheoryFramework`.
 
-### Proyecto 3: `FOL_Compiler` (Nuevo Proyecto)
+### Proyecto Externo: `FOL_Compiler` (Nuevo Proyecto)
 
 - **Rol**: **Especificación Material**.
-- **Descripción**: Un proyecto que implementa un parser y un "pretty-printer" para traducir entre una notación de texto de fórmulas lógicas y el tipo de datos `Formula` de Lean del proyecto `FOL`. Servirá como un modelo material y una herramienta de prueba.
+- **Descripción**: Parser `String → Formula` y pretty-printer `Formula → String`.
 - **Dependencia**: `FOL`.
 
 ---

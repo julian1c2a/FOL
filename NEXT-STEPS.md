@@ -1,6 +1,6 @@
 # Próximos Pasos — FOL
 
-**Última actualización:** 2026-04-25 21:30
+**Última actualización:** 2026-05-16
 **Autor**: Julián Calderón Almendros
 
 > Este archivo hace un seguimiento de las fases de desarrollo planificadas para el proyecto de Lógica de Primer Orden (FOL).
@@ -118,6 +118,71 @@
 
 ---
 
+## Fase 6b: FOLPure — FOL sin Igualdad
+
+**Objetivo**: Variante de FOL sin el predicado `=`, con Completitud y Compacidad completas y 0 sorries.
+
+**Estado**: ✅ Completo — librería `FOLPure` separada en el mismo repo.
+
+---
+
+## Fase 6c: PropLogic — Lógica Proposicional
+
+**Objetivo**: Subconjunto sin cuantificadores con el mismo stack metamatemático (Deducción, Corrección, Completitud, Compacidad).
+
+**Estado**: ✅ Completo — librería `PropLogic` separada, 0 sorries.
+
+---
+
+## Fase 6d: TheoryFramework — Marco Genérico de Teorías
+
+**Objetivo**: Capa de abstracción `class LogicSystem (F : Type)` que unifica las tres lógicas y permite demostrar metateorémas una sola vez.
+
+**Tareas completadas**:
+- [x] `Logic.lean`: `LogicSystem`, `DerivesSet`, `EntailsSet`
+- [x] `Theory.lean`: `structure Theory`, `proves`, `models`, `empty`, `fromList`, `singleton`
+- [x] `Properties.lean`: `IsConsistent`, `IsSyntacticallyComplete`, `IsAxiomRedundant`, `IsMaximalConsistent`
+- [x] `Relations.lean`: `LE (Theory F)`, `TheoryEquivalent`, `IsConservativeExtension`, `TheoryUnion`, `TheoryIntersection`
+- [x] `MetaTheorems.lean`: `proves_iff_models`, `proves_monotone`, `inconsistent_upward`, `equiv_of_conservative`, etc.
+- [x] Instancias para `PropLogic`, `FOLPure` y `FOL`
+
+**Estado**: ✅ Completo.
+
+---
+
+## Fase 7: Fundamentación de la Aritmética y Gödelización
+
+**Objetivo**: Utilizar el sistema FOL= para construir una base para la aritmética, definir tuplas, listas y funciones, y establecer las bases para la autorreferencia.
+
+**Tareas**:
+
+- [ ] **Axiomatización**: Introducir los axiomas de la Aritmética de Peano (restringida, sin inducción general) en una nueva teoría.
+- [ ] **Codificación de Tuplas**: Implementar la función de apareamiento de Cantor para codificar pares de números naturales `⟨x,y⟩` como un único número.
+- [ ] **Codificación de Listas**: Definir listas finitas como una construcción sobre las tuplas (`Cons(h,t)`).
+- [ ] **Codificación de Funciones**: Definir funciones discretas como listas de pares (grafos funcionales).
+- [ ] **Gödelización**: Esbozar el mapeo de símbolos y fórmulas a números de Gödel, permitiendo que el sistema hable de sus propias fórmulas y derivaciones.
+
+**Dependencias**: Fase 6 completada.
+**Complejidad**: Muy Alta
+
+---
+
+## Fase 8: Consolidación y Teorías Concretas
+
+**Objetivo**: Cerrar deudas técnicas y añadir teorías de ejemplo sobre el `TheoryFramework`.
+
+**Tareas**:
+
+- [ ] Cerrar el `sorry` de igualdad en `FOL/Completeness.lean` (modelo cociente completo para `Formula.eq`).
+- [ ] Definir una teoría concreta de ejemplo (ej. grupos, orden total) usando `TheoryFramework`.
+- [ ] Demostrar la independencia de axiomas en alguna teoría usando `IsAxiomRedundant`.
+- [ ] Explorar extensiones conservativas entre `PropLogic` y `FOLPure` via `IsConservativeExtension`.
+
+**Dependencias**: Fases 6a–6d completadas.
+**Complejidad**: Alta
+
+---
+
 ## Resumen de Estado
 
 | Fase | Descripción | Estado |
@@ -127,5 +192,9 @@
 | 3 | Conectivos y Cuantificadores | ✅ Completo |
 | 4 | Automatización | ✅ Completo |
 | 5 | Metamatemática | ✅ Completo |
-| 6 | FOL con Igualdad | ✅ Completo |
-| 7 | Fundamentación de la Aritmética | 🔄 En progreso |
+| 6 | FOL con Igualdad (FOL^=) | ✅ Completo |
+| 6b | FOLPure (sin igualdad, 0 sorries) | ✅ Completo |
+| 6c | PropLogic (proposicional) | ✅ Completo |
+| 6d | TheoryFramework (marco genérico) | ✅ Completo |
+| 7 | Fundamentación de la Aritmética | ❌ Pendiente |
+| 8 | Consolidación y Teorías Concretas | ❌ Pendiente |

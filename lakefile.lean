@@ -28,3 +28,9 @@ package «FOL» where
 @[default_target]
 lean_lib «FOL» where
 
+lean_lib «FOLPure» where
+
+lean_lib «PropLogic» where
+
+lean_lib «TheoryFramework» where
+

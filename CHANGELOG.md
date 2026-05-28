@@ -1,6 +1,6 @@
 # Changelog
 
-**Last updated:** 2026-04-20 00:00
+**Last updated:** 2026-05-16
 **Author**: Julián Calderón Almendros
 
 All notable changes to this project will be documented in this file.
@@ -9,6 +9,23 @@ Format based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+
+### Added (2026-05-16)
+
+- **TheoryFramework** — nueva `lean_lib` con marco genérico de teorías:
+  - `Logic.lean`: `class LogicSystem (F : Type)` con campos `derives`, `bottom`, `neg`, `semanticEntails`, `sound`, `complete`.
+  - `Theory.lean`: `structure Theory F`, operaciones `proves`, `models`, `empty`, `fromList`, `singleton`.
+  - `Properties.lean`: `IsConsistent`, `IsSyntacticallyComplete`, `IsAxiomRedundant`, `IsIrredundant`, `IsMaximalConsistent`.
+  - `Relations.lean`: `LE (Theory F)` (extensión de teorías), `TheoryEquivalent`, `IsConservativeExtension`, `TheoryUnion`, `TheoryIntersection`, lemas de monotonía.
+  - `MetaTheorems.lean`: `proves_iff_models`, `proves_monotone`, `models_monotone`, `inconsistent_upward`, `consistent_of_le`, `equiv_of_conservative`, `TheoryEquivalent.symm/trans`, `empty_le`.
+  - Instancias: `LogicSystem PropLogic.Formula`, `LogicSystem Formula` (FOLPure), `LogicSystem Formula` (FOL^=, heredando el sorry de Completeness).
+- **FOLPure** — nueva `lean_lib` con FOL sin igualdad (0 sorries):
+  - Misma arquitectura que `FOL` pero sin `Formula.eq`, `refl`, `subst`.
+  - Completitud de Gödel y Compacidad demostradas sin sorries.
+- **PropLogic** — nueva `lean_lib` con lógica proposicional (0 sorries):
+  - Subconjunto de FOLPure sin cuantificadores.
+  - Stack metamatemático completo: Deducción, Soundness, Completeness, Compacity.
+  - Módulos `Theorems/Impl.lean`, `Theorems/Neg.lean`, `Theorems/Derived.lean`.
 
 ### Added (2026-05-08 18:22)
 
