@@ -125,9 +125,8 @@ theorem substTerm_liftLift (t : Term) (c : Nat) (s : Term) :
     by_cases h1 : n < c
     · simp [liftTerm, substTerm, h1, show ¬ n = c + 1 from by omega, show ¬ n > c + 1 from by omega]
     · have hge2 : ¬ n + 1 < c := by omega
-      have hne : ¬ n + 1 + 1 = c + 1 := by omega
       have hgt : n + 1 + 1 > c + 1 := by omega
-      simp [liftTerm, substTerm, h1, hge2, hne, hgt]
+      simp [liftTerm, substTerm, h1, hge2, hgt]
       omega
   | func f ts =>
     simp only [liftTerm, substTerm]
