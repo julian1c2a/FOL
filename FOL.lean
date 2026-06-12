@@ -9,6 +9,7 @@ License: MIT
 -- Run 'bash gen-root.bash' after adding or removing modules.
 
 import FOL.FOL
+import FOL.MetaRules
 import FOL.Tactics
 import FOL.Theorems.Derived
 import FOL.Theorems.Impl
