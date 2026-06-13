@@ -50,6 +50,14 @@ axiom gen {Γ : List Formula} {A : Formula} (h : ∀ n : Term, Γ ⊢ substFormu
     **Meta-axioma** ω. -/
 axiom raa {Γ : List Formula} {A : Formula} (h : Γ ⊢ A → Γ ⊢ ⊥) : Γ ⊢ ¬A
 
+/-- **Eliminación de doble negación** (lógica CLÁSICA): de `Γ ⊢ ¬¬A` concluye
+    `Γ ⊢ A`. **Meta-axioma** — NO derivable de las reglas anteriores (todas
+    intuicionistamente válidas). Convierte el sistema en clásico, sólido para el
+    modelo estándar ℕ (coherente con la lectura ω-lógica "demostrabilidad =
+    verdad en ℕ"). Necesario p. ej. para la segunda mitad del Primer Teorema de
+    Gödel (`⊬ ¬G`). -/
+axiom dne {Γ : List Formula} {A : Formula} (h : Γ ⊢ neg (neg A)) : Γ ⊢ A
+
 /-- Conjunction introduction (wrapper de `Derives.intro_and`). -/
 def and_intro {Γ : List Formula} {A B : Formula} (h1 : Γ ⊢ A) (h2 : Γ ⊢ B) : Γ ⊢ (A ∧ B) :=
   Derives.intro_and Γ A B h1 h2
