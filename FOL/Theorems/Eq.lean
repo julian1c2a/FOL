@@ -181,4 +181,70 @@ theorem substFormula_lift_comm : ∀ (f : Formula) (c : Nat) (s : Term),
       rw [show liftTerm 0 (liftTerm c s) = liftTerm (c+1) (liftTerm 0 s) from liftTerm_comm_zero s c,
           iha (c+1) (liftTerm 0 s)]
 
+set_option linter.unusedSimpArgs false
+
+-- Conmutación subst/lift con lift en 0 y subst en `v+1` (nivel término).
+mutual
+theorem substTerm_lift_comm_zero (s : Term) (n : Term) (v : Nat) :
+    substTerm (v + 1) (liftTerm 0 n) (liftTerm 0 s) = liftTerm 0 (substTerm v n s) := by
+  cases s with
+  | var k =>
+      rw [show liftTerm 0 (.var k) = .var (k+1) from by simp [liftTerm]]
+      by_cases h1 : k = v
+      · subst h1; simp [substTerm, liftTerm]
+      · by_cases h2 : k > v
+        · simp [substTerm, liftTerm, show k + 1 ≠ v + 1 from by omega, show k + 1 > v + 1 from by omega,
+            h1, h2, show k - 1 + 1 = k from by omega]
+        · simp [substTerm, liftTerm, show k + 1 ≠ v + 1 from by omega, show ¬ k + 1 > v + 1 from by omega,
+            h1, h2]
+  | func f ts => simp only [liftTerm, substTerm]; congr 1; exact substTerms_lift_comm_zero ts n v
+theorem substTerms_lift_comm_zero (ts : List Term) (n : Term) (v : Nat) :
+    substTerms (v + 1) (liftTerm 0 n) (liftTerms 0 ts) = liftTerms 0 (substTerms v n ts) := by
+  cases ts with
+  | nil => rfl
+  | cons s ss => simp only [liftTerms, substTerms]; rw [substTerm_lift_comm_zero, substTerms_lift_comm_zero]
+end
+
+-- Composición subst-subst-lift generalizada al nivel `v` (nivel término).
+mutual
+theorem substTerm_subst_lift_gen (u : Term) (n s : Term) (v : Nat) :
+    substTerm v n (substTerm v s (liftTerm (v + 1) u)) = substTerm v (substTerm v n s) u := by
+  cases u with
+  | var k =>
+      by_cases h1 : k < v + 1
+      · rw [show liftTerm (v+1) (.var k) = .var k from by simp [liftTerm, h1]]
+        by_cases h2 : k = v
+        · subst h2; simp [substTerm]
+        · simp [substTerm, h2, show ¬ k > v from by omega]
+      · rw [show liftTerm (v+1) (.var k) = .var (k+1) from by simp [liftTerm, h1]]
+        simp [substTerm, show ¬ k + 1 = v from by omega, show k + 1 > v from by omega,
+          show ¬ k = v from by omega, show k > v from by omega]
+  | func f ts => simp only [liftTerm, substTerm]; congr 1; exact substTerms_subst_lift_gen ts n s v
+theorem substTerms_subst_lift_gen (ts : List Term) (n s : Term) (v : Nat) :
+    substTerms v n (substTerms v s (liftTerms (v + 1) ts)) = substTerms v (substTerm v n s) ts := by
+  cases ts with
+  | nil => rfl
+  | cons u us => simp only [liftTerms, substTerms]; rw [substTerm_subst_lift_gen, substTerms_subst_lift_gen]
+end
+
+/-- **Composición subst-subst-lift a nivel fórmula, generalizada al nivel `v`**:
+    `substFormula v n (substFormula v s (liftFormula (v+1) f)) = substFormula v (substTerm v n s) f`.
+    Casos ∀/∃ vía `substTerm_lift_comm_zero`; atom/eq vía la versión término. -/
+theorem subst_subst_lift_gen : ∀ (f : Formula) (n s : Term) (v : Nat),
+    substFormula v n (substFormula v s (liftFormula (v + 1) f)) = substFormula v (substTerm v n s) f := by
+  intro f
+  induction f with
+  | bottom => intro n s v; rfl
+  | atom p ts => intro n s v; simp only [liftFormula, substFormula, substTerms_subst_lift_gen]
+  | eq t u => intro n s v; simp only [liftFormula, substFormula, substTerm_subst_lift_gen]
+  | impl a b iha ihb => intro n s v; simp only [liftFormula, substFormula]; rw [iha, ihb]
+  | «forall» a iha =>
+      intro n s v; simp only [liftFormula, substFormula]
+      rw [iha (liftTerm 0 n) (liftTerm 0 s) (v+1), substTerm_lift_comm_zero]
+  | and a b iha ihb => intro n s v; simp only [liftFormula, substFormula]; rw [iha, ihb]
+  | or a b iha ihb => intro n s v; simp only [liftFormula, substFormula]; rw [iha, ihb]
+  | ex a iha =>
+      intro n s v; simp only [liftFormula, substFormula]
+      rw [iha (liftTerm 0 n) (liftTerm 0 s) (v+1), substTerm_lift_comm_zero]
+
 end FOL
