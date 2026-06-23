@@ -142,4 +142,43 @@ theorem substTerms_liftLift (ts : List Term) (c : Nat) (s : Term) :
     exact ⟨substTerm_liftLift t c s, substTerms_liftLift ts' c s⟩
 end
 
+-- Conmutación de `liftTerm 0` con `liftTerm c` (estándar De Bruijn).
+mutual
+theorem liftTerm_comm_zero (t : Term) (c : Nat) :
+    liftTerm 0 (liftTerm c t) = liftTerm (c + 1) (liftTerm 0 t) := by
+  cases t with
+  | var n =>
+      by_cases h : n < c
+      · simp [liftTerm, h, show n + 1 < c + 1 from by omega]
+      · simp [liftTerm, h, show ¬ n + 1 < c + 1 from by omega]
+  | func f ts => simp only [liftTerm]; congr 1; exact liftTerms_comm_zero ts c
+theorem liftTerms_comm_zero (ts : List Term) (c : Nat) :
+    liftTerms 0 (liftTerms c ts) = liftTerms (c + 1) (liftTerms 0 ts) := by
+  cases ts with
+  | nil => rfl
+  | cons t ts' => simp only [liftTerms]; rw [liftTerm_comm_zero, liftTerms_comm_zero]
+end
+
+/-- **Conmutación subst/lift a nivel fórmula** (versión fórmula de `substTerm_lift_comm`):
+    `substFormula (c+1) (liftTerm c s) (liftFormula c f) = liftFormula c (substFormula c s f)`.
+    Los binders ∀/∃ recurren a `c+1` usando `liftTerm_comm_zero`. -/
+theorem substFormula_lift_comm : ∀ (f : Formula) (c : Nat) (s : Term),
+    substFormula (c + 1) (liftTerm c s) (liftFormula c f) = liftFormula c (substFormula c s f) := by
+  intro f
+  induction f with
+  | bottom => intro c s; rfl
+  | atom p ts => intro c s; simp only [liftFormula, substFormula, substTerms_lift_comm]
+  | eq t u => intro c s; simp only [liftFormula, substFormula, substTerm_lift_comm]
+  | impl a b iha ihb => intro c s; simp only [liftFormula, substFormula]; rw [iha, ihb]
+  | «forall» a iha =>
+      intro c s; simp only [liftFormula, substFormula]
+      rw [show liftTerm 0 (liftTerm c s) = liftTerm (c+1) (liftTerm 0 s) from liftTerm_comm_zero s c,
+          iha (c+1) (liftTerm 0 s)]
+  | and a b iha ihb => intro c s; simp only [liftFormula, substFormula]; rw [iha, ihb]
+  | or a b iha ihb => intro c s; simp only [liftFormula, substFormula]; rw [iha, ihb]
+  | ex a iha =>
+      intro c s; simp only [liftFormula, substFormula]
+      rw [show liftTerm 0 (liftTerm c s) = liftTerm (c+1) (liftTerm 0 s) from liftTerm_comm_zero s c,
+          iha (c+1) (liftTerm 0 s)]
+
 end FOL
