@@ -247,4 +247,62 @@ theorem subst_subst_lift_gen : ∀ (f : Formula) (n s : Term) (v : Nat),
       intro n s v; simp only [liftFormula, substFormula]
       rw [iha (liftTerm 0 n) (liftTerm 0 s) (v+1), substTerm_lift_comm_zero]
 
+-- Lema de sustitución (Barendregt) para niveles consecutivos `j+1`/`j` (convención
+-- decremental): conmuta dos sustituciones anidadas. Casos de binder vía
+-- `substTerm_lift_comm_zero` + `liftTerm_comm_zero`.
+mutual
+theorem substTerm_subst_comm_succ (u : Term) (a b : Term) (j : Nat) :
+    substTerm (j+1) a (substTerm j b u)
+      = substTerm j (substTerm (j+1) a b) (substTerm (j+2) (liftTerm j a) u) := by
+  cases u with
+  | var k =>
+      rcases Nat.lt_trichotomy k j with hlt | heq | hgt
+      · simp [substTerm, show ¬ k = j from by omega, show ¬ k > j from by omega,
+          show ¬ k = j+1 from by omega, show ¬ k > j+1 from by omega,
+          show ¬ k = j+2 from by omega, show ¬ k > j+2 from by omega]
+      · subst heq
+        simp [substTerm, show ¬ k = k+2 from by omega, show ¬ k > k+2 from by omega]
+      · rcases Nat.lt_trichotomy k (j+2) with h2 | h2 | h2
+        · have hk : k = j+1 := by omega
+          subst hk
+          simp [substTerm, show ¬ j+1 = j from by omega, show j+1 > j from by omega,
+            show ¬ j+1 = j+2 from by omega, show ¬ j+1 > j+2 from by omega,
+            show ¬ j = j+1 from by omega, show ¬ j > j+1 from by omega]
+        · subst h2
+          simp [substTerm, show ¬ j+2 = j from by omega, show j+2 > j from by omega,
+            show j+2 = j+2 from rfl, substTerm_liftTerm]
+        · simp [substTerm, show ¬ k = j from by omega, show k > j from hgt,
+            show ¬ k = j+2 from by omega, show k > j+2 from h2,
+            show ¬ k - 1 = j from by omega, show k - 1 > j from by omega,
+            show ¬ k - 1 = j+1 from by omega, show k - 1 > j+1 from by omega]
+  | func f ts => simp only [substTerm, liftTerm]; congr 1; exact substTerms_subst_comm_succ ts a b j
+theorem substTerms_subst_comm_succ (ts : List Term) (a b : Term) (j : Nat) :
+    substTerms (j+1) a (substTerms j b ts)
+      = substTerms j (substTerm (j+1) a b) (substTerms (j+2) (liftTerm j a) ts) := by
+  cases ts with
+  | nil => rfl
+  | cons u us => simp only [substTerms]; rw [substTerm_subst_comm_succ, substTerms_subst_comm_succ]
+end
+
+/-- **Lema de sustitución de Barendregt (nivel fórmula)**, niveles `j+1`/`j`:
+    `substFormula (j+1) a (substFormula j b f) = substFormula j (substTerm (j+1) a b) (substFormula (j+2) (liftTerm j a) f)`.
+    Casos ∀/∃ vía `substTerm_lift_comm_zero` + `liftTerm_comm_zero`. -/
+theorem subst_subst_comm_succ : ∀ (f : Formula) (a b : Term) (j : Nat),
+    substFormula (j+1) a (substFormula j b f)
+      = substFormula j (substTerm (j+1) a b) (substFormula (j+2) (liftTerm j a) f) := by
+  intro f
+  induction f with
+  | bottom => intro a b j; rfl
+  | atom p ts => intro a b j; simp only [substFormula, substTerms_subst_comm_succ]
+  | eq t u => intro a b j; simp only [substFormula, substTerm_subst_comm_succ]
+  | impl x y ihx ihy => intro a b j; simp only [substFormula]; rw [ihx, ihy]
+  | «forall» g ih =>
+      intro a b j; simp only [substFormula]
+      rw [ih (liftTerm 0 a) (liftTerm 0 b) (j+1), substTerm_lift_comm_zero, liftTerm_comm_zero]
+  | and x y ihx ihy => intro a b j; simp only [substFormula]; rw [ihx, ihy]
+  | or x y ihx ihy => intro a b j; simp only [substFormula]; rw [ihx, ihy]
+  | ex g ih =>
+      intro a b j; simp only [substFormula]
+      rw [ih (liftTerm 0 a) (liftTerm 0 b) (j+1), substTerm_lift_comm_zero, liftTerm_comm_zero]
+
 end FOL
