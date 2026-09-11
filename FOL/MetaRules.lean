@@ -41,8 +41,24 @@ def mp {Γ : List Formula} {A B : Formula} (h1 : Γ ⊢ (A ⇒ B)) (h2 : Γ ⊢ 
     **Meta-axioma** ω: sólido relativo al modelo estándar. -/
 axiom imp_intro {Γ : List Formula} {A B : Formula} (h : Γ ⊢ A → Γ ⊢ B) : Γ ⊢ (A ⇒ B)
 
-/-- Generalización universal (**ω-regla**): de `∀ n, Γ ⊢ A[n]` concluye `Γ ⊢ ∀A`.
-    **Meta-axioma**: no derivable de `Derives.intro_forall` (que es finitario). -/
+/-- Generalización universal: de `Γ ⊢ A[t]` **para todo TÉRMINO `t`** concluye `Γ ⊢ ∀A`.
+    **Meta-axioma**: no derivable de `Derives.intro_forall` (que es finitario).
+
+    ⚠️⚠️ **CORRECCIÓN 2026-09-11 — esto NO es la ω-regla, y llamarlo así confunde la fuerza del
+    cálculo.** La ω-regla toma como premisa `A[n̄]` para cada **NUMERAL**; ésta la toma para
+    **todo `Term`** — variables libres y aplicaciones de función incluidas. Su premisa es
+    **estrictamente mayor**, así que como **regla de inferencia** es **MÁS DÉBIL** que la ω-regla:
+    está más cerca de la generalización ordinaria con variable propia. (Su *soundness* sí depende de
+    que el modelo esté generado por términos, que es lo que sugería el nombre.)
+
+    ⛔ **De dónde viene de verdad la fuerza del cálculo**: de `imp_intro` y `raa`, que toman como
+    premisa una **función de Lean**. Si `Γ ⊬ A`, esa función existe **vacuamente** ⇒ `raa` da
+    `Γ ⊢ ¬A`. Consecuencia **medida** en `ROBINSON_PlusPlus/Meta/OmegaStrength.lean`:
+
+        derives_completo (A) : (axioms ⊢ A) ∨ (axioms ⊢ ¬A)
+
+    es decir, **`⊢` es sintácticamente COMPLETO**: decide toda sentencia, luego **no es r.e.** y
+    **no puede ser el sujeto de un teorema de incompletitud**. -/
 axiom gen {Γ : List Formula} {A : Formula} (h : ∀ n : Term, Γ ⊢ substFormula 0 n A) :
     Γ ⊢ Formula.forall A
 
