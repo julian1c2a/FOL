@@ -17,6 +17,10 @@ import FOL.Theorems.Neg
 import FOL.Theorems.Quantifiers
 import FOL.Deduction
 import FOL.Semantics
-import FOL.Soundness
 import FOL.Completeness
-import FOL.Compacity
+
+-- ⛔⛔ `FOL.Soundness` y `FOL.Compacity` EN CUARENTENA desde el 2026‑09‑11.
+-- `soundness : Γ ⊢ f → Γ ⊨ f` es FALSO en presencia de `FOL.MetaRules`, y su
+-- combinación con `raa` demuestra `False` SIN HIPÓTESIS. Este barrel importaba
+-- los dos a la vez, así que `import FOL` era un módulo INCONSISTENTE.
+-- Evidencia compilada y explicación: `cuarentena/README.md`.

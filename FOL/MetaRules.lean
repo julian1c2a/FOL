@@ -16,11 +16,33 @@ Aquí las hipótesis son funciones Lean (`Γ ⊢ A → Γ ⊢ B`) y, en `gen`, l
 **Estatus**: `imp_intro`, `gen`, `raa`, `or_elim`, `ex_elim` son **axiomas**.
 No son derivables de los constructores de `Derives` (la hipótesis meta-función
 no se reduce a hipótesis-en-contexto sin inspeccionar el término de prueba).
-Junto con la ω-regla `gen`, axiomatizan "demostrabilidad = verdad en el modelo
-estándar": el sistema resultante es **sólido y completo relativo a ℕ** (es
-ω-lógica, estrictamente más fuerte que FOL= finitaria). Los constructores
-finitarios y sólidos para *todo* modelo son `Derives.intro_impl`,
-`Derives.elim_or`, `Derives.elim_ex`, `Derives.intro_forall`.
+
+⛔⛔ **AVISO CAPITAL, MEDIDO EL 2026‑09‑11 — estos axiomas HABITAN un tipo
+INDUCTIVO, y eso tiene una consecuencia que este docstring negaba.**
+
+`Derives` es un `inductive` de 18 constructores. Estos cinco axiomas producen
+habitantes suyos que **no son aplicaciones de constructor**. Por tanto:
+
+> ⛔ **NINGÚN teorema sobre `Derives` puede demostrarse por INDUCCIÓN.** La
+> inducción cubre los 18 constructores, pero el enunciado cuantifica sobre
+> **todos** los habitantes, y los que producen estos axiomas no están cubiertos.
+
+Eso no es una precaución teórica: `cuarentena/Soundness.lean` lo hacía, y de ahí
+sale **`False` sin hipótesis** (`cuarentena/Inconsistencia.lean`, compilado).
+
+⚠️ Y por eso **se ha retirado la frase que decía que el sistema resultante es
+«sólido y completo relativo a ℕ»**: la solidez es precisamente lo que NO se
+tiene. `ROBINSON_PlusPlus/Meta/OmegaStrength.lean` mide la otra cara: con `raa`,
+`⊢` **decide toda sentencia** (lo que no prueba, lo refuta) ⇒ no es r.e.
+
+⚠️ `gen` **no es la ω-regla**: su premisa recorre **todo `Term`**, no sólo los
+numerales — premisa estrictamente mayor, luego regla más débil. La fuerza viene
+de `raa` e `imp_intro`, que toman **funciones de Lean**.
+
+Los constructores finitarios y sólidos para *todo* modelo son los 18 de
+`Derives`; su solidez sí es demostrable, y lo está —para el cálculo de Hilbert
+`Prf₀`, que **no tiene ningún axioma habitándolo**— en
+`ROBINSON_PlusPlus/sondeos/AnclaSoundness.lean`.
 
 El resto (`mp`, `and_intro`, `and_elim_*`, `or_intro_*`, `false_elim`,
 `ex_intro`, `iff_mp`, `iff_mpr`) son **wrappers derivables** de los
