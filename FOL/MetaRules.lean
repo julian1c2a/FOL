@@ -20,8 +20,11 @@ no se reduce a hipótesis-en-contexto sin inspeccionar el término de prueba).
 ⛔⛔ **AVISO CAPITAL, MEDIDO EL 2026‑09‑11 — estos axiomas HABITAN un tipo
 INDUCTIVO, y eso tiene una consecuencia que este docstring negaba.**
 
-`Derives` es un `inductive` de 18 constructores. Estos cinco axiomas producen
-habitantes suyos que **no son aplicaciones de constructor**. Por tanto:
+`Derives` es un `inductive` de 18 constructores. Estos **seis** axiomas producen habitantes suyos
+que **no son aplicaciones de constructor** — y ⚠️ **no son los únicos**: el censo corregido el
+2026‑09‑12 da **OCHO en esta librería** (falta un **segundo `dne`** en `Theorems/Neg.lean:57`, en
+forma de esquema, y `forall_not_impl_exists_not` en `Theorems/Quantifiers.lean:115`) y **DOCE**
+contando `ROBINSON_PlusPlus`. Por tanto:
 
 > ⛔ **NINGÚN teorema sobre `Derives` puede demostrarse por INDUCCIÓN.** La
 > inducción cubre los 18 constructores, pero el enunciado cuantifica sobre

@@ -26,7 +26,18 @@ Y `FOL.lean` —el barrel raíz— importaba `FOL.MetaRules` **y** `FOL.Soundnes
 válidos — es deducción natural intuicionista. La solidez para ellos es cierta y su prueba era
 correcta caso por caso.
 
-Pero `FOL/MetaRules.lean` declara **cinco `axiom`s que HABITAN `Derives`**:
+⚠️ **CENSO CORREGIDO el 2026‑09‑12**: esta página decía «cinco» y son **OCHO en la librería FOL**
+(**doce** contando el lado de ROBINSON_PlusPlus). Los que faltaban estaban **fuera** de
+`MetaRules.lean`, que es justo donde nadie miró:
+
+| dónde | cuáles | n |
+|---|---|---|
+| `FOL/MetaRules.lean` | `imp_intro`, `gen`, `raa`, `dne`, `or_elim`, `ex_elim` | 6 |
+| `FOL/Theorems/Neg.lean:57` | **un SEGUNDO `dne`**, en forma de esquema (`Γ ⊢ (¬¬A ⇒ A)`), distinto del de `MetaRules` (que es regla). Lo consume `Completeness.lean:680` | 1 |
+| `FOL/Theorems/Quantifiers.lean:115` | `forall_not_impl_exists_not` | 1 |
+| *(RPP)* | `ax_induction_prim`, `ax_list_induction`, `ax_axiomsCodeT_eq`, `ax_p_tfa` | +4 |
+
+Los seis de `MetaRules.lean` son:
 
     axiom imp_intro (h : Γ ⊢ A → Γ ⊢ B) : Γ ⊢ (A ⇒ B)
     axiom gen       (h : ∀ n : Term, Γ ⊢ substFormula 0 n A) : Γ ⊢ ∀A
@@ -89,11 +100,55 @@ Enunciar la solidez sobre un cálculo **sin axiomas habitándolo**. `ROBINSON_Pl
 constructores, con footprint **`[propext, Classical.choice, Quot.sound]`** — net‑0 puro.
 Está en `ROBINSON_PlusPlus/sondeos/AnclaSoundness.lean`.
 
-## 7 · La reparación de fondo, que NO se ha hecho
+## 6bis · ⛔ **ESTA CUARENTENA NO FUE EFECTIVA EL PRIMER DÍA** (2026‑09‑12)
+
+Se movió el fuente, se quitó del barrel, se reconstruyó el árbol y dio **verde**. Pero `lake` **no
+recoge la basura**: `.lake/build/lib/lean/FOL/Soundness.olean` se quedó, `import FOL.Soundness`
+**seguía resolviendo desde él**, y `False` se demostraba al día siguiente exactamente igual —
+verificado compilando, footprint `[propext, Classical.choice, Quot.sound, FOL.MetaRules.raa]`.
+
+🔑 **Retirar el FUENTE no retira el MÓDULO.** Un `.olean` sin `.lean` es un **módulo fantasma**:
+importable, invisible al build, y sin fuente que auditar.
+
+**Arreglado**: borrados `Soundness.olean`/`Compacity.olean` y sus artefactos hermanos, y verificado
+que el import **falla** («object file … does not exist»).
+
+**Control**: bloque **`[F]` de `ROBINSON_PlusPlus/check-doc-sync.bash`** — ROMPE si hay algún
+`.olean` sin fuente, aquí o en `../FOL`. Probado en los dos sentidos. ⭐ Al estrenarlo aparecieron
+**cuatro fantasmas más en RPP**, uno de ellos `Meta/Incompleteness` —la capa Gödel LEGACY retirada—
+que reexponía **`axiom D2` y `axiom D3`**, las dos condiciones que el proyecto **demostró** después.
+
+⚠️ Y ojo al reverso: `FOLPure`, `PropLogic` y `FOL_poli` tienen sus **propios** `Soundness.lean`
+**vivos** con el mismo defecto estructural. No son fantasmas —tienen fuente— pero **no están en
+cuarentena**. Ver §7.
+
+## 7 · ⬜ Lo que esta cuarentena NO cubre
+
+Auditoría del 2026‑09‑11/12, medido y **reproducido compilando** por dos agentes independientes:
+
+* ⛔⛔ **`FOLPure` y `FOL_poli` son INCONSISTENTES** por una causa **distinta** a ésta: declaran como
+  `axiom` la ecuación `substFormula v t (liftFormula (v+1) f) = f`, que **el propio `FOL` documenta
+  como FALSA desde 2026‑06‑23 con contraejemplo** y corrigió… sólo en `FOL/`. Se compiló `False` en
+  las dos, footprint `[subst_lift_cancel_formula]`.
+  🔶 **Contenido por desuso**: ninguna tiene consumidores ni artefactos, y RPP no las toca.
+* `FOLPure`, `PropLogic` y `FOL_poli` tienen además su propio `soundness` por inducción sobre su
+  propio `Derives`, con el mismo hueco. Sin cuarentena.
+* `FOL_poli/FOL.lean` es **byte‑idéntico** a `FOL/FOL.lean`: un clon muerto.
+* De las cinco `lean_lib`, **sólo `FOL` está viva** (único `@[default_target]`, único con `.olean`,
+  única que consume RPP).
+
+⇒ **Decisión pendiente del propietario**: retirar las tres librerías muertas, o ponerlas en
+cuarentena también.
+
+## 8 · La reparación de fondo, que NO se ha hecho
 
 Lo de arriba **contiene**, no repara. La reparación real es que las meta‑reglas **no habiten
 `Derives`**: declararlas sobre una relación aparte `DerivesW` con `Derives Γ f → DerivesW Γ f`, y
 dejar `Derives` limpio para que su solidez sea un teorema de verdad.
+
+⛔ **Y con el censo corregido, esa reparación NO BASTARÍA** (2026‑09‑12): mover sólo `MetaRules`
+dejaría **seis** habitantes — los dos de `FOL/Theorems/` y los cuatro de RPP. Una reparación que
+deja habitantes **no repara nada**: la prohibición de inducir seguiría en pie.
 
 ⚠️ **Coste medido**: `ROBINSON_PlusPlus` usa constructores `Derives.*` **164 veces**
 (`Derives.subst` 58, `Derives.refl` 40, `Derives.hyp` 18, `Derives.weakening` 13,

@@ -27,7 +27,8 @@ prueba más cuidadosa lo arreglaría.
 ## Por qué
 
 `Derives` es un `inductive` de **18 constructores**, todos semánticamente válidos. Pero
-`FOL/MetaRules.lean` declara **cinco `axiom`s que lo HABITAN** (`imp_intro`, `gen`, `raa`,
+`FOL/MetaRules.lean` declara **seis `axiom`s que lo HABITAN** —y el censo corregido el 2026‑09‑12
+da **OCHO** en la librería y **DOCE** con RPP, ver `README.md` §2— (`imp_intro`, `gen`, `raa`,
 `or_elim`, `ex_elim`) — y tienen que ser axiomas, porque sus premisas son **funciones de Lean**, es
 decir ocurrencias negativas que Lean rechazaría en un `inductive`.
 
