@@ -146,9 +146,13 @@ Lo de arriba **contiene**, no repara. La reparación real es que las meta‑regl
 `Derives`**: declararlas sobre una relación aparte `DerivesW` con `Derives Γ f → DerivesW Γ f`, y
 dejar `Derives` limpio para que su solidez sea un teorema de verdad.
 
-⛔ **Y con el censo corregido, esa reparación NO BASTARÍA** (2026‑09‑12): mover sólo `MetaRules`
-dejaría **seis** habitantes — los dos de `FOL/Theorems/` y los cuatro de RPP. Una reparación que
-deja habitantes **no repara nada**: la prohibición de inducir seguiría en pie.
+⛔⛔ **Y con el censo corregido, esa reparación NO BASTARÍA** (2026‑09‑12): mover sólo `MetaRules`
+dejaría **seis** habitantes — los dos de `FOL/Theorems/` y los cuatro de RPP.
+
+⚠️ Y uno de ellos lo **fabrica RPP** con la forma mala: `ax_list_induction`
+(`../ROBINSON_PlusPlus/ROBINSON_PlusPlus/Full/Lists.lean:55`) tiene una **premisa‑FUNCIÓN**
+`Γ ⊢ φ t → Γ ⊢ φ (cons h t)`. ⇒ el problema no es de quién es el fichero, es de la **FORMA de la
+premisa**. Una reparación que deja habitantes **no repara nada**.
 
 ⚠️ **Coste medido**: `ROBINSON_PlusPlus` usa constructores `Derives.*` **164 veces**
 (`Derives.subst` 58, `Derives.refl` 40, `Derives.hyp` 18, `Derives.weakening` 13,

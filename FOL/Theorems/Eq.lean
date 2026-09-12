@@ -305,4 +305,42 @@ theorem subst_subst_comm_succ : ∀ (f : Formula) (a b : Term) (j : Nat),
       intro a b j; simp only [substFormula]
       rw [ih (liftTerm 0 a) (liftTerm 0 b) (j+1), substTerm_lift_comm_zero, liftTerm_comm_zero]
 
+
+/-- **`substFormula c s (liftFormula c φ) = φ`** — la sustitución **al mismo índice** que el
+    `lift` lo deshace, para `s` **ARBITRARIO**. Versión `Formula` de `substTerm_liftTerm`.
+
+    ⚠️ **NO confundir con `Theorems.Quantifiers.subst_lift_cancel_formula`**, que es la variante
+    *off‑by‑one* (`substFormula v (#v) (liftFormula (v+1) f) = f`) y **exige `s = #v`**. Son lemas
+    distintos y ninguno implica al otro de forma inmediata.
+
+    📌 **BAJADO DESDE `ROBINSON_PlusPlus` el 2026‑09‑12 (R‑4).** Allí estaba probado **TRES veces**
+    —`Full/StrongInduction.lean`, `Meta/StrongInductionPrf.lean` (mismo nombre) y
+    `Meta/Hilbert.lean` bajo el nombre **`subst_lift_same`**— y **ninguno de los tres docstrings
+    mencionaba a los otros dos**. Es lógica pura de FOL⁼ y su sitio es éste. -/
+theorem substFormula_liftFormula (φ : Formula) (c : Nat) (s : Term) :
+    substFormula c s (liftFormula c φ) = φ := by
+  induction φ generalizing c s with
+  | bottom => rfl
+  | atom p ts =>
+      simp only [liftFormula, substFormula]
+      rw [substTerms_liftTerms]
+  | eq t u =>
+      simp only [liftFormula, substFormula]
+      rw [substTerm_liftTerm, substTerm_liftTerm]
+  | impl a b iha ihb =>
+      simp only [liftFormula, substFormula]
+      rw [iha c s, ihb c s]
+  | «forall» a iha =>
+      simp only [liftFormula, substFormula]
+      rw [iha (c + 1) (liftTerm 0 s)]
+  | and a b iha ihb =>
+      simp only [liftFormula, substFormula]
+      rw [iha c s, ihb c s]
+  | or a b iha ihb =>
+      simp only [liftFormula, substFormula]
+      rw [iha c s, ihb c s]
+  | ex a iha =>
+      simp only [liftFormula, substFormula]
+      rw [iha (c + 1) (liftTerm 0 s)]
+
 end FOL
