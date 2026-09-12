@@ -112,8 +112,10 @@ theorem exists_not_impl_forall_not {Γ A} : Γ ⊢ .impl (.ex (neg A)) (neg (.fo
 
 -- Dualidad ∀/∃ (clásica): ¬(∀x. A) ⇒ ∃x. ¬A
 -- Dirección clásica; no es derivable intuicionísticamente.
-axiom forall_not_impl_exists_not {Γ : List Formula} {A : Formula} :
-    Γ ⊢ .impl (neg (.forall A)) (.ex (neg A))
+/-- ⭐ **YA NO ES `axiom`** (2026‑09‑12, D-2): es el constructor `Derives.forall_not_ex_not`. -/
+theorem forall_not_impl_exists_not {Γ : List Formula} {A : Formula} :
+    Γ ⊢ .impl (neg (.forall A)) (.ex (neg A)) :=
+  Derives.forall_not_ex_not Γ A
 
 -- 15. Distribución de ∀ sobre ∧: (∀x. A ∧ B) ⇔ (∀x. A) ∧ (∀x. B)
 

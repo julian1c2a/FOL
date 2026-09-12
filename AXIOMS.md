@@ -1,8 +1,9 @@
 # AXIOMS.md — el censo de `axiom` de FOL
 
-> ## ESTADO REAL — 2026‑09‑12 · **13 `axiom` de Lean** · 0 `sorry` · Lean v4.31.0
+> ## ESTADO REAL — 2026‑09‑12 · **4 `axiom` de Lean** · 0 `sorry` · Lean v4.31.0
 >
-> **Librerías en el build:** `FOL` (13 axiomas) · `TheoryFramework` (0).
+> **Librerías en el build:** `FOL` (**4** axiomas) · `TheoryFramework` (0).
+> ⭐ **Y los cuatro son exactamente los que el kernel obliga a postular** — ver §1.
 > **Retiradas** el 2026‑09‑12: `FOLPure`, `PropLogic`, `FOL_poli` → `cuarentena/librerias-retiradas/`.
 
 **Creado:** 2026‑09‑12 · **Autor:** Julián Calderón Almendros
@@ -26,63 +27,65 @@ La auditoría del 2026‑09‑12 midió que **ningún control de este repo cuent
 
 ---
 
-## 1 · Los 13, uno a uno
+## 1 · Los CUATRO, uno a uno — y por qué son exactamente éstos
 
-### 1.1 · `FOL/MetaRules.lean` — las meta‑reglas (6)
-
-| axioma | línea | forma | ¿usos en RPP? |
-|---|---:|---|---:|
-| `imp_intro` | 67 | `(Γ ⊢ A → Γ ⊢ B) → Γ ⊢ (A ⇒ B)` | **83** |
-| `gen` | 87 | `(∀ n : Term, Γ ⊢ A[n]) → Γ ⊢ ∀A` | **324** |
-| `raa` | 92 | `(Γ ⊢ A → Γ ⊢ ⊥) → Γ ⊢ ¬A` | **27** |
-| `dne` (regla) | 100 | `Γ ⊢ ¬¬A → Γ ⊢ A` | **13** |
-| `or_elim` | 124 | premisas‑función | **127** |
-| `ex_elim` | 138 | premisas‑función | **83** |
-
-### 1.2 · Sueltos (2)
-
-| axioma | dónde | ¿usos en RPP? |
-|---|---|---:|
-| `dne` (**esquema**) | `FOL/Theorems/Neg.lean:57` — `Γ ⊢ (¬¬A ⇒ A)`. ⚠️ **Es un SEGUNDO `dne`**, distinto del de `MetaRules` (que es regla). Lo consume `Completeness.lean:680` | 0 |
-| `forall_not_impl_exists_not` | `FOL/Theorems/Quantifiers.lean:115` | **0** |
-
-### 1.3 · `FOL/Completeness.lean` — los cinco del Teorema de Completitud (5)
-
-| axioma | línea | qué postula | ¿inevitable? |
-|---|---:|---|---|
-| `formula_enum` | 119 | una enumeración `Nat → Formula` | ⛔ **NO**: `Formula` es un inductivo **numerable**; la enumeración es **construible** |
-| `formula_enum_surj` | 120 | y que es suprayectiva | ⛔ **NO**, ídem |
-| `termEqv_func_congr` | 389 | congruencia de la equivalencia de términos para `func` | 🔶 no medido |
-| `termEqv_rel_congr` | 392 | ídem para `rel` | 🔶 no medido |
-| `henkin_extension_lemma` | 657 | el lema de extensión de Henkin | 🔶 no medido — es **el sustantivo** |
-
-⇒ **Ninguno llega a RPP** [medido]: `Completeness` no lo importa nadie.
-
----
-
-## 2 · ⛔⛔ Los 8 que HABITAN el inductivo `Derives` — y la doctrina CORREGIDA
-
-Los de §1.1 y §1.2 **habitan `Derives`**. Por **M‑11**
-([ADR‑025](../ROBINSON_PlusPlus/DECISIONS.md)) eso **prohíbe demostrar nada sobre `Derives` por
-inducción** — y es lo que hacía `soundness`, hoy en `cuarentena/`.
-
-> ### ⚠️ LA DOCTRINA ESTABA MAL, y se corrigió el 2026‑09‑12 (A‑4)
+> 🏁 **2026‑09‑12: el censo pasó de 13 a 4**, por dos decisiones del propietario (**D‑2** y **D‑3**),
+> y el resultado tiene una propiedad que conviene subrayar:
 >
-> `MetaRules.lean` decía que **los seis** «no son derivables… **tienen que ser axiomas**».
-> **Falso para cuatro de los ocho**, y está **medido compilando**:
+> ### **Los cuatro que quedan son EXACTAMENTE los que el kernel obliga a postular.**
 
-| | axiomas | por qué |
+| axioma | dónde | forma | ¿usos en RPP? |
+|---|---|---|---:|
+| `imp_intro` | `FOL/MetaRules.lean` | `(Γ ⊢ A → Γ ⊢ B) → Γ ⊢ (A ⇒ B)` | **83** |
+| `raa` | `FOL/MetaRules.lean` | `(Γ ⊢ A → Γ ⊢ ⊥) → Γ ⊢ ¬A` | **27** |
+| `or_elim` | `FOL/MetaRules.lean` | premisas‑función | **127** |
+| `ex_elim` | `FOL/MetaRules.lean` | premisas‑función | **83** |
+
+Los cuatro tienen **premisa‑FUNCIÓN** (`Γ ⊢ A → Γ ⊢ B`), que es una **ocurrencia NO POSITIVA** de
+`Derives` en su propio constructor. El kernel lo rechaza con estas palabras:
+
+    (kernel) arg #3 of 'D.raa' has a non positive occurrence of the datatypes being declared
+
+⇒ **no hay alternativa dentro del tipo**: o son axiomas, o no existen.
+
+## 2 · De 13 a 4 — qué se fue y por dónde
+
+### 2.1 · D‑2 · Cuatro pasaron a ser CONSTRUCTORES (13 → 9)
+
+`gen`, `dne` (regla, `MetaRules`), `dne` (esquema, `Theorems/Neg.lean`) y
+`forall_not_impl_exists_not` **no tenían por qué ser axiomas**: sus premisas son ocurrencias
+**positivas**. Hoy son los constructores `Derives.gen_rule`, `Derives.dne_rule`,
+`Derives.dne_schema` y `Derives.forall_not_ex_not`.
+
+⚠️ **Los nombres y las firmas se conservan** (ahora como `theorem`), así que las **336 citas** de
+ROBINSON_PlusPlus —`gen` sola se usa **323 veces**— no cambiaron ni una.
+
+🔑 **Y no es contabilidad**: un `axiom` que habita un inductivo **afirma una falsedad sobre el punto
+fijo**; un constructor **lo extiende**. La lista negra de `Derives` (M‑11) baja de **8 a 4** en el
+lado FOL.
+
+⭐ **Coste medido: CERO.** No hay ni una inducción sobre `Derives` en ninguno de los dos repos.
+
+### 2.2 · D‑3 · `Completeness.lean` a cuarentena (9 → 4)
+
+702 líneas y **cinco axiomas** en un módulo con **cero consumidores reales**: sólo lo importaban el
+barrel y un fichero ya apartado. Dos de esos cinco —`formula_enum` y `formula_enum_surj`— son
+**construibles** (`Formula` es un inductivo numerable) y se postularon en un commit titulado
+«100 % sorry‑free». Los otros tres (`termEqv_func_congr`, `termEqv_rel_congr`,
+`henkin_extension_lemma`) no se han medido.
+
+⚠️ **Lo que esto significa, dicho claro**: **no hay Teorema de Completitud demostrado en este repo**
+en el sentido en que `README.md` lo publicaba. Está en `cuarentena/Completeness.lean`, y volverá el
+día que sus cinco postulados se paguen o se justifiquen.
+
+### 2.3 · Lo que se fue antes
+
+| | cuándo | qué |
 |---|---|---|
-| ⛔ **TIENEN que serlo** (4) | `imp_intro`, `raa`, `or_elim`, `ex_elim` | su premisa es `Γ ⊢ A → Γ ⊢ B`: **ocurrencia NO POSITIVA**. El kernel lo rechaza literalmente: *«arg #3 … has a non positive occurrence of the datatypes being declared»* |
-| ✅ **PODRÍAN ser constructores** (4) | `gen`, `dne` (regla), `dne` (esquema), `forall_not_impl_exists_not` | son *shapes* legales. **Compilado**: un `inductive` que los incluye a los cuatro typechequea, `EXIT 0`, y su recursor no depende de ningún axioma — **`gen` incluido**, pese a su premisa infinitaria |
+| 6 axiomas | 2026‑09‑12 (`ef54c6f`) | `FOLPure` y `FOL_poli` — **el enunciado era FALSO** y la corrección de junio nunca se propagó |
+| 15 axiomas | 2026‑09‑12 (D‑1) | retiradas `FOLPure`, `PropLogic`, `FOL_poli` |
 
-⇒ 🔑 **El criterio que de verdad separa no es «meta‑regla» sino PREMISA‑FUNCIÓN.**
-
-⇒ ⬜ **Decisión abierta (D‑2)**: mover los cuatro evitables a constructores dejaría **13 → 9**
-axiomas y la lista negra de `Derives` en **4**, **sin tocar la fuerza del cálculo** y con **cero
-pruebas tocadas dentro de `FOL/`**.
-
----
+⇒ **34 → 28 → 13 → 4** en un día.
 
 ## 3 · Lo que este censo NO dice
 

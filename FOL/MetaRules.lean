@@ -94,9 +94,16 @@ axiom imp_intro {Γ : List Formula} {A B : Formula} (h : Γ ⊢ A → Γ ⊢ B) 
         derives_completo (A) : (axioms ⊢ A) ∨ (axioms ⊢ ¬A)
 
     es decir, **`⊢` es sintácticamente COMPLETO**: decide toda sentencia, luego **no es r.e.** y
-    **no puede ser el sujeto de un teorema de incompletitud**. -/
-axiom gen {Γ : List Formula} {A : Formula} (h : ∀ n : Term, Γ ⊢ substFormula 0 n A) :
-    Γ ⊢ Formula.forall A
+    **no puede ser el sujeto de un teorema de incompletitud**.
+
+    ⭐ **YA NO ES `axiom`** (2026‑09‑12, D-2/ADR-028): es el constructor
+    `Derives.gen_rule`. Su premisa `∀ n : Term, Γ ⊢ A[n]` es una ocurrencia **POSITIVA**,
+    así que el kernel la acepta en el `inductive` — [ADR‑027](../../ROBINSON_PlusPlus/DECISIONS.md)
+    refutó que fuera «inevitable». El nombre y la firma se conservan: las 323 citas de
+    ROBINSON_PlusPlus no cambian. -/
+theorem gen {Γ : List Formula} {A : Formula} (h : ∀ n : Term, Γ ⊢ substFormula 0 n A) :
+    Γ ⊢ Formula.forall A :=
+  Derives.gen_rule Γ A h
 
 /-- Reducción al absurdo (clásica): de `Γ ⊢ A → ⊥` concluye `Γ ⊢ ¬A`.
     **Meta-axioma** ω. -/
@@ -107,8 +114,11 @@ axiom raa {Γ : List Formula} {A : Formula} (h : Γ ⊢ A → Γ ⊢ ⊥) : Γ �
     intuicionistamente válidas). Convierte el sistema en clásico, sólido para el
     modelo estándar ℕ (coherente con la lectura ω-lógica "demostrabilidad =
     verdad en ℕ"). Necesario p. ej. para la segunda mitad del Primer Teorema de
-    Gödel (`⊬ ¬G`). -/
-axiom dne {Γ : List Formula} {A : Formula} (h : Γ ⊢ neg (neg A)) : Γ ⊢ A
+    Gödel (`⊬ ¬G`).
+
+    ⭐ **YA NO ES `axiom`** (2026‑09‑12, D-2): es el constructor `Derives.dne_rule`. -/
+theorem dne {Γ : List Formula} {A : Formula} (h : Γ ⊢ neg (neg A)) : Γ ⊢ A :=
+  Derives.dne_rule Γ A h
 
 /-- Conjunction introduction (wrapper de `Derives.intro_and`). -/
 def and_intro {Γ : List Formula} {A B : Formula} (h1 : Γ ⊢ A) (h2 : Γ ⊢ B) : Γ ⊢ (A ∧ B) :=

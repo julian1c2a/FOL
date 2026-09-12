@@ -11,7 +11,7 @@
 export PATH="/usr/bin:$PATH"
 cd "$(dirname "$0")" || exit 2
 
-ESPERADO_FOL=13
+ESPERADO_FOL=4
 ESPERADO_TF=0
 
 echo "════ AXIOMAS DE LEAN, por librería ════"

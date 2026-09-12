@@ -201,6 +201,22 @@ inductive Derives : List Formula → Formula → Prop where
       f' = replaceAt f p sub' →
       Derives Γ f'
 
+  -- ════════════════════════════════════════════════════════════════════════
+  -- Reglas CLÁSICAS y de GENERALIZACIÓN — constructores desde el 2026‑09‑12
+  --
+  -- ⭐ D-2 (ADR-028): estos cuatro eran `axiom` (tres en `MetaRules.lean`, uno en
+  -- `Theorems/Neg.lean`, uno en `Theorems/Quantifiers.lean`) y **NO tenían por qué serlo**:
+  -- sus premisas son ocurrencias POSITIVAS, así que el kernel los acepta aquí. Sólo los que
+  -- tienen premisa-FUNCIÓN (`Γ ⊢ A → Γ ⊢ B`) están obligados a ser axiomas — ver M-11.
+  --
+  -- 🔑 Y esto no es contabilidad: un `axiom` que habita un inductivo **afirma una falsedad
+  -- sobre el punto fijo**; un constructor **lo extiende**. Con estos cuatro dentro, `Derives`
+  -- tiene cuatro habitantes-basura menos.
+  | gen_rule : ∀ Γ A, (∀ n : Term, Derives Γ (substFormula 0 n A)) → Derives Γ (.forall A)
+  | dne_rule : ∀ Γ A, Derives Γ (neg (neg A)) → Derives Γ A
+  | dne_schema : ∀ Γ A, Derives Γ (.impl (neg (neg A)) A)
+  | forall_not_ex_not : ∀ Γ A, Derives Γ (.impl (neg (.forall A)) (.ex (neg A)))
+
   -- Reglas de Igualdad
   | refl  : ∀ Γ t, Derives Γ (.eq t t)
   | subst : ∀ Γ t₁ t₂ f, Derives Γ (.eq t₁ t₂) → Derives Γ (substFormula 0 t₁ f) → Derives Γ (substFormula 0 t₂ f)
