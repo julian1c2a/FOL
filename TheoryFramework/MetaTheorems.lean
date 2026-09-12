@@ -21,14 +21,19 @@ variable {F : Type} [LogicSystem F]
 -- Soundness/Completeness lifting to theories
 -- ============================================================
 
-/-- For any theory, proving and modeling coincide — lifted from the logic base. -/
-theorem proves_iff_models (T : Theory F) (f : F) :
+/-- For any theory, proving and modeling coincide — lifted from the logic base.
+
+⚠️ **CONDICIONAL desde 2026‑09‑12 (A‑6)**: pide `[SoundLogic F]` y `[CompleteLogic F]`
+**explícitamente**. Antes las obtenía «gratis» porque eran campos de `LogicSystem` — es
+decir, el marco las **postulaba** para toda instancia. ⛔ Para `FOL` la primera es
+indemostrable. -/
+theorem proves_iff_models [SoundLogic F] [CompleteLogic F] (T : Theory F) (f : F) :
     T.proves f ↔ T.models f := by
   constructor
   · intro ⟨Γ, hΓ, hDer⟩
-    exact ⟨Γ, hΓ, LogicSystem.sound hDer⟩
+    exact ⟨Γ, hΓ, SoundLogic.sound hDer⟩
   · intro ⟨Γ, hΓ, hSem⟩
-    exact ⟨Γ, hΓ, LogicSystem.complete hSem⟩
+    exact ⟨Γ, hΓ, CompleteLogic.complete hSem⟩
 
 -- ============================================================
 -- Monotonicity
@@ -40,9 +45,9 @@ theorem proves_monotone {T₁ T₂ : Theory F} (hle : T₁ ≤ T₂) {f : F}
   obtain ⟨Γ, hΓ, hDer⟩ := hf
   exact ⟨Γ, fun g hg => hle g (hΓ g hg), hDer⟩
 
-/-- Models are also monotone (via proves_iff_models). -/
-theorem models_monotone {T₁ T₂ : Theory F} (hle : T₁ ≤ T₂) {f : F}
-    (hf : T₁.models f) : T₂.models f :=
+/-- Models are also monotone (via `proves_iff_models`) — **condicional**, ver arriba. -/
+theorem models_monotone [SoundLogic F] [CompleteLogic F] {T₁ T₂ : Theory F} (hle : T₁ ≤ T₂)
+    {f : F} (hf : T₁.models f) : T₂.models f :=
   (proves_iff_models T₂ f).mp (proves_monotone hle ((proves_iff_models T₁ f).mpr hf))
 
 -- ============================================================

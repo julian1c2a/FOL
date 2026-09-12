@@ -2,11 +2,24 @@
 # Usage: make <target>
 # Requires: bash, lake, git
 
-.PHONY: build clean rebuild sorry status lock unlock list init new help
+.PHONY: build build-all clean rebuild sorry axioms status lock unlock list init new help
 
-## Build the project
+## Build the project (los DOS `@[default_target]`: FOL y TheoryFramework)
 build:
 	lake build
+
+## Build TODAS las librerías del lakefile, explícitamente.
+## ⚠️ 2026-09-12 (A-2): antes sólo `FOL` era `@[default_target]`, así que CUATRO de las
+## cinco librerías NO SE COMPILABAN NUNCA — y ahí sobrevivió 80 días un `axiom` que el
+## propio proyecto había declarado FALSO. Tres de ellas se retiraron (D-1); la cuarta,
+## `TheoryFramework`, entró al build y su `Instances/FOL.lean` resultó estar roto.
+## ⇒ Si se añade una `lean_lib`, AÑADIRLA AQUÍ.
+build-all:
+	lake build FOL TheoryFramework
+
+## Censo de `axiom` de Lean (A-1)
+axioms:
+	@bash check-axioms.bash
 
 ## Clean build artifacts
 clean:
@@ -26,6 +39,9 @@ status:
 	@echo ""
 	@echo "=== Sorry Status ==="
 	@bash check-sorry.bash || true
+	@echo ""
+	@echo "=== Axiom Status ==="
+	@bash check-axioms.bash || true
 
 ## Lock a file: make lock FILE=ProjectName/Module.lean
 lock:
@@ -50,9 +66,11 @@ new:
 	@[ -n "$(NAME)" ] || (echo "Usage: make new NAME=ModuleName" && exit 1)
 	@bash new-module.bash $(NAME)
 
-## Regenerate root module file
+## ⛔ PROHIBIDO (2026-09-12, A-7): sobrescribe el barrel, borra el aviso de cuarentena
+## y mete tres modulos huerfanos con declaraciones DUPLICADAS. Ver gen-root.bash.
 root:
-	@bash gen-root.bash
+	@echo "⛔ 'make root' esta PROHIBIDO en este repo — ver la cabecera de gen-root.bash (A-7)."
+	@exit 2
 
 ## Update Lean toolchain: make update-toolchain VERSION=v4.29.0
 update-toolchain:

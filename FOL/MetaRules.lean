@@ -13,9 +13,20 @@ constructores de `Derives` (que usan hipótesis-en-contexto, `A :: Γ ⊢ B`).
 Aquí las hipótesis son funciones Lean (`Γ ⊢ A → Γ ⊢ B`) y, en `gen`, la
 **ω-regla** (`∀ n : Term, Γ ⊢ A[n] → Γ ⊢ ∀A`).
 
-**Estatus**: `imp_intro`, `gen`, `raa`, `or_elim`, `ex_elim` son **axiomas**.
-No son derivables de los constructores de `Derives` (la hipótesis meta-función
-no se reduce a hipótesis-en-contexto sin inspeccionar el término de prueba).
+**Estatus**: `imp_intro`, `gen`, `raa`, `dne`, `or_elim`, `ex_elim` son **axiomas**.
+
+⚠️⚠️ **DOCTRINA CORREGIDA EL 2026‑09‑12 (A‑4).** Este docstring decía que **los seis**
+«no son derivables … **tienen que ser axiomas**». **Es falso para la mitad**, y está
+**medido compilando**:
+
+| | cuáles | por qué |
+|---|---|---|
+| ⛔ **TIENEN que ser `axiom`** | `imp_intro`, `raa`, `or_elim`, `ex_elim` | su premisa es `Γ ⊢ A → Γ ⊢ B`, una **ocurrencia NO POSITIVA**. El kernel lo rechaza literalmente: *«arg #3 … has a non positive occurrence of the datatypes being declared»* |
+| ✅ **PODRÍAN ser CONSTRUCTORES** | `gen`, `dne` | son *shapes* legales. Un `inductive` que los incluya **typechequea** (`EXIT 0`, recursor sin axiomas) — **`gen` incluido**, pese a su premisa infinitaria sobre `Term` |
+
+🔑 **El criterio que de verdad separa no es «meta‑regla» sino PREMISA‑FUNCIÓN.** Y de ahí
+que «inevitable» fuese falso: ver la decisión abierta **D‑2** en `AXIOMS.md` §2 (mover los
+evitables a constructores dejaría **13 → 9** axiomas sin tocar la fuerza del cálculo).
 
 ⛔⛔ **AVISO CAPITAL, MEDIDO EL 2026‑09‑11 — estos axiomas HABITAN un tipo
 INDUCTIVO, y eso tiene una consecuencia que este docstring negaba.**

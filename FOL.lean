@@ -12,6 +12,10 @@ import FOL.FOL
 import FOL.MetaRules
 import FOL.Tactics
 import FOL.Theorems.Derived
+-- ⚠️ `Theorems.Eq` NO estaba en este barrel (2026‑09‑12, D‑3): se compilaba **sólo**
+-- porque `Completeness` lo importaba. Retirar `Completeness` habría roto **20 módulos de
+-- ROBINSON_PlusPlus** sin que ningún control lo avisara.
+import FOL.Theorems.Eq
 import FOL.Theorems.Impl
 import FOL.Theorems.Neg
 import FOL.Theorems.Quantifiers

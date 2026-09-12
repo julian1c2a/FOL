@@ -1,5 +1,24 @@
 # FOL Ecosystem — Formalización de Lógica en Lean 4
 
+> # ⛔⛔ AVISO DE ESTADO — 2026‑09‑12. LEER ANTES QUE NADA
+>
+> **Este documento estaba fechado en mayo de 2026 y publicaba como hitos demostrados cosas que
+> hoy están medidas FALSAS.** Se corrigen abajo las afirmaciones concretas; el resto del texto
+> **no se ha reescrito** y debe leerse con esta advertencia delante.
+>
+> | lo que decía | lo medido |
+> |---|---|
+> | «Teorema de Corrección (Soundness): `Γ ⊢ A → Γ ⊨ A`» ✅ | ⛔ **NO HAY teorema de Corrección.** `soundness` es **FALSO** en presencia de `FOL/MetaRules.lean`: cualquier testigo suyo demuestra `False` sin hipótesis (`cuarentena/Inconsistencia.lean`, compilado). Está en **`cuarentena/`** |
+> | «Compacidad» ✅ | ⛔ Su prueba pasaba por `soundness` ⇒ **vacua**. En `cuarentena/` |
+> | «Completitud» ✅ / «1 sorry» | ⚠️ **0 `sorry`, pero CINCO `axiom`**: el `sorry` se sustituyó por cinco postulados en un commit titulado «100 % sorry‑free». **No está demostrada** en el sentido que aquí se publica. Ver **`AXIOMS.md`** |
+> | «4 `lean_lib`, ~43 módulos, 1 sorry, v4.28.0» | **2 `lean_lib`** (`FOL`, `TheoryFramework`) · **13 `axiom`** · **0 sorry** · **v4.31.0**. `FOLPure`, `PropLogic` y `FOL_poli` **retiradas** el 2026‑09‑12 a `cuarentena/librerias-retiradas/` |
+>
+> ⭐ **Lo único sólido MEDIDO del ecosistema** es `prf0_soundness` sobre `Prf₀`
+> (`../ROBINSON_PlusPlus/sondeos/AnclaSoundness.lean`), net‑0 puro.
+>
+> **Fuentes:** `cuarentena/README.md` · `AXIOMS.md` ·
+> `../ROBINSON_PlusPlus/doc/AUDITORIA-FOL-2026-09-12.md`
+
 [![Lean 4](https://img.shields.io/badge/Lean-v4.28.0-blue)](https://leanprover.github.io/)
 [![Build Status](https://img.shields.io/badge/build-passing-brightgreen)](CURRENT-STATUS-PROJECT.md)
 [![License](https://img.shields.io/badge/license-MIT-green)](LICENSE)
@@ -31,10 +50,10 @@ Este ecosistema formaliza la sintaxis, semántica y metamatemática de la Lógic
 **Hitos Metamatemáticos:**
 
 1. Teorema de Deducción.
-2. **Teorema de Corrección** (Soundness): `Γ ⊢ A → Γ ⊨ A`.
+2. ⛔ ~~**Teorema de Corrección** (Soundness)~~ — **NO EXISTE**: es FALSO con `MetaRules`. Ver el aviso.
 3. Construcción de Henkin + Lema de Lindenbaum.
-4. **Teorema de Completitud de Gödel**: `Γ ⊨ A → Γ ⊢ A` (FOL, FOLPure, PropLogic).
-5. **Teorema de Compacidad Semántica**.
+4. ⚠️ **Teorema de Completitud**: `Γ ⊨ A → Γ ⊢ A` — **módulo CINCO `axiom`** (ver `AXIOMS.md`). Sólo `FOL`: `FOLPure` y `PropLogic` fueron retiradas.
+5. ⛔ ~~**Teorema de Compacidad Semántica**~~ — **vacuo**: su prueba pasaba por `soundness`. En `cuarentena/`.
 6. Metateorémas genéricos sobre cualquier `LogicSystem`: monotonía de pruebas, preservación de inconsistencia, extensiones conservativas.
 
 ## Modules
@@ -48,9 +67,9 @@ Este ecosistema formaliza la sintaxis, semántica y metamatemática de la Lógic
 | `Tactics.lean` | top-level | ✅ |
 | `Deduction.lean` | `FOL.Metamath.Deduction` | ✅ |
 | `Semantics.lean` | `FOL.Metamath.Semantics` | ✅ |
-| `Soundness.lean` | `FOL.Metamath.Soundness` | ✅ |
-| `Completeness.lean` | `FOL.Metamath.Completeness` | ⚠️ 1 sorry |
-| `Compacity.lean` | `FOL.Metamath.Compacity` | ✅ |
+| ~~`Soundness.lean`~~ | — | ⛔ **CUARENTENA**: su teorema es FALSO |
+| `Completeness.lean` | `FOL.Metamath.Completeness` | ⚠️ **0 sorry, 5 `axiom`** |
+| ~~`Compacity.lean`~~ | — | ⛔ **CUARENTENA**: vacuo |
 | `Theorems/Impl.lean`, `Neg.lean`, `Derived.lean`, `Quantifiers.lean`, `Eq.lean` | — | ✅ |
 
 ### `FOLPure` / `PropLogic` — estructura análoga, 0 sorries
@@ -128,12 +147,21 @@ import TheoryFramework.Instances.FOLPure  -- o PropLogic / FOL (no mezclar)
 ## Development Workflow
 
 ```bash
-make build      # lake build
+make build      # lake build (FOL + TheoryFramework)
+make build-all  # TODAS las librerias del lakefile, explicitamente
 make sorry      # check-sorry.bash
-make status     # locked files + sorry status
+make axioms     # check-axioms.bash  ← el censo de `axiom` (A-1)
+make status     # locked files + sorry + axiom status
 bash new-module.bash ModuleName
-bash gen-root.bash
 ```
+
+> ### ⛔ `make root` / `bash gen-root.bash` están **PROHIBIDOS** (2026‑09‑12, A‑7)
+>
+> Sobrescriben el barrel entero: **borrarían el aviso de cuarentena** de `FOL.lean` y
+> **meterían tres módulos huérfanos con declaraciones duplicadas**, uno de los cuales
+> redefine `derive_hyp`/`derive_weaken` que ROBINSON_PlusPlus importa **22 veces**.
+> Tan prohibido como `cd FOL && lake build`. La cabecera de `gen-root.bash` dice qué
+> haría falta para levantar la prohibición.
 
 > Ver [WORKFLOW.md](WORKFLOW.md) para el flujo completo.
 

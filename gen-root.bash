@@ -1,4 +1,27 @@
 #!/bin/bash
+# ⛔⛔⛔ PROHIBIDO EJECUTARLO EN ESTE REPO (2026-09-12, A-7) ⛔⛔⛔
+#
+# Este script SOBRESCRIBE el barrel entero (`} > "$ROOT_FILE"`) y sus unicas exclusiones
+# son `_*`, `test*`, `Test*`. Ejecutarlo hoy haria DOS destrozos MEDIDOS:
+#
+#  (1) BORRA el aviso de cuarentena de `FOL.lean` — las lineas que documentan por que
+#      `FOL.Soundness` y `FOL.Compacity` NO se importan (su teorema demuestra `False`).
+#
+#  (2) PASA el barrel de 10 imports CURADOS a 14 ALFABETICOS, metiendo tres modulos
+#      HUERFANOS con declaraciones DUPLICADAS:
+#        * `FOL/Tactics2.lean`          redeclara `derive_hyp` / `derive_weaken` de
+#                                       `FOL/Tactics.lean`, que RPP importa 22 VECES
+#        * `FOL/Theorems/Deduction.lean` duplica `deduction_theorem` palabra por palabra
+#        * `FOL/Classical.lean`         vacio
+#
+# QUE HARIA FALTA PARA LEVANTAR LA PROHIBICION:
+#   (a) un fichero `gen-root.exclude`;
+#   (b) preservar bloques `-- BEGIN MANUAL` / `-- END MANUAL`;
+#   (c) que el script se NIEGUE a escribir si detecta un nombre de declaracion duplicado.
+#
+# Mientras no esten las tres, esto es tan prohibido como `cd FOL && lake build`.
+# Ver `../ROBINSON_PlusPlus/doc/AUDITORIA-FOL-2026-09-12.md` A-7.
+
 # gen-root.bash — Regenerate root ProjectName.lean with barrel-aware imports
 #
 # Usage: bash gen-root.bash
@@ -9,6 +32,14 @@
 # This follows the export/glob pattern defined in AI-GUIDE.md §17-18.
 
 set -e
+
+if [ "${GEN_ROOT_LO_SE:-}" != "1" ]; then
+  echo "⛔ gen-root.bash esta PROHIBIDO en este repo (A-7)." >&2
+  echo "   Sobrescribiria el barrel y meteria 3 modulos con declaraciones DUPLICADAS." >&2
+  echo "   Lee la cabecera del script. Si aun asi sabes lo que haces:" >&2
+  echo "       GEN_ROOT_LO_SE=1 bash gen-root.bash" >&2
+  exit 2
+fi
 
 # Detect project name from lakefile.lean
 # Supports both «Name» and "Name" syntax; prefers lean_lib (correct case) over package
