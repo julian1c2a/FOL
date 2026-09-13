@@ -18,6 +18,7 @@ import FOL.Deduction
 import FOL.Theorems.Neg
 import FOL.Theorems.Quantifiers
 import FOL.Theorems.Eq
+import FOL.Enumeration
 
 namespace FOL.Metamath.Completeness
 
@@ -115,9 +116,17 @@ theorem DerivesSet_elim_impl {S : Formula → Prop} {A B : Formula}
 -- Lema de Lindenbaum
 -- ============================================================
 
--- Asumimos la enumerabilidad de las fórmulas
-axiom formula_enum : Nat → Formula
-axiom formula_enum_surj : ∀ f : Formula, ∃ n, formula_enum n = f
+-- ⭐ **2026‑09‑13 — DOS AXIOMAS RETIRADOS.** Aquí decía «asumimos la enumerabilidad de las
+-- fórmulas» y había dos `axiom`. No hace falta asumirla: `FOL.Enumeration` la CONSTRUYE, y lo
+-- hace **dentro del build** (footprint medido: `[propext, Classical.choice, Quot.sound]`, o sea
+-- cero axiomas del proyecto).
+--
+-- ⚠️ Se conservan los dos NOMBRES, `formula_enum` y `formula_enum_surj`, para no tocar los ocho
+-- sitios de uso de abajo: lo que cambia es que ahora son una `def` y un `theorem`.
+def formula_enum : Nat → Formula := FOL.Metamath.Enumeration.natToFormula
+
+theorem formula_enum_surj : ∀ f : Formula, ∃ n, formula_enum n = f :=
+  FOL.Metamath.Enumeration.natToFormula_surj
 
 noncomputable def LindenbaumStep (S : Formula → Prop) : Nat → (Formula → Prop)
   | 0 => S

@@ -88,7 +88,11 @@ Footprint medido: **`[propext, FOL.MetaRules.raa]`**. Ni `Classical.choice` hace
 ## 5 · Lo que se perdió, y lo que no
 
 `compactness_theorem` (`Compacity.lean`) era **vacuo**: su prueba pasaba por `soundness`.
-`Completeness.lean` **no** está afectado —no importa ni `Soundness` ni `MetaRules`— y se queda.
+`Completeness.lean` **no** está afectado por ESTA causa —no importa ni `Soundness` ni `MetaRules`—.
+
+⚠️ **Corrección del 2026‑09‑12**: aquí decía «y se queda», y **ya no se queda**. `Completeness.lean`
+entró en esta cuarentena al día siguiente por un motivo **distinto** (decisión **D‑3**): sus cinco
+`axiom` propios. Ver **§9**.
 
 ## 6 · La salida buena, y ya está hecha
 
@@ -158,6 +162,48 @@ premisa**. Una reparación que deja habitantes **no repara nada**.
 (`Derives.subst` 58, `Derives.refl` 40, `Derives.hyp` 18, `Derives.weakening` 13,
 `Derives.intro_impl` 13, …), más toda la notación `⊢`. No es una tarde. **Queda como decisión del
 propietario.**
+
+---
+
+## 9 · `Completeness.lean` — por qué está aquí, y qué se ha pagado ya
+
+Entró el **2026‑09‑12** (decisión **D‑3**), por una causa que **no** es la de §2: **cinco `axiom`
+propios** en un módulo de 702 líneas con **cero consumidores reales** —sólo lo importaban el barrel
+raíz y un fichero ya apartado—. El `sorry` original se sustituyó por esos cinco postulados en un
+commit titulado *«100 % sorry‑free»*.
+
+### 9.1 · 🏁 2026‑09‑13 · de CINCO a TRES
+
+`formula_enum` y `formula_enum_surj` ya **no se postulan**: los construye
+**`FOL/Enumeration.lean`**, que está **dentro del build** (`@[default_target]`) y no en esta
+carpeta. Se conservan los dos nombres —ahora `def` y `theorem`—, así que los **ocho sitios de uso**
+de este módulo no cambiaron.
+
+| medida | valor |
+|---|---|
+| `natToFormula_surj` / `formula_enum_surj` | `[propext, Classical.choice, Quot.sound]` |
+| ⭐ `lindenbaum_lemma` | `[propext, Classical.choice, Quot.sound]` — **net‑0 puro, incondicional** |
+| `completeness` | `henkin_extension_lemma`, `termEqv_func_congr`, `termEqv_rel_congr`, y sólo ésos |
+
+⚠️ **Esta carpeta no la compila nadie.** Para comprobar a mano que `Completeness.lean` sigue
+cerrando, desde la raíz de **ROBINSON_PlusPlus** (⛔ nunca `cd FOL && lake build`):
+
+    lake env lean ../FOL/cuarentena/Completeness.lean     # salida vacía = verde
+
+⭐ **Por qué el fichero nuevo va al BUILD y no a esta carpeta**: lo que se está pagando aquí es
+justamente la enfermedad de §6bis y de §7 —código que nadie compila—. Una construcción que retira
+un axioma y vive fuera del build no retira nada: nadie la verifica. `FOL/Enumeration.lean` entra por
+`FOL.lean`, que es `@[default_target]`, y se comprueba con `lake build @FOL/FOL`.
+
+### 9.2 · ⬜ Los TRES que quedan
+
+| axioma | juicio |
+|---|---|
+| `termEqv_func_congr`, `termEqv_rel_congr` | ⬜ **no medidos**; parecen inducción sobre `PointwiseEqv` más `FOL/Theorems/Eq.lean` |
+| ⛔ `henkin_extension_lemma` | ⛔ el caro: su prueba clásica **amplía el lenguaje con constantes** |
+
+⚠️ **El veredicto no ha cambiado**: mientras `henkin_extension_lemma` siga postulado, **no hay
+Teorema de Completitud demostrado en este repo**. Pasar de 5 a 3 baja la cifra, no el veredicto.
 
 ---
 

@@ -1,10 +1,16 @@
 # AXIOMS.md — el censo de `axiom` de FOL
 
-> ## ESTADO REAL — 2026‑09‑12 · **4 `axiom` de Lean** · 0 `sorry` · Lean v4.31.0
+> ## ESTADO REAL — 2026‑09‑13 · **4 `axiom` de Lean** en el build · 0 `sorry` · Lean v4.31.0
 >
 > **Librerías en el build:** `FOL` (**4** axiomas) · `TheoryFramework` (0).
 > ⭐ **Y los cuatro son exactamente los que el kernel obliga a postular** — ver §1.
 > **Retiradas** el 2026‑09‑12: `FOLPure`, `PropLogic`, `FOL_poli` → `cuarentena/librerias-retiradas/`.
+>
+> 🏁 **2026‑09‑13 · `cuarentena/Completeness.lean` pasa de 5 a 3** — ver §2.4. `formula_enum` y
+> `formula_enum_surj` ya no se postulan: los **construye** `FOL/Enumeration.lean`, que está
+> **dentro del build** y cuya sobreyectividad mide `[propext, Classical.choice, Quot.sound]`.
+> ⭐ Efecto colateral medido: **`lindenbaum_lemma` queda net‑0 puro** — era el único consumidor
+> de los dos axiomas retirados.
 
 **Creado:** 2026‑09‑12 · **Autor:** Julián Calderón Almendros
 
@@ -24,6 +30,10 @@ La auditoría del 2026‑09‑12 midió que **ningún control de este repo cuent
 > *«100 % sorry‑free»*). ⇒ **El Teorema de Completitud NO está demostrado** en el sentido en que
 > `README.md` y `REFERENCE.md` lo publican. Está demostrado **módulo cinco postulados**, y tres de
 > ellos son sustantivos.
+>
+> ⭐ **2026‑09‑13: son TRES** — los dos que **no** eran sustantivos están construidos (§2.4). Y eso
+> no cambia el titular: **sigue sin estar demostrado**, ahora módulo tres postulados. 🔑 La cifra
+> baja; el veredicto no. Cambiarlo requeriría pagar `henkin_extension_lemma`.
 
 ---
 
@@ -77,6 +87,58 @@ barrel y un fichero ya apartado. Dos de esos cinco —`formula_enum` y `formula_
 ⚠️ **Lo que esto significa, dicho claro**: **no hay Teorema de Completitud demostrado en este repo**
 en el sentido en que `README.md` lo publicaba. Está en `cuarentena/Completeness.lean`, y volverá el
 día que sus cinco postulados se paguen o se justifiquen.
+
+### 2.4 · 2026‑09‑13 · los dos «construibles» quedan CONSTRUIDOS (5 → 3 en cuarentena)
+
+`FOL/Enumeration.lean` — **nuevo, dentro del build**, cero axiomas — construye
+
+    natToFormula      : Nat → Formula
+    natToFormula_surj : ∀ f : Formula, ∃ n, natToFormula n = f
+
+y `cuarentena/Completeness.lean` los consume conservando los **nombres** `formula_enum` y
+`formula_enum_surj` (ahora `def` y `theorem`), así que **ni uno de sus ocho sitios de uso cambió**.
+
+| medida | valor |
+|---|---|
+| footprint de `natToFormula_surj` | `[propext, Classical.choice, Quot.sound]` — **cero axiomas del proyecto** |
+| footprint de `formula_enum_surj` | idéntico |
+| ⭐ footprint de `lindenbaum_lemma` | `[propext, Classical.choice, Quot.sound]` — **net‑0 PURO** |
+| footprint de `completeness` | los **tres** que quedan, y sólo ésos |
+| axiomas en `FOL/` y `TheoryFramework/` | **4**, sin cambio (`check-axioms.bash` sigue en verde) |
+
+⭐ **El Lema de Lindenbaum es ahora incondicional.** No era el objetivo —el objetivo era la cifra—
+pero era el único consumidor de los dos postulados, así que al pagarlos quedó libre. Es la
+recíproca de M‑1 otra vez: *cada axioma que se retira audita lo que se apoyaba en él.*
+
+#### Cómo, y por qué no costó lo que parecía
+
+⭐ **El par de Cantor NO se define con números triangulares.** La inversa habitual exige
+`n = (a+b)(a+b+1)/2 + b` y con ella identidades de división entera, que sin Mathlib son caras.
+`unpair` **camina la diagonal** en un paso estructural (`(0,0) (1,0) (0,1) (2,0) …`) y entonces la
+sobreyectividad es una inducción doble, sin una sola división. 🔑 *La recursión se pone donde la
+prueba la quiere, no donde la fórmula la sugiere.*
+
+⚠️ **El punto que podía bloquearlo todo era `String`** (`Formula.atom : String → List Term → …`),
+y se midió antes de construir: el núcleo de Lean da `Char.ofNat_toNat` y `String.ofList_toList`,
+que es exactamente lo que hace falta. ⚠️ `String` ya **no** es `structure String where data : List Char`
+en v4.31 —es UTF‑8 opaco— así que `String.mk s.data = s` **no** vale por `rfl`; el lema sí.
+
+⚠️ **Las sobreyectividades de `Term` y `Formula` NO son inducción sobre el inductivo**, sino sobre
+una COTA de tamaño (`∀ N, ∀ t, size t < N → …`), el mismo patrón de `truth_lemma_lt`. `Term` es un
+inductivo **anidado** (contiene `List Term`) y así se esquiva escribir a mano su recursor mutuo.
+
+#### Lo que NO se ha tocado
+
+Los **tres** que quedan, por orden de dificultad medida:
+
+| axioma | qué es | juicio |
+|---|---|---|
+| `termEqv_func_congr` | congruencia de `=` bajo `Term.func`, argumento a argumento | ⬜ **probablemente barato**: es inducción sobre `PointwiseEqv` más los axiomas de igualdad de `FOL/Theorems/Eq.lean`. No medido |
+| `termEqv_rel_congr` | lo mismo para `Formula.atom` | ⬜ igual que el anterior |
+| ⛔ `henkin_extension_lemma` | todo conjunto consistente se extiende a uno **máximamente consistente y con testigos** | ⛔ **es el caro de verdad**: su prueba clásica **amplía el lenguaje con constantes nuevas**, y eso aquí significa construir la extensión y su conservatividad |
+
+⚠️ **Y mientras `henkin_extension_lemma` siga postulado, `completeness` no está demostrado.**
+Bajar de 5 a 3 no mueve ese veredicto ni un milímetro.
 
 ### 2.3 · Lo que se fue antes
 

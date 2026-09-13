@@ -24,4 +24,4 @@ lean_lib «TheoryFramework» where
 -- ⛔ Estaban en el PEOR estado posible: declaradas (⇒ su salida en el `LEAN_PATH` de
 -- ROBINSON_PlusPlus), con 15 de los 28 axiomas del repo, y **nunca compiladas** — que es
 -- la causa raíz de que un `axiom` FALSO sobreviviera ahí 80 días.
--- Ver `cuarentena/README.md` §9.
+-- Ver `cuarentena/README.md` §7.

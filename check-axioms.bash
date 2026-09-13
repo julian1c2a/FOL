@@ -14,6 +14,13 @@ cd "$(dirname "$0")" || exit 2
 ESPERADO_FOL=4
 ESPERADO_TF=0
 
+# ⭐ 2026-09-13: la CUARENTENA también se cuenta. Motivo: `cuarentena/Completeness.lean` bajó de
+# 5 a 3 axiomas (`FOL/Enumeration.lean` construye la enumeración de fórmulas), la cifra «3» quedó
+# escrita en SEIS documentos, y NADA la comprobaba. Un número escrito y no medido se pudre.
+# ⚠️ NO incluye `cuarentena/librerias-retiradas/` (15 axiomas): son librerías MUERTAS, fuera del
+# lakefile, y su cifra no es una promesa de nadie.
+ESPERADO_CUAR=3
+
 echo "════ AXIOMAS DE LEAN, por librería ════"
 FAIL=0
 for lib in FOL TheoryFramework; do
@@ -30,6 +37,24 @@ for lib in FOL TheoryFramework; do
     FAIL=1
   fi
 done
+
+echo
+echo "════ CUARENTENA (fuera del build, pero con cifra publicada) ════"
+if [ -d cuarentena ]; then
+  NC=$(grep -rhE '^axiom ' cuarentena/ --include=*.lean 2>/dev/null \
+       | wc -l | tr -d ' ')
+  NR=$(grep -rhE '^axiom ' cuarentena/librerias-retiradas/ --include=*.lean 2>/dev/null \
+       | wc -l | tr -d ' ')
+  NC=$((NC - NR))
+  if [ "$NC" = "$ESPERADO_CUAR" ]; then
+    printf "  ✓ %-18s %2s axiom  (+%s en librerias-retiradas, muertas)\n" "cuarentena" "$NC" "$NR"
+  else
+    printf "  ✗ %-18s %2s axiom — este script dice %s\n" "cuarentena" "$NC" "$ESPERADO_CUAR"
+    FAIL=1
+  fi
+else
+  echo "  · sin cuarentena/"
+fi
 
 echo
 echo "════ ¿los cita AXIOMS.md? ════"
