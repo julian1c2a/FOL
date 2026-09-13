@@ -12,6 +12,11 @@
 > ⭐ Efecto medido, y es mayor que la cifra: **`lindenbaum_lemma`, `truth_lemma` y el modelo
 > canónico entero quedan net‑0 puros**. `completeness` depende ya de **un solo** postulado del
 > proyecto: `henkin_extension_lemma`.
+>
+> ⚠️⚠️ **Y ese último SE MIDIÓ el mismo día: también sale** (§2.6, `sondeos/HenkinSaleDeRaa.lean`).
+> **No se ha aplicado, y a propósito**: el footprint de `completeness` pasaría de un postulado
+> propio y con nombre a **`FOL.MetaRules.raa`**, el axioma que hace el cálculo **completo y no
+> sólido**. 🔑 *La cifra mejoraría y el contenido empeoraría.* ⬜ Decisión del propietario.
 
 **Creado:** 2026‑09‑12 · **Autor:** Julián Calderón Almendros
 
@@ -34,8 +39,12 @@ La auditoría del 2026‑09‑12 midió que **ningún control de este repo cuent
 >
 > ⭐ **2026‑09‑13: es UNO.** Cuatro de los cinco están pagados: los dos de enumerabilidad (§2.4) y
 > las dos congruencias de la igualdad (§2.5). Y eso **no cambia el titular**: sigue sin estar
-> demostrado, ahora módulo **un** postulado. 🔑 La cifra baja; el veredicto no. Cambiarlo requiere
-> pagar `henkin_extension_lemma`, y ése es el caro de verdad.
+> demostrado, ahora módulo **un** postulado.
+>
+> ⚠️⚠️ **Y el que queda no es «el caro»: es el INCÓMODO.** Se midió (§2.6) y **sale** — pero pagando
+> con `raa`. ⇒ el módulo podría marcar **CERO axiomas** y seguir sin demostrar lo que su nombre
+> promete, porque el cálculo del que hablaría **decide toda sentencia y no es sólido**.
+> 🔑 **Un cero en este censo no significaría «Completitud demostrada».** Por eso el axioma sigue ahí.
 
 ---
 
@@ -138,7 +147,7 @@ porque **dos de los tres juicios se comprobaron el mismo día** (§2.5):
 |---|---|---|
 | `termEqv_func_congr` | congruencia de `=` bajo `Term.func`, argumento a argumento | ⬜ «probablemente barato… **no medido**» → ✅ **medido y pagado** (§2.5) |
 | `termEqv_rel_congr` | lo mismo para `Formula.atom` | ⬜ igual → ✅ **pagado** |
-| ⛔ `henkin_extension_lemma` | todo conjunto consistente se extiende a uno **máximamente consistente y con testigos** | ⛔ **el caro de verdad**: su prueba clásica **amplía el lenguaje con constantes nuevas**, y eso aquí significa construir la extensión y su conservatividad. **Sigue en pie** |
+| ⚠️ `henkin_extension_lemma` | todo conjunto consistente se extiende a uno **máximamente consistente y con testigos** | ⛔ se clasificó como «el caro de verdad» (ampliar el lenguaje con constantes y probar conservatividad) → ⚠️⚠️ **MEDIDO el 2026‑09‑13 y el juicio ERA FALSO**: sale, y por la peor razón. Ver §2.6 |
 
 ### 2.5 · 2026‑09‑13 (tarde) · las DOS congruencias, DEMOSTRADAS (3 → 1)
 
@@ -195,3 +204,50 @@ medido**»*. Estaba bien dicho —era una estimación declarada como tal— y al
 **Véase también:** `cuarentena/README.md` (por qué `soundness` está apartado),
 `FOL/MetaRules.lean` (la doctrina corregida),
 `../ROBINSON_PlusPlus/doc/AUDITORIA-FOL-2026-09-12.md` (de dónde sale este documento).
+
+### 2.6 · ⚠️⚠️ 2026‑09‑13 · `henkin_extension_lemma` SALE — y por eso no se ha tocado
+
+`sondeos/HenkinSaleDeRaa.lean` (ROBINSON_PlusPlus), compilado.
+
+🏁 **Es demostrable.** `IsMaximalConsistent S → IsHenkin S` es un teorema, y con él
+`henkin_extension_lemma` es `lindenbaum_lemma` más tres líneas ⇒ este módulo llegaría a **CERO
+axiomas propios**.
+
+⚠️⚠️ **Y el precio está medido, y no es «1 → 0»:**
+
+| | axiomas propios | footprint de `completeness` |
+|---|---|---|
+| hoy | **1** | `[propext, Classical.choice, Quot.sound, henkin_extension_lemma]` |
+| pagándolo | **0** | `[propext, Classical.choice, Quot.sound, **FOL.MetaRules.raa**]` |
+
+Es cambiar **un postulado propio, honesto y con nombre** por **el axioma que hace el cálculo
+completo y no sólido** — el mismo que en `cuarentena/Inconsistencia.lean` da `False` en cuanto se
+le junta cualquier teorema de solidez. Y obliga a que `Completeness.lean` **importe
+`FOL.MetaRules`**, cosa que hoy **no hace** (medido: siete imports, ninguno es `MetaRules` — y
+`cuarentena/README.md` §4 presentaba justamente eso como la razón de que este módulo no estuviera
+en el radio de la inconsistencia).
+
+#### Por qué sale
+
+`raa` toma una **función de Lean**: si `Γ ⊬ A`, esa función existe **vacuamente** ⇒ `Γ ⊢ ¬A`.
+⇒ **todo contexto decide toda fórmula** (`derives_complete`, tres líneas). Con eso el obstáculo
+clásico —constantes frescas, conservatividad— **ni se plantea**: el testigo sale por completitud
+sintáctica, no por ampliación del lenguaje. ⭐ La pieza limpia del argumento es
+`no_instance_no_body` (footprint **`[propext]`**, sólo `intro_forall` + `elim_forall`), y ⭐ el
+punto que parecía romperlo —contextos finitos distintos para cada instancia— **no se rompe**:
+`max_cons_contains` deja el mismo `Γ0` para todas.
+
+⚠️ **M‑11 no se viola**: no hay ni una inducción sobre `Derives`; sólo constructores, `raa` como
+**introducción**, y tercio excluido sobre la `Prop` `Γ ⊢ A`. Las pruebas son legítimas.
+⚠️ Pero **no valdrían para un cálculo sólido**: en uno sólido `derives_complete` es falso.
+🔑 **Esta Henkin sale de la patología, no de la lógica.** Es ADR‑024 otra vez: *`⊢` es la
+herramienta, no el sujeto*.
+
+#### Lo que NO se sigue
+
+**No** se sigue `False`: el detonador de `Inconsistencia.lean` es `raa` **más solidez**, y este
+módulo no demuestra solidez y va en la dirección contraria.
+
+⬜ **Decisión del propietario, y por eso está medido y no aplicado.** Un **0** en este censo se
+leería como «Completitud demostrada», y lo que habría detrás es «completitud de un cálculo que,
+cuando no deriva `A`, deriva `¬A`». 🔑 *La cifra mejoraría y el contenido empeoraría.*

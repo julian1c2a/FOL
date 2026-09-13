@@ -204,16 +204,40 @@ justamente la enfermedad de §6bis y de §7 —código que nadie compila—. Una
 un axioma y vive fuera del build no retira nada: nadie la verifica. `FOL/Enumeration.lean` entra por
 `FOL.lean`, que es `@[default_target]`, y se comprueba con `lake build @FOL/FOL`.
 
-### 9.2 · ⛔ El ÚNICO que queda
+### 9.2 · ⚠️⚠️ El único que queda — y por qué se queda AUNQUE SALE
 
-⛔ **`henkin_extension_lemma`**: todo conjunto consistente se extiende a uno **máximamente
-consistente y con testigos**. Su prueba clásica **amplía el lenguaje con constantes nuevas**, y
-aquí eso significa construir la extensión y demostrar que es conservativa. Es, de los cinco, el
-único que desde el principio se clasificó como *«el caro de verdad»* — y sigue siéndolo.
+⚠️ **`henkin_extension_lemma`** se clasificó desde el principio como *«el caro de verdad»*: su
+prueba clásica amplía el lenguaje con constantes nuevas y exige probar la conservatividad.
+**Se midió el 2026‑09‑13 y ese juicio era FALSO.** Sale — y sale por la peor razón.
 
-⚠️ **El veredicto no ha cambiado**: mientras esté postulado, **no hay Teorema de Completitud
-demostrado en este repo**. Pasar de 5 a 1 baja la cifra, no el veredicto. 🔑 Lo que sí cambia es
-**dónde está la deuda**: ya no repartida en cinco sitios, sino concentrada en uno y con nombre.
+`sondeos/HenkinSaleDeRaa.lean` (ROBINSON_PlusPlus), compilado:
+`IsMaximalConsistent S → IsHenkin S` es un teorema, y con él `henkin_extension_lemma` son tres
+líneas sobre `lindenbaum_lemma`. Este módulo llegaría a **CERO axiomas propios**.
+
+| | axiomas propios | footprint de `completeness` |
+|---|---|---|
+| hoy | **1** | `[propext, Classical.choice, Quot.sound, henkin_extension_lemma]` |
+| pagándolo | **0** | `[propext, Classical.choice, Quot.sound, `**`FOL.MetaRules.raa`**`]` |
+
+🔑 **Sale porque `raa` hace que TODO contexto decida toda fórmula.** Su premisa es una **función de
+Lean**: si `Γ ⊬ A`, existe vacuamente ⇒ `Γ ⊢ ¬A`. Con eso el obstáculo clásico —constantes frescas,
+conservatividad— **ni se plantea**: el testigo sale de la completitud sintáctica.
+
+⚠️⚠️ **Y eso es exactamente lo que esta carpeta contiene.** §2 explica que `raa` es la causa de que
+la solidez sea falsa; §4 presentaba como tranquilizador que `Completeness.lean` **no importa
+`MetaRules`**. Pagar el axioma **obliga a importarlo** y mete `raa` en el footprint del teorema.
+
+⇒ **No es «1 → 0».** Es cambiar un postulado **propio, honesto y con nombre** por el axioma que
+hace el cálculo **completo y no sólido**. Un **0** en `AXIOMS.md` se leería como «Completitud
+demostrada», y lo que habría detrás es «completitud de un cálculo que, cuando no deriva `A`,
+deriva `¬A`». 🔑 *La cifra mejoraría y el contenido empeoraría.*
+
+⚠️ Lo que **no** se sigue: `False`. El detonador de `Inconsistencia.lean` es `raa` **más solidez**,
+y este módulo no demuestra solidez.
+⚠️ Lo que **sí** conviene subrayar: la prueba es **legítima** (ni una inducción sobre `Derives`,
+M‑11 intacta) y **no valdría para un cálculo sólido**, donde la completitud sintáctica es falsa.
+
+⬜ **Decisión del propietario.** Medido y no aplicado.
 
 ---
 
