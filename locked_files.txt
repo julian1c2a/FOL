@@ -1,2 +1,7 @@
 FOL/MetaRules.lean
 FOL/Core.lean
+FOL.lean
+AXIOMS.md
+cuarentena/README.md
+FOL/Enumeration.lean
+FOL/Theorems/Eq.lean
