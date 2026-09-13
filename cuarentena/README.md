@@ -237,7 +237,10 @@ y este módulo no demuestra solidez.
 ⚠️ Lo que **sí** conviene subrayar: la prueba es **legítima** (ni una inducción sobre `Derives`,
 M‑11 intacta) y **no valdría para un cálculo sólido**, donde la completitud sintáctica es falsa.
 
-⬜ **Decisión del propietario.** Medido y no aplicado.
+✅ **DECIDIDO el 2026‑09‑13 (ADR‑032, opción A): el axioma se queda.** Medido y **no aplicado, a
+propósito**. ⛔ **No es trabajo pendiente.** Si alguien lo ve «demostrable y sin arreglar», que **no
+lo arregle**: hay que reabrir ADR‑032. El aviso está junto al `axiom` en `Completeness.lean`, y
+`check-axioms.bash` (`ESPERADO_CUAR=1`) **rompe también si la cifra baja a 0**.
 
 ---
 

@@ -14,9 +14,10 @@
 > proyecto: `henkin_extension_lemma`.
 >
 > ⚠️⚠️ **Y ese último SE MIDIÓ el mismo día: también sale** (§2.6, `sondeos/HenkinSaleDeRaa.lean`).
-> **No se ha aplicado, y a propósito**: el footprint de `completeness` pasaría de un postulado
-> propio y con nombre a **`FOL.MetaRules.raa`**, el axioma que hace el cálculo **completo y no
-> sólido**. 🔑 *La cifra mejoraría y el contenido empeoraría.* ⬜ Decisión del propietario.
+> ✅ **Y SE QUEDA, por decisión tomada** (ADR‑032, opción **(A)**, sanción del propietario): el
+> footprint de `completeness` pasaría de un postulado propio y con nombre a **`FOL.MetaRules.raa`**,
+> el axioma que hace el cálculo **completo y no sólido**. 🔑 *La cifra mejoraría y el contenido
+> empeoraría.* ⛔ **Este 1 no es trabajo pendiente: es la cifra correcta.**
 
 **Creado:** 2026‑09‑12 · **Autor:** Julián Calderón Almendros
 
@@ -44,7 +45,10 @@ La auditoría del 2026‑09‑12 midió que **ningún control de este repo cuent
 > ⚠️⚠️ **Y el que queda no es «el caro»: es el INCÓMODO.** Se midió (§2.6) y **sale** — pero pagando
 > con `raa`. ⇒ el módulo podría marcar **CERO axiomas** y seguir sin demostrar lo que su nombre
 > promete, porque el cálculo del que hablaría **decide toda sentencia y no es sólido**.
-> 🔑 **Un cero en este censo no significaría «Completitud demostrada».** Por eso el axioma sigue ahí.
+> 🔑 **Un cero en este censo no significaría «Completitud demostrada».**
+> ✅ **Decidido (ADR‑032, opción A): el axioma se queda.** Este documento existe porque *«un `sorry`
+> es visible y un `axiom` no»*; un censo que baja a cero **comprando el cero con `raa`** dejaría de
+> ser un censo.
 
 ---
 
@@ -248,6 +252,20 @@ herramienta, no el sujeto*.
 **No** se sigue `False`: el detonador de `Inconsistencia.lean` es `raa` **más solidez**, y este
 módulo no demuestra solidez y va en la dirección contraria.
 
-⬜ **Decisión del propietario, y por eso está medido y no aplicado.** Un **0** en este censo se
-leería como «Completitud demostrada», y lo que habría detrás es «completitud de un cálculo que,
-cuando no deriva `A`, deriva `¬A`». 🔑 *La cifra mejoraría y el contenido empeoraría.*
+### 2.7 · ✅ Decidido: **(A)**, el axioma se queda — y cómo queda protegido
+
+Sancionado por el propietario el **2026‑09‑13** (ADR‑032 §5). Un **0** en este censo se leería como
+«Completitud demostrada», y lo que habría detrás es «completitud de un cálculo que, cuando no
+deriva `A`, deriva `¬A`». 🔑 *La cifra mejoraría y el contenido empeoraría.*
+
+⚠️ **Una decisión de NO hacer algo es la más fácil de deshacer por accidente**: el que llegue
+después ve un axioma, ve que es demostrable, y lo «arregla». Tres guardas:
+
+| dónde | qué |
+|---|---|
+| `cuarentena/Completeness.lean`, junto al `axiom` | el aviso **en el punto de uso**, con los dos footprints y la orden de **reabrir ADR‑032** antes de tocarlo. ⚠️ Sustituye al comentario que decía «requiere expandir el lenguaje con constantes», **medido FALSO** |
+| `check-axioms.bash` | `ESPERADO_CUAR=1` **rompe también si baja a 0** |
+| aquí (§2.6) y `cuarentena/README.md` §9.2 | la medición, con el precio |
+
+⭐ **El control no hubo que cambiarlo**: compara con una cifra **exacta**, no con una cota. Un
+contador exacto convierte *«no pagar este axioma»* en algo que el build vigila **solo**.

@@ -728,7 +728,31 @@ theorem truth_lemma {S : Formula → Prop} (hMax : IsMaximalConsistent S) (hHenk
 
 -- Todo conjunto consistente puede extenderse a uno máximamente consistente
 -- que además contenga testigos para sus fórmulas existenciales.
--- (Su demostración constructiva requiere expandir el lenguaje con constantes).
+--
+-- ⛔⛔ **ESTE AXIOMA SE QUEDA POR DECISIÓN, NO POR NO SABER PROBARLO.** (2026‑09‑13, ADR‑032,
+-- sanción del propietario: **opción (A)**.) Léase esto ANTES de "arreglarlo".
+--
+-- ⚠️ Aquí decía «su demostración constructiva requiere expandir el lenguaje con constantes».
+-- **Es FALSO, y está medido**: `../ROBINSON_PlusPlus/sondeos/HenkinSaleDeRaa.lean`, compilado.
+-- `IsMaximalConsistent S → IsHenkin S` es un teorema y esto son tres líneas sobre
+-- `lindenbaum_lemma`. El obstáculo clásico —constantes frescas, conservatividad— ni se plantea.
+--
+-- ⚠️⚠️ **Y por eso NO se paga.** El footprint de `completeness` pasaría de
+--
+--     [propext, Classical.choice, Quot.sound, henkin_extension_lemma]
+--   a [propext, Classical.choice, Quot.sound, FOL.MetaRules.raa]
+--
+-- No es «1 → 0»: es cambiar un postulado PROPIO, honesto y con nombre por **el axioma que hace
+-- el cálculo COMPLETO y NO SÓLIDO** (`cuarentena/Inconsistencia.lean`), y obliga a importar
+-- `FOL.MetaRules`, cosa que este módulo **no hace** — que es justo lo que lo mantiene fuera del
+-- radio de la inconsistencia (`cuarentena/README.md` §4).
+--
+-- 🔑 Sale porque `raa` hace que **todo contexto decida toda fórmula**: la Henkin saldría de la
+-- **patología**, no de la lógica. Un `0` en `AXIOMS.md` se leería como «Completitud demostrada».
+-- *La cifra mejoraría y el contenido empeoraría.*
+--
+-- ⛔ **Para pagarlo hay que REABRIR ADR‑032**, no basta con verlo demostrable. Y el control lo
+-- protege: `check-axioms.bash` tiene `ESPERADO_CUAR=1` y **rompe también si baja a 0**.
 axiom henkin_extension_lemma {S : Formula → Prop} (hCons : IsConsistent S) :
     ∃ (S' : Formula → Prop), IsMaximalConsistent S' ∧ IsHenkin S' ∧ (∀ f, S f → S' f)
 
