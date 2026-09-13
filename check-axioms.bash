@@ -15,11 +15,12 @@ ESPERADO_FOL=4
 ESPERADO_TF=0
 
 # ⭐ 2026-09-13: la CUARENTENA también se cuenta. Motivo: `cuarentena/Completeness.lean` bajó de
-# 5 a 3 axiomas (`FOL/Enumeration.lean` construye la enumeración de fórmulas), la cifra «3» quedó
-# escrita en SEIS documentos, y NADA la comprobaba. Un número escrito y no medido se pudre.
+# 5 a 3 y luego a 1 axioma (2026-09-13: la enumeración de fórmulas, y los dos `termEqv_*_congr`),
+# y la cifra quedó escrita en SEIS documentos sin que NADA la comprobara. Un número escrito y no
+# medido se pudre.
 # ⚠️ NO incluye `cuarentena/librerias-retiradas/` (15 axiomas): son librerías MUERTAS, fuera del
 # lakefile, y su cifra no es una promesa de nadie.
-ESPERADO_CUAR=3
+ESPERADO_CUAR=1
 
 echo "════ AXIOMAS DE LEAN, por librería ════"
 FAIL=0

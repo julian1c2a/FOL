@@ -395,11 +395,77 @@ inductive PointwiseEqv (S : Formula → Prop) : List Term → List Term → Prop
   | nil : PointwiseEqv S [] []
   | cons : ∀ {t1 t2 ts1 ts2}, termEqv S t1 t2 → PointwiseEqv S ts1 ts2 → PointwiseEqv S (t1 :: ts1) (t2 :: ts2)
 
-axiom termEqv_func_congr {S : Formula → Prop} (hMax : IsMaximalConsistent S) (f : String) {ts1 ts2 : List Term}
-    (hEqv : PointwiseEqv S ts1 ts2) : termEqv S (Term.func f ts1) (Term.func f ts2)
+-- ⭐ **2026‑09‑13 — DOS AXIOMAS MÁS RETIRADOS.** `termEqv_func_congr` y `termEqv_rel_congr` eran
+-- `axiom`; ahora son teoremas. Lo que faltaba **no era de lógica sino de LISTAS**: `Derives.subst`
+-- es Leibniz y sustituye UN término, mientras que `func`/`atom` llevan una **lista** de
+-- argumentos. Se recorre **una posición cada vez**, con un prefijo `pre` que crece.
+--
+-- Las dos piezas de `Derives` viven en `FOL/Theorems/Eq.lean` —dentro del build—:
+-- `derive_eq_func_congr` y `derive_atom_congr`. Aquí queda sólo el traslado de `Derives` a
+-- `DerivesSet` y la inducción sobre `PointwiseEqv`.
+--
+-- ⭐ **Efecto medido**: `truth_lemma` queda **net‑0 puro**, y `completeness` depende ya de **un
+-- solo** postulado del proyecto, `henkin_extension_lemma`.
 
-axiom termEqv_rel_congr {S : Formula → Prop} (hMax : IsMaximalConsistent S) (p : String) {ts1 ts2 : List Term}
-    (hEqv : PointwiseEqv S ts1 ts2) : S (.atom p ts1) ↔ S (.atom p ts2)
+/-- Eleva una regla de `Derives` a `DerivesSet`: el contexto finito viaja con ella. -/
+theorem DerivesSet_map {S : Formula → Prop} {A B : Formula}
+    (rule : ∀ Γ, (Γ ⊢ A) → (Γ ⊢ B)) (h : S ⊢* A) : S ⊢* B := by
+  obtain ⟨Γ, hΓ, hD⟩ := h
+  exact ⟨Γ, hΓ, rule Γ hD⟩
+
+/-- Igual que `DerivesSet_map` con dos premisas: los dos contextos finitos se concatenan. -/
+theorem DerivesSet_map2 {S : Formula → Prop} {A B C : Formula}
+    (rule : ∀ Γ, (Γ ⊢ A) → (Γ ⊢ B) → (Γ ⊢ C)) (hA : S ⊢* A) (hB : S ⊢* B) : S ⊢* C := by
+  obtain ⟨Γ1, hΓ1, hD1⟩ := hA
+  obtain ⟨Γ2, hΓ2, hD2⟩ := hB
+  refine ⟨Γ1 ++ Γ2, ?_, ?_⟩
+  · intro g hg
+    cases List.mem_append.mp hg with
+    | inl h1 => exact hΓ1 g h1
+    | inr h2 => exact hΓ2 g h2
+  · exact rule _ (Derives.weakening _ _ _ hD1 (fun x hx => List.mem_append.mpr (Or.inl hx)))
+                 (Derives.weakening _ _ _ hD2 (fun x hx => List.mem_append.mpr (Or.inr hx)))
+
+theorem pointwiseEqv_symm {S : Formula → Prop} (hMax : IsMaximalConsistent S)
+    {ts1 ts2 : List Term} (h : PointwiseEqv S ts1 ts2) : PointwiseEqv S ts2 ts1 := by
+  induction h with
+  | nil => exact PointwiseEqv.nil
+  | cons ht _ ih => exact PointwiseEqv.cons (termEqv_symm hMax ht) ih
+
+theorem termEqv_func_congr {S : Formula → Prop} (hMax : IsMaximalConsistent S) (f : String)
+    {ts1 ts2 : List Term} (hEqv : PointwiseEqv S ts1 ts2) :
+    termEqv S (Term.func f ts1) (Term.func f ts2) := by
+  suffices H : ∀ pre : List Term,
+      termEqv S (Term.func f (pre ++ ts1)) (Term.func f (pre ++ ts2)) from H []
+  induction hEqv with
+  | nil => intro pre; exact termEqv_refl hMax _
+  | @cons t1 t2 r1 r2 ht _ ih =>
+      intro pre
+      have step1 : termEqv S (Term.func f (pre ++ t1 :: r1)) (Term.func f (pre ++ t2 :: r1)) := by
+        apply max_cons_contains hMax
+        exact DerivesSet_map (fun _ hd => derive_eq_func_congr f pre r1 hd) (DerivesSet_hyp ht)
+      have step2 := ih (pre ++ [t2])
+      simp only [List.append_assoc, List.cons_append, List.nil_append] at step2
+      exact termEqv_trans hMax step1 step2
+
+theorem termEqv_rel_congr {S : Formula → Prop} (hMax : IsMaximalConsistent S) (p : String)
+    {ts1 ts2 : List Term} (hEqv : PointwiseEqv S ts1 ts2) :
+    S (.atom p ts1) ↔ S (.atom p ts2) := by
+  have forward : ∀ {u1 u2 : List Term}, PointwiseEqv S u1 u2 →
+      ∀ pre : List Term, S (Formula.atom p (pre ++ u1)) → S (Formula.atom p (pre ++ u2)) := by
+    intro u1 u2 h
+    induction h with
+    | nil => intro _ hx; exact hx
+    | @cons t1 t2 r1 r2 ht _ ih =>
+        intro pre hx
+        have step1 : S (Formula.atom p (pre ++ t2 :: r1)) := by
+          apply max_cons_contains hMax
+          exact DerivesSet_map2 (fun _ he ha => derive_atom_congr p pre r1 he ha)
+                  (DerivesSet_hyp ht) (DerivesSet_hyp hx)
+        have hnext := ih (pre ++ [t2])
+        simp only [List.append_assoc, List.cons_append, List.nil_append] at hnext
+        exact hnext step1
+  exact ⟨fun h => forward hEqv [] h, fun h => forward (pointwiseEqv_symm hMax hEqv) [] h⟩
 
 noncomputable def quotientOut {α : Type u} {s : Setoid α} (q : Quotient s) : α :=
   Classical.choose (Quotient.exists_rep q)

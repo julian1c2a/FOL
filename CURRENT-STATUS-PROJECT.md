@@ -10,8 +10,8 @@
 > |---|---|
 > | «Teorema de Corrección (Soundness): `Γ ⊢ A → Γ ⊨ A`» ✅ | ⛔ **NO HAY teorema de Corrección.** `soundness` es **FALSO** en presencia de `FOL/MetaRules.lean`: cualquier testigo suyo demuestra `False` sin hipótesis (`cuarentena/Inconsistencia.lean`, compilado). Está en **`cuarentena/`** |
 > | «Compacidad» ✅ | ⛔ Su prueba pasaba por `soundness` ⇒ **vacua**. En `cuarentena/` |
-> | «Completitud» ✅ / «1 sorry» | ⚠️ **0 `sorry`, pero TRES `axiom`**: el `sorry` se sustituyó por CINCO postulados en un commit titulado «100 % sorry‑free»; DOS se retiraron el 2026‑09‑13 al CONSTRUIR la enumeración de fórmulas (`FOL.Enumeration`, cero axiomas). Quedan TRES y por tanto **sigue sin estar demostrada** en el sentido que aquí se publica. Ver **`AXIOMS.md`** |
-> | «4 `lean_lib`, ~43 módulos, 1 sorry, v4.28.0» | **2 `lean_lib`** (`FOL`, `TheoryFramework`) · **4 `axiom`** en el build (+3 en `cuarentena/Completeness.lean`) · **0 sorry** · **v4.31.0**. `FOLPure`, `PropLogic` y `FOL_poli` **retiradas** el 2026‑09‑12 a `cuarentena/librerias-retiradas/` |
+> | «Completitud» ✅ / «1 sorry» | ⚠️ **0 `sorry`, pero UN SOLO `axiom`**: el `sorry` se sustituyó por CINCO postulados en un commit titulado «100 % sorry‑free»; el 2026‑09‑13 cayeron CUATRO (la enumeración de fórmulas y las dos congruencias de la igualdad) y queda **UNO**: `henkin_extension_lemma`. ⭐ `truth_lemma` y el modelo canónico son ya **net‑0 puros**; ⚠️ pero la completitud **sigue sin estar demostrada** en el sentido que aquí se publica. Ver **`AXIOMS.md`** |
+> | «4 `lean_lib`, ~43 módulos, 1 sorry, v4.28.0» | **2 `lean_lib`** (`FOL`, `TheoryFramework`) · **4 `axiom`** en el build (+1 en `cuarentena/Completeness.lean`) · **0 sorry** · **v4.31.0**. `FOLPure`, `PropLogic` y `FOL_poli` **retiradas** el 2026‑09‑12 a `cuarentena/librerias-retiradas/` |
 >
 > ⭐ **Lo único sólido MEDIDO del ecosistema** es `prf0_soundness` sobre `Prf₀`
 > (`../ROBINSON_PlusPlus/sondeos/AnclaSoundness.lean`), net‑0 puro.
@@ -31,7 +31,7 @@
 | Lean libraries (`lean_lib`) | 4 |
 | Total modules | ~43 |
 | Modules with 0 sorry | ~42 / ~43 |
-| Total sorries | **0** — ⚠️ pero el de `Completeness` se sustituyó por 5 `axiom`, hoy **3** (`FOL.Enumeration` retiró dos el 2026‑09‑13) |
+| Total sorries | **0** — ⚠️ pero el de `Completeness` se sustituyó por 5 `axiom`, hoy **1** (el 2026‑09‑13 cayeron cuatro: la enumeración y las dos congruencias) |
 | Build status | ✅ Passing (all 4 libs) |
 | Lean version | v4.28.0 |
 | Naming convention | Mathlib-style (see NAMING-CONVENTIONS.md) |
@@ -50,7 +50,7 @@
 | `Deduction.lean` | 1 | 0 | ✅ Complete |
 | `Semantics.lean` | 13 | 0 | ✅ Complete |
 | ~~`Soundness.lean`~~ | — | — | ⛔ **CUARENTENA — su teorema es FALSO** |
-| `Completeness.lean` | 22 | 0 | ⚠️ **3 `axiom`** — eran 5 (ver `AXIOMS.md`) |
+| `Completeness.lean` | 22 | 0 | ⚠️ **1 `axiom`** — eran 5 (ver `AXIOMS.md`) |
 | ~~`Compacity.lean`~~ | — | — | ⛔ **CUARENTENA — vacuo** |
 | `Theorems/Impl.lean` | 4 | 0 | ✅ Complete |
 | `Theorems/Neg.lean` | 5 | 0 | ✅ Complete |

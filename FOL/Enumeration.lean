@@ -17,7 +17,11 @@ import FOL.FOL
 /-!
 # `FOL.Enumeration` — las fórmulas son ENUMERABLES, y aquí está la sobreyección
 
-⭐ **Este módulo existe para RETIRAR DOS AXIOMAS.** `cuarentena/Completeness.lean` postulaba
+⭐ **Este módulo existe para RETIRAR DOS AXIOMAS** de los cinco de `cuarentena/Completeness.lean`.
+(Los otros dos baratos —`termEqv_func_congr` y `termEqv_rel_congr`— cayeron el mismo día por otra
+vía, en `FOL/Theorems/Eq.lean`; el módulo quedó en **un solo** postulado.)
+
+`cuarentena/Completeness.lean` postulaba
 
     axiom formula_enum      : Nat → Formula
     axiom formula_enum_surj : ∀ f : Formula, ∃ n, formula_enum n = f

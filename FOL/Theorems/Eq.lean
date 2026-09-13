@@ -343,4 +343,78 @@ theorem substFormula_liftFormula (φ : Formula) (c : Nat) (s : Term) :
       simp only [liftFormula, substFormula]
       rw [iha (c + 1) (liftTerm 0 s)]
 
+-- ════════════════════════════════════════════════════════════════════════════
+-- CONGRUENCIA de la igualdad bajo `func` y bajo `atom` — 2026‑09‑13
+-- ════════════════════════════════════════════════════════════════════════════
+--
+-- ⚠️ Estos cuatro lemas faltaban, y su ausencia costaba DOS `axiom`:
+-- `termEqv_func_congr` y `termEqv_rel_congr` de `cuarentena/Completeness.lean`.
+--
+-- La técnica es la misma que la de `derive_eq_symm`/`derive_eq_trans` de más arriba:
+-- `Derives.subst` es Leibniz **con índice 0**, así que se fabrica la fórmula‑contexto con
+-- `Term.var 0` en el hueco y `liftTerm 0`/`liftTerms 0` en todo lo demás, y
+-- `substTerm_liftTerm`/`substTerms_liftTerms` la vuelven a cerrar.
+--
+-- 🔑 **Lo único que faltaba no era de lógica, era de LISTAS.** `Derives.subst` sustituye UN
+-- término y `func`/`atom` llevan una **lista** de argumentos: hay que abrir el hueco en una
+-- posición, lo que exige partir la lista en `pre ++ x :: post` y saber que `substTerms`
+-- distribuye sobre `++`. Eso es `substTerms_append`, y con él los tres siguientes salen.
+
+theorem substTerms_append (v : Nat) (s : Term) : ∀ (l1 l2 : List Term),
+    substTerms v s (l1 ++ l2) = substTerms v s l1 ++ substTerms v s l2
+  | [], _ => rfl
+  | t :: l, l2 => by
+      show substTerm v s t :: substTerms v s (l ++ l2)
+            = (substTerm v s t :: substTerms v s l) ++ substTerms v s l2
+      rw [substTerms_append v s l l2]
+      rfl
+
+/-- El HUECO: una lista de argumentos con `Term.var 0` en una posición y todo lo demás
+levantado se cierra sustituyendo, y devuelve `x` en esa posición y el resto intacto. -/
+theorem substTerms_lift_hole (pre post : List Term) (x : Term) :
+    substTerms 0 x (liftTerms 0 pre ++ Term.var 0 :: liftTerms 0 post)
+      = pre ++ x :: post := by
+  rw [substTerms_append, substTerms_liftTerms]
+  show pre ++ substTerm 0 x (Term.var 0) :: substTerms 0 x (liftTerms 0 post) = _
+  rw [substTerms_liftTerms]
+  rfl
+
+/-- Congruencia de `Term.func` en UNA posición de sus argumentos. -/
+theorem derive_eq_func_congr {Γ : List Formula} (p : String) (pre post : List Term)
+    {a b : Term} (h : Derives Γ (.eq a b)) :
+    Derives Γ (.eq (Term.func p (pre ++ a :: post)) (Term.func p (pre ++ b :: post))) := by
+  have key : ∀ x : Term,
+      substFormula 0 x
+        (Formula.eq (liftTerm 0 (Term.func p (pre ++ a :: post)))
+                    (Term.func p (liftTerms 0 pre ++ Term.var 0 :: liftTerms 0 post)))
+        = Formula.eq (Term.func p (pre ++ a :: post)) (Term.func p (pre ++ x :: post)) := by
+    intro x
+    show Formula.eq (substTerm 0 x (liftTerm 0 (Term.func p (pre ++ a :: post))))
+                    (Term.func p
+                      (substTerms 0 x (liftTerms 0 pre ++ Term.var 0 :: liftTerms 0 post)))
+         = _
+    rw [substTerm_liftTerm, substTerms_lift_hole]
+  have hstep := Derives.subst Γ a b
+      (Formula.eq (liftTerm 0 (Term.func p (pre ++ a :: post)))
+                  (Term.func p (liftTerms 0 pre ++ Term.var 0 :: liftTerms 0 post))) h
+  rw [key a, key b] at hstep
+  exact hstep (Derives.refl Γ _)
+
+/-- Congruencia de `Formula.atom` en UNA posición de sus argumentos. -/
+theorem derive_atom_congr {Γ : List Formula} (p : String) (pre post : List Term)
+    {a b : Term} (h : Derives Γ (.eq a b))
+    (hA : Derives Γ (.atom p (pre ++ a :: post))) :
+    Derives Γ (.atom p (pre ++ b :: post)) := by
+  have key : ∀ x : Term,
+      substFormula 0 x (Formula.atom p (liftTerms 0 pre ++ Term.var 0 :: liftTerms 0 post))
+        = Formula.atom p (pre ++ x :: post) := by
+    intro x
+    show Formula.atom p
+          (substTerms 0 x (liftTerms 0 pre ++ Term.var 0 :: liftTerms 0 post)) = _
+    rw [substTerms_lift_hole]
+  have hstep := Derives.subst Γ a b
+      (Formula.atom p (liftTerms 0 pre ++ Term.var 0 :: liftTerms 0 post)) h
+  rw [key a, key b] at hstep
+  exact hstep hA
+
 end FOL

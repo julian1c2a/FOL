@@ -6,11 +6,12 @@
 > ⭐ **Y los cuatro son exactamente los que el kernel obliga a postular** — ver §1.
 > **Retiradas** el 2026‑09‑12: `FOLPure`, `PropLogic`, `FOL_poli` → `cuarentena/librerias-retiradas/`.
 >
-> 🏁 **2026‑09‑13 · `cuarentena/Completeness.lean` pasa de 5 a 3** — ver §2.4. `formula_enum` y
-> `formula_enum_surj` ya no se postulan: los **construye** `FOL/Enumeration.lean`, que está
-> **dentro del build** y cuya sobreyectividad mide `[propext, Classical.choice, Quot.sound]`.
-> ⭐ Efecto colateral medido: **`lindenbaum_lemma` queda net‑0 puro** — era el único consumidor
-> de los dos axiomas retirados.
+> 🏁🏁 **2026‑09‑13 · `cuarentena/Completeness.lean` pasa de 5 a 1.** Dos por la mañana (§2.4:
+> `formula_enum`/`formula_enum_surj`, que **construye** `FOL/Enumeration.lean`) y dos por la tarde
+> (§2.5: `termEqv_func_congr`/`termEqv_rel_congr`, **demostrados**).
+> ⭐ Efecto medido, y es mayor que la cifra: **`lindenbaum_lemma`, `truth_lemma` y el modelo
+> canónico entero quedan net‑0 puros**. `completeness` depende ya de **un solo** postulado del
+> proyecto: `henkin_extension_lemma`.
 
 **Creado:** 2026‑09‑12 · **Autor:** Julián Calderón Almendros
 
@@ -31,9 +32,10 @@ La auditoría del 2026‑09‑12 midió que **ningún control de este repo cuent
 > `README.md` y `REFERENCE.md` lo publican. Está demostrado **módulo cinco postulados**, y tres de
 > ellos son sustantivos.
 >
-> ⭐ **2026‑09‑13: son TRES** — los dos que **no** eran sustantivos están construidos (§2.4). Y eso
-> no cambia el titular: **sigue sin estar demostrado**, ahora módulo tres postulados. 🔑 La cifra
-> baja; el veredicto no. Cambiarlo requeriría pagar `henkin_extension_lemma`.
+> ⭐ **2026‑09‑13: es UNO.** Cuatro de los cinco están pagados: los dos de enumerabilidad (§2.4) y
+> las dos congruencias de la igualdad (§2.5). Y eso **no cambia el titular**: sigue sin estar
+> demostrado, ahora módulo **un** postulado. 🔑 La cifra baja; el veredicto no. Cambiarlo requiere
+> pagar `henkin_extension_lemma`, y ése es el caro de verdad.
 
 ---
 
@@ -127,18 +129,49 @@ en v4.31 —es UTF‑8 opaco— así que `String.mk s.data = s` **no** vale por 
 una COTA de tamaño (`∀ N, ∀ t, size t < N → …`), el mismo patrón de `truth_lemma_lt`. `Term` es un
 inductivo **anidado** (contiene `List Term`) y así se esquiva escribir a mano su recursor mutuo.
 
-#### Lo que NO se ha tocado
+#### Lo que en esa pasada NO se tocó
 
-Los **tres** que quedan, por orden de dificultad medida:
+Los **tres** que quedaban entonces, con el juicio que se emitió — y conviene dejarlo escrito
+porque **dos de los tres juicios se comprobaron el mismo día** (§2.5):
 
-| axioma | qué es | juicio |
+| axioma | qué es | juicio de la mañana |
 |---|---|---|
-| `termEqv_func_congr` | congruencia de `=` bajo `Term.func`, argumento a argumento | ⬜ **probablemente barato**: es inducción sobre `PointwiseEqv` más los axiomas de igualdad de `FOL/Theorems/Eq.lean`. No medido |
-| `termEqv_rel_congr` | lo mismo para `Formula.atom` | ⬜ igual que el anterior |
-| ⛔ `henkin_extension_lemma` | todo conjunto consistente se extiende a uno **máximamente consistente y con testigos** | ⛔ **es el caro de verdad**: su prueba clásica **amplía el lenguaje con constantes nuevas**, y eso aquí significa construir la extensión y su conservatividad |
+| `termEqv_func_congr` | congruencia de `=` bajo `Term.func`, argumento a argumento | ⬜ «probablemente barato… **no medido**» → ✅ **medido y pagado** (§2.5) |
+| `termEqv_rel_congr` | lo mismo para `Formula.atom` | ⬜ igual → ✅ **pagado** |
+| ⛔ `henkin_extension_lemma` | todo conjunto consistente se extiende a uno **máximamente consistente y con testigos** | ⛔ **el caro de verdad**: su prueba clásica **amplía el lenguaje con constantes nuevas**, y eso aquí significa construir la extensión y su conservatividad. **Sigue en pie** |
 
-⚠️ **Y mientras `henkin_extension_lemma` siga postulado, `completeness` no está demostrado.**
-Bajar de 5 a 3 no mueve ese veredicto ni un milímetro.
+### 2.5 · 2026‑09‑13 (tarde) · las DOS congruencias, DEMOSTRADAS (3 → 1)
+
+`termEqv_func_congr` y `termEqv_rel_congr` eran `axiom`. Son teoremas.
+
+| medida | valor |
+|---|---|
+| `termEqv_func_congr` / `termEqv_rel_congr` | `[propext, Classical.choice, Quot.sound]` |
+| ⭐ `evalTerm_canonical` (el modelo canónico) | **net‑0 puro** |
+| ⭐⭐ `truth_lemma` (el Lema de la Verdad) | **net‑0 puro** |
+| `model_existence_lemma` / `completeness` | `henkin_extension_lemma`, y **nada más** |
+| coste | **~45 líneas** en `FOL/Theorems/Eq.lean` (dentro del build) + **~55** en `Completeness.lean` |
+
+🔑 **Lo que faltaba no era de LÓGICA, era de LISTAS.** `Derives.subst` es Leibniz con índice 0 —
+sustituye **un** término— y `Term.func`/`Formula.atom` llevan una **lista** de argumentos. La
+técnica es la misma que `derive_eq_symm`/`derive_eq_trans` ya usaban desde siempre (fórmula‑contexto
+con `Term.var 0` en el hueco y `liftTerm 0` en el resto, cerrada por `substTerm_liftTerm`); lo único
+que no existía era **abrir el hueco dentro de la lista**: partirla en `pre ++ x :: post` y saber que
+`substTerms` distribuye sobre `++`. Ese lema —`substTerms_append`, cuatro líneas— es toda la pieza
+que faltaba, y con él los otros tres salen seguidos.
+
+Entran en `FOL/Theorems/Eq.lean`, que **está en el build**: `substTerms_append`,
+`substTerms_lift_hole`, **`derive_eq_func_congr`** y **`derive_atom_congr`**. Son lemas generales de
+igualdad que a la librería le faltaban, no andamiaje de la cuarentena. En `Completeness.lean` queda
+sólo el traslado de `Derives` a `DerivesSet` (`DerivesSet_map`/`DerivesSet_map2`) y la inducción
+sobre `PointwiseEqv`, que es un inductivo **sin axiomas habitándolo** ⇒ M‑11 no aplica.
+
+⚠️ **Y el veredicto sigue sin moverse**: mientras `henkin_extension_lemma` esté postulado,
+`completeness` **no está demostrado**. De 5 a 1 es una cifra; el que queda es el que costaba.
+
+⚠️ **Lección de método, del propio §2.4**: allí se escribió *«derivable en principio, **no
+medido**»*. Estaba bien dicho —era una estimación declarada como tal— y al medirla resultó cierta.
+🔑 *Una estimación etiquetada como estimación no hace daño; la que se publica como medición, sí.*
 
 ### 2.3 · Lo que se fue antes
 

@@ -32,7 +32,7 @@ consumidor no usaba.
 |---|---|---|
 | `FOL.Soundness` | 2026‑09‑11 | ⛔ **su teorema es FALSO**: con `raa` demuestra `False` sin hipótesis |
 | `FOL.Compacity` | 2026‑09‑11 | su prueba pasaba por `soundness` ⇒ **vacua** |
-| `FOL.Completeness` | 2026‑09‑12 | 702 líneas y **5 axiomas**, con **cero consumidores reales**. ⭐ **Desde el 2026‑09‑13 son TRES**: `formula_enum` y `formula_enum_surj` ya **no se postulan**, los construye `FOL.Enumeration`. Sigue en cuarentena: `henkin_extension_lemma` no está pagado |
+| `FOL.Completeness` | 2026‑09‑12 | 702 líneas y **5 axiomas**, con **cero consumidores reales**. ⭐⭐ **Desde el 2026‑09‑13 es UNO**: la enumerabilidad la construye `FOL.Enumeration` y las dos congruencias de la igualdad son teoremas (`FOL/Theorems/Eq.lean`). ⛔ Sigue en cuarentena: `henkin_extension_lemma` no está pagado, y con él `completeness` no está demostrado |
 
 Los tres están en `cuarentena/`, con su explicación en `cuarentena/README.md`.
 -/

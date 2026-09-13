@@ -172,18 +172,27 @@ propios** en un módulo de 702 líneas con **cero consumidores reales** —sólo
 raíz y un fichero ya apartado—. El `sorry` original se sustituyó por esos cinco postulados en un
 commit titulado *«100 % sorry‑free»*.
 
-### 9.1 · 🏁 2026‑09‑13 · de CINCO a TRES
+### 9.1 · 🏁🏁 2026‑09‑13 · de CINCO a UNO
 
 `formula_enum` y `formula_enum_surj` ya **no se postulan**: los construye
 **`FOL/Enumeration.lean`**, que está **dentro del build** (`@[default_target]`) y no en esta
 carpeta. Se conservan los dos nombres —ahora `def` y `theorem`—, así que los **ocho sitios de uso**
 de este módulo no cambiaron.
 
+Y por la tarde cayeron los otros dos: **`termEqv_func_congr` y `termEqv_rel_congr` están
+demostrados**. La congruencia de la igualdad bajo `func`/`atom` sale de `Derives.subst` con el
+patrón de `derive_eq_symm`; 🔑 lo que faltaba **no era de lógica sino de LISTAS** —abrir el hueco
+en una posición de los argumentos—, y eso es `substTerms_append`, cuatro líneas. Las piezas de
+`Derives` viven ahora en **`FOL/Theorems/Eq.lean`, dentro del build** (`derive_eq_func_congr`,
+`derive_atom_congr`), porque son lemas generales de igualdad que a la librería le faltaban.
+
 | medida | valor |
 |---|---|
 | `natToFormula_surj` / `formula_enum_surj` | `[propext, Classical.choice, Quot.sound]` |
-| ⭐ `lindenbaum_lemma` | `[propext, Classical.choice, Quot.sound]` — **net‑0 puro, incondicional** |
-| `completeness` | `henkin_extension_lemma`, `termEqv_func_congr`, `termEqv_rel_congr`, y sólo ésos |
+| `termEqv_func_congr` / `termEqv_rel_congr` | `[propext, Classical.choice, Quot.sound]` |
+| ⭐ `lindenbaum_lemma` | **net‑0 puro, incondicional** |
+| ⭐⭐ `truth_lemma` y el modelo canónico | **net‑0 puros** — el Lema de la Verdad ya no cuesta nada |
+| `completeness` | `henkin_extension_lemma`, y **nada más** |
 
 ⚠️ **Esta carpeta no la compila nadie.** Para comprobar a mano que `Completeness.lean` sigue
 cerrando, desde la raíz de **ROBINSON_PlusPlus** (⛔ nunca `cd FOL && lake build`):
@@ -195,15 +204,16 @@ justamente la enfermedad de §6bis y de §7 —código que nadie compila—. Una
 un axioma y vive fuera del build no retira nada: nadie la verifica. `FOL/Enumeration.lean` entra por
 `FOL.lean`, que es `@[default_target]`, y se comprueba con `lake build @FOL/FOL`.
 
-### 9.2 · ⬜ Los TRES que quedan
+### 9.2 · ⛔ El ÚNICO que queda
 
-| axioma | juicio |
-|---|---|
-| `termEqv_func_congr`, `termEqv_rel_congr` | ⬜ **no medidos**; parecen inducción sobre `PointwiseEqv` más `FOL/Theorems/Eq.lean` |
-| ⛔ `henkin_extension_lemma` | ⛔ el caro: su prueba clásica **amplía el lenguaje con constantes** |
+⛔ **`henkin_extension_lemma`**: todo conjunto consistente se extiende a uno **máximamente
+consistente y con testigos**. Su prueba clásica **amplía el lenguaje con constantes nuevas**, y
+aquí eso significa construir la extensión y demostrar que es conservativa. Es, de los cinco, el
+único que desde el principio se clasificó como *«el caro de verdad»* — y sigue siéndolo.
 
-⚠️ **El veredicto no ha cambiado**: mientras `henkin_extension_lemma` siga postulado, **no hay
-Teorema de Completitud demostrado en este repo**. Pasar de 5 a 3 baja la cifra, no el veredicto.
+⚠️ **El veredicto no ha cambiado**: mientras esté postulado, **no hay Teorema de Completitud
+demostrado en este repo**. Pasar de 5 a 1 baja la cifra, no el veredicto. 🔑 Lo que sí cambia es
+**dónde está la deuda**: ya no repartida en cinco sitios, sino concentrada en uno y con nombre.
 
 ---
 
