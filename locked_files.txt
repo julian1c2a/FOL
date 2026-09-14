@@ -8,3 +8,6 @@ FOL/Derives0.lean
 FOL/Soundness0.lean
 FOL/Rename.lean
 FOL/Eigenvariable.lean
+FOL.lean
+FOL/Lift0.lean
+FOL/Henkin0.lean
