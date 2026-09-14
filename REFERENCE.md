@@ -116,10 +116,14 @@ This document complies with all requirements specified in [AI-GUIDE.md](AI-GUIDE
 | `Tactics.lean` | `FOL.Tactics` | `FOL.FOL`, `Lean` | ✅ Completo |
 | `Deduction.lean` | `FOL.Metamath.Deduction` | `FOL.FOL`, `FOL.Tactics` | ✅ Completo |
 | `Semantics.lean` | `FOL.Metamath.Semantics` | `FOL.FOL` | ✅ Completo |
-| `Soundness.lean` | `FOL.Metamath.Soundness` | `FOL.FOL`, `FOL.Metamath.Semantics`, `FOL.Tactics` | ✅ Completo |
-| `Completeness.lean` | `FOL.Metamath.Completeness` | `FOL.FOL`, `FOL.Semantics`, `FOL.Deduction`, `FOL.Theorems.Neg`, `FOL.Theorems.Quantifiers` | ✅ Completo |
-| `Compacity.lean` | `FOL.Metamath.Compacity` | `FOL.FOL`, `FOL.Semantics`, `FOL.Soundness`, `FOL.Completeness` | ✅ Completo |
 | `Theorems/Eq.lean` | `FOL.Theorems.Eq` | `FOL.FOL` | ✅ Completo |
+| `Enumeration.lean` | `FOL.Metamath.Enumeration` | `FOL.FOL` | ✅ Completo — `natToFormula` y su sobreyectividad, **computables**, cero axiomas (ADR‑030) |
+| `Derives0.lean` | *(raíz, como `Derives`)* | `FOL.FOL` | ✅ Completo — **`Derives₀`**: 21 constructores, **cero habitantes‑axioma** ⇒ **inducible**. Paso 0 del plan finitista |
+
+⛔ **Y tres módulos que esta tabla listaba como vivos YA NO LO ESTÁN** (corregido el 2026‑09‑14):
+`Soundness.lean`, `Compacity.lean` y `Completeness.lean` están **retirados** a `cuarentena/` desde
+el 2026‑09‑11/12 — los dos primeros porque el teorema de solidez para `Derives` es **falso**, el
+tercero por sus `axiom` propios. Ver `cuarentena/README.md`.
 
 *Status codes*: ✅ Complete · 🧊 Frozen · 🔶 Partial · 🔄 In progress · ❌ Pending
 

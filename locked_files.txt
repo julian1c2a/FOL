@@ -1,6 +1,5 @@
 FOL/MetaRules.lean
 FOL/Core.lean
-FOL.lean
 FOL/Enumeration.lean
 AXIOMS.md
 cuarentena/README.md

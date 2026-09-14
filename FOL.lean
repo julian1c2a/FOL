@@ -7,6 +7,7 @@ License: MIT
 import FOL.Core
 import FOL.Semantics
 import FOL.Enumeration
+import FOL.Derives0
 
 /-!
 # `FOL` — el barrel completo: núcleo **más** capa semántica
@@ -15,7 +16,15 @@ import FOL.Enumeration
 
 * **`FOL.Core`** — sintaxis, derivación, tácticas y teoremas lógicos. Es **exactamente** lo que
   ROBINSON_PlusPlus importa (medido: nueve módulos; nunca importa este barrel).
-* **`FOL`** (este fichero) — `FOL.Core` **más** `Semantics` **más** `Enumeration`.
+* **`FOL`** (este fichero) — `FOL.Core` **más** `Semantics`, `Enumeration` y `Derives0`.
+
+⭐⭐ **`FOL.Derives0` entró el 2026‑09‑14** — es el **Paso 0** de
+`../ROBINSON_PlusPlus/doc/PLAN-COMPLETITUD-FINITISTA.md`: `Derives₀`, los 21 constructores de
+`Derives` **menos la ω‑regla** y **sin los cuatro axiomas de `MetaRules`**, con **cero
+habitantes‑axioma** ⇒ **se puede inducir sobre él** (M‑11 no aplica). Más el encaje
+`derives0_to_derives : Γ ⊢₀ f → Γ ⊢ f`, que es **él mismo** una inducción sobre `Derives₀` y por
+tanto la prueba de que el paso funciona. ⚠️ **No toca a ROBINSON_PlusPlus**: es un objeto nuevo, y
+este barrel RPP no lo importa.
 
 ⭐ **`FOL.Enumeration` entró el 2026‑09‑13**: construye `natToFormula : Nat → Formula` y su
 sobreyectividad, **cero axiomas**. Es lo que retira `formula_enum` y `formula_enum_surj` de
