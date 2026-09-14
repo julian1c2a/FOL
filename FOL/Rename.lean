@@ -41,8 +41,40 @@ En esta firma los dos son `String`, pero son **dos espacios de nombres distintos
 son símbolos de función de aridad cero. Renombrar también los relacionales confundiría los dos.
 
 ⚠️ **No se pide que `ρ` sea inyectiva.** Para esta dirección no hace falta: un renombrado
-cualquiera transporta derivaciones. La inyectividad hará falta para la **recíproca** (la
-conservatividad), que es otra pieza.
+cualquiera transporta derivaciones.
+
+## ⭐⭐ Y la RECÍPROCA sale sin inducción nueva
+
+    derives0_rename_inv (hσ : ∀ s, σ (ρ s) = s) :
+        Γ.map (renameFormula ρ) ⊢₀ renameFormula ρ f  →  Γ ⊢₀ f
+
+Es `derives0_rename σ` **aplicado a la inversa**, más la cancelación de las dos capas. Cuatro
+líneas, cero casos.
+🔑 *Cuando una operación es funtorial y tiene inversa por un lado, su «conservatividad» es el
+mismo teorema aplicado a la inversa.*
+
+| teorema | footprint |
+|---|---|
+| `derives0_rename` | `[propext, Quot.sound]` |
+| `derives0_rename_inv` | `[propext, Quot.sound]` ⭐ **constructivo** |
+| `derives0_rename_iff` | `[propext, Quot.sound]` |
+| `derives0_rename_conservative` (hipótesis: `ρ` **inyectiva**) | `[propext, Classical.choice, Quot.sound]` |
+
+⭐ **La separación es exacta y vale la pena leerla**: la conservatividad **no** necesita elección;
+la necesita **sólo** el paso «inyectiva ⇒ tiene inversa». Por eso la forma buena es
+`derives0_rename_inv`, que pide la inversa — y en la construcción de Henkin la inversa **se tiene
+escrita**, porque el renombrado es explícito.
+
+## ⬜ Lo que esto NO es todavía
+
+⚠️ Con esto **aún no está la extensión de Henkin**. Falta la otra mitad, y conviene tenerla con
+nombre: el paso de **eigenvariable** — de `Γ ⊢₀ φ(c)` con `c` fresca concluir `Γ ⊢₀ ∀x φ(x)`.
+Eso **no es un renombrado**: manda una **constante** a una **variable**, con corrimiento de índices
+de De Bruijn bajo los binders. Es otra operación (`abstractConst`) y otra inducción sobre los 21
+constructores.
+
+⇒ Lo que este módulo da es la **mitad de la extensión de lenguaje** (meter la teoría en un
+sublenguaje y traerse de vuelta la contradicción); la mitad del testigo fresco sigue abierta.
 
 ## Lo que hubo que probar antes
 
@@ -276,6 +308,118 @@ theorem derives0_rename (ρ : String → String) {Γ : List Formula} {f : Formul
       rw [rename_substFormula]
       exact this
 
+-- ============================================================
+-- ⭐⭐ LA RECÍPROCA · conservatividad
+-- ============================================================
+
+/-!
+### La recíproca no necesita ninguna inducción nueva
+
+⭐ `ρΓ ⊢₀ ρφ → Γ ⊢₀ φ` **sale de aplicar el lema DIRECTO a la inversa por la izquierda**. Si
+`σ ∘ ρ = id`, entonces `derives0_rename σ` transporta la derivación de vuelta y las dos capas de
+renombrado se cancelan. Cero casos, cuatro líneas.
+
+🔑 *Cuando una operación es funtorial y tiene inversa por un lado, su «conservatividad» es el
+mismo teorema aplicado a la inversa.* No hay que volver a inducir sobre el cálculo.
+
+⚠️ **Se pide la inversa, no la inyectividad**, y a propósito: así el enunciado es **constructivo**
+(`[propext, Quot.sound]`) y no pierde nada — el renombrado que Henkin necesita es explícito
+(«mete todo en un sublenguaje») y viene con su inversa escrita. La versión con hipótesis de
+**inyectividad** está debajo como corolario, y ésa sí paga `Classical.choice` para fabricar la
+inversa.
+-/
+
+mutual
+theorem rename_rename_term {ρ σ : String → String} (hσ : ∀ s, σ (ρ s) = s) :
+    ∀ t : Term, renameTerm σ (renameTerm ρ t) = t := by
+  intro t
+  cases t with
+  | var n => rfl
+  | func s ts =>
+      simp only [renameTerm, hσ]
+      congr 1
+      exact rename_rename_terms hσ ts
+
+theorem rename_rename_terms {ρ σ : String → String} (hσ : ∀ s, σ (ρ s) = s) :
+    ∀ ts : List Term, renameTerms σ (renameTerms ρ ts) = ts := by
+  intro ts
+  cases ts with
+  | nil => rfl
+  | cons t ts' =>
+      simp only [renameTerms, List.cons.injEq]
+      exact ⟨rename_rename_term hσ t, rename_rename_terms hσ ts'⟩
+end
+
+theorem rename_rename_formula {ρ σ : String → String} (hσ : ∀ s, σ (ρ s) = s) :
+    ∀ f : Formula, renameFormula σ (renameFormula ρ f) = f := by
+  intro f
+  induction f with
+  | bottom => rfl
+  | atom p ts => simp only [renameFormula, rename_rename_terms hσ]
+  | eq t u => simp only [renameFormula, rename_rename_term hσ]
+  | impl a b iha ihb => simp only [renameFormula, iha, ihb]
+  | «forall» a ih => simp only [renameFormula, ih]
+  | and a b iha ihb => simp only [renameFormula, iha, ihb]
+  | or a b iha ihb => simp only [renameFormula, iha, ihb]
+  | ex a ih => simp only [renameFormula, ih]
+
+theorem map_rename_rename {ρ σ : String → String} (hσ : ∀ s, σ (ρ s) = s) (Γ : List Formula) :
+    (Γ.map (renameFormula ρ)).map (renameFormula σ) = Γ := by
+  induction Γ with
+  | nil => rfl
+  | cons g Γ' ih => simp only [List.map_cons, rename_rename_formula hσ, ih]
+
+/-- ⭐⭐ **CONSERVATIVIDAD del renombrado**, en su forma constructiva: con una inversa por la
+izquierda, lo que se deriva en la imagen se deriva en el original.
+
+⭐ **Ni una inducción nueva**: es `derives0_rename σ` más la cancelación. -/
+theorem derives0_rename_inv {ρ σ : String → String} (hσ : ∀ s, σ (ρ s) = s)
+    {Γ : List Formula} {f : Formula}
+    (h : (Γ.map (renameFormula ρ)) ⊢₀ renameFormula ρ f) : Γ ⊢₀ f := by
+  have h' := derives0_rename σ h
+  rwa [map_rename_rename hσ, rename_rename_formula hσ] at h'
+
+-- ── La versión con INYECTIVIDAD, que sí paga elección ───────────────────────
+
+-- ⚠️ `open Classical` SÓLO aquí: la instancia `Decidable (∃ t, ρ t = s)` no existe, y es
+-- justamente el punto — de la inyectividad no sale una inversa computable.
+section ConElección
+open Classical
+
+/-- Inversa por la izquierda fabricada con elección. ⚠️ `noncomputable` a propósito: de la mera
+inyectividad no sale una inversa **computable**. Por eso la forma buena del teorema es
+`derives0_rename_inv`, que pide la inversa y es constructiva. -/
+noncomputable def invOf (ρ : String → String) : String → String :=
+  fun s => if h : ∃ t, ρ t = s then h.choose else s
+
+theorem invOf_spec {ρ : String → String} (hinj : ∀ s t, ρ s = ρ t → s = t) (s : String) :
+    invOf ρ (ρ s) = s := by
+  have hex : ∃ t, ρ t = ρ s := ⟨s, rfl⟩
+  show (if h : ∃ t, ρ t = ρ s then h.choose else ρ s) = s
+  rw [dif_pos hex]
+  exact hinj _ _ hex.choose_spec
+
+/-- **Conservatividad con la hipótesis habitual**: `ρ` inyectiva.
+⚠️ Su footprint lleva `Classical.choice`, y no por la lógica sino **por fabricar la inversa**.
+Si se tiene la inversa a mano —y en la construcción de Henkin se tiene—, usar
+`derives0_rename_inv`, que es constructivo. -/
+theorem derives0_rename_conservative {ρ : String → String} (hinj : ∀ s t, ρ s = ρ t → s = t)
+    {Γ : List Formula} {f : Formula}
+    (h : (Γ.map (renameFormula ρ)) ⊢₀ renameFormula ρ f) : Γ ⊢₀ f :=
+  derives0_rename_inv (invOf_spec hinj) h
+
+end ConElección
+
+/-- ⭐ **Las dos direcciones juntas**: con inversa por la izquierda, derivar en el original y
+derivar en la imagen es **lo mismo**. Es el enunciado que consume la extensión de lenguaje. -/
+theorem derives0_rename_iff {ρ σ : String → String} (hσ : ∀ s, σ (ρ s) = s)
+    {Γ : List Formula} {f : Formula} :
+    Iff (Γ ⊢₀ f) ((Γ.map (renameFormula ρ)) ⊢₀ renameFormula ρ f) :=
+  ⟨derives0_rename ρ, derives0_rename_inv hσ⟩
+
 end FOL.Rename
 
 #print axioms FOL.Rename.derives0_rename
+#print axioms FOL.Rename.derives0_rename_inv
+#print axioms FOL.Rename.derives0_rename_iff
+#print axioms FOL.Rename.derives0_rename_conservative
