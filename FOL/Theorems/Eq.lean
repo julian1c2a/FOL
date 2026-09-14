@@ -6,14 +6,25 @@ namespace FOL
 -- ramas imposibles con `omega` **sobre un objetivo NO aritmético** (el objetivo era `s = .var n`,
 -- y `omega` lo cerraba por contradicción entre las hipótesis de `Nat`).
 --
--- ⚠️ **Medido**: `omega` es limpio cuando el objetivo ES aritmético, y trae **`Classical.choice`**
--- cuando NO lo es. Mismo enunciado, dos pruebas:
+-- ⚠️⚠️ **CORREGIDO el mismo día**: la primera versión de esta nota decía *«`omega` es limpio si el
+-- objetivo es aritmético y trae `Classical.choice` si no»*. **Es demasiado general y está
+-- refutado midiendo** — el MISMO teorema con las MISMAS tácticas da footprints distintos según el
+-- contexto de imports:
 --
---     theorem v_omega   … : s = t := by omega            -- [propext, Classical.choice, Quot.sound]
---     theorem v_exfalso … : s = t := by exfalso; omega   -- [propext, Quot.sound]
+--     import FOL.FOL            →  [propext, Classical.choice, Quot.sound]
+--     import ROBINSON_PlusPlus  →  [propext, Quot.sound]
 --
--- Aquí se usa el estilo `by_cases` + `simp` del hermano `substTerm_lift_comm`, que **ya era
--- limpio**. Footprint de este par: `[propext, Quot.sound]`.
+-- 🔑 **El footprint de una táctica automática no es propiedad del enunciado ni de la táctica:
+-- depende del ENTORNO.** Lo que sí es robusto —limpio en los dos contextos— es `exfalso; omega`,
+-- `absurd h (by omega)` y el estilo `by_cases` + `simp` que usa el hermano `substTerm_lift_comm`,
+-- que **nunca estuvo sucio**. Es el que se usa aquí.
+--
+-- ⇒ **Regla operativa**: no dejes que una táctica automática cierre una rama imposible sobre un
+-- objetivo ajeno a su dominio; mándala a `False` tú primero.
+--
+-- Efecto medido del arreglo: FOL pasa de **26** a **16** declaraciones con `Classical.choice`, y
+-- `derive_eq_symm`/`derive_eq_trans`/`derive_eq_func_congr`/`derive_atom_congr` quedan **net‑0
+-- puras**. Detalle completo en `../ROBINSON_PlusPlus/sondeos/ClassicalChoiceCenso.lean`.
 mutual
 theorem substTerm_liftTerm (t : Term) (c : Nat) (s : Term) :
     substTerm c s (liftTerm c t) = t := by
