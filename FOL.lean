@@ -10,6 +10,7 @@ import FOL.Enumeration
 import FOL.Derives0
 import FOL.Soundness0
 import FOL.Rename
+import FOL.Eigenvariable
 
 /-!
 # `FOL` — el barrel completo: núcleo **más** capa semántica
@@ -38,6 +39,12 @@ patología de la que `Derives` sí padece. ⛔ Recuérdese que **la solidez de `
 ⭐ **`FOL.Rename`, también el 2026‑09‑14**: `derives0_rename` — `Derives₀` respeta el renombrado
 de símbolos de función, footprint **`[propext, Quot.sound]`** (ni `Classical.choice`). Es la pieza
 que la **extensión de Henkin** necesitaba y que sobre `Derives` estaba prohibida por M‑11.
+
+⭐⭐ **`FOL.Eigenvariable`, la otra mitad**: `derives0_gen_fresh` — de `Γ ⊢₀ φ` con la constante
+`c` **fresca en el contexto** se concluye `Γ ⊢₀ ∀ (absFormula c 0 φ)`. Footprint
+**`[propext, Quot.sound]`**. ⚠️ Ésta **sí** toca los índices de De Bruijn, así que sus
+conmutaciones llevan hipótesis de nivel (`j ≤ k`, `v ≤ k`) — de ahí que costara más que el
+renombrado.
 
 ⭐ **`FOL.Enumeration` entró el 2026‑09‑13**: construye `natToFormula : Nat → Formula` y su
 sobreyectividad, **cero axiomas**. Es lo que retira `formula_enum` y `formula_enum_surj` de

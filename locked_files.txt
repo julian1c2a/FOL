@@ -6,5 +6,4 @@ cuarentena/README.md
 FOL/Theorems/Eq.lean
 FOL/Derives0.lean
 FOL/Soundness0.lean
-FOL.lean
 FOL/Rename.lean
