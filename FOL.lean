@@ -9,6 +9,7 @@ import FOL.Semantics
 import FOL.Enumeration
 import FOL.Derives0
 import FOL.Soundness0
+import FOL.Rename
 
 /-!
 # `FOL` — el barrel completo: núcleo **más** capa semántica
@@ -33,6 +34,10 @@ este barrel RPP no lo importa.
 ⭐⭐ **`derives0_not_complete`**: `Derives₀` **no decide toda fórmula**, que es exactamente la
 patología de la que `Derives` sí padece. ⛔ Recuérdese que **la solidez de `Derives` es FALSA**
 (`cuarentena/Inconsistencia.lean`).
+
+⭐ **`FOL.Rename`, también el 2026‑09‑14**: `derives0_rename` — `Derives₀` respeta el renombrado
+de símbolos de función, footprint **`[propext, Quot.sound]`** (ni `Classical.choice`). Es la pieza
+que la **extensión de Henkin** necesitaba y que sobre `Derives` estaba prohibida por M‑11.
 
 ⭐ **`FOL.Enumeration` entró el 2026‑09‑13**: construye `natToFormula : Nat → Formula` y su
 sobreyectividad, **cero axiomas**. Es lo que retira `formula_enum` y `formula_enum_surj` de
