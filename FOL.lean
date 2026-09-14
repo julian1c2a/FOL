@@ -11,6 +11,8 @@ import FOL.Derives0
 import FOL.Soundness0
 import FOL.Rename
 import FOL.Eigenvariable
+import FOL.Lift0
+import FOL.Henkin0
 
 /-!
 # `FOL` — el barrel completo: núcleo **más** capa semántica
@@ -45,6 +47,15 @@ que la **extensión de Henkin** necesitaba y que sobre `Derives` estaba prohibid
 **`[propext, Quot.sound]`**. ⚠️ Ésta **sí** toca los índices de De Bruijn, así que sus
 conmutaciones llevan hipótesis de nivel (`j ≤ k`, `v ≤ k`) — de ahí que costara más que el
 renombrado.
+
+⭐ **`FOL.Lift0`** — `derives0_lift`, el debilitamiento bajo levantamiento, y con él
+`derives0_ex_forall_neg_absurd` (`∃A` y `∀¬A` se contradicen). Lo descubrió el ensamblaje: en un
+cálculo finitario esa contradicción pasa por `elim_ex`, cuya premisa vive en el contexto levantado.
+
+⭐⭐ **`FOL.Henkin0`** — **`henkin_step_consistent`**: añadir el testigo de Henkin con una constante
+fresca **preserva la consistencia**. Es donde paga `derives0_gen_fresh`, y es la parte
+**matemática** del ensamblaje. ⬜ Falta la iteración ω y el **suministro de constantes frescas**,
+que es combinatoria de nombres y pasa por `String`.
 
 ⭐ **`FOL.Enumeration` entró el 2026‑09‑13**: construye `natToFormula : Nat → Formula` y su
 sobreyectividad, **cero axiomas**. Es lo que retira `formula_enum` y `formula_enum_surj` de

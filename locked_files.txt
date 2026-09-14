@@ -7,5 +7,4 @@ FOL/Theorems/Eq.lean
 FOL/Derives0.lean
 FOL/Soundness0.lean
 FOL/Rename.lean
-FOL.lean
 FOL/Eigenvariable.lean

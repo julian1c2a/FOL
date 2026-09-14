@@ -122,6 +122,8 @@ This document complies with all requirements specified in [AI-GUIDE.md](AI-GUIDE
 | `Soundness0.lean` | `FOL.Metamath.Soundness0` | `FOL.Derives0`, `FOL.Semantics` | ✅ Completo — **`derives0_soundness`**, y con ella la **consistencia** de `Derives₀` y que **no es sintácticamente completo**. Paso 1 |
 | `Rename.lean` | `FOL.Rename` | `FOL.Derives0` | ✅ Completo — **`derives0_rename`**: `Derives₀` respeta el renombrado de símbolos de función. Footprint `[propext, Quot.sound]`. Pieza del Paso 2 (Henkin) |
 | `Eigenvariable.lean` | `FOL.Eigenvariable` | `FOL.Derives0` | ✅ Completo — **`derives0_gen_fresh`**: de una constante FRESCA a un `∀`. Footprint `[propext, Quot.sound]`. La otra mitad del Paso 2 |
+| `Lift0.lean` | `FOL.Lift0` | `FOL.Eigenvariable` | ✅ Completo — **`derives0_lift`** (debilitamiento bajo levantamiento) y **`derives0_ex_forall_neg_absurd`**. `[propext, Quot.sound]` |
+| `Henkin0.lean` | `FOL.Henkin0` | `FOL.Lift0` | ✅ Completo — ⭐⭐ **`henkin_step_consistent`**: añadir el testigo de Henkin con constante fresca preserva la consistencia. ⬜ Falta la iteración ω y el suministro de constantes |
 
 ⛔ **Y tres módulos que esta tabla listaba como vivos YA NO LO ESTÁN** (corregido el 2026‑09‑14):
 `Soundness.lean`, `Compacity.lean` y `Completeness.lean` están **retirados** a `cuarentena/` desde
