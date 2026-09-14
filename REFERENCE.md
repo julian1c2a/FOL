@@ -119,6 +119,7 @@ This document complies with all requirements specified in [AI-GUIDE.md](AI-GUIDE
 | `Theorems/Eq.lean` | `FOL.Theorems.Eq` | `FOL.FOL` | ✅ Completo |
 | `Enumeration.lean` | `FOL.Metamath.Enumeration` | `FOL.FOL` | ✅ Completo — `natToFormula` y su sobreyectividad, **computables**, cero axiomas (ADR‑030) |
 | `Derives0.lean` | *(raíz, como `Derives`)* | `FOL.FOL` | ✅ Completo — **`Derives₀`**: 21 constructores, **cero habitantes‑axioma** ⇒ **inducible**. Paso 0 del plan finitista |
+| `Soundness0.lean` | `FOL.Metamath.Soundness0` | `FOL.Derives0`, `FOL.Semantics` | ✅ Completo — **`derives0_soundness`**, y con ella la **consistencia** de `Derives₀` y que **no es sintácticamente completo**. Paso 1 |
 
 ⛔ **Y tres módulos que esta tabla listaba como vivos YA NO LO ESTÁN** (corregido el 2026‑09‑14):
 `Soundness.lean`, `Compacity.lean` y `Completeness.lean` están **retirados** a `cuarentena/` desde

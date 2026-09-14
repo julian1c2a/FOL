@@ -8,6 +8,7 @@ import FOL.Core
 import FOL.Semantics
 import FOL.Enumeration
 import FOL.Derives0
+import FOL.Soundness0
 
 /-!
 # `FOL` — el barrel completo: núcleo **más** capa semántica
@@ -25,6 +26,13 @@ habitantes‑axioma** ⇒ **se puede inducir sobre él** (M‑11 no aplica). Má
 `derives0_to_derives : Γ ⊢₀ f → Γ ⊢ f`, que es **él mismo** una inducción sobre `Derives₀` y por
 tanto la prueba de que el paso funciona. ⚠️ **No toca a ROBINSON_PlusPlus**: es un objeto nuevo, y
 este barrel RPP no lo importa.
+
+🏁🏁 **`FOL.Soundness0`, el mismo día (Paso 1)** — y es lo que el repo no tenía:
+`derives0_soundness : Γ ⊢₀ f → Γ ⊨ f`, **demostrada**, y con ella
+**`derives0_consistent : ¬ ([] ⊢₀ ⊥)`** —la primera consistencia de un cálculo de FOL⁼ aquí— y
+⭐⭐ **`derives0_not_complete`**: `Derives₀` **no decide toda fórmula**, que es exactamente la
+patología de la que `Derives` sí padece. ⛔ Recuérdese que **la solidez de `Derives` es FALSA**
+(`cuarentena/Inconsistencia.lean`).
 
 ⭐ **`FOL.Enumeration` entró el 2026‑09‑13**: construye `natToFormula : Nat → Formula` y su
 sobreyectividad, **cero axiomas**. Es lo que retira `formula_enum` y `formula_enum_surj` de
