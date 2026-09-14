@@ -2,45 +2,42 @@ import FOL.FOL
 
 namespace FOL
 
+-- ⭐ **2026‑09‑14 · REESCRITO PARA QUITAR `Classical.choice`.** La prueba anterior cerraba las
+-- ramas imposibles con `omega` **sobre un objetivo NO aritmético** (el objetivo era `s = .var n`,
+-- y `omega` lo cerraba por contradicción entre las hipótesis de `Nat`).
+--
+-- ⚠️ **Medido**: `omega` es limpio cuando el objetivo ES aritmético, y trae **`Classical.choice`**
+-- cuando NO lo es. Mismo enunciado, dos pruebas:
+--
+--     theorem v_omega   … : s = t := by omega            -- [propext, Classical.choice, Quot.sound]
+--     theorem v_exfalso … : s = t := by exfalso; omega   -- [propext, Quot.sound]
+--
+-- Aquí se usa el estilo `by_cases` + `simp` del hermano `substTerm_lift_comm`, que **ya era
+-- limpio**. Footprint de este par: `[propext, Quot.sound]`.
 mutual
 theorem substTerm_liftTerm (t : Term) (c : Nat) (s : Term) :
     substTerm c s (liftTerm c t) = t := by
   cases t with
   | var n =>
-    unfold liftTerm
-    split
-    · next h =>
-      unfold substTerm
-      split
-      · next hEq => omega
-      · split
-        · next hGt => omega
-        · next hNotGt => rfl
-    · next h =>
-      unfold substTerm
-      split
-      · next hEq => omega
-      · split
-        · next hGt =>
-          have h1 : n + 1 - 1 = n := by omega
-          rw [h1]
-        · next hNotGt => omega
+    by_cases h : n < c
+    · have hne  : n ≠ c   := by omega
+      have hngt : ¬ n > c := by omega
+      simp [liftTerm, substTerm, h, hne, hngt]
+    · have hne : n + 1 ≠ c := by omega
+      have hgt : n + 1 > c := by omega
+      simp [liftTerm, substTerm, h, hne, hgt]
   | func f ts =>
-    unfold liftTerm
-    unfold substTerm
-    have ih := substTerms_liftTerms ts c s
-    rw [ih]
+    simp only [liftTerm, substTerm]
+    congr 1
+    exact substTerms_liftTerms ts c s
 
 theorem substTerms_liftTerms (ts : List Term) (c : Nat) (s : Term) :
     substTerms c s (liftTerms c ts) = ts := by
   cases ts with
   | nil => rfl
   | cons t ts' =>
-    unfold liftTerms
-    unfold substTerms
-    have ih1 := substTerm_liftTerm t c s
-    have ih2 := substTerms_liftTerms ts' c s
-    rw [ih1, ih2]
+    simp only [liftTerms, substTerms, List.cons.injEq]
+    exact ⟨substTerm_liftTerm t c s, substTerms_liftTerms ts' c s⟩
 end
 
 -- Lemma: substTerm (c+1) (liftTerm c s) (liftTerm c t) = liftTerm c (substTerm c s t)
@@ -127,6 +124,11 @@ theorem substTerm_liftLift (t : Term) (c : Nat) (s : Term) :
     · have hge2 : ¬ n + 1 < c := by omega
       have hgt : n + 1 + 1 > c + 1 := by omega
       simp [liftTerm, substTerm, h1, hge2, hgt]
+      -- ⚠️ el objetivo residual es `n + 1 = c → s = #(n+1)`: la CONCLUSIÓN no es aritmética.
+      -- `omega` lo cerraba, pero al hacerlo traía `Classical.choice` (ver cabecera de
+      -- `substTerm_liftTerm`). Con el `exfalso` delante, omega ya sólo ve aritmética.
+      intro hc
+      exfalso
       omega
   | func f ts =>
     simp only [liftTerm, substTerm]
