@@ -4,3 +4,5 @@ FOL/Enumeration.lean
 AXIOMS.md
 cuarentena/README.md
 FOL/Theorems/Eq.lean
+FOL.lean
+FOL/Derives0.lean
