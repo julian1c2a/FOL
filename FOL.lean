@@ -21,6 +21,7 @@ import FOL.Canonical0
 import FOL.DecEq
 import FOL.Propositional0
 import FOL.Herbrand0
+import FOL.Derives1
 
 /-!
 # `FOL` — el barrel completo: núcleo **más** capa semántica
