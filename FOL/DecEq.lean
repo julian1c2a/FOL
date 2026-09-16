@@ -33,12 +33,25 @@ aplica. Hay que escribir la recursión mutua `Term` / `List Term`.
 ⭐ En cambio **`Formula` sí se deriva**, una vez existe la de `Term`: sus ocurrencias recursivas
 son directas y la única anidada es `List Term`, que ya tiene instancia.
 
-## ⚠️ Lo que esta instancia NO hace
+## ⚠️⚠️ CORRECCIÓN (2026‑09‑16): aquí decía que NO reduce, y es FALSO
 
-No **reduce** en el kernel: `decEqTerm` se compila por recursión bien fundada, así que `by decide`
-sobre una igualdad concreta de fórmulas **se atasca**. No es un problema para lo que se usa —los
-`if` se razonan con `split` / `by_cases`, no evaluando—, pero conviene saberlo antes de intentar
-un `decide`.
+El texto anterior era:
+
+> No **reduce** en el kernel: `decEqTerm` se compila por recursión bien fundada, así que
+> `by decide` sobre una igualdad concreta de fórmulas **se atasca**.
+
+**Medido de nuevo, y sale al revés**: los tres controles compilan **por `rfl`**:
+
+    decide (Term.var 1 = Term.var 1) = true
+    decide (Formula.atom "P" [#0] = Formula.atom "P" [#0]) = true
+    decide (Formula.atom "P" [#0] = Formula.atom "Q" [#0]) = false
+
+⇒ **la instancia SÍ reduce**, y por eso `FOL.Herbrand0.ptautCheck` —que la usa a través de
+`upd`— se evalúa en el kernel y un certificado de Herbrand se comprueba con `by rfl`.
+
+🔑 El fallo original era **del control, no del código**: probé `decide (X = Y) = true` con
+`by decide`, es decir, un `decide` envolviendo a otro, y lo que se atascaba era el de fuera.
+*Un control mal montado mide su propio montaje.*
 
 ## ⛔ Y por qué NO se retrofita a los módulos ya escritos
 

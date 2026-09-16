@@ -132,6 +132,7 @@ This document complies with all requirements specified in [AI-GUIDE.md](AI-GUIDE
 | `Canonical0.lean` | `FOL.Canonical0` | `FOL.Lindenbaum0`, `FOL.Eq0`, `FOL.Semantics`, `FOL.Soundness0` | ✅ Completo — 🏁🏁🏁 **`completeness₀ : Γ ⊨ f → Γ ⊢₀ f`** y **`derives0_complete_iff`**. Modelo canónico, `truth_lemma`, y ⭐ `eval_pullback_formula` (**net‑0 puro**). Con controles de **no vacuidad** (ADR‑041) |
 | `DecEq.lean` | `FOL.DecEq` | `FOL.FOL` | ✅ Completo — `DecidableEq` **de verdad** para `Term` y `Formula`, **net‑0 pura**. ⛔ `deriving` NO aplica a `Term` (inductivo anidado): la recursión mutua va a mano (ADR‑042) |
 | `Propositional0.lean` | `FOL.Propositional0` | `FOL.Derives0`, `FOL.DecEq` | ✅ Completo — 🏁 **H1 y H2** de la vía H: `peval`, Kalmár y ⭐⭐ **`derives0_of_ptaut_ctx`**, la completitud proposicional para `Γ` FINITO. `[propext, Quot.sound]`: **ni un `Classical.choice`** (ADR‑042) |
+| `Herbrand0.lean` | `FOL.Herbrand0` | `FOL.Propositional0`, `FOL.Eq0` | ✅ Completo — 🏁 **H4** (mitad ⟸): ⭐⭐ **`derives0_ex_of_cert`**, el certificado de Herbrand, **dato sintáctico y verificable por cómputo** (`ptautCheck` reduce ⇒ `by rfl`). ⬜ H3 **enunciada** como `HerbrandExtraction` con su consumidor `herbrand_iff` (ADR‑043) |
 
 ⛔ **Y tres módulos que esta tabla listaba como vivos YA NO LO ESTÁN** (corregido el 2026‑09‑14):
 `Soundness.lean`, `Compacity.lean` y `Completeness.lean` están **retirados** a `cuarentena/` desde

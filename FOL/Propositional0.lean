@@ -333,7 +333,7 @@ theorem peval_implChain (v : PVal) : ∀ (Γ : List Formula) (φ : Formula),
   | g :: Γ', φ, h => by
       show ((!(peval v g)) || peval v (implChain Γ' φ)) = true
       cases hg : peval v g with
-      | false => simp [hg]
+      | false => simp
       | true =>
           have hrec : peval v (implChain Γ' φ) = true :=
             peval_implChain v Γ' φ (fun hs => h (fun x hx => by
