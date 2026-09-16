@@ -151,7 +151,14 @@ theorem shift_updateEnv_comm {D : Type} (c : Nat) (v : Nat → D) (d d' : D) :
       · have h3 : ¬(n + 1 < c + 1) := by omega
         simp [h1, h2, h3]
         cases n with
-        | zero => omega
+        -- ⚠️⚠️ AQUÍ estaba el ÚNICO `Classical.choice` de toda la semántica de fórmulas.
+        -- Este caso es imposible (`¬(0 < c)` y `¬(0 = c)` se contradicen) y se cerraba con
+        -- `omega`. Pero la meta es de tipo `D`, **fuera del lenguaje de omega**: cuando
+        -- omega tiene que descargar una meta no aritmética por contradicción, mete
+        -- `Classical.choice`. Sobre metas ARITMÉTICAS omega es limpio — medido.
+        -- De aquí heredaban `eval_liftFormula_ext`, `eval_substFormula_ext`,
+        -- `derives0_soundness` y todo lo que dependa de ellos.
+        | zero => exact absurd (Nat.le_zero.mp (Nat.not_lt.mp h1)).symm h2
         | succ m => rfl
 
 theorem eval_liftFormula_ext {D : Type} (M : Model D) (v : Nat → D) (d : D) (c : Nat) (f : Formula) :
