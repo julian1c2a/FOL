@@ -138,6 +138,7 @@ This document complies with all requirements specified in [AI-GUIDE.md](AI-GUIDE
 | `Sequent0.lean` | *(raíz)* · `FOL.Sequent0` | `FOL.Derives2`, `FOL.Herbrand0` | ✅ Completo — `LK₀` (14 ctors, sin corte) y `LKc` (15, con corte), **con `eqAx`** —el *theory‑cut*—; ⭐⭐ **`lk0_herbrand`**, la EXTRACCIÓN, que devuelve los términos **y** las instancias de igualdad. ⬜ Queda **`CutElim`** (ADR‑046, revisado en ADR‑049) |
 | `SequentSound0.lean` | `FOL.SequentSound0` | `FOL.Sequent0`, `FOL.Canonical0` | ✅ Completo — ⭐ **el molde no prueba de más**: `lkc_sound`/`lk0_sound`, el corolario sintáctico `lk0_to_derives0` **por la semántica** y `lk0_not_empty`. ⚠️ Clásico **por la matemática** (secuentes multiconclusión) (ADR‑048) |
 | `NDtoLK0.lean` | `FOL.NDtoLK0` | `FOL.Sequent0` | ✅ Completo — ⭐⭐⭐ **`ndToLK` DEMOSTRADA** (los 22 casos) y **`herbrandExtraction_of_cutElim : CutElim → HerbrandExtraction`**: H3 se queda con **una sola** deuda (ADR‑049) |
+| `Hauptsatz0.lean` | *(raíz `LKh`)* · `FOL.Hauptsatz0` | `FOL.Sequent0` | 🔶 **Andamiaje del Hauptsatz** — ⭐ `CutAdm` + `cutElim_of` (H3 sobre el **corte único**), `LKh` **indexado por altura** con sus encajes, y ⭐ `liftFormula_subst_le`, la conmutación De Bruijn que **faltaba** en el repo. ⬜ `CutAdm` NO está (ADR‑050) |
 
 ⛔ **Y tres módulos que esta tabla listaba como vivos YA NO LO ESTÁN** (corregido el 2026‑09‑14):
 `Soundness.lean`, `Compacity.lean` y `Completeness.lean` están **retirados** a `cuarentena/` desde
