@@ -19,3 +19,5 @@ FOL/Herbrand0.lean
 FOL/Propositional0.lean
 FOL/DecEq.lean
 FOL/Derives1.lean
+FOL/Derives2.lean
+FOL.lean
