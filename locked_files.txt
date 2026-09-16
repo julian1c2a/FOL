@@ -9,3 +9,7 @@ FOL/Soundness0.lean
 FOL/Rename.lean
 FOL/Eigenvariable.lean
 FOL/Lift0.lean
+FOL/Fresh0.lean
+FOL/HenkinLimit0.lean
+FOL/Henkin0.lean
+FOL.lean
