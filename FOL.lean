@@ -15,7 +15,9 @@ import FOL.Lift0
 import FOL.Henkin0
 import FOL.Fresh0
 import FOL.HenkinLimit0
+import FOL.Eq0
 import FOL.Lindenbaum0
+import FOL.Canonical0
 
 /-!
 # `FOL` — el barrel completo: núcleo **más** capa semántica

@@ -11,6 +11,7 @@
 > | «Teorema de Corrección (Soundness): `Γ ⊢ A → Γ ⊨ A`» ✅ | ⛔ **NO HAY teorema de Corrección.** `soundness` es **FALSO** en presencia de `FOL/MetaRules.lean`: cualquier testigo suyo demuestra `False` sin hipótesis (`cuarentena/Inconsistencia.lean`, compilado). Está en **`cuarentena/`** |
 > | «Compacidad» ✅ | ⛔ Su prueba pasaba por `soundness` ⇒ **vacua**. En `cuarentena/` |
 > | «Completitud» ✅ / «1 sorry» | ⚠️ **0 `sorry`, pero UN SOLO `axiom`**: el `sorry` se sustituyó por CINCO postulados en un commit titulado «100 % sorry‑free»; el 2026‑09‑13 cayeron CUATRO (la enumeración de fórmulas y las dos congruencias de la igualdad) y queda **UNO**: `henkin_extension_lemma`. ⭐ `truth_lemma` y el modelo canónico son ya **net‑0 puros**; ⚠️ pero la completitud **sigue sin estar demostrada** en el sentido que aquí se publica. Ver **`AXIOMS.md`** |
+> | — | 🏁🏁🏁 **2026‑09‑16: la completitud SÍ está demostrada — pero de `Derives₀`, no de `Derives`.** `FOL.Canonical0.completeness₀`, footprint `[propext, Classical.choice, Quot.sound]`, **cero axiomas del proyecto**, y con `derives0_soundness` las **dos direcciones**. ⛔ Sobre `Derives` sigue siendo imposible: su solidez es FALSA. Ver ADR‑039/040/041 |
 > | «4 `lean_lib`, ~43 módulos, 1 sorry, v4.28.0» | **2 `lean_lib`** (`FOL`, `TheoryFramework`) · **4 `axiom`** en el build (+1 en `cuarentena/Completeness.lean`) · **0 sorry** · **v4.31.0**. `FOLPure`, `PropLogic` y `FOL_poli` **retiradas** el 2026‑09‑12 a `cuarentena/librerias-retiradas/` |
 >
 > ⭐ **Lo único sólido MEDIDO del ecosistema** es `prf0_soundness` sobre `Prf₀`
@@ -127,6 +128,8 @@ This document complies with all requirements specified in [AI-GUIDE.md](AI-GUIDE
 | `Fresh0.lean` | `FOL.Fresh0` | `FOL.Henkin0`, `FOL.Rename` | ✅ Completo — el **suministro de constantes frescas**: `shiftTheory` (la teoría en un sublenguaje, conservativa y equiconsistente) y ⭐ `cst_bound_formula` / `exists_fresh`. Pieza (1) del §6.4 (ADR‑039) |
 | `HenkinLimit0.lean` | `FOL.HenkinLimit0` | `FOL.Fresh0`, `FOL.Enumeration` | ✅ Completo — ⭐⭐ la **iteración ω**: `henLimit_consistent` y `henLimit_witness`. **La extensión de Henkin, construida.** Pieza (2) del §6.4 (ADR‑039) |
 | `Lindenbaum0.lean` | `FOL.Lindenbaum0` | `FOL.HenkinLimit0` | ✅ Completo — **Lindenbaum sobre `Derives₀`** y ⭐⭐⭐ **`henkin_completion`**: el **ensamblaje de Henkin, cerrado**. ⛔ Aquí vive la no‑finitud del teorema (`if IsConsistent₀ …`, Π⁰₁). Pieza (3) del §6.4 (ADR‑040) |
+| `Eq0.lean` | `FOL.Eq0` | `FOL.Derives0`, `FOL.Theorems.Eq` | ✅ Completo — simetría, transitividad y las dos **congruencias** de la igualdad sobre `Derives₀`. ⭐ Traslado **literal** de `Theorems/Eq.lean`; footprint `[propext, Quot.sound]` (ADR‑041) |
+| `Canonical0.lean` | `FOL.Canonical0` | `FOL.Lindenbaum0`, `FOL.Eq0`, `FOL.Semantics`, `FOL.Soundness0` | ✅ Completo — 🏁🏁🏁 **`completeness₀ : Γ ⊨ f → Γ ⊢₀ f`** y **`derives0_complete_iff`**. Modelo canónico, `truth_lemma`, y ⭐ `eval_pullback_formula` (**net‑0 puro**). Con controles de **no vacuidad** (ADR‑041) |
 
 ⛔ **Y tres módulos que esta tabla listaba como vivos YA NO LO ESTÁN** (corregido el 2026‑09‑14):
 `Soundness.lean`, `Compacity.lean` y `Completeness.lean` están **retirados** a `cuarentena/` desde
