@@ -42,14 +42,28 @@ suministro de constantes— es bookkeeping alrededor de este teorema.
 6. `∃A` y `∀¬A` se contradicen (`derives0_ex_forall_neg_absurd`, que es lo que obligó a tener
    `derives0_lift`).
 
-## ⬜ Lo que ESTE módulo todavía no hace
+## 🏁 Lo que ESTE módulo no hace — y dónde está ya hecho (2026‑09‑16, ADR‑039)
 
-⚠️ **No construye la extensión completa.** Da el **paso**; falta la iteración ω y, sobre todo, el
-**suministro de constantes frescas** para un `S` arbitrario, que exige meter la teoría en un
-sublenguaje (`FOL.Rename`) y **eso** pasa por descomponer cadenas ⇒ `Classical.choice` por la vía
-del `String` del núcleo (ver `../ROBINSON_PlusPlus/sondeos/ClassicalChoiceCenso.lean`).
+Este módulo da el **paso**. La **extensión completa** está construida en los dos módulos que
+vienen encima:
 
-🔑 La parte **matemática** está aquí y es finitaria; lo que falta es **combinatoria de nombres**.
+* `FOL.Fresh0` — el **suministro de constantes frescas** (`shiftTheory`, `cst`, `exists_fresh`);
+* `FOL.HenkinLimit0` — la **iteración ω** y el límite (`henLimit_consistent`, `henLimit_witness`).
+
+⚠️⚠️ **Y aquí decía algo que la medición refutó.** El texto anterior era:
+
+> ⚠️ **No construye la extensión completa.** Da el **paso**; falta la iteración ω y, sobre todo,
+> el **suministro de constantes frescas** para un `S` arbitrario, que exige meter la teoría en un
+> sublenguaje (`FOL.Rename`) y **eso** pasa por descomponer cadenas ⇒ `Classical.choice` por la
+> vía del `String` del núcleo.
+>
+> 🔑 La parte **matemática** está aquí y es finitaria; lo que falta es **combinatoria de nombres**.
+
+Lo del sublenguaje era correcto. Lo de **descomponer cadenas, no**: la construcción no descompone
+ninguna — la conservatividad del renombrado se obtiene **mapeando con la inversa** (`invOf`), y el
+`Classical.choice` que aparece viene de ahí y de `Exists.choose`, no de leer `String`. Y no era
+«combinatoria de nombres»: son **dos** propiedades de `cst` (inyectividad y estar fuera de la
+imagen del desplazamiento), tres líneas cada una.
 -/
 
 namespace FOL.Henkin0

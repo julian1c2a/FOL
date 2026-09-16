@@ -13,6 +13,8 @@ import FOL.Rename
 import FOL.Eigenvariable
 import FOL.Lift0
 import FOL.Henkin0
+import FOL.Fresh0
+import FOL.HenkinLimit0
 
 /-!
 # `FOL` — el barrel completo: núcleo **más** capa semántica
