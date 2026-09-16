@@ -13,3 +13,6 @@ FOL/Fresh0.lean
 FOL/HenkinLimit0.lean
 FOL/Henkin0.lean
 FOL/Lindenbaum0.lean
+FOL/Eq0.lean
+FOL/Canonical0.lean
+FOL.lean
