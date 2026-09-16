@@ -126,6 +126,7 @@ This document complies with all requirements specified in [AI-GUIDE.md](AI-GUIDE
 | `Henkin0.lean` | `FOL.Henkin0` | `FOL.Lift0` | ✅ Completo — ⭐⭐ **`henkin_step_consistent`**: añadir el testigo de Henkin con constante fresca preserva la consistencia |
 | `Fresh0.lean` | `FOL.Fresh0` | `FOL.Henkin0`, `FOL.Rename` | ✅ Completo — el **suministro de constantes frescas**: `shiftTheory` (la teoría en un sublenguaje, conservativa y equiconsistente) y ⭐ `cst_bound_formula` / `exists_fresh`. Pieza (1) del §6.4 (ADR‑039) |
 | `HenkinLimit0.lean` | `FOL.HenkinLimit0` | `FOL.Fresh0`, `FOL.Enumeration` | ✅ Completo — ⭐⭐ la **iteración ω**: `henLimit_consistent` y `henLimit_witness`. **La extensión de Henkin, construida.** Pieza (2) del §6.4 (ADR‑039) |
+| `Lindenbaum0.lean` | `FOL.Lindenbaum0` | `FOL.HenkinLimit0` | ✅ Completo — **Lindenbaum sobre `Derives₀`** y ⭐⭐⭐ **`henkin_completion`**: el **ensamblaje de Henkin, cerrado**. ⛔ Aquí vive la no‑finitud del teorema (`if IsConsistent₀ …`, Π⁰₁). Pieza (3) del §6.4 (ADR‑040) |
 
 ⛔ **Y tres módulos que esta tabla listaba como vivos YA NO LO ESTÁN** (corregido el 2026‑09‑14):
 `Soundness.lean`, `Compacity.lean` y `Completeness.lean` están **retirados** a `cuarentena/` desde
