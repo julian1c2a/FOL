@@ -15,3 +15,7 @@ FOL/Henkin0.lean
 FOL/Lindenbaum0.lean
 FOL/Eq0.lean
 FOL/Canonical0.lean
+FOL/Herbrand0.lean
+FOL/Propositional0.lean
+FOL/DecEq.lean
+FOL.lean
