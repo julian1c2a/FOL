@@ -16,17 +16,18 @@ import FOL.Derives2
 import FOL.Herbrand0
 
 /-!
-# `FOL.Sequent0` — **el cálculo de secuentes**, y H3 reducida a DOS obligaciones
+# `FOL.Sequent0` — **el cálculo de secuentes**, y H3 reducida a UNA obligación
 
 Tercera pieza de **H3** (`doc/PLAN-COMPLETITUD-FINITISTA.md` §5.7). ADR‑044 y ADR‑045 dejaron el
 cálculo en forma de libro; **aquí se pone en la forma en la que el Hauptsatz se ENUNCIA**, y se
 demuestra lo único que valida esa forma: **que de una prueba sin corte salen los testigos**.
 
-    LK₀                    -- secuentes clásicos de dos lados, SIN corte
-    LKc                    -- lo mismo MÁS la regla de corte
-    lk0_herbrand           -- ⭐⭐ la EXTRACCIÓN: de `LK₀ E ⟹ ∃xφ` salen los términos
-    CutElim, NDtoLK        -- ⬜ las DOS obligaciones que quedan, enunciadas como `Prop`
-    herbrandExtraction_of  -- ⭐⭐⭐ y con las dos, H3
+    LK₀                    -- secuentes clásicos de dos lados, SIN corte (14 ctors)
+    LKc                    -- lo mismo MÁS la regla de corte (15)
+    lk0_herbrand           -- ⭐⭐ la EXTRACCIÓN: de `LK₀ ⟹ ∃xφ` salen los términos Y las
+                           --    instancias de igualdad que la derivación usa
+    CutElim                -- ⬜ LA ÚNICA DEUDA QUE QUEDA: el Hauptsatz
+    herbrandExtraction_of  -- ⭐⭐⭐ CutElim + NDtoLK ⇒ H3
 
 ## ⭐ Por qué el orden es éste, y no al revés
 
@@ -36,50 +37,67 @@ en forma estándar en ADR‑045. Sólo entonces tiene sentido el molde — y **l
 él es probar el consumidor**, `lk0_herbrand`. Si esa prueba no hubiera salido, `LK₀` estaría mal
 diseñado y no lo sabríamos hasta el Hauptsatz.
 
+## ⭐⭐ `eqAx`: la regla que faltaba, y por qué
+
+⚠️ **Revisión de diseño (ADR‑049).** La primera versión de este módulo no tenía `eqAx` y dejaba la
+lista `E` de instancias de igualdad **en el antecedente**, recogida por la traducción `NDtoLK`.
+**Medido: eso BLOQUEA `NDtoLK`** — el caso `intro_forall` **levanta el contexto**, así que la `E`
+que devuelve la hipótesis de inducción vive arriba y hay que producirla abajo; y una instancia con
+`Term.var 0` **no es el levantamiento de ninguna**. No hay manera.
+
+⭐ La regla que lo desbloquea es el **corte contra un axioma de la teoría**:
+
+    eqAx : EqInstance g → LK Γ' Δ  con  Γ' = g :: Γ   ⟹   LK Γ Δ
+
+Es el *theory‑cut* estándar, y con él:
+
+| | antes | ahora |
+|---|---|---|
+| `NDtoLK` | ⛔ bloqueado por el levantamiento | ✅ **demostrado** (`FOL.NDtoLK0`), traducción estructural sin `E` |
+| `lk0_herbrand` | devolvía sólo `ts` | ⭐ devuelve `ts` **y** la `E` que la derivación usó |
+| `CutElim` | estándar | estándar: los axiomas son **sin cuantificadores**, así que permutan como cualquier regla izquierda |
+
+🔑 *Cuando una obligación se bloquea por bookkeeping, a veces lo que falta no es esfuerzo sino una
+regla.*
+
+⚠️ Y `eqAx` **no puede ser una regla derecha de igualdad** (`⟹ t ≐ t`): `peval` trata `t ≐ t` como
+un **átomo**, y bajo una valuación arbitraria es falso. El certificado sólo puede decir *«la
+disyunción se sigue de E»*, así que la `E` tiene que existir. **El diseño está forzado por la forma
+de `HerbrandCert`, no elegido.**
+
 ## ⭐⭐ `lk0_herbrand`: cómo se leen los testigos
 
 El enunciado es, en contrapositiva —que es la forma en que la inducción cierra—:
 
-> si `Γ` es **sin cuantificadores**, y `Δ` lo es salvo apariciones de `∃φ`, entonces hay una lista
-> finita `ts` tal que, para toda valuación: si `Γ` es verdadero y **todas** las instancias
-> `φ(t)` con `t ∈ ts` son falsas, entonces algún elemento de `Δ` **distinto de `∃φ`** es verdadero.
+> si `Γ` es **sin cuantificadores**, y `Δ` lo es salvo apariciones de `∃φ`, entonces hay listas
+> finitas `ts` y `E` (de instancias de igualdad) tales que, para toda valuación: si `Γ` y `E` son
+> verdaderos y **todas** las instancias `φ(t)` con `t ∈ ts` son falsas, entonces algún elemento de
+> `Δ` **distinto de `∃φ`** es verdadero.
 
-Con `Δ = [∃φ]` el consecuente es imposible, así que queda: *`Γ` verdadero ⇒ alguna instancia
-verdadera* — que es exactamente la segunda componente de `HerbrandCert`.
+Con `Γ = []` y `Δ = [∃φ]` el consecuente es imposible, así que queda: *`E` verdadero ⇒ alguna
+instancia verdadera* — que es exactamente la segunda componente de `HerbrandCert`.
 
-La inducción tiene **13** casos y se reparten en tres grupos:
+La inducción tiene **14** casos en tres grupos:
 
 | grupo | casos | qué pasa |
 |---|---|---|
 | **producen el testigo** | `exR` | ⭐ `∃A` en el sucedente sólo puede ser `∃φ`, y el término de la regla **es** un testigo: `ts := t :: ts'` |
+| **produce una instancia** | ⭐ `eqAx` | el axioma se recoge: `E := g :: E'` |
 | ⛔ **imposibles** | `allR`, `allL`, `exL` | meten un cuantificador donde la hipótesis dice que no lo hay ⇒ el caso se cierra por absurdo |
-| **proposicionales** | los **nueve** restantes | bookkeeping sobre `peval`, sin sorpresas |
+| **proposicionales** | los nueve restantes | bookkeeping sobre `peval`, sin sorpresas |
 
 🔑 **Y ahí se ve para qué sirve el Hauptsatz**: la regla de **corte** tendría una fórmula `A`
 arbitraria —posiblemente cuantificada— que no aparece en la conclusión, así que **las hipótesis de
-la inducción no se heredan**. *El corte es exactamente lo que rompe esta lectura.*
+la inducción no se heredan**. *El corte es exactamente lo que rompe esta lectura.* ⚠️ Compárese con
+`FOL.SequentSound0`, donde el corte es **semánticamente trivial**: *el corte es gratis para la
+verdad y carísimo para la demostración.*
 
-## ⬜ Las dos obligaciones que quedan — enunciadas, no postuladas
+## ⬜ La obligación que queda — enunciada, no postulada
 
     CutElim : ∀ Γ Δ, LKc Γ Δ → LK₀ Γ Δ                       -- el HAUPTSATZ
-    NDtoLK  : ∀ Γ f, Derives₂ Γ f →
-                ∃ E, (∀ g ∈ E, EqInstance g) ∧ LKc (E ++ Γ) [f]
 
-y **el consumidor está escrito**: `herbrandExtraction_of (hcut) (htr) : HerbrandExtraction`. ⇒
-con esas dos, H3 y la vía H quedan cerradas.
-
-⚠️ **`NDtoLK` no es rutina, y su dificultad está localizada**: el caso `intro_forall` levanta el
-contexto, así que la lista `E` de instancias de igualdad recogida por la hipótesis de inducción
-vive en el contexto **levantado**, y hay que producirla desde el de abajo. Las instancias con
-`Term.var 0` no son el levantamiento de ninguna. ⬜ Medido como problema, no como coste.
-
-## ⬜ Y una comprobación que NO está hecha
-
-`LK₀ Γ Δ → Derives₂ Γ (disjOf Δ)` —que `LK₀` no es **demasiado fuerte**— ⬜ no se ha demostrado.
-⚠️ El obstáculo está identificado y es el caso `allR`: exige sacar una disyunción de dentro de un
-cuantificador (`∀x(A ∨ C) → (∀x A) ∨ C` con `C` sin `x`), que es clásico pero pide su propia capa
-de lemas sobre el levantamiento. **No está en el camino crítico de H3** —las dos obligaciones de
-arriba no pasan por ella—, pero sí es lo que certificaría que el molde no prueba de más.
+y **el consumidor está escrito**: `herbrandExtraction_of (hcut) (htr) : HerbrandExtraction`, con
+`htr` ya **demostrado** en `FOL.NDtoLK0`. ⇒ con `CutElim`, H3 y la vía H quedan cerradas.
 
 ## 📏 Footprint
 
@@ -104,6 +122,7 @@ inductive LK₀ : List Formula → List Formula → Prop where
   | exR : ∀ Γ Δ A t, LK₀ Γ (substFormula 0 t A :: Δ) → LK₀ Γ (Formula.ex A :: Δ)
   | exL : ∀ Γ Δ A, LK₀ (A :: Γ.map (liftFormula 0)) (Δ.map (liftFormula 0)) →
       LK₀ (Formula.ex A :: Γ) Δ
+  | eqAx : ∀ Γ Δ g, FOL.Herbrand0.EqInstance g → LK₀ (g :: Γ) Δ → LK₀ Γ Δ
 
 -- ── LKc : LK₀ MAS la regla de CORTE ────────────────────────────────────────
 inductive LKc : List Formula → List Formula → Prop where
@@ -124,6 +143,7 @@ inductive LKc : List Formula → List Formula → Prop where
   | exL : ∀ G D A, LKc (A :: G.map (liftFormula 0)) (D.map (liftFormula 0)) ->
       LKc (Formula.ex A :: G) D
   | cut : ∀ G D A, LKc G (A :: D) → LKc (A :: G) D → LKc G D
+  | eqAx : ∀ Γ Δ g, FOL.Herbrand0.EqInstance g → LKc (g :: Γ) Δ → LKc Γ Δ
 
 namespace FOL.Sequent0
 
@@ -131,7 +151,7 @@ open FOL.Propositional0
 open FOL.Herbrand0
 
 -- ============================================================
--- §1 · Lemas de `QuantFree`
+-- §1 · Lemas de `QuantFree` y el tipo de salida
 -- ============================================================
 
 -- ── `QuantFree` se conserva por sustitución ─────────────────────────────────
@@ -151,30 +171,53 @@ theorem quantFree_subst : ∀ (f : Formula) (v : Nat) (t : Term),
 theorem not_quantFree_ex (A : Formula) : Not (QuantFree (Formula.ex A)) := fun h => h
 theorem not_quantFree_all (A : Formula) : Not (QuantFree (Formula.forall A)) := fun h => h
 
--- ⭐⭐ LA EXTRACCIÓN: de una prueba SIN CORTE salen los testigos
+-- ── toda instancia de la igualdad es SIN CUANTIFICADORES ────────────────────
+theorem quantFree_of_eqInstance {g : Formula} (h : EqInstance g) : QuantFree g := by
+  cases h with
+  | refl t => trivial
+  | symm t u => exact And.intro trivial trivial
+  | trans t u w => exact And.intro trivial (And.intro trivial trivial)
+  | func p pre post a b => exact And.intro trivial trivial
+  | atom p pre post a b => exact And.intro trivial (And.intro trivial trivial)
+
+
+/-- Lo que la extracción devuelve: los términos **y** las instancias de igualdad que usa. -/
+def HerbrandOut (φ : Formula) (Γ Δ : List Formula) (ts : List Term) (E : List Formula) : Prop :=
+  ∀ v : PVal,
+    (∀ g, g ∈ Γ → peval v g = true) →
+    (∀ g, g ∈ E → peval v g = true) →
+    (∀ t, t ∈ ts → peval v (substFormula 0 t φ) = false) →
+    ∃ d, And (d ∈ Δ) (And (Not (d = Formula.ex φ)) (peval v d = true))
+
+private theorem nilEq : ∀ g, g ∈ ([] : List Formula) → EqInstance g :=
+  fun _ hg => absurd hg List.not_mem_nil
+
+private theorem appEq {E1 E2 : List Formula}
+    (h1 : ∀ g, g ∈ E1 → EqInstance g) (h2 : ∀ g, g ∈ E2 → EqInstance g) :
+    ∀ g, g ∈ E1 ++ E2 → EqInstance g :=
+  fun g hg => (List.mem_append.mp hg).elim (h1 g) (h2 g)
+
 theorem lk0_herbrand {φ : Formula} (hφ : QuantFree φ) :
     ∀ {Γ Δ : List Formula}, LK₀ Γ Δ →
     (∀ g, g ∈ Γ → QuantFree g) →
     (∀ d, d ∈ Δ → Or (QuantFree d) (d = Formula.ex φ)) →
-    ∃ ts : List Term, ∀ v : PVal,
-      (∀ g, g ∈ Γ → peval v g = true) →
-      (∀ t, t ∈ ts → peval v (substFormula 0 t φ) = false) →
-      ∃ d, And (d ∈ Δ) (And (Not (d = Formula.ex φ)) (peval v d = true)) := by
+    ∃ (ts : List Term) (E : List Formula),
+      And (∀ g, g ∈ E → EqInstance g) (HerbrandOut φ Γ Δ ts E) := by
   intro Γ Δ h
   induction h with
   | ax Γ Δ A hΓ hΔ =>
       intro hqΓ _
-      refine ⟨[], fun v hv _ => ⟨A, hΔ, ?_, hv A hΓ⟩⟩
+      refine ⟨[], [], nilEq, fun v hv _ _ => ⟨A, hΔ, ?_, hv A hΓ⟩⟩
       intro he; exact not_quantFree_ex φ (he ▸ hqΓ A hΓ)
   | botL Γ Δ hbot =>
       intro _ _
-      refine ⟨[], fun v hv _ => ?_⟩
+      refine ⟨[], [], nilEq, fun v hv _ _ => ?_⟩
       exact absurd (hv _ hbot) (by simp [peval])
   | struct Γ Γ' Δ Δ' _ hsΓ hsΔ ih =>
       intro hqΓ' hqΔ'
-      obtain ⟨ts, hts⟩ := ih (fun g hg => hqΓ' g (hsΓ g hg)) (fun d hd => hqΔ' d (hsΔ d hd))
-      refine ⟨ts, fun v hv hf => ?_⟩
-      obtain ⟨d, hd, hne, hval⟩ := hts v (fun g hg => hv g (hsΓ g hg)) hf
+      obtain ⟨ts, E, hE, hts⟩ := ih (fun g hg => hqΓ' g (hsΓ g hg)) (fun d hd => hqΔ' d (hsΔ d hd))
+      refine ⟨ts, E, hE, fun v hv hEv hf => ?_⟩
+      obtain ⟨d, hd, hne, hval⟩ := hts v (fun g hg => hv g (hsΓ g hg)) hEv hf
       exact ⟨d, hsΔ d hd, hne, hval⟩
   | implR Γ Δ A B _ ih =>
       intro hqΓ hqΔ
@@ -182,14 +225,14 @@ theorem lk0_herbrand {φ : Formula} (hφ : QuantFree φ) :
         cases hqΔ _ (List.Mem.head _) with
         | inl hx => exact hx
         | inr hx => exact Formula.noConfusion hx
-      obtain ⟨ts, hts⟩ := ih
+      obtain ⟨ts, E, hE, hts⟩ := ih
         (fun g hg => by cases hg with
                         | head => exact hAB.1
                         | tail _ h' => exact hqΓ g h')
         (fun d hd => by cases hd with
                         | head => exact Or.inl hAB.2
                         | tail _ h' => exact hqΔ d (List.Mem.tail _ h'))
-      refine ⟨ts, fun v hv hf => ?_⟩
+      refine ⟨ts, E, hE, fun v hv hEv hf => ?_⟩
       cases hA : peval v A with
       | false =>
           refine ⟨Formula.impl A B, List.Mem.head _, fun he => Formula.noConfusion he, ?_⟩
@@ -199,7 +242,7 @@ theorem lk0_herbrand {φ : Formula} (hφ : QuantFree φ) :
           obtain ⟨d, hd, hne, hval⟩ := hts v
             (fun g hg => by cases hg with
                             | head => exact hA
-                            | tail _ h' => exact hv g h') hf
+                            | tail _ h' => exact hv g h') hEv hf
           cases hd with
           | head =>
               refine ⟨Formula.impl A B, List.Mem.head _, fun he => Formula.noConfusion he, ?_⟩
@@ -209,22 +252,26 @@ theorem lk0_herbrand {φ : Formula} (hφ : QuantFree φ) :
   | implL Γ Δ A B _ _ ih1 ih2 =>
       intro hqΓ hqΔ
       have hAB : QuantFree (Formula.impl A B) := hqΓ _ (List.Mem.head _)
-      obtain ⟨ts1, h1⟩ := ih1 (fun g hg => hqΓ g (List.Mem.tail _ hg))
+      obtain ⟨ts1, E1, hE1, h1⟩ := ih1 (fun g hg => hqΓ g (List.Mem.tail _ hg))
         (fun d hd => by cases hd with
                         | head => exact Or.inl hAB.1
                         | tail _ h' => exact hqΔ d h')
-      obtain ⟨ts2, h2⟩ := ih2
+      obtain ⟨ts2, E2, hE2, h2⟩ := ih2
         (fun g hg => by cases hg with
                         | head => exact hAB.2
                         | tail _ h' => exact hqΓ g (List.Mem.tail _ h'))
         hqΔ
-      refine ⟨ts1 ++ ts2, fun v hv hf => ?_⟩
+      refine ⟨ts1 ++ ts2, E1 ++ E2, appEq hE1 hE2, fun v hv hEv hf => ?_⟩
       have hfl : ∀ t, t ∈ ts1 → peval v (substFormula 0 t φ) = false :=
         fun t ht => hf t (List.mem_append.mpr (Or.inl ht))
       have hfr : ∀ t, t ∈ ts2 → peval v (substFormula 0 t φ) = false :=
         fun t ht => hf t (List.mem_append.mpr (Or.inr ht))
+      have hEl : ∀ g, g ∈ E1 → peval v g = true :=
+        fun g hg => hEv g (List.mem_append.mpr (Or.inl hg))
+      have hEr : ∀ g, g ∈ E2 → peval v g = true :=
+        fun g hg => hEv g (List.mem_append.mpr (Or.inr hg))
       have hvt : ∀ g, g ∈ Γ → peval v g = true := fun g hg => hv g (List.Mem.tail _ hg)
-      obtain ⟨d, hd, hne, hval⟩ := h1 v hvt hfl
+      obtain ⟨d, hd, hne, hval⟩ := h1 v hvt hEl hfl
       cases hd with
       | head =>
           -- `A` es verdadera; con `A → B` en el antecedente, `B` también
@@ -235,7 +282,7 @@ theorem lk0_herbrand {φ : Formula} (hφ : QuantFree φ) :
             simpa using this
           exact h2 v (fun g hg => by cases hg with
                                      | head => exact hBv
-                                     | tail _ h' => exact hvt g h') hfr
+                                     | tail _ h' => exact hvt g h') hEr hfr
       | tail _ hd' => exact ⟨d, hd', hne, hval⟩
   | andR Γ Δ A B _ _ ih1 ih2 =>
       intro hqΓ hqΔ
@@ -243,24 +290,28 @@ theorem lk0_herbrand {φ : Formula} (hφ : QuantFree φ) :
         cases hqΔ _ (List.Mem.head _) with
         | inl hx => exact hx
         | inr hx => exact Formula.noConfusion hx
-      obtain ⟨ts1, h1⟩ := ih1 hqΓ
+      obtain ⟨ts1, E1, hE1, h1⟩ := ih1 hqΓ
         (fun d hd => by cases hd with
                         | head => exact Or.inl hAB.1
                         | tail _ h' => exact hqΔ d (List.Mem.tail _ h'))
-      obtain ⟨ts2, h2⟩ := ih2 hqΓ
+      obtain ⟨ts2, E2, hE2, h2⟩ := ih2 hqΓ
         (fun d hd => by cases hd with
                         | head => exact Or.inl hAB.2
                         | tail _ h' => exact hqΔ d (List.Mem.tail _ h'))
-      refine ⟨ts1 ++ ts2, fun v hv hf => ?_⟩
+      refine ⟨ts1 ++ ts2, E1 ++ E2, appEq hE1 hE2, fun v hv hEv hf => ?_⟩
       have hfl : ∀ t, t ∈ ts1 → peval v (substFormula 0 t φ) = false :=
         fun t ht => hf t (List.mem_append.mpr (Or.inl ht))
       have hfr : ∀ t, t ∈ ts2 → peval v (substFormula 0 t φ) = false :=
         fun t ht => hf t (List.mem_append.mpr (Or.inr ht))
-      obtain ⟨d1, hd1, hne1, hval1⟩ := h1 v hv hfl
+      have hEl : ∀ g, g ∈ E1 → peval v g = true :=
+        fun g hg => hEv g (List.mem_append.mpr (Or.inl hg))
+      have hEr : ∀ g, g ∈ E2 → peval v g = true :=
+        fun g hg => hEv g (List.mem_append.mpr (Or.inr hg))
+      obtain ⟨d1, hd1, hne1, hval1⟩ := h1 v hv hEl hfl
       cases hd1 with
       | tail _ hd1' => exact ⟨d1, List.Mem.tail _ hd1', hne1, hval1⟩
       | head =>
-          obtain ⟨d2, hd2, hne2, hval2⟩ := h2 v hv hfr
+          obtain ⟨d2, hd2, hne2, hval2⟩ := h2 v hv hEr hfr
           cases hd2 with
           | tail _ hd2' => exact ⟨d2, List.Mem.tail _ hd2', hne2, hval2⟩
           | head =>
@@ -270,14 +321,14 @@ theorem lk0_herbrand {φ : Formula} (hφ : QuantFree φ) :
   | andL Γ Δ A B _ ih =>
       intro hqΓ hqΔ
       have hAB : QuantFree (Formula.and A B) := hqΓ _ (List.Mem.head _)
-      obtain ⟨ts, hts⟩ := ih
+      obtain ⟨ts, E, hE, hts⟩ := ih
         (fun g hg => by cases hg with
                         | head => exact hAB.1
                         | tail _ h' => cases h' with
                                        | head => exact hAB.2
                                        | tail _ h'' => exact hqΓ g (List.Mem.tail _ h''))
         hqΔ
-      refine ⟨ts, fun v hv hf => ?_⟩
+      refine ⟨ts, E, hE, fun v hv hEv hf => ?_⟩
       have hABv : peval v (Formula.and A B) = true := hv _ (List.Mem.head _)
       have hAv : peval v A = true := by
         have hx : (peval v A && peval v B) = true := hABv
@@ -294,21 +345,21 @@ theorem lk0_herbrand {φ : Formula} (hφ : QuantFree φ) :
         | head => exact hAv
         | tail _ h' => cases h' with
                        | head => exact hBv
-                       | tail _ h'' => exact hv g (List.Mem.tail _ h'')) hf
+                       | tail _ h'' => exact hv g (List.Mem.tail _ h'')) hEv hf
   | orR Γ Δ A B _ ih =>
       intro hqΓ hqΔ
       have hAB : QuantFree (Formula.or A B) := by
         cases hqΔ _ (List.Mem.head _) with
         | inl hx => exact hx
         | inr hx => exact Formula.noConfusion hx
-      obtain ⟨ts, hts⟩ := ih hqΓ
+      obtain ⟨ts, E, hE, hts⟩ := ih hqΓ
         (fun d hd => by cases hd with
                         | head => exact Or.inl hAB.1
                         | tail _ h' => cases h' with
                                        | head => exact Or.inl hAB.2
                                        | tail _ h'' => exact hqΔ d (List.Mem.tail _ h''))
-      refine ⟨ts, fun v hv hf => ?_⟩
-      obtain ⟨d, hd, hne, hval⟩ := hts v hv hf
+      refine ⟨ts, E, hE, fun v hv hEv hf => ?_⟩
+      obtain ⟨d, hd, hne, hval⟩ := hts v hv hEv hf
       cases hd with
       | head =>
           refine ⟨Formula.or A B, List.Mem.head _, fun he => Formula.noConfusion he, ?_⟩
@@ -324,19 +375,23 @@ theorem lk0_herbrand {φ : Formula} (hφ : QuantFree φ) :
   | orL Γ Δ A B _ _ ih1 ih2 =>
       intro hqΓ hqΔ
       have hAB : QuantFree (Formula.or A B) := hqΓ _ (List.Mem.head _)
-      obtain ⟨ts1, h1⟩ := ih1
+      obtain ⟨ts1, E1, hE1, h1⟩ := ih1
         (fun g hg => by cases hg with
                         | head => exact hAB.1
                         | tail _ h' => exact hqΓ g (List.Mem.tail _ h')) hqΔ
-      obtain ⟨ts2, h2⟩ := ih2
+      obtain ⟨ts2, E2, hE2, h2⟩ := ih2
         (fun g hg => by cases hg with
                         | head => exact hAB.2
                         | tail _ h' => exact hqΓ g (List.Mem.tail _ h')) hqΔ
-      refine ⟨ts1 ++ ts2, fun v hv hf => ?_⟩
+      refine ⟨ts1 ++ ts2, E1 ++ E2, appEq hE1 hE2, fun v hv hEv hf => ?_⟩
       have hfl : ∀ t, t ∈ ts1 → peval v (substFormula 0 t φ) = false :=
         fun t ht => hf t (List.mem_append.mpr (Or.inl ht))
       have hfr : ∀ t, t ∈ ts2 → peval v (substFormula 0 t φ) = false :=
         fun t ht => hf t (List.mem_append.mpr (Or.inr ht))
+      have hEl : ∀ g, g ∈ E1 → peval v g = true :=
+        fun g hg => hEv g (List.mem_append.mpr (Or.inl hg))
+      have hEr : ∀ g, g ∈ E2 → peval v g = true :=
+        fun g hg => hEv g (List.mem_append.mpr (Or.inr hg))
       have hABv : peval v (Formula.or A B) = true := hv _ (List.Mem.head _)
       have hx : (peval v A || peval v B) = true := hABv
       have hvt : ∀ g, g ∈ Γ → peval v g = true := fun g hg => hv g (List.Mem.tail _ hg)
@@ -344,12 +399,12 @@ theorem lk0_herbrand {φ : Formula} (hφ : QuantFree φ) :
       | true =>
           exact h1 v (fun g hg => by cases hg with
                                      | head => exact hA
-                                     | tail _ h' => exact hvt g h') hfl
+                                     | tail _ h' => exact hvt g h') hEl hfl
       | false =>
           have hB : peval v B = true := by rw [hA] at hx; simpa using hx
           exact h2 v (fun g hg => by cases hg with
                                      | head => exact hB
-                                     | tail _ h' => exact hvt g h') hfr
+                                     | tail _ h' => exact hvt g h') hEr hfr
   -- ⛔ los tres casos IMPOSIBLES: meten un cuantificador donde no puede haberlo
   | allR Γ Δ A _ _ =>
       intro _ hqΔ
@@ -369,29 +424,39 @@ theorem lk0_herbrand {φ : Formula} (hφ : QuantFree φ) :
         | inr hx => exact hx
       have hAφ : A = φ := Formula.ex.inj hA
       subst hAφ
-      obtain ⟨ts, hts⟩ := ih hqΓ
+      obtain ⟨ts, E, hE, hts⟩ := ih hqΓ
         (fun d hd => by
           cases hd with
           | head => exact Or.inl (quantFree_subst _ 0 t hφ)
           | tail _ h' => exact hqΔ d (List.Mem.tail _ h'))
-      refine ⟨t :: ts, fun v hv hf => ?_⟩
-      obtain ⟨d, hd, hne, hval⟩ := hts v hv (fun s hs => hf s (List.Mem.tail _ hs))
+      refine ⟨t :: ts, E, hE, fun v hv hEv hf => ?_⟩
+      obtain ⟨d, hd, hne, hval⟩ := hts v hv hEv (fun s hs => hf s (List.Mem.tail _ hs))
       cases hd with
       | head =>
           rw [hf t (List.Mem.head _)] at hval
           exact Bool.noConfusion hval
       | tail _ hd' => exact ⟨d, List.Mem.tail _ hd', hne, hval⟩
 
-
-
--- ── toda instancia de la igualdad es SIN CUANTIFICADORES ────────────────────
-theorem quantFree_of_eqInstance {g : Formula} (h : EqInstance g) : QuantFree g := by
-  cases h with
-  | refl t => trivial
-  | symm t u => exact And.intro trivial trivial
-  | trans t u w => exact And.intro trivial (And.intro trivial trivial)
-  | func p pre post a b => exact And.intro trivial trivial
-  | atom p pre post a b => exact And.intro trivial (And.intro trivial trivial)
+  -- ⭐ EL CASO NUEVO: el corte contra un axioma de la igualdad LO RECOGE
+  | eqAx Γ Δ g hg _ ih =>
+      intro hqΓ hqΔ
+      obtain ⟨ts, E, hE, hts⟩ := ih
+        (fun x hx => by
+          cases hx with
+          | head => exact quantFree_of_eqInstance hg
+          | tail _ h' => exact hqΓ x h')
+        hqΔ
+      refine ⟨ts, g :: E, ?_, fun v hv hEv hf => ?_⟩
+      · intro x hx
+        cases hx with
+        | head => exact hg
+        | tail _ h' => exact hE x h'
+      · exact hts v
+          (fun x hx => by
+            cases hx with
+            | head => exact hEv g (List.Mem.head _)
+            | tail _ h' => exact hv x h')
+          (fun x hx => hEv x (List.Mem.tail _ hx)) hf
 
 -- ── o la disyuncion es verdadera, o TODAS las instancias son falsas ─────────
 theorem disj_or_allFalse (v : PVal) (φ : Formula) : ∀ ts : List Term,
@@ -416,9 +481,6 @@ theorem disj_or_allFalse (v : PVal) (φ : Formula) : ∀ ts : List Term,
               | head => exact ht
               | tail _ h2 => exact hall s h2
 
--- ============================================================
--- §2 · El encaje y las DOS obligaciones
--- ============================================================
 
 theorem lk0_to_lkc {G D : List Formula} (h : LK₀ G D) : LKc G D := by
   induction h with
@@ -435,31 +497,32 @@ theorem lk0_to_lkc {G D : List Formula} (h : LK₀ G D) : LKc G D := by
   | allL G D A t _ ih => exact LKc.allL G D A t ih
   | exR G D A t _ ih => exact LKc.exR G D A t ih
   | exL G D A _ ih => exact LKc.exL G D A ih
+  | eqAx G D g hg _ ih => exact LKc.eqAx G D g hg ih
 
-/-- LA DEUDA 1: el HAUPTSATZ. -/
-def CutElim : Prop := ∀ G D, LKc G D → LK₀ G D
 
-/-- LA DEUDA 2: la traduccion de deduccion natural a secuentes CON corte,
-recogiendo las instancias de la igualdad en el antecedente. -/
-def NDtoLK : Prop := ∀ (G : List Formula) (f : Formula), Derives₂ G f ->
-    Exists (fun E => And (∀ g, g ∈ E → EqInstance g) (LKc (E ++ G) [f]))
+/-- ⬜ LA ÚNICA DEUDA QUE QUEDA: el HAUPTSATZ. -/
+def CutElim : Prop := ∀ Γ Δ, LKc Γ Δ → LK₀ Γ Δ
 
-/-- LA CADENA: con las dos deudas, H3. -/
+/-- La traducción ND → secuentes con corte. ⭐ Ya NO lleva `E`: las instancias de igualdad
+las mete `eqAx` dentro de la derivación, y la extracción las recoge. -/
+def NDtoLK : Prop := ∀ (Γ : List Formula) (f : Formula), Derives₂ Γ f → LKc Γ [f]
+
 theorem herbrandExtraction_of (hcut : CutElim) (htr : NDtoLK) : HerbrandExtraction := by
   intro φ hqf hd
-  obtain ⟨E, hE, hlk⟩ := htr [] φ.ex (FOL.Derives2.derives0_iff_derives2.mp hd)
-  have hlk0 : LK₀ (E ++ []) [Formula.ex φ] := hcut _ _ hlk
-  obtain ⟨ts, hts⟩ := lk0_herbrand (φ := φ) hqf hlk0
-    (fun g hg => quantFree_of_eqInstance (hE g (by simpa using hg)))
-    (fun d hd2 => by cases hd2 with
-                     | head => exact Or.inr rfl
-                     | tail _ h2 => exact absurd h2 List.not_mem_nil)
+  have hlk : LKc [] [Formula.ex φ] :=
+    htr [] (Formula.ex φ) (FOL.Derives2.derives0_iff_derives2.mp hd)
+  have hlk0 : LK₀ [] [Formula.ex φ] := hcut _ _ hlk
+  obtain ⟨ts, E, hE, hts⟩ := lk0_herbrand (φ := φ) hqf hlk0
+    (fun g hg => absurd hg List.not_mem_nil)
+    (fun d hd2 => by
+      cases hd2 with
+      | head => exact Or.inr rfl
+      | tail _ h2 => exact absurd h2 List.not_mem_nil)
   refine ⟨ts, E, hE, fun v hv => ?_⟩
   cases disj_or_allFalse v φ ts with
   | inl hok => exact hok
   | inr hall =>
-      obtain ⟨d, hdmem, hdne, _⟩ := hts v
-        (fun g hg => hv g (by simpa using hg)) hall
+      obtain ⟨d, hdmem, hdne, _⟩ := hts v (fun g hg => absurd hg List.not_mem_nil) hv hall
       cases hdmem with
       | head => exact absurd rfl hdne
       | tail _ h2 => exact absurd h2 List.not_mem_nil

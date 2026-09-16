@@ -81,6 +81,47 @@ open FOL.Metamath.Semantics
 open FOL.Sequent0
 open Classical
 
+-- ============================================================
+-- §0 · Los axiomas de la igualdad son VÁLIDOS
+-- ============================================================
+
+-- ⭐ Lo que `eqAx` necesita semánticamente: un corte contra un axioma de la teoría sólo es
+-- sólido si el axioma es verdadero en todo modelo. Y lo es — la igualdad del lenguaje se
+-- interpreta como la igualdad de Lean, así que refl/symm/trans son `rfl`/`.symm`/`.trans`.
+
+theorem evalTerms_append {D : Type} (M : Model D) (v : Nat → D) : ∀ (l1 l2 : List Term),
+    evalTerms M v (l1 ++ l2) = evalTerms M v l1 ++ evalTerms M v l2
+  | [], _ => rfl
+  | t :: l, l2 => by
+      show evalTerm M v t :: evalTerms M v (l ++ l2)
+            = (evalTerm M v t :: evalTerms M v l) ++ evalTerms M v l2
+      rw [evalTerms_append M v l l2]
+      rfl
+
+theorem evalTerms_hole {D : Type} (M : Model D) (v : Nat → D) (pre post : List Term)
+    {a b : Term} (h : evalTerm M v a = evalTerm M v b) :
+    evalTerms M v (pre ++ a :: post) = evalTerms M v (pre ++ b :: post) := by
+  rw [evalTerms_append, evalTerms_append]
+  show evalTerms M v pre ++ (evalTerm M v a :: evalTerms M v post)
+     = evalTerms M v pre ++ (evalTerm M v b :: evalTerms M v post)
+  rw [h]
+
+theorem eqInstance_valid {g : Formula} (hg : FOL.Herbrand0.EqInstance g)
+    {D : Type} (M : Model D) (v : Nat → D) : evalFormula M v g := by
+  cases hg with
+  | refl t => exact rfl
+  | symm t u => exact fun h => h.symm
+  | trans t u w => exact fun h1 h2 => h1.trans h2
+  | func p pre post a b =>
+      intro h
+      show M.func p (evalTerms M v (pre ++ a :: post)) = M.func p (evalTerms M v (pre ++ b :: post))
+      rw [evalTerms_hole M v pre post h]
+  | atom p pre post a b =>
+      intro h ha
+      show M.rel p (evalTerms M v (pre ++ b :: post))
+      rw [← evalTerms_hole M v pre post h]
+      exact ha
+
 -- ⭐ Se prueba para `LKc` (14 casos) y `LK₀` sale por el encaje: una sola inducción.
 theorem lkc_sound : ∀ {Γ Δ : List Formula}, LKc Γ Δ →
     ∀ {D : Type} (M : Model D) (v : Nat → D),
@@ -209,6 +250,13 @@ theorem lkc_sound : ∀ {Γ Δ : List Formula}, LKc Γ Δ →
       refine ⟨e0, he0, ?_⟩
       rw [← heq] at hval
       exact (eval_liftFormula_zero M v d0 e0).mp hval
+  -- ⭐ el theory-cut: sólido porque el axioma es VÁLIDO
+  | eqAx Γ Δ g hg _ ih =>
+      intro D M v hv
+      exact ih M v (fun x hx => by
+        cases hx with
+        | head => exact eqInstance_valid hg M v
+        | tail _ h' => exact hv x h')
   -- ⭐ el CORTE: semánticamente trivial — y ahí está el contraste con la sintaxis
   | cut Γ Δ A _ _ ih1 ih2 =>
       intro D M v hv
