@@ -21,4 +21,3 @@ FOL/DecEq.lean
 FOL/Derives1.lean
 FOL/Derives2.lean
 FOL/Sequent0.lean
-FOL.lean

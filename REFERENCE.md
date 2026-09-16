@@ -136,6 +136,7 @@ This document complies with all requirements specified in [AI-GUIDE.md](AI-GUIDE
 | `Derives1.lean` | *(raíz, como `Derives₀`)* · `FOL.Derives1` | `FOL.Lift0` | ✅ Completo — 🏁 **primera pieza de H3**: ⭐⭐ **`rewrite_at` es ADMISIBLE**. `Derives₁` = los 20 ctors de `Derives₀` **menos `rewrite_at`**, y `derives0_iff_derives1`. ⭐ `Derives₁.rec` **sin ningún axioma** (ADR‑044) |
 | `Derives2.lean` | *(raíz)* · `FOL.Derives2` | `FOL.Derives1`, `FOL.Theorems.Eq` | ✅ Completo — 🏁 **segunda pieza de H3**: ⭐⭐ **`subst` es ADMISIBLE** desde tres congruencias primitivas (`eq_substFormula`), más `derives2_lift` y `derives0_iff_derives2`. ⭐ `Derives₂.rec` **sin ningún axioma** (ADR‑045) |
 | `Sequent0.lean` | *(raíz)* · `FOL.Sequent0` | `FOL.Derives2`, `FOL.Herbrand0` | ✅ Completo — 🏁 **tercera pieza de H3**: `LK₀` (13 ctors, sin corte) y `LKc` (14, con corte); ⭐⭐ **`lk0_herbrand`**, la EXTRACCIÓN desde una prueba sin corte; y ⭐⭐⭐ **`herbrandExtraction_of`** — H3 reducida a **dos** `Prop` (`CutElim`, `NDtoLK`) (ADR‑046) |
+| `SequentSound0.lean` | `FOL.SequentSound0` | `FOL.Sequent0`, `FOL.Canonical0` | ✅ Completo — ⭐ **el molde no prueba de más**: `lkc_sound`/`lk0_sound`, el corolario sintáctico `lk0_to_derives0` **por la semántica** y `lk0_not_empty`. ⚠️ Clásico **por la matemática** (secuentes multiconclusión) (ADR‑048) |
 
 ⛔ **Y tres módulos que esta tabla listaba como vivos YA NO LO ESTÁN** (corregido el 2026‑09‑14):
 `Soundness.lean`, `Compacity.lean` y `Completeness.lean` están **retirados** a `cuarentena/` desde
