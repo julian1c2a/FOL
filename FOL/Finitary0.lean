@@ -8,11 +8,11 @@ License: MIT
 -- See AI-GUIDE.md §12 for the "proyectar" protocol.
 -- See NAMING-CONVENTIONS.md for naming rules.
 --
--- Dependencies: FOL.Hauptsatz0
+-- Dependencies: FOL.NDtoLK0  (⭐ NO FOL.Hauptsatz0: ver §«Dónde NO paga el Hauptsatz»)
 -- @axiom_system: classical
 -- @importance: high
 
-import FOL.Hauptsatz0
+import FOL.NDtoLK0
 
 /-!
 # `FOL.Finitary0` — 🏁 la CONSISTENCIA de `Derives₀`, **sin `Classical.choice`**
@@ -52,14 +52,33 @@ disyunción, sobre `Prop`, exige `em`.
 ⚠️ Salvo `eqAtomAx`, que da `!a || a` y necesita `cases a` — no es `rfl` con `a` variable.
 ⇒ la regla `eqAx` de `LK₀` (el theory‑cut, ADR‑049) **no cuesta nada aquí**.
 
-## ⭐⭐ Dónde paga el Hauptsatz, exactamente
+## ⛔⛔ Dónde NO paga el Hauptsatz — y la primera versión de este módulo lo decía mal
 
-`LK₀` ya era cut‑free, así que `lk0_tval` **no necesita** el Hauptsatz. Lo que sí lo necesita es el
-puente desde la deducción natural: `ndToLK` produce `LKc` —**con** corte—, y `cut_elimination` es lo
-único que lleva de ahí a `LK₀`. La cadena entera:
+⚠️ **CORRECCIÓN (ADR‑053 §4, rectificada).** La primera versión de este módulo afirmaba que el
+Hauptsatz pagaba «en un solo sitio»: el paso de `LKc` a `LK₀`, porque `ndToLK` produce una
+derivación **con** corte. **Es falso como afirmación de necesidad**, y lo destapó una medición
+externa: el caso `cut` de la solidez booleana es **trivial** —cinco líneas— porque *el corte es
+gratis para la verdad*. Luego la misma inducción se hace directamente sobre `LKc` (15 casos) y
+**se para ahí**:
 
-    Derives₀ [] ⊥  →  Derives₂ [] ⊥  →  LKc [] [⊥]  →  LK₀ [] [⊥]  →  False
-                    (derives0_iff_derives2)  (ndToLK)  (cut_elimination)  (lk0_tval)
+    Derives₀ [] ⊥  →  Derives₂ [] ⊥  →  LKc [] [⊥]  →  False
+                (derives0_iff_derives2)  (ndToLK)   (lkc_tval)
+
+⇒ este módulo **no importa `FOL.Hauptsatz0`**, y ése es el control: si lo necesitara, no compilaría.
+
+🔑 *Un dividendo atribuido a la pieza equivocada sobrevive hasta que alguien mide.* Es la segunda
+vez en dos días: ADR‑052 §1 ya corrigió que el «debilitamiento gratis» no venía de `struct`.
+⇒ **la consistencia finitaria estaba disponible ANTES del Hauptsatz.** El Hauptsatz vale por
+Herbrand (H3), no por esto.
+
+## ⭐⭐ Y lo que este módulo SÍ mejora, que es más de lo que parecía
+
+`lk0_not_empty` (`FOL/SequentSound0.lean:300`) demuestra hoy `¬ LK₀ [] []` pasando por
+`lk0_to_derives0`, **que es `completeness₀`** (`SequentSound0.lean:290`). Es decir: la consistencia
+del cálculo de secuentes se compra hoy **con el teorema de completitud**, y arrastra con él el
+`Classical.choice` que ADR‑041 identificó como el **WKL**.
+⇒ `lk0_empty` y `lkc_empty` lo sustituyen con `[propext, Quot.sound]`. Y son **más fuertes**:
+`¬ LK₀ [] [⊥]` implica `¬ LK₀ [] []` por `struct`, no al revés.
 
 ## 📏 Footprint
 
@@ -71,7 +90,6 @@ namespace FOL.Finitary0
 
 open FOL.Herbrand0
 open FOL.Sequent0
-open FOL.Hauptsatz0
 
 def tval (a : Bool) : Formula → Bool
   | .bottom => false
@@ -254,6 +272,109 @@ theorem lk0_tval : ∀ {Γ Δ : List Formula}, LK₀ Γ Δ → ∀ (a : Bool),
       intro a hΓ
       exact ih a (allTrue_cons (tval_eqInstance a hg) hΓ)
 
+-- ── ⭐⭐ Y LA MISMA INDUCCIÓN SOBRE `LKc`, el cálculo CON CORTE ──────────────
+-- ⭐ El caso `cut` son CINCO líneas: si la fórmula cortada vale, la premisa derecha
+-- da el resultado; si no, el testigo ya está en Δ. *El corte es gratis para la verdad.*
+-- ⇒ no hace falta eliminarlo, y por eso este módulo no importa `FOL.Hauptsatz0`.
+theorem lkc_tval : ∀ {Γ Δ : List Formula}, LKc Γ Δ → ∀ (a : Bool),
+    allTrue a Γ → someTrue a Δ := by
+  intro Γ Δ h
+  induction h with
+  | ax Γ Δ A h1 h2 => intro a hΓ; exact ⟨A, h2, hΓ A h1⟩
+  | botL Γ Δ h1 =>
+      intro a hΓ
+      have := hΓ Formula.bottom h1
+      exact absurd this (by simp [tval])
+  | struct Γ Γ' Δ Δ' _ s1 s2 ih =>
+      intro a hΓ; exact someTrue_sub s2 (ih a (allTrue_sub s1 hΓ))
+  | implR Γ Δ A B _ ih =>
+      intro a hΓ
+      cases hA : tval a A with
+      | false => exact ⟨Formula.impl A B, List.Mem.head _, by simp [tval, hA]⟩
+      | true =>
+          rcases ih a (allTrue_cons hA hΓ) with ⟨x, hx, hv⟩
+          cases hx with
+          | head => exact ⟨Formula.impl A B, List.Mem.head _, by simp [tval, hv]⟩
+          | tail _ hm => exact ⟨x, List.Mem.tail _ hm, hv⟩
+  | implL Γ Δ A B _ _ ih1 ih2 =>
+      intro a hΓ
+      have hAB : tval a (Formula.impl A B) = true := allTrue_hd hΓ
+      have hΓ' : allTrue a Γ := allTrue_tl hΓ
+      cases hA : tval a A with
+      | false =>
+          rcases ih1 a hΓ' with ⟨x, hx, hv⟩
+          cases hx with
+          | head => exact absurd (hA ▸ hv) (by simp)
+          | tail _ hm => exact ⟨x, hm, hv⟩
+      | true =>
+          have hB : tval a B = true := by
+            simp only [tval, hA] at hAB; simpa using hAB
+          exact ih2 a (allTrue_cons hB hΓ')
+  | andR Γ Δ A B _ _ ih1 ih2 =>
+      intro a hΓ
+      rcases ih1 a hΓ with ⟨x, hx, hv⟩
+      cases hx with
+      | tail _ hm => exact ⟨x, List.Mem.tail _ hm, hv⟩
+      | head =>
+          rcases ih2 a hΓ with ⟨y, hy, hw⟩
+          cases hy with
+          | tail _ hm => exact ⟨y, List.Mem.tail _ hm, hw⟩
+          | head => exact ⟨Formula.and A B, List.Mem.head _, by simp [tval, hv, hw]⟩
+  | andL Γ Δ A B _ ih =>
+      intro a hΓ
+      have hAB : tval a (Formula.and A B) = true := allTrue_hd hΓ
+      simp only [tval, Bool.and_eq_true] at hAB
+      exact ih a (allTrue_cons hAB.1 (allTrue_cons hAB.2 (allTrue_tl hΓ)))
+  | orR Γ Δ A B _ ih =>
+      intro a hΓ
+      rcases ih a hΓ with ⟨x, hx, hv⟩
+      cases hx with
+      | head => exact ⟨Formula.or A B, List.Mem.head _, by simp [tval, hv]⟩
+      | tail _ hm =>
+          cases hm with
+          | head => exact ⟨Formula.or A B, List.Mem.head _, by simp [tval, hv]⟩
+          | tail _ hm2 => exact ⟨x, List.Mem.tail _ hm2, hv⟩
+  | orL Γ Δ A B _ _ ih1 ih2 =>
+      intro a hΓ
+      have hAB : tval a (Formula.or A B) = true := allTrue_hd hΓ
+      simp only [tval, Bool.or_eq_true] at hAB
+      have hΓ' : allTrue a Γ := allTrue_tl hΓ
+      rcases hAB with hA | hB
+      · exact ih1 a (allTrue_cons hA hΓ')
+      · exact ih2 a (allTrue_cons hB hΓ')
+  | allR Γ Δ A _ ih =>
+      intro a hΓ
+      rcases ih a (allTrue_lift hΓ) with ⟨x, hx, hv⟩
+      cases hx with
+      | head => exact ⟨Formula.forall A, List.Mem.head _, hv⟩
+      | tail _ hm => exact someTrue_sub (fun y hy => List.Mem.tail _ hy) (someTrue_unlift ⟨x, hm, hv⟩)
+  | allL Γ Δ A t _ ih =>
+      intro a hΓ
+      have hA : tval a (Formula.forall A) = true := allTrue_hd hΓ
+      refine ih a (allTrue_cons ?_ (allTrue_tl hΓ))
+      rw [tval_subst]; exact hA
+  | exR Γ Δ A t _ ih =>
+      intro a hΓ
+      rcases ih a hΓ with ⟨x, hx, hv⟩
+      cases hx with
+      | head =>
+          refine ⟨Formula.ex A, List.Mem.head _, ?_⟩
+          rw [tval_subst] at hv; exact hv
+      | tail _ hm => exact ⟨x, List.Mem.tail _ hm, hv⟩
+  | exL Γ Δ A _ ih =>
+      intro a hΓ
+      have hA : tval a (Formula.ex A) = true := allTrue_hd hΓ
+      exact someTrue_unlift (ih a (allTrue_cons hA (allTrue_lift (allTrue_tl hΓ))))
+  | cut Γ Δ A _ _ ih1 ih2 =>
+      intro a hΓ
+      rcases ih1 a hΓ with ⟨x, hx, hv⟩
+      cases hx with
+      | head => exact ih2 a (allTrue_cons hv hΓ)
+      | tail _ hm => exact ⟨x, hm, hv⟩
+  | eqAx Γ Δ g hg _ ih =>
+      intro a hΓ
+      exact ih a (allTrue_cons (tval_eqInstance a hg) hΓ)
+
 -- ── 🏁 LOS COROLARIOS, y todos SIN `Classical.choice` ───────────────────────
 theorem lk0_empty : Not (LK₀ [] []) := fun h => someTrue_nil true (lk0_tval h true (by intro _ hx; exact absurd hx (List.not_mem_nil)))
 
@@ -264,20 +385,26 @@ theorem lk0_no_bot : Not (LK₀ [] [Formula.bottom]) := by
   | head => exact absurd hv (by simp [tval])
   | tail _ hm => exact absurd hm (List.not_mem_nil)
 
-/-- ⭐⭐⭐ **CONSISTENCIA FINITARIA de `Derives₀`**: el mismo enunciado que
-`derives0_consistent`, pero por la vía SINTÁCTICA — y aquí es donde paga el Hauptsatz. -/
-theorem derives0_consistent_fin : Not (([] : List Formula) ⊢₀ Formula.bottom) := by
+theorem lkc_empty : Not (LKc [] []) := fun h =>
+  someTrue_nil true (lkc_tval h true (fun _ hx => absurd hx (List.not_mem_nil)))
+
+theorem lkc_no_bot : Not (LKc [] [Formula.bottom]) := by
   intro h
-  have h2 := FOL.Derives2.derives0_iff_derives2.mp h
-  have hc := FOL.NDtoLK0.ndToLK h2
-  exact lk0_no_bot (cut_elimination [] [Formula.bottom] hc)
+  rcases lkc_tval h true (fun _ hx => absurd hx (List.not_mem_nil)) with ⟨x, hx, hv⟩
+  cases hx with
+  | head => exact absurd hv (by simp [tval])
+  | tail _ hm => exact absurd hm (List.not_mem_nil)
+
+/-- ⭐⭐⭐ **CONSISTENCIA FINITARIA de `Derives₀`**: el mismo enunciado que
+`derives0_consistent`, por la vía SINTÁCTICA y **sin el Hauptsatz** — se para en `LKc`. -/
+theorem derives0_consistent_fin : Not (([] : List Formula) ⊢₀ Formula.bottom) := fun h =>
+  lkc_no_bot (FOL.NDtoLK0.ndToLK (FOL.Derives2.derives0_iff_derives2.mp h))
 
 /-- ⭐ Y con la valuación `false`, que `Derives₀` tampoco prueba un átomo. -/
 theorem derives0_not_P_fin : Not (([] : List Formula) ⊢₀ Formula.atom "P" []) := by
   intro h
-  have h2 := FOL.Derives2.derives0_iff_derives2.mp h
-  have hc := FOL.NDtoLK0.ndToLK h2
-  rcases lk0_tval (cut_elimination [] [Formula.atom "P" []] hc) false
+  have hc := FOL.NDtoLK0.ndToLK (FOL.Derives2.derives0_iff_derives2.mp h)
+  rcases lkc_tval hc false
     (by intro _ hx; exact absurd hx (List.not_mem_nil)) with ⟨x, hx, hv⟩
   cases hx with
   | head => exact absurd hv (by simp [tval])
@@ -289,5 +416,8 @@ end FOL.Finitary0
 #print axioms FOL.Finitary0.lk0_tval
 #print axioms FOL.Finitary0.lk0_empty
 #print axioms FOL.Finitary0.lk0_no_bot
+#print axioms FOL.Finitary0.lkc_tval
+#print axioms FOL.Finitary0.lkc_empty
+#print axioms FOL.Finitary0.lkc_no_bot
 #print axioms FOL.Finitary0.derives0_consistent_fin
 #print axioms FOL.Finitary0.derives0_not_P_fin
