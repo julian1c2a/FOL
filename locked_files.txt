@@ -24,3 +24,5 @@ FOL/NDtoLK0.lean
 FOL/Sequent0.lean
 FOL/SequentSound0.lean
 FOL/Hauptsatz0.lean
+FOL.lean
+FOL/Finitary0.lean
