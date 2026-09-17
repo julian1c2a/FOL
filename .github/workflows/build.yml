@@ -49,13 +49,19 @@ jobs:
       - name: Build
         run: lake build
 
-      # ⚠️ `continue-on-error` MEDIDO, no por costumbre: hoy `check-sorry.bash` sale con 1
-      # en este árbol. Ponerlo bloqueante de golpe dejaría la CI en rojo permanente, que es
-      # la forma más rápida de que nadie vuelva a mirarla. Cuando el árbol quede a cero,
-      # cambiar a `false`.
+      # ⛔⛔ CORREGIDO el 2026-09-17. El comentario anterior decía, y con razón aparente:
+      #   «`continue-on-error` MEDIDO: hoy `check-sorry.bash` sale con 1 en este árbol.
+      #    Cuando el árbol quede a cero, cambiar a `false`.»
+      # La salida era cierta; la INFERENCIA, falsa. El árbol YA estaba a cero: lo que salía
+      # con 1 era el CONTROL. Contaba `grep -c 'sorry'` a secas, y los dos «sorry» que
+      # reportaba eran la frase «100 % sorry-free» dentro de un COMENTARIO
+      # (TheoryFramework/Instances/FOL.lean:34 y TheoryFramework/Logic.lean:58).
+      # ⇒ se portó el control de ROBINSON_PlusPlus, que despoja comentarios y literales antes
+      # de buscar el TOKEN, y entonces da `✅ No sorry found.` con exit 0. MEDIDO.
+      # 🔑 Cuando un control da rojo, hay DOS hipótesis — el árbol o el control —, y silenciar
+      #    la puerta elige una sin comprobarla. La herramienta se arregla; la cifra nunca.
       - name: Check for sorry
         run: bash check-sorry.bash
-        continue-on-error: true
 
       # ⭐ BLOQUEANTE, y medido: hoy sale con 0. Cuenta los `axiom` del árbol, comprueba que
       # AXIOMS.md los cita todos y que ninguna librería retirada ha vuelto al lakefile —
