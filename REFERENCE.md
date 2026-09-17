@@ -189,6 +189,14 @@ graph TD
 
 ## 3. Module Descriptions
 
+> ⚠️⚠️ **LAS CUATRO ENTRADAS SIGUIENTES DESCRIBEN MÓDULOS QUE YA NO EXISTEN** (auditado el
+> 2026‑09‑17): `Prelim.lean` se fusionó, y `Soundness.lean`, `Completeness.lean` y
+> `Compacity.lean` están en **`cuarentena/`** desde el 2026‑09‑11/12 (la solidez de `Derives` es
+> **falsa**). Se conservan porque su texto explica decisiones vivas, pero **no describen el árbol**.
+> ⛔ Y nada las detectaba: el control `[C]` de `check-doc-sync.bash` **sólo miraba los módulos de
+> ROBINSON_PlusPlus**, nunca los de FOL. Arreglado el 2026‑09‑17.
+
+
 ### 3.1 Prelim.lean
 
 **Namespace**: top-level (no namespace wrapper)
@@ -522,6 +530,42 @@ Demostración del Teorema de Compacidad Semántica como corolario de los teorema
 
 ---
 
+### 3.13 Los módulos del plan finitista (2026‑09‑13 → 09‑17)
+
+⭐ **Proyección consolidada.** Estos veintiún módulos nacieron con
+`doc/PLAN-COMPLETITUD-FINITISTA.md` (en `../ROBINSON_PlusPlus`) y cada uno lleva su propio
+docstring de cabecera con el detalle. Aquí va lo que §14 de AI‑GUIDE exige: **qué demuestra cada
+uno y qué cuesta**. Los `export` van en §6.13.
+
+| módulo | qué demuestra | footprint del titular | ADR |
+|---|---|---|---|
+| `Enumeration.lean` | `natToFormula` y su sobreyectividad, **computables** | `net‑0` | 030 |
+| `Derives0.lean` | **`Derives₀`**: 21 ctors, cero habitantes‑axioma ⇒ **inducible** | `—` | 033 |
+| `Soundness0.lean` | **`derives0_soundness`**, y con ella consistencia y no‑completitud sintáctica | ``propext, Classical.choice, Quot.sound`` | 034 |
+| `Rename.lean` | **`derives0_rename`** y su conservatividad | ``propext, Quot.sound`` | 035 |
+| `Eigenvariable.lean` | **`derives0_gen_fresh`**: de constante FRESCA a `∀` | ``propext, Quot.sound`` | 036 |
+| `Lift0.lean` | **`derives0_lift`** y `derives0_ex_forall_neg_absurd` | ``propext, Quot.sound`` | 037 |
+| `Henkin0.lean` | ⭐⭐ **`henkin_step_consistent`**: el paso de Henkin | ``propext, Classical.choice, Quot.sound`` | 037 |
+| `Fresh0.lean` | el **suministro de constantes frescas**; `shiftTheory` conservativa y equiconsistente | ``propext, Classical.choice, Quot.sound`` | 039 |
+| `HenkinLimit0.lean` | ⭐⭐ la **iteración ω**: `henLimit_consistent` y `henLimit_witness` | ``propext, Classical.choice, Quot.sound`` | 039 |
+| `Lindenbaum0.lean` | **Lindenbaum** y ⭐⭐⭐ **`henkin_completion`**. ⛔ Aquí vive la no‑finitud (Π⁰₁) | ``propext, Classical.choice, Quot.sound`` | 040 |
+| `Eq0.lean` | las cuatro piezas de la **igualdad** sobre `Derives₀` | ``propext, Quot.sound`` | 041 |
+| `Canonical0.lean` | ⭐⭐⭐ **`completeness₀`** y **`derives0_complete_iff`**; modelo canónico y `truth_lemma` | ``propext, Classical.choice, Quot.sound`` | 041 |
+| `DecEq.lean` | `DecidableEq` **de verdad** para `Term` y `Formula` | `**ninguno**` | 042 |
+| `Propositional0.lean` | **H1/H2**: `peval`, Kalmár y ⭐⭐ `derives0_of_ptaut_ctx` | ``propext, Quot.sound`` | 042 |
+| `Herbrand0.lean` | **H4**: ⭐⭐ `derives0_ex_of_cert`, el certificado, **verificable por cómputo** | ``propext, Quot.sound`` | 043 |
+| `Derives1.lean` | ⭐⭐ **`rewrite_at` es ADMISIBLE**; `derives0_iff_derives1` | ``propext, Quot.sound`` | 044 |
+| `Derives2.lean` | ⭐⭐ **`subst` es ADMISIBLE** desde tres congruencias; `derives0_iff_derives2` | ``propext, Quot.sound`` | 045 |
+| `Sequent0.lean` | `LK₀`/`LKc` y ⭐⭐ **`lk0_herbrand`**, la extracción sin corte | ``propext`` | 046/049 |
+| `SequentSound0.lean` | ⭐ **el molde no prueba de más**: `lkc_sound`, `lk0_to_derives0`, `lk0_not_empty` | ``propext, Classical.choice, Quot.sound`` | 048 |
+| `NDtoLK0.lean` | ⭐⭐⭐ **`ndToLK`** y `herbrandExtraction_of_cutElim` | ``propext, Quot.sound`` | 049 |
+| `Hauptsatz0.lean` | 🔶 **andamiaje del Hauptsatz**: `CutAdm`, `cutElim_of`, `LKh`, ⭐ `lkh_subst` | ``propext, Quot.sound`` | 050/051 |
+
+🔑 **La lectura de la tabla en una línea**: `Derives₀` (033) hace que se pueda *hablar* del
+cálculo; `Canonical0` (041) cierra la **vía W** —completitud, con su `Classical.choice`
+explicado—; y de `Propositional0` a `Hauptsatz0` va la **vía H**, que es finitaria y a la que
+sólo le falta el Hauptsatz.
+
 ## 4. Theorems
 
 *(See Module Descriptions in §3 for individual theorems).*
@@ -552,6 +596,14 @@ Demostración del Teorema de Compacidad Semántica como corolario de los teorema
 ---
 
 ## 6. Exports
+
+> ⚠️⚠️ **LAS CUATRO ENTRADAS SIGUIENTES DESCRIBEN MÓDULOS QUE YA NO EXISTEN** (auditado el
+> 2026‑09‑17): `Prelim.lean` se fusionó, y `Soundness.lean`, `Completeness.lean` y
+> `Compacity.lean` están en **`cuarentena/`** desde el 2026‑09‑11/12 (la solidez de `Derives` es
+> **falsa**). Se conservan porque su texto explica decisiones vivas, pero **no describen el árbol**.
+> ⛔ Y nada las detectaba: el control `[C]` de `check-doc-sync.bash` **sólo miraba los módulos de
+> ROBINSON_PlusPlus**, nunca los de FOL. Arreglado el 2026‑09‑17.
+
 
 ### 6.1 Prelim.lean
 
@@ -634,6 +686,108 @@ Exports from namespace `FOL.Metamath.Compacity`:
 `IsSatisfiable`, `IsConsistent`, `isSatisfiable_iff_isConsistent`, `semantic_compactness`.
 
 ---
+
+### 6.13 Exports de los módulos del plan finitista
+
+⚠️ Lista **generada del árbol**, no de memoria: todo nombre público (no `private`) de cada
+módulo. Es lo que exige AI‑GUIDE §14.
+
+**`Enumeration.lean`** — `unpair`, `unpair_step_down`, `unpair_step_next`, `unpair_reach`, `unpair_surj`, `unpair_sum_le`, `unpair_fst_le`, `unpair_snd_le`, `natToList`, `natToList_surj`, `map_ofNat_toNat`, `natToString`, `natToString_surj`, `natToTerm`, `natToTerms`, `termSize`, `termsSize`, `term_surj_aux`, `natToTerm_surj`, `natToTerms_surj`, `formulaSize`, `natToFormula`, `formula_surj_aux`, `natToFormula_surj`
+
+**`Derives0.lean`** — `Derives₀`, `derives0_to_derives`, `derives0_raa`
+
+**`Soundness0.lean`** — `derives0_soundness`, `Mtrue`, `Mfalse`, `derives0_consistent`, `P`, `derives0_not_derives_P`, `derives0_not_derives_negP`, `derives0_not_complete`
+
+**`Rename.lean`** — `renameTerm`, `renameTerms`, `renameFormula`, `rename_neg`, `rename_liftTerm`, `rename_liftTerms`, `rename_liftFormula`, `rename_substTerm`, `rename_substTerms`, `rename_substFormula`, `rename_getAt?`, `rename_replaceAt`, `rename_localRule`, `map_rename_lift`, `derives0_rename`, `rename_rename_term`, `rename_rename_terms`, `rename_rename_formula`, `map_rename_rename`, `derives0_rename_inv`, `invOf`, `invOf_spec`, `derives0_rename_conservative`, `derives0_rename_iff`
+
+**`Eigenvariable.lean`** — `absTerm`, `absTerms`, `absFormula`, `abs_neg`, `absTerm_lift`, `absTerms_lift`, `absFormula_lift`, `absTerm_subst`, `absTerms_subst`, `absFormula_subst`, `posDepth`, `abs_getAt?`, `abs_replaceAt`, `abs_localRule`, `map_abs_lift`, `absDerives`, `occursTerm`, `occursTerms`, `occursFormula`, `absTerm_eq_lift`, `absTerms_eq_lift`, `absFormula_eq_lift`, `map_abs_eq_map_lift`, `derives0_gen_fresh`, `derives0_inst_fresh`
+
+**`Lift0.lean`** — `liftTerm_lift`, `liftTerms_lift`, `liftFormula_lift`, `liftTerm_subst`, `liftTerms_subst`, `liftFormula_subst`, `lift_getAt?`, `lift_replaceAt`, `lift_localRule`, `map_lift_lift`, `derives0_lift`, `substTerm_lift_var`, `substTerms_lift_var`, `substFormula_lift_var`, `derives0_ex_forall_neg_absurd`
+
+**`Henkin0.lean`** — `DerivesSet₀`, `IsConsistent₀`, `henkinAx`, `neg_impl_left`, `neg_impl_right`, `abs_neg_witness`, `henkin_step_consistent`
+
+**`Fresh0.lean`** — `shift`, `shift_inj`, `cst`, `cst_zero_ne`, `cst_ne_shift`, `cst_inj`, `not_occurs_shiftTerm`, `not_occurs_shiftTerms`, `not_occurs_shiftFormula`, `cst_bound_sym`, `cst_bound_term`, `cst_bound_terms`, `cst_bound_formula`, `cst_bound_list`, `shiftTheory`, `shiftTheory_fresh`, `derivesSet0_shift`, `derivesSet0_shift_inv`, `shiftTheory_consistent`, `exists_fresh`
+
+**`HenkinLimit0.lean`** — `occursTerm_lift`, `occursTerms_lift`, `not_occurs_substTerm`, `not_occurs_substTerms`, `not_occurs_substFormula`, `not_occurs_henkinAx`, `bnd`, `bnd_spec`, `hidx`, `hidx_ge`, `hidx_step`, `hidx_mono`, `hidx_ge_of_le`, `hen`, `hen_mono`, `hen_fresh`, `hen_fresh_at`, `hen_consistent`, `henLimit`, `shiftTheory_sub_henLimit`, `henLimit_finite`, `henLimit_consistent`, `henLimit_witness`
+
+**`Lindenbaum0.lean`** — `derivesSet0_hyp`, `derivesSet0_weakening`, `derivesSet0_intro_impl`, `derivesSet0_elim_impl`, `IsMaximalConsistent₀`, `LindenbaumStep`, `LindenbaumLimit`, `lindenbaum_step_consistent`, `lindenbaum_step_subset`, `lindenbaum_step_mono`, `lindenbaum_limit_bound`, `lindenbaum_lemma`, `max_cons_bot`, `max_cons_contains`, `max_cons_impl`, `IsHenkin₀`, `henkin_completion`
+
+**`Eq0.lean`** — `derives0_eq_symm`, `derives0_eq_trans`, `derives0_eq_func_congr`, `derives0_atom_congr`
+
+**`Canonical0.lean`** — `derivesSet0_map`, `derivesSet0_map2`, `max_cons_impl_iff`, `max_cons_and`, `max_cons_or`, `termEqv`, `termEqv_refl`, `termEqv_symm`, `termEqv_trans`, `termSetoid`, `PointwiseEqv`, `pointwiseEqv_symm`, `termEqv_func_congr`, `termEqv_rel_congr`, `quotientOut`, `quotientOut_eq`, `QuotientDomain`, `canonicalModel`, `canonicalEnv`, `pointwiseEqv_out_mk`, `evalTerm_canonical`, `evalTerms_canonical`, `formulaComplexity`, `complexity_substFormula`, `max_cons_ex`, `max_cons_forall`, `truth_lemma_lt`, `truth_lemma`, `pullback`, `eval_pullback_term`, `eval_pullback_terms`, `eval_pullback_formula`, `IsSatisfiable`, `satisfiable_of_shift`, `model_existence_lemma₀`, `completeness₀`, `derives0_complete_iff`, `derives0_em`, `derives0_peirce`
+
+**`DecEq.lean`** — `decEqTerm`, `decEqTerms`, `instDecidableEqTerm`
+
+**`Propositional0.lean`** — `derives0_em_ctx`, `derives0_cases`, `PVal`, `peval`, `PTaut`, `peval_neg`, `patoms`, `lit`, `kalmar`, `upd`, `upd_self`, `upd_other`, `elim_atoms`, `derives0_of_ptaut`, `implChain`, `peval_implChain`, `derives0_of_implChain`, `derives0_of_ptaut_ctx`, `derives0_em_prop`, `derives0_peirce_prop`
+
+**`Herbrand0.lean`** — `peval_congr`, `pcheck`, `pcheck_sound`, `ptautCheck`, `ptaut_of_check`, `derives0_discharge`, `disjOf`, `herbrandDisj`, `derives0_ex_of_disj`, `eqReflAx`, `eqSymmAx`, `eqTransAx`, `eqFuncAx`, `eqAtomAx`, `EqInstance`, `derives0_of_eqInstance`, `HerbrandCert`, `derives0_ex_of_cert`, `QuantFree`, `HerbrandExtraction`, `herbrand_iff`, `ex_tercio`, `ex_igualdad`
+
+**`Derives1.lean`** — `Derives₁`, `commute_impl_fwd`, `impl_congr_l`, `impl_congr_r`, `and_congr_l`, `and_congr_r`, `or_congr_l`, `or_congr_r`, `forall_congr`, `ex_congr`, `rewrite_equiv`, `rewrite_at_admissible`, `derives1_to_derives0`, `derives0_to_derives1`, `derives0_iff_derives1`
+
+**`Derives2.lean`** — `Derives₂`, `eq_symm`, `eq_trans`, `liftTerms_append`, `derives2_lift`, `PwEq`, `eq_func_pw`, `eq_atom_pw`, `eq_substTerm`, `eq_substTerms`, `eq_substFormula`, `derives1_eq_symm`, `derives1_eq_trans`, `derives1_eq_func_congr`, `derives1_atom_congr`, `derives2_to_derives1`, `derives1_to_derives2`, `derives1_iff_derives2`, `derives0_iff_derives2`
+
+**`Sequent0.lean`** — `LK₀`, `LKc`, `quantFree_subst`, `not_quantFree_ex`, `not_quantFree_all`, `quantFree_of_eqInstance`, `HerbrandOut`, `lk0_herbrand`, `disj_or_allFalse`, `lk0_to_lkc`, `CutElim`, `NDtoLK`, `herbrandExtraction_of`
+
+**`SequentSound0.lean`** — `evalTerms_append`, `evalTerms_hole`, `eqInstance_valid`, `lkc_sound`, `lk0_sound`, `eval_disjOf_of_mem`, `lk0_to_derives0`, `lk0_to_derives2`, `lk0_not_empty`
+
+**`NDtoLK0.lean`** — `wkL`, `wkR`, `axH`, `dneL`, `fnenL`, `mpLK`, `viaEqImpl`, `cutOn`, `ndToLK`, `ndToLK_prop`, `herbrandExtraction_of_cutElim`
+
+**`Hauptsatz0.lean`** — `CutAdm`, `cutElim_of`, `LKh`, `lkh_mono`, `lkh_to_lk0`, `lk0_to_lkh`, `liftTerm_subst_le`, `liftTerms_subst_le`, `liftFormula_subst_le`, `substTerm_subst_le`, `substTerms_subst_le`, `substFormula_subst_le`, `eqInstance_subst`, `map_lift_subst`, `map_sub`, `lkh_subst`
+
+### 6.14 Exports de los módulos ANTIGUOS que nadie había proyectado
+
+⚠️⚠️ De los **34** módulos que el control comprueba (todo `FOL/*.lean` y `FOL/Theorems/*.lean`
+menos el barril), sólo **7** estaban proyectados y **27 no**. Los 21 del plan finitista están en
+§6.13; los **seis** de aquí llevaban **meses** en el árbol sin proyectar, y ⛔ el control `[C]` de
+`check-doc-sync.bash` los absolvía: hasta el 2026‑09‑17 **no miraba FOL en absoluto**. Y su
+primera versión, ya mirándolo, seguía absolviendo a tres — casaba por **subcadena**
+(`Theorems/Eq.lean` daba verde porque `"Eq.lean"` está dentro de `"DecEq.lean"`) y por
+**basename** (una sola entrada `Deduction.lean` absolvía a los **dos** ficheros con ese nombre).
+🔑 *Un control que casa por subcadena no comprueba: absuelve.*
+
+**`Classical.lean`** — `doubleNegAxiom`, `excludedMiddleAxiom`
+
+**`Core.lean`** — *(barril: sólo `import`s, cero declaraciones propias)*. Es `FOL.FOL`,
+`MetaRules`, `Tactics`, `Deduction` y los cinco `Theorems/*`; `FOL.lean` (el de la raíz) es `Core`
+**más** `Semantics`, `Enumeration` y toda la escalera finitista.
+
+**`MetaRules.lean`** — `mp`, `imp_intro`, `gen`, `raa`, `dne`, `and_intro`, `and_elim_left`,
+`and_elim_right`, `or_intro_left`, `or_intro_right`, `or_elim`, `false_elim`, `ex_intro`,
+`ex_elim`, `iff_mp`, `iff_mpr`
+
+⛔⛔ **Cuatro de esos dieciséis son `axiom`** — `imp_intro`, `raa`, `or_elim`, `ex_elim` — y son
+**los cuatro habitantes‑axioma de `Derives`**: los que hacen que **M‑11** prohíba
+**permanentemente** inducir sobre `Derives` (ADR‑029). Tienen que ser axiomas porque su premisa
+**no es positiva** (toma una función de Lean, `Γ ⊢ A → Γ ⊢ B`), y el kernel no la admite como
+constructor. ⚠️ Y de ahí sale la otra mitad de la patología: como `raa` toma una **función de
+Lean**, `axioms ⊢` **refuta** lo que no prueba ⇒ es **sintácticamente completo** ⇒ ningún
+resultado de incompletitud puede enunciarse sobre `⊢` (`Meta/OmegaStrength.lean`, medido).
+
+**`Tactics2.lean`** — las tres macros `prove_mem`, `derive_hyp`, `derive_weaken`
+
+**`Theorems/Deduction.lean`** — `deduction_theorem`
+
+⚠️ **DUPLICADO MEDIDO**: es *letra por letra* el mismo teorema que `FOL/Deduction.lean` (§6.8), en
+otro `namespace` (`FOL.Theorems.Deduction` frente a `FOL.Metamath.Deduction`). ⇒ lo que §6.8
+proyecta es el **otro** fichero. Quien importa la deducción es `Core.lean`, y lo que importa es
+`FOL.Deduction`.
+
+**`Theorems/Eq.lean`** — `substTerm_liftTerm`, `substTerms_liftTerms`, `substTerm_lift_comm`,
+`substTerms_lift_comm`, `derive_eq_symm`, `derive_eq_trans`, `substTerm_liftLift`,
+`substTerms_liftLift`, `liftTerm_comm_zero`, `liftTerms_comm_zero`, `substFormula_lift_comm`,
+`substTerm_lift_comm_zero`, `substTerms_lift_comm_zero`, `substTerm_subst_lift_gen`,
+`substTerms_subst_lift_gen`, `subst_subst_lift_gen`, `substTerm_subst_comm_succ`,
+`substTerms_subst_comm_succ`, `subst_subst_comm_succ`, `substFormula_liftFormula`,
+`substTerms_append`, `substTerms_lift_hole`, `derive_eq_func_congr`, `derive_atom_congr`
+
+⭐ Es **el módulo de conmutaciones De Bruijn del repo**, y por eso importa que estuviera sin
+proyectar: `Hauptsatz0.lean` tuvo que **medir dos veces** que le faltaban dos miembros de esta
+familia (`liftFormula_subst_le` y `substFormula_subst_le`, §6.13) porque el catálogo no decía
+cuáles había. *Un módulo sin proyectar se vuelve a construir.*
+
+⬜ **Huérfanos medidos**: `Classical.lean`, `Tactics2.lean` y `Theorems/Deduction.lean` **no los
+importa nadie** del árbol. No se retiran aquí — retirar es una decisión con ADR, no una pasada de
+documentación — pero quedan **escritos**.
 
 ## 7. Documentation Status
 

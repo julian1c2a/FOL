@@ -17,14 +17,19 @@ import FOL.Sequent0
 /-!
 # `FOL.Hauptsatz0` — el andamiaje del **Hauptsatz**, y H3 reducida al CORTE ÚNICO
 
-Quinta pieza de **H3** (`doc/PLAN-COMPLETITUD-FINITISTA.md` §5.9). ⛔ **El Hauptsatz NO está**:
-esto es lo que hay que tener **antes** de intentarlo, construido y verificado por partes.
+Quinta pieza de **H3** (`doc/PLAN-COMPLETITUD-FINITISTA.md` §5.9‑§5.10). ⛔ **El Hauptsatz NO
+está**: esto es lo que hay que tener **antes** de intentarlo, construido y verificado por partes.
 
-    CutAdm               -- el corte ÚNICO, que es lo que un Hauptsatz demuestra de verdad
-    cutElim_of           -- ⭐ CutAdm ⇒ CutElim, DEMOSTRADO
-    LKh                  -- el cálculo INDEXADO POR ALTURA
-    lkh_mono, lkh_to_lk0, lk0_to_lkh
-    liftFormula_subst_le -- ⭐ la conmutación De Bruijn que faltaba en el repo
+    §1  CutAdm                -- el corte ÚNICO, que es lo que un Hauptsatz demuestra de verdad
+        cutElim_of            -- ⭐ CutAdm ⇒ CutElim, DEMOSTRADO
+    §2  LKh                   -- el cálculo INDEXADO POR ALTURA (14 ctors)
+    §3  lkh_mono, lkh_to_lk0, lk0_to_lkh
+    §4  liftFormula_subst_le  -- ⭐ la conmutación De Bruijn que faltaba en el repo
+    §5  substFormula_subst_le -- ⭐ **Barendregt general** (`w ≤ v`), la otra que faltaba
+    §6  lkh_subst             -- ⭐⭐ el cálculo es CERRADO POR SUSTITUCIÓN, preservando altura
+
+⇒ De las tres piezas que §7 del ADR‑050 dejaba abiertas, **dos están hechas y queda UNA viva**: la
+inducción doble.
 
 ## ⭐ Lo primero: separar el corte ÚNICO de su clausura
 
@@ -49,33 +54,53 @@ intercambio gratis dentro de la inducción**, que es exactamente lo que en la pr
 obliga a pasar por la regla **MIX** en vez del corte. *Una decisión de diseño del inductivo se
 come una complicación entera de la prueba clásica.*
 
-## ⭐ La conmutación que faltaba, y está MEDIDO que faltaba
+## ⭐ Las DOS conmutaciones que faltaban, y está MEDIDO que faltaban
 
-El caso `allR` del lema de sustitución necesita
+El caso `allR` de `lkh_subst` necesita
 
     liftFormula 0 (substFormula v s f) = substFormula (v+1) (liftTerm 0 s) (liftFormula 0 f)
 
-y, al recurrir bajo el binder, su versión general con `k ≤ v`. El repo tenía **las otras dos
-mitades de la familia** y no ésta:
+y el caso `allL`, la forma general de **Barendregt**
+
+    substFormula v s (substFormula w u f)
+      = substFormula w (substTerm v s u) (substFormula (v+1) (liftTerm w s) f)   -- con `w ≤ v`
+
+y, al recurrir bajo el binder, las dos en su versión general. El repo tenía **cuatro miembros de
+la familia** y **ninguno de estos dos**:
 
 | lema | condición | dónde |
 |---|---|---|
 | `substFormula_lift_comm` | `k = v` | `FOL/Theorems/Eq.lean` |
+| `subst_subst_comm_succ` | índices **adyacentes** `j+1`/`j` | `FOL/Theorems/Eq.lean` |
 | `liftFormula_subst` | `v ≤ k` | `FOL/Lift0.lean` |
-| ⭐ `liftFormula_subst_le` | **`k ≤ v`** | **aquí** — faltaba |
+| ⭐ `liftFormula_subst_le` | **`k ≤ v`** | **aquí, §4** — faltaba |
+| ⭐ `substFormula_subst_le` | **`w ≤ v`**, general | **aquí, §5** — faltaba |
 
-⚠️ Vive en este módulo y no en `Theorems/Eq.lean` sólo para no mover un fichero ya medido; es de
-la familia de aquél y ahí debería acabar.
+⚠️ Viven en este módulo y no en `Theorems/Eq.lean` sólo para no mover un fichero ya medido; son de
+la familia de aquél y ahí deberían acabar.
 
-## ⬜ Lo que falta para `CutAdm`, con su obstáculo MEDIDO
+🔑 *Una familia de lemas De Bruijn casi nunca está completa: hay que mirar **qué mitad falta**
+antes de planificar, no a mitad de la prueba.* ⚠️⚠️ Y aquí el catálogo **no podía** decírselo a
+nadie: `Theorems/Eq.lean` llevaba meses **sin proyectar** en `REFERENCE.md` §6 (corregido el
+2026‑09‑17, §6.14) — *un módulo sin proyectar se vuelve a construir.*
 
-1. ⬜ **La segunda conmutación**: la forma general de Barendregt
-   `substFormula v s (substFormula 0 u f) = substFormula 0 (substTerm v s u) (substFormula (v+1) (liftTerm 0 s) f)`.
-   ⛔ **Medido que tampoco está**: `subst_subst_comm_succ` (`Theorems/Eq.lean`) sólo cubre índices
-   **adyacentes** (`j+1`/`j`), y el caso `allL` necesita `v` arbitrario. ~90 l., riesgo bajo —
-   es gemela de `liftFormula_subst_le`.
-2. ⬜ **`lkh_subst`** — el cálculo es cerrado por sustitución, preservando altura. ~150 l.
-3. ⬜ **La inducción doble** de `CutAdm`. ~400–600 l., **riesgo alto**. Es la pieza grande.
+## ⭐⭐ `lkh_subst`, y dónde paga cada conmutación
+
+`lkh_subst : LKh n Γ Δ → ∀ v t, LKh n (Γ.map (substFormula v t)) (Δ.map (substFormula v t))` — la
+**altura se conserva**, que es lo que la inducción doble va a necesitar. Catorce casos, y sólo
+cuatro son trabajo:
+
+* `allR`/`exL` — **cambian el entorno**: bajo el binder hay que sustituir con `v+1` y
+  `liftTerm 0 t`, y volver a salir. Ahí paga `liftFormula_subst_le` (§4), vía `map_lift_subst`.
+* `allL`/`exR` — **instancian**: el testigo `s` viaja a `substTerm v t s` y hay que reordenar dos
+  sustituciones anidadas. Ahí paga **Barendregt** (§5).
+* `eqAx` — gratis, porque `eqInstance_subst` demuestra que las instancias de igualdad son
+  **cerradas por sustitución** (cinco casos, **sin ningún axioma**).
+
+## ⬜ Lo que falta para `CutAdm` — UNA sola pieza, y es la grande
+
+⬜ **La inducción doble** de Gentzen: por fuera sobre el **grado** de la fórmula de corte, por
+dentro sobre la **suma de las alturas**. ~400–600 l., **riesgo alto**. Es la pieza grande.
 
 ⚠️ **Y una advertencia sobre el atajo semántico, para que no se intente**: `CutAdm` **no** sale de
 `lkc_sound` + `completeness₀`. `completeness₀` devuelve una derivación de **`Derives₀`**, no de
@@ -84,8 +109,9 @@ cierra y no hay atajo.**
 
 ## 📏 Footprint
 
-`cutElim_of`, `lkh_mono` y `lkh_to_lk0` **no dependen de ningún axioma**; el resto,
-`[propext, Quot.sound]`. **Ni un `Classical.choice`.**
+`cutElim_of`, `lkh_mono`, `lkh_to_lk0` y `eqInstance_subst` **no dependen de ningún axioma**; el
+resto — incluidas `substFormula_subst_le` y `lkh_subst` —, `[propext, Quot.sound]`.
+**Ni un `Classical.choice`.**
 -/
 
 namespace FOL.Hauptsatz0
@@ -145,6 +171,8 @@ inductive LKh : Nat → List Formula → List Formula → Prop where
   | eqAx : ∀ n Γ Δ g, FOL.Herbrand0.EqInstance g → LKh n (g :: Γ) Δ → LKh (n+1) Γ Δ
 
 namespace FOL.Hauptsatz0
+
+open FOL.Herbrand0
 
 -- ============================================================
 -- §3 · Altura: monotonia y los dos encajes
@@ -330,6 +358,209 @@ theorem liftFormula_subst_le : ∀ (f : Formula) (k v : Nat), k ≤ v → ∀ (s
       rw [ih (k + 1) (v + 1) (Nat.succ_le_succ h) (liftTerm 0 s),
           liftTerm_comm_zero s k]
 
+-- ============================================================
+-- §5 · Barendregt general: la SEGUNDA conmutacion que faltaba
+-- ============================================================
+
+-- ⛔ MEDIDO en ADR-050: `subst_subst_comm_succ` sólo cubre índices ADYACENTES (`j+1`/`j`).
+-- El caso `allL` del lema de sustitución necesita `v` arbitrario con `w ≤ v`.
+mutual
+theorem substTerm_subst_le : ∀ (t : Term) (w v : Nat), w ≤ v → ∀ (s u : Term),
+    substTerm v s (substTerm w u t)
+      = substTerm w (substTerm v s u) (substTerm (v + 1) (liftTerm w s) t)
+  | .var n, w, v, h, s, u => by
+      rcases Nat.lt_trichotomy n w with hlt | heq | hgt
+      · simp [substTerm,
+          show ¬ n = w from by omega, show ¬ n > w from by omega,
+          show ¬ n = v from by omega, show ¬ n > v from by omega,
+          show ¬ n = v + 1 from by omega, show ¬ n > v + 1 from by omega]
+      · subst heq
+        simp [substTerm,
+          show ¬ n = v + 1 from by omega, show ¬ n > v + 1 from by omega]
+      · rcases Nat.lt_trichotomy (n - 1) v with h2 | h2 | h2
+        · simp [substTerm,
+            show ¬ n = w from by omega, show n > w from hgt,
+            show ¬ n - 1 = v from by omega, show ¬ n - 1 > v from by omega,
+            show ¬ n = v + 1 from by omega, show ¬ n > v + 1 from by omega]
+        · have hn : n = v + 1 := by omega
+          subst hn
+          simp only [substTerm,
+            if_neg (show ¬ v + 1 = w from by omega),
+            if_pos (show v + 1 > w from by omega)]
+          simp only [show v + 1 - 1 = v from by omega]
+          exact (substTerm_liftTerm s w (substTerm v s u)).symm
+        · simp [substTerm,
+            show ¬ n = w from by omega, show n > w from hgt,
+            show ¬ n - 1 = v from by omega, show n - 1 > v from h2,
+            show ¬ n = v + 1 from by omega, show n > v + 1 from by omega,
+            show ¬ n - 1 = w from by omega, show n - 1 > w from by omega]
+  | .func f ts, w, v, h, s, u => by
+      show Term.func f (substTerms v s (substTerms w u ts))
+            = Term.func f (substTerms w (substTerm v s u) (substTerms (v + 1) (liftTerm w s) ts))
+      rw [substTerms_subst_le ts w v h s u]
+
+theorem substTerms_subst_le : ∀ (ts : List Term) (w v : Nat), w ≤ v → ∀ (s u : Term),
+    substTerms v s (substTerms w u ts)
+      = substTerms w (substTerm v s u) (substTerms (v + 1) (liftTerm w s) ts)
+  | [], _, _, _, _, _ => rfl
+  | t :: ts, w, v, h, s, u => by
+      show substTerm v s (substTerm w u t) :: substTerms v s (substTerms w u ts)
+            = substTerm w (substTerm v s u) (substTerm (v + 1) (liftTerm w s) t)
+              :: substTerms w (substTerm v s u) (substTerms (v + 1) (liftTerm w s) ts)
+      rw [substTerm_subst_le t w v h s u, substTerms_subst_le ts w v h s u]
+end
+
+/-- ⭐ **El lema de sustitución de Barendregt, en su forma general** (`w ≤ v`). -/
+theorem substFormula_subst_le : ∀ (f : Formula) (w v : Nat), w ≤ v → ∀ (s u : Term),
+    substFormula v s (substFormula w u f)
+      = substFormula w (substTerm v s u) (substFormula (v + 1) (liftTerm w s) f) := by
+  intro f
+  induction f with
+  | bottom => intro _ _ _ _ _; rfl
+  | atom p ts =>
+      intro w v h s u; simp only [substFormula, substTerms_subst_le ts w v h s u]
+  | eq t1 t2 =>
+      intro w v h s u; simp only [substFormula, substTerm_subst_le _ w v h s u]
+  | impl a b iha ihb =>
+      intro w v h s u; simp only [substFormula, iha w v h s u, ihb w v h s u]
+  | and a b iha ihb =>
+      intro w v h s u; simp only [substFormula, iha w v h s u, ihb w v h s u]
+  | or a b iha ihb =>
+      intro w v h s u; simp only [substFormula, iha w v h s u, ihb w v h s u]
+  | «forall» a ih =>
+      intro w v h s u
+      simp only [substFormula]
+      rw [ih (w + 1) (v + 1) (Nat.succ_le_succ h) (liftTerm 0 s) (liftTerm 0 u),
+          ← liftTerm_subst_le u 0 v (Nat.zero_le _) s,
+          liftTerm_comm_zero s w]
+  | ex a ih =>
+      intro w v h s u
+      simp only [substFormula]
+      rw [ih (w + 1) (v + 1) (Nat.succ_le_succ h) (liftTerm 0 s) (liftTerm 0 u),
+          ← liftTerm_subst_le u 0 v (Nat.zero_le _) s,
+          liftTerm_comm_zero s w]
+
+-- ============================================================
+-- §6 · ⭐⭐ El calculo es CERRADO POR SUSTITUCION, preservando altura
+-- ============================================================
+
+-- ── las instancias de igualdad son cerradas por sustitución ─────────────────
+theorem eqInstance_subst {g : Formula} (hg : EqInstance g) (v : Nat) (t : Term) :
+    EqInstance (substFormula v t g) := by
+  cases hg with
+  | refl s => exact EqInstance.refl (substTerm v t s)
+  | symm a b => exact EqInstance.symm (substTerm v t a) (substTerm v t b)
+  | trans a b c => exact EqInstance.trans (substTerm v t a) (substTerm v t b) (substTerm v t c)
+  | func p pre post a b =>
+      simp only [eqFuncAx, substFormula, substTerm, substTerms_append]
+      exact EqInstance.func p (substTerms v t pre) (substTerms v t post)
+        (substTerm v t a) (substTerm v t b)
+  | atom p pre post a b =>
+      simp only [eqAtomAx, substFormula, substTerms_append]
+      exact EqInstance.atom p (substTerms v t pre) (substTerms v t post)
+        (substTerm v t a) (substTerm v t b)
+
+-- ── el levantamiento conmuta con la sustitución, a nivel de LISTA ───────────
+theorem map_lift_subst (v : Nat) (t : Term) : ∀ Γ : List Formula,
+    (Γ.map (liftFormula 0)).map (substFormula (v + 1) (liftTerm 0 t))
+      = (Γ.map (substFormula v t)).map (liftFormula 0)
+  | [] => rfl
+  | g :: Γ => by
+      show substFormula (v + 1) (liftTerm 0 t) (liftFormula 0 g)
+             :: (Γ.map (liftFormula 0)).map (substFormula (v + 1) (liftTerm 0 t))
+           = liftFormula 0 (substFormula v t g) :: (Γ.map (substFormula v t)).map (liftFormula 0)
+      rw [← liftFormula_subst_le g 0 v (Nat.zero_le _) t, map_lift_subst v t Γ]
+
+theorem map_sub {Γ Γ' : List Formula} (σ : Formula → Formula) (hs : ∀ x, x ∈ Γ → x ∈ Γ') :
+    ∀ x, x ∈ Γ.map σ → x ∈ Γ'.map σ := by
+  intro x hx
+  obtain ⟨y, hy, heq⟩ := List.mem_map.mp hx
+  exact heq ▸ List.mem_map_of_mem (hs y hy)
+
+-- ── ⭐⭐ EL CÁLCULO ES CERRADO POR SUSTITUCIÓN, PRESERVANDO ALTURA ───────────
+theorem lkh_subst : ∀ {n : Nat} {Γ Δ : List Formula}, LKh n Γ Δ → ∀ (v : Nat) (t : Term),
+    LKh n (Γ.map (substFormula v t)) (Δ.map (substFormula v t)) := by
+  intro n Γ Δ h
+  induction h with
+  | ax n Γ Δ A h1 h2 =>
+      intro v t
+      exact LKh.ax n _ _ (substFormula v t A) (List.mem_map_of_mem h1) (List.mem_map_of_mem h2)
+  | botL n Γ Δ h1 =>
+      intro v t
+      refine LKh.botL n _ _ ?_
+      have hx := List.mem_map_of_mem (f := substFormula v t) h1
+      simpa only [substFormula] using hx
+  | struct n Γ Γ' Δ Δ' _ hs1 hs2 ih =>
+      intro v t
+      exact LKh.struct n _ _ _ _ (ih v t) (map_sub _ hs1) (map_sub _ hs2)
+  | implR n Γ Δ A B _ ih =>
+      intro v t
+      simp only [List.map_cons, substFormula]
+      exact LKh.implR n _ _ _ _ (by simpa only [List.map_cons] using ih v t)
+  | implL n Γ Δ A B _ _ ih1 ih2 =>
+      intro v t
+      simp only [List.map_cons, substFormula]
+      exact LKh.implL n _ _ _ _ (by simpa only [List.map_cons] using ih1 v t)
+        (by simpa only [List.map_cons] using ih2 v t)
+  | andR n Γ Δ A B _ _ ih1 ih2 =>
+      intro v t
+      simp only [List.map_cons, substFormula]
+      exact LKh.andR n _ _ _ _ (by simpa only [List.map_cons] using ih1 v t)
+        (by simpa only [List.map_cons] using ih2 v t)
+  | andL n Γ Δ A B _ ih =>
+      intro v t
+      simp only [List.map_cons, substFormula]
+      exact LKh.andL n _ _ _ _ (by simpa only [List.map_cons] using ih v t)
+  | orR n Γ Δ A B _ ih =>
+      intro v t
+      simp only [List.map_cons, substFormula]
+      exact LKh.orR n _ _ _ _ (by simpa only [List.map_cons] using ih v t)
+  | orL n Γ Δ A B _ _ ih1 ih2 =>
+      intro v t
+      simp only [List.map_cons, substFormula]
+      exact LKh.orL n _ _ _ _ (by simpa only [List.map_cons] using ih1 v t)
+        (by simpa only [List.map_cons] using ih2 v t)
+  -- ⭐ los dos casos que CAMBIAN EL ENTORNO
+  | allR n Γ Δ A _ ih =>
+      intro v t
+      simp only [List.map_cons, substFormula]
+      refine LKh.allR n _ _ _ ?_
+      have hx := ih (v + 1) (liftTerm 0 t)
+      simp only [List.map_cons] at hx
+      rw [map_lift_subst v t Γ, map_lift_subst v t Δ] at hx
+      exact hx
+  | exL n Γ Δ A _ ih =>
+      intro v t
+      simp only [List.map_cons, substFormula]
+      refine LKh.exL n _ _ _ ?_
+      have hx := ih (v + 1) (liftTerm 0 t)
+      simp only [List.map_cons] at hx
+      rw [map_lift_subst v t Γ, map_lift_subst v t Δ] at hx
+      exact hx
+  -- ⭐ los dos que instancian: aquí paga Barendregt
+  | allL n Γ Δ A s _ ih =>
+      intro v t
+      simp only [List.map_cons, substFormula]
+      refine LKh.allL n _ _ _ (substTerm v t s) ?_
+      have hx := ih v t
+      simp only [List.map_cons] at hx
+      rw [substFormula_subst_le A 0 v (Nat.zero_le _) t s] at hx
+      exact hx
+  | exR n Γ Δ A s _ ih =>
+      intro v t
+      simp only [List.map_cons, substFormula]
+      refine LKh.exR n _ _ _ (substTerm v t s) ?_
+      have hx := ih v t
+      simp only [List.map_cons] at hx
+      rw [substFormula_subst_le A 0 v (Nat.zero_le _) t s] at hx
+      exact hx
+  | eqAx n Γ Δ g hg _ ih =>
+      intro v t
+      refine LKh.eqAx n _ _ (substFormula v t g) (eqInstance_subst hg v t) ?_
+      have hx := ih v t
+      simp only [List.map_cons] at hx
+      exact hx
+
 end FOL.Hauptsatz0
 
 #print axioms FOL.Hauptsatz0.cutElim_of
@@ -338,3 +569,6 @@ end FOL.Hauptsatz0
 #print axioms FOL.Hauptsatz0.lkh_to_lk0
 #print axioms FOL.Hauptsatz0.lk0_to_lkh
 #print axioms FOL.Hauptsatz0.liftFormula_subst_le
+#print axioms FOL.Hauptsatz0.substFormula_subst_le
+#print axioms FOL.Hauptsatz0.eqInstance_subst
+#print axioms FOL.Hauptsatz0.lkh_subst
