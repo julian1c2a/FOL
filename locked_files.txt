@@ -26,5 +26,4 @@ FOL/Hauptsatz0.lean
 FOL/Finitary0.lean
 cuarentena/README.md
 FOL/Compacity0.lean
-FOL.lean
 FOL/HerbrandBlock0.lean
