@@ -24,3 +24,6 @@ FOL/Sequent0.lean
 FOL/SequentSound0.lean
 FOL/Hauptsatz0.lean
 FOL/Finitary0.lean
+cuarentena/README.md
+FOL.lean
+FOL/Compacity0.lean
