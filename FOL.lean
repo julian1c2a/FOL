@@ -29,6 +29,7 @@ import FOL.NDtoLK0
 import FOL.Hauptsatz0
 import FOL.Finitary0
 import FOL.Compacity0
+import FOL.HerbrandBlock0
 
 /-!
 # `FOL` — el barrel completo: núcleo **más** capa semántica
