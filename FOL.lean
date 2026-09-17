@@ -28,6 +28,7 @@ import FOL.SequentSound0
 import FOL.NDtoLK0
 import FOL.Hauptsatz0
 import FOL.Finitary0
+import FOL.Compacity0
 
 /-!
 # `FOL` — el barrel completo: núcleo **más** capa semántica

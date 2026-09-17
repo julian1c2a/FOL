@@ -2,7 +2,6 @@ FOL/MetaRules.lean
 FOL/Core.lean
 FOL/Enumeration.lean
 AXIOMS.md
-cuarentena/README.md
 FOL/Theorems/Eq.lean
 FOL/Derives0.lean
 FOL/Soundness0.lean
@@ -24,5 +23,4 @@ FOL/NDtoLK0.lean
 FOL/Sequent0.lean
 FOL/SequentSound0.lean
 FOL/Hauptsatz0.lean
-FOL.lean
 FOL/Finitary0.lean

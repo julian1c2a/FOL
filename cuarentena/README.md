@@ -88,6 +88,13 @@ Footprint medido: **`[propext, FOL.MetaRules.raa]`**. Ni `Classical.choice` hace
 ## 5 · Lo que se perdió, y lo que no
 
 `compactness_theorem` (`Compacity.lean`) era **vacuo**: su prueba pasaba por `soundness`.
+
+> 🏁 **REPARADO FUERA el 2026‑09‑17** (ADR‑054): `FOL.Compacity0.compactness₀` es el mismo
+> teorema sobre **`Derives₀`**, cuya solidez sí es cierta, y con los mismos dos ingredientes
+> (`derives0_soundness` + `model_existence_lemma₀`). ⭐ De los tres módulos apartados, éste es el
+> **único** cuyo defecto queda reparado en otro sitio: el de `Soundness.lean` es un enunciado
+> **FALSO**, no una prueba mala. 🔑 *Cuando un teorema cae, su prueba suele estar bien — lo que
+> cambia es el SUJETO.*
 `Completeness.lean` **no** está afectado por ESTA causa —no importa ni `Soundness` ni `MetaRules`—.
 
 ⚠️ **Corrección del 2026‑09‑12**: aquí decía «y se queda», y **ya no se queda**. `Completeness.lean`
