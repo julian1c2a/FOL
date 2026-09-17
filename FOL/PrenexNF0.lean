@@ -49,15 +49,24 @@ de la equivalencia 5 de `FOL.Prenex0`.
 llega levantado. ⇒ dos líneas de envoltorio cada una, vía `derives0_iff_derives1`, en vez de
 noventa de reescritura. *Antes de construir, buscar* — van ocho.
 
+## ⭐ Y la salida ESTÁ en forma prenexa
+
+`prenex_isPrenex : ∀ f, Prenex (prenex f)`, footprint `[propext]`. La corrección no lo necesita
+—`derives0_prenex_iff` vale igual—, pero **la skolemización sí**: sin él no se sabe dónde poner los
+símbolos de Skolem. ⭐ Y sale por el mismo patrón que todo lo demás: `quantFree_lift` (**sin ningún
+axioma**) y seis inducciones que calcan las seis definiciones.
+
 ## 📏 Footprint
 
-`[propext, Quot.sound]`. **Ni un `Classical.choice`.** (`iffAll_trans`, sin ningún axioma.)
+`[propext, Quot.sound]`. **Ni un `Classical.choice`.** (`iffAll_trans` y `quantFree_lift`, sin
+ningún axioma.)
 -/
 
 namespace FOL.PrenexNF0
 
 open FOL.Prenex0
 open FOL.Derives1
+open FOL.Herbrand0
 
 -- ── las FUSIONES: cada una recurre ESTRUCTURALMENTE sobre UN argumento,
 --    y el otro simplemente se levanta (`liftFormula` no cambia el tamaño).
@@ -302,9 +311,105 @@ theorem derives0_prenex_iff (Γ : List Formula) (f : Formula) : Iff (Γ ⊢₀ f
   ⟨fun h => Derives₀.elim_impl _ _ _ (iffL (prenex_iff f) Γ) h,
    fun h => Derives₀.elim_impl _ _ _ (iffR (prenex_iff f) Γ) h⟩
 
+-- ── §6 · ⭐ Y la SALIDA esta de verdad en forma prenexa ─────────────────────
+-- ── el levantamiento no crea ni destruye cuantificadores ────────────────────
+theorem quantFree_lift : ∀ (f : Formula) (k : Nat), QuantFree f → QuantFree (liftFormula k f)
+  | .bottom, _, h => h
+  | .atom _ _, _, h => h
+  | .eq _ _, _, h => h
+  | .impl a b, k, h => ⟨quantFree_lift a k h.1, quantFree_lift b k h.2⟩
+  | .and a b, k, h => ⟨quantFree_lift a k h.1, quantFree_lift b k h.2⟩
+  | .or a b, k, h => ⟨quantFree_lift a k h.1, quantFree_lift b k h.2⟩
+  | .forall _, _, h => h.elim
+  | .ex _, _, h => h.elim
+
+theorem prenex_lift : ∀ (f : Formula) (k : Nat), Prenex f → Prenex (liftFormula k f)
+  | .bottom, _, h => h
+  | .atom _ _, _, h => h
+  | .eq _ _, _, h => h
+  | .impl a b, k, h => ⟨quantFree_lift a k h.1, quantFree_lift b k h.2⟩
+  | .and a b, k, h => ⟨quantFree_lift a k h.1, quantFree_lift b k h.2⟩
+  | .or a b, k, h => ⟨quantFree_lift a k h.1, quantFree_lift b k h.2⟩
+  | .forall f, k, h => prenex_lift f (k + 1) h
+  | .ex f, k, h => prenex_lift f (k + 1) h
+
+-- ── las fusiones preservan la forma prenexa ─────────────────────────────────
+theorem mergeAndR_prenex : ∀ (A B : Formula), QuantFree A → Prenex B → Prenex (mergeAndR A B)
+  | A, .forall B', hA, hB => mergeAndR_prenex (liftFormula 0 A) B' (quantFree_lift A 0 hA) hB
+  | A, .ex B', hA, hB => mergeAndR_prenex (liftFormula 0 A) B' (quantFree_lift A 0 hA) hB
+  | _, .bottom, hA, hB => ⟨hA, hB⟩
+  | _, .atom _ _, hA, hB => ⟨hA, hB⟩
+  | _, .eq _ _, hA, hB => ⟨hA, hB⟩
+  | _, .impl _ _, hA, hB => ⟨hA, hB⟩
+  | _, .and _ _, hA, hB => ⟨hA, hB⟩
+  | _, .or _ _, hA, hB => ⟨hA, hB⟩
+
+theorem mergeAnd_prenex : ∀ (A B : Formula), Prenex A → Prenex B → Prenex (mergeAnd A B)
+  | .forall A', B, hA, hB => mergeAnd_prenex A' (liftFormula 0 B) hA (prenex_lift B 0 hB)
+  | .ex A', B, hA, hB => mergeAnd_prenex A' (liftFormula 0 B) hA (prenex_lift B 0 hB)
+  | .bottom, B, hA, hB => mergeAndR_prenex _ B hA hB
+  | .atom _ _, B, hA, hB => mergeAndR_prenex _ B hA hB
+  | .eq _ _, B, hA, hB => mergeAndR_prenex _ B hA hB
+  | .impl _ _, B, hA, hB => mergeAndR_prenex _ B hA hB
+  | .and _ _, B, hA, hB => mergeAndR_prenex _ B hA hB
+  | .or _ _, B, hA, hB => mergeAndR_prenex _ B hA hB
+
+theorem mergeOrR_prenex : ∀ (A B : Formula), QuantFree A → Prenex B → Prenex (mergeOrR A B)
+  | A, .forall B', hA, hB => mergeOrR_prenex (liftFormula 0 A) B' (quantFree_lift A 0 hA) hB
+  | A, .ex B', hA, hB => mergeOrR_prenex (liftFormula 0 A) B' (quantFree_lift A 0 hA) hB
+  | _, .bottom, hA, hB => ⟨hA, hB⟩
+  | _, .atom _ _, hA, hB => ⟨hA, hB⟩
+  | _, .eq _ _, hA, hB => ⟨hA, hB⟩
+  | _, .impl _ _, hA, hB => ⟨hA, hB⟩
+  | _, .and _ _, hA, hB => ⟨hA, hB⟩
+  | _, .or _ _, hA, hB => ⟨hA, hB⟩
+
+theorem mergeOr_prenex : ∀ (A B : Formula), Prenex A → Prenex B → Prenex (mergeOr A B)
+  | .forall A', B, hA, hB => mergeOr_prenex A' (liftFormula 0 B) hA (prenex_lift B 0 hB)
+  | .ex A', B, hA, hB => mergeOr_prenex A' (liftFormula 0 B) hA (prenex_lift B 0 hB)
+  | .bottom, B, hA, hB => mergeOrR_prenex _ B hA hB
+  | .atom _ _, B, hA, hB => mergeOrR_prenex _ B hA hB
+  | .eq _ _, B, hA, hB => mergeOrR_prenex _ B hA hB
+  | .impl _ _, B, hA, hB => mergeOrR_prenex _ B hA hB
+  | .and _ _, B, hA, hB => mergeOrR_prenex _ B hA hB
+  | .or _ _, B, hA, hB => mergeOrR_prenex _ B hA hB
+
+theorem mergeImplR_prenex : ∀ (A B : Formula), QuantFree A → Prenex B → Prenex (mergeImplR A B)
+  | A, .forall B', hA, hB => mergeImplR_prenex (liftFormula 0 A) B' (quantFree_lift A 0 hA) hB
+  | A, .ex B', hA, hB => mergeImplR_prenex (liftFormula 0 A) B' (quantFree_lift A 0 hA) hB
+  | _, .bottom, hA, hB => ⟨hA, hB⟩
+  | _, .atom _ _, hA, hB => ⟨hA, hB⟩
+  | _, .eq _ _, hA, hB => ⟨hA, hB⟩
+  | _, .impl _ _, hA, hB => ⟨hA, hB⟩
+  | _, .and _ _, hA, hB => ⟨hA, hB⟩
+  | _, .or _ _, hA, hB => ⟨hA, hB⟩
+
+theorem mergeImpl_prenex : ∀ (A B : Formula), Prenex A → Prenex B → Prenex (mergeImpl A B)
+  | .forall A', B, hA, hB => mergeImpl_prenex A' (liftFormula 0 B) hA (prenex_lift B 0 hB)
+  | .ex A', B, hA, hB => mergeImpl_prenex A' (liftFormula 0 B) hA (prenex_lift B 0 hB)
+  | .bottom, B, hA, hB => mergeImplR_prenex _ B hA hB
+  | .atom _ _, B, hA, hB => mergeImplR_prenex _ B hA hB
+  | .eq _ _, B, hA, hB => mergeImplR_prenex _ B hA hB
+  | .impl _ _, B, hA, hB => mergeImplR_prenex _ B hA hB
+  | .and _ _, B, hA, hB => mergeImplR_prenex _ B hA hB
+  | .or _ _, B, hA, hB => mergeImplR_prenex _ B hA hB
+
+/-- 🏁 **La salida de `prenex` ESTÁ en forma prenexa.** -/
+theorem prenex_isPrenex : ∀ (f : Formula), Prenex (prenex f)
+  | .bottom => trivial
+  | .atom _ _ => trivial
+  | .eq _ _ => trivial
+  | .forall f => prenex_isPrenex f
+  | .ex f => prenex_isPrenex f
+  | .and a b => mergeAnd_prenex _ _ (prenex_isPrenex a) (prenex_isPrenex b)
+  | .or a b => mergeOr_prenex _ _ (prenex_isPrenex a) (prenex_isPrenex b)
+  | .impl a b => mergeImpl_prenex _ _ (prenex_isPrenex a) (prenex_isPrenex b)
+
 end FOL.PrenexNF0
 
 #print axioms FOL.PrenexNF0.mergeAnd_iff
 #print axioms FOL.PrenexNF0.mergeImpl_iff
 #print axioms FOL.PrenexNF0.prenex_iff
 #print axioms FOL.PrenexNF0.derives0_prenex_iff
+#print axioms FOL.PrenexNF0.quantFree_lift
+#print axioms FOL.PrenexNF0.prenex_isPrenex
