@@ -30,3 +30,5 @@ FOL/PrenexNF0.lean
 FOL/Skolem0.lean
 FOL.lean
 FOL/SkolemN0.lean
+FOL/Finitary0.lean
+FOL/SequentSound0.lean
