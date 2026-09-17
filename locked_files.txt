@@ -30,3 +30,5 @@ FOL/HerbrandBlock0.lean
 FOL/Prenex0.lean
 FOL/PrenexNF0.lean
 FOL/Skolem0.lean
+FOL.lean
+FOL/SkolemN0.lean
