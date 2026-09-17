@@ -139,6 +139,7 @@ This document complies with all requirements specified in [AI-GUIDE.md](AI-GUIDE
 | `SequentSound0.lean` | `FOL.SequentSound0` | `FOL.Sequent0`, `FOL.Canonical0` | ✅ Completo — ⭐ **el molde no prueba de más**: `lkc_sound`/`lk0_sound`, el corolario sintáctico `lk0_to_derives0` **por la semántica** y `lk0_not_empty`. ⚠️ Clásico **por la matemática** (secuentes multiconclusión) (ADR‑048) |
 | `NDtoLK0.lean` | `FOL.NDtoLK0` | `FOL.Sequent0` | ✅ Completo — ⭐⭐⭐ **`ndToLK` DEMOSTRADA** (los 22 casos) y **`herbrandExtraction_of_cutElim : CutElim → HerbrandExtraction`**: H3 se queda con **una sola** deuda (ADR‑049) |
 | `Hauptsatz0.lean` | *(raíz `LKh`)* · `FOL.Hauptsatz0` | `FOL.Sequent0`, `FOL.NDtoLK0` | 🏁🏁🏁 **EL HAUPTSATZ** — ⭐⭐⭐ `hauptsatz : CutAdm` (el corte es **admisible** en `LK₀`), y de ahí `cut_elimination`, `herbrand_extraction` y ⭐ **`herbrand`**, el teorema de Herbrand **ya incondicional**. Debajo: `LKh` indexado por altura, las dos conmutaciones De Bruijn que faltaban, `lkh_subst`, `lkh_lift` y ⭐⭐ `LeftPrin`, el dato que desacopla los dos análisis de casos. ADR‑050/051/**052** |
+| `Prenex0.lean` | `FOL.Prenex0` | `FOL.Herbrand0`, `FOL.Lift0` | 🏁 **La CAPA PRENEXA**: las **ocho** equivalencias de desplazamiento de cuantificador sobre `Derives₀`. ⭐ «La variable no aparece en `B`» se **construye** (`liftFormula 0 B`), no se comprueba; y las tres direcciones clásicas salen de **constructores**, no de `Classical.choice`. ADR‑057 |
 | `Skolem0.lean` | `FOL.Skolem0` | `FOL.Canonical0` | 🏁 **El axioma de Skolem/Henkin es CONSERVATIVO** — ⭐⭐ `evalFormula_updateFunc`, el **lema de coincidencia** que faltaba entre `occursFormula` y `evalFormula` (net‑0, y es el bloqueo que una medición externa señaló); ⭐ el axioma de Skolem **ya estaba escrito**: es `henkinAx`. ADR‑056 |
 | `HerbrandBlock0.lean` | `FOL.HerbrandBlock0` | `FOL.Sequent0` | 🔶 **Herbrand para un BLOQUE de existenciales** — ⭐ la mitad ⟸ PAGADA (`derives0_exBlock_of_cert`, incondicional y sin el Hauptsatz) y la mitad ⟹ **enunciada** como `Prop` con su consumidor. ⭐ La pieza de riesgo es `subst_exBlock`, y el índice va `n + k` **a propósito**. ADR‑055 |
 | `Compacity0.lean` | `FOL.Compacity0` | `FOL.Canonical0` | 🏁 **COMPACIDAD y LÖWENHEIM–SKOLEM DESCENDENTE** — ⭐ `compactness₀` repara el `compactness_theorem` que `cuarentena/README.md:90` declara **VACUO**; ⭐ `loewenheim_skolem_down`: el modelo canónico **ya era numerable**, faltaba poder decirlo. ADR‑054 |
@@ -568,6 +569,7 @@ uno y qué cuesta**. Los `export` van en §6.13.
 | `Compacity0.lean` | 🏁 **compacidad + LS descendente**: `compactness₀`, `loewenheim_skolem_down` | ``propext, Classical.choice, Quot.sound`` (el WKL) | **054** |
 | `HerbrandBlock0.lean` | 🔶 **Herbrand de bloque**: ⭐ `derives0_exBlock_of_cert` (⟸ pagada) | ``propext, Quot.sound`` | **055** |
 | `Skolem0.lean` | 🏁 **Skolem CONSERVATIVO**: `henkin_conservative`; ⭐ el lema de coincidencia, **sin axiomas** | ``propext, Classical.choice, Quot.sound`` | **056** |
+| `Prenex0.lean` | 🏁 **capa prenexa**: las ocho equivalencias de desplazamiento | ``propext, Quot.sound`` | **057** |
 
 🔑 **La lectura de la tabla en una línea**: `Derives₀` (033) hace que se pueda *hablar* del
 cálculo; `Canonical0` (041) cierra la **vía W** —completitud, con su `Classical.choice`
@@ -739,6 +741,8 @@ módulo. Es lo que exige AI‑GUIDE §14.
 **`SequentSound0.lean`** — `evalTerms_append`, `evalTerms_hole`, `eqInstance_valid`, `lkc_sound`, `lk0_sound`, `eval_disjOf_of_mem`, `lk0_to_derives0`, `lk0_to_derives2`, `lk0_not_empty`
 
 **`NDtoLK0.lean`** — `wkL`, `wkR`, `axH`, `dneL`, `fnenL`, `mpLK`, `viaEqImpl`, `cutOn`, `ndToLK`, `ndToLK_prop`, `herbrandExtraction_of_cutElim`
+
+**`Prenex0.lean`** — `inst_var0`, **`and_forall`**, **`and_ex`**, **`or_forall`**, **`or_ex`**, **`impl_forall_left`**, **`impl_ex_left`**, **`impl_forall_right`**, **`impl_ex_right`**, `Prenex`, `prenex_of_quantFree`
 
 **`Skolem0.lean`** — `updateFunc`, `evalTerm_updateFunc`, `evalTerms_updateFunc`, **`evalFormula_updateFunc`**, `evalTerm_new`, **`henkin_conservative`**
 
