@@ -23,5 +23,4 @@ FOL/Derives2.lean
 FOL/NDtoLK0.lean
 FOL/Sequent0.lean
 FOL/SequentSound0.lean
-FOL.lean
 FOL/Hauptsatz0.lean
