@@ -25,6 +25,11 @@ La comprobación que ADR‑046 §5 dejó declarada como **no hecha**:
     lk0_to_derives0 : LK₀ Γ Δ → Γ ⊢₀ disjOf Δ        -- ⭐ el corolario sintáctico
     lk0_not_empty   : ¬ LK₀ [] []                     -- ⭐ y la consistencia del molde
 
+⚠⚠ **De `lk0_not_empty` hay hoy una versión MEJOR fuera de aquí**: `FOL.Finitary0.lk0_not_empty_fin`,
+mismo enunciado con `[propext, Quot.sound]` en vez del **WKL**, y derivada del estrictamente más
+fuerte `lk0_no_bot`. Ver el docstring de `lk0_not_empty` abajo para por qué la prueba de aquí **no**
+se sustituye (ADR‑061).
+
 ⚠️ **Por qué importa y no es adorno**: `LK₀` es el cálculo sobre el que se va a enunciar y
 demostrar el Hauptsatz. Si fuera **demasiado fuerte**, `CutElim` podría ser cierto y no servir —o
 peor, se perseguiría un teorema falso durante las mil líneas del Hauptsatz—. Esto lo cierra
@@ -296,7 +301,21 @@ theorem lk0_to_derives2 {Γ Δ : List Formula} (h : LK₀ Γ Δ) :
     Γ ⊢₂ FOL.Herbrand0.disjOf Δ :=
   FOL.Derives2.derives0_iff_derives2.mp (lk0_to_derives0 h)
 
-/-- ⭐ Y la consistencia del molde: `LK₀` NO prueba el secuente vacío. -/
+/-- ⭐ Y la consistencia del molde: `LK₀` NO prueba el secuente vacío.
+
+⚠⚠ **NO CITAR ESTE. Usar `FOL.Finitary0.lk0_not_empty_fin`**, que es el **mismo enunciado** con
+footprint **estrictamente menor**: aquí la prueba pasa por `lk0_to_derives0`, que **es
+`completeness₀`**, y arrastra con él el `Classical.choice` que ADR‑041 identificó como el **WKL**;
+allí sale del modelo booleano de un punto y mide `[propext, Quot.sound]`.
+⭐ Y allí además se deriva del **estrictamente más fuerte** `lk0_no_bot` (`¬ LK₀ [] [⊥]`), vía
+`lk0_empty_of_no_bot`.
+
+⛔ **Por qué no se sustituye la prueba aquí y ya está** (decidido, ADR‑061): habría que importar
+`FOL.Finitary0` en este módulo, y con él `FOL.NDtoLK0` — la traducción ND→LK, que **no tiene nada
+que ver** con la solidez semántica de `LK₀`. Además sería **blanquear el footprint**: el contenido
+de este módulo es la solidez con `evalFormula` a `Prop`, y ésa **es** cara (`lkc_sound` ya mide
+`[propext, Classical.choice, Quot.sound]` por su cuenta). 🔑 *El footprint de un corolario debe
+decir la verdad sobre el módulo en el que vive; lo que se arregla es a dónde se manda al lector.* -/
 theorem lk0_not_empty : Not (LK₀ [] []) := by
   intro h
   have hbot : ([] : List Formula) ⊢₀ Formula.bottom := lk0_to_derives0 h

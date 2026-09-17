@@ -19,8 +19,21 @@
 > **Fuentes:** `cuarentena/README.md` · `AXIOMS.md` ·
 > `../ROBINSON_PlusPlus/doc/AUDITORIA-FOL-2026-09-12.md`
 
-**Last updated:** 2026-05-16
+**Last updated:** 2026-09-17 23:40
 **Author**: Julián Calderón Almendros
+
+> 📐 **CIFRAS CANÓNICAS — medidas, no copiadas** (`bash check-doc-sync.bash`, 2026‑09‑17):
+> **48 módulos activos** (`FOL/` 36 + `FOL/Theorems/` 6 + `TheoryFramework/` 6) ·
+> **5 módulos en `cuarentena/`** · **4 `axiom` de Lean** en el build (+1 en `cuarentena/`) ·
+> **0 sorry**.
+>
+> ⚠️ Esta línea existe para que el control tenga **contra qué comparar**: sin ella,
+> `check-doc-sync.bash` calcula las cifras del árbol, no encuentra dónde contrastarlas e imprime
+> «control VACÍO» — y sale **verde sin haber comprobado nada**. 🔑 *Un control sin nada que
+> contrastar no aprueba: se abstiene, y la abstención se lee como aprobado.*
+>
+> ⛔ La cifra de **jobs** NO se publica aquí: FOL no se construye desde FOL (M‑3), y quien la
+> mide es `../ROBINSON_PlusPlus` (`lake build FOL TheoryFramework`).
 
 ---
 
@@ -129,7 +142,8 @@ repo/
 │   ├── Deduction.lean
 │   ├── Semantics.lean
 │   ├── Soundness.lean
-│   ├── Completeness.lean    # ⚠️ 1 sorry (eq/Henkin)
+│   ├── Completeness.lean    # ⚠️ hoy en `cuarentena/`: cero sorry y un postulado
+│   │                        #    (`henkin_extension_lemma`) — histórico este árbol
 │   ├── Compacity.lean
 │   └── Theorems/
 ├── FOLPure/                 # FOL pura (sin igualdad) — 0 sorries
@@ -163,7 +177,7 @@ repo/
 | 3 | Conectivos Derivados y Cuantificadores | ✅ Complete |
 | 4 | Automatización y Tácticas | ✅ Complete |
 | 5 | Metamatemática (Deducción, Corrección, Completitud) | ✅ Complete |
-| 6 | FOL con Igualdad (FOL^=) | ✅ Complete (1 sorry pendiente) |
+| 6 | FOL con Igualdad (FOL^=) | ⚠️ **NO completa** — ver el aviso de estado de arriba: cero sorry, pero la completitud se apoya en un postulado en `cuarentena/` |
 | 6b | FOLPure (sin igualdad, 0 sorries) | ✅ Complete |
 | 6c | PropLogic (subconjunto proposicional) | ✅ Complete |
 | 6d | TheoryFramework (marco genérico) | ✅ Complete |

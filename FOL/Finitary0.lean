@@ -80,6 +80,11 @@ del cálculo de secuentes se compra hoy **con el teorema de completitud**, y arr
 ⇒ `lk0_empty` y `lkc_empty` lo sustituyen con `[propext, Quot.sound]`. Y son **más fuertes**:
 `¬ LK₀ [] [⊥]` implica `¬ LK₀ [] []` por `struct`, no al revés.
 
+🏁 **Y eso último ya no es prosa** (2026‑09‑17): `lk0_empty_of_no_bot` y `lkc_empty_of_no_bot` lo
+demuestran, **net‑0 puro**, y `lk0_not_empty_fin`/`lkc_not_empty_fin` entregan el enunciado de
+`SequentSound0` derivado **del fuerte**. ⚠️ *Un docstring que afirma una relación de fuerza y no la
+demuestra es un docstring que afirma más que el módulo.*
+
 ## 📏 Footprint
 
 `tval_eqInstance` **sin ningún axioma**; el resto, `[propext, Quot.sound]`.
@@ -395,6 +400,33 @@ theorem lkc_no_bot : Not (LKc [] [Formula.bottom]) := by
   | head => exact absurd hv (by simp [tval])
   | tail _ hm => exact absurd hm (List.not_mem_nil)
 
+-- ── ⭐ LA RELACIÓN DE FUERZA, que hasta hoy era PROSA ───────────────────────
+-- El docstring de este módulo afirmaba «`¬ LK₀ [] [⊥]` implica `¬ LK₀ [] []` por `struct`, no al
+-- revés» sin que nadie lo hubiera demostrado. Aquí está, y **net‑0 puro**: ni un axioma.
+
+/-- ⭐ `¬ LK₀ [] [⊥]` es **estrictamente más fuerte** que `¬ LK₀ [] []`: de una derivación del
+secuente vacío sale `[] ⊢ ⊥` por puro debilitamiento. (El recíproco **no** vale: `struct` sólo
+añade fórmulas, no las quita.) -/
+theorem lk0_empty_of_no_bot (h : Not (LK₀ [] [Formula.bottom])) : Not (LK₀ [] []) :=
+  fun he => h (LK₀.struct [] [] [] [Formula.bottom] he
+    (fun _ hx => hx) (fun _ hx => absurd hx List.not_mem_nil))
+
+/-- ⭐ Lo mismo para `LKc`. -/
+theorem lkc_empty_of_no_bot (h : Not (LKc [] [Formula.bottom])) : Not (LKc [] []) :=
+  fun he => h (LKc.struct [] [] [] [Formula.bottom] he
+    (fun _ hx => hx) (fun _ hx => absurd hx List.not_mem_nil))
+
+/-- 🏁 **El enunciado que `FOL.SequentSound0.lk0_not_empty` publica, con footprint
+ESTRICTAMENTE MENOR.** Allí se compra con `completeness₀` y arrastra el **WKL**
+(`[propext, Classical.choice, Quot.sound]`); aquí sale del modelo booleano de un punto y mide
+`[propext, Quot.sound]`.
+
+⚠️ Y se deriva del **fuerte**, no al revés: es `lk0_no_bot` quien hace el trabajo. -/
+theorem lk0_not_empty_fin : Not (LK₀ [] []) := lk0_empty_of_no_bot lk0_no_bot
+
+/-- 🏁 Ídem para `LKc`. -/
+theorem lkc_not_empty_fin : Not (LKc [] []) := lkc_empty_of_no_bot lkc_no_bot
+
 /-- ⭐⭐⭐ **CONSISTENCIA FINITARIA de `Derives₀`**: el mismo enunciado que
 `derives0_consistent`, por la vía SINTÁCTICA y **sin el Hauptsatz** — se para en `LKc`. -/
 theorem derives0_consistent_fin : Not (([] : List Formula) ⊢₀ Formula.bottom) := fun h =>
@@ -419,5 +451,9 @@ end FOL.Finitary0
 #print axioms FOL.Finitary0.lkc_tval
 #print axioms FOL.Finitary0.lkc_empty
 #print axioms FOL.Finitary0.lkc_no_bot
+#print axioms FOL.Finitary0.lk0_empty_of_no_bot
+#print axioms FOL.Finitary0.lkc_empty_of_no_bot
+#print axioms FOL.Finitary0.lk0_not_empty_fin
+#print axioms FOL.Finitary0.lkc_not_empty_fin
 #print axioms FOL.Finitary0.derives0_consistent_fin
 #print axioms FOL.Finitary0.derives0_not_P_fin

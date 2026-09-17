@@ -21,9 +21,7 @@ FOL/Derives1.lean
 FOL/Derives2.lean
 FOL/NDtoLK0.lean
 FOL/Sequent0.lean
-FOL/SequentSound0.lean
 FOL/Hauptsatz0.lean
-FOL/Finitary0.lean
 cuarentena/README.md
 FOL/Compacity0.lean
 FOL/HerbrandBlock0.lean

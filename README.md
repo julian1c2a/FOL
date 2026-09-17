@@ -95,7 +95,8 @@ repo/
 │   ├── Deduction.lean
 │   ├── Semantics.lean
 │   ├── Soundness.lean
-│   ├── Completeness.lean    # ⚠️ 1 sorry (eq/Henkin)
+│   ├── Completeness.lean    # ⚠️ hoy en `cuarentena/`: cero sorry y un postulado
+│   │                        #    (`henkin_extension_lemma`) — histórico este árbol
 │   ├── Compacity.lean
 │   └── Theorems/
 ├── FOLPure/                 # FOL sin igualdad — 0 sorries

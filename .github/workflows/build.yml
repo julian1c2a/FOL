@@ -69,3 +69,32 @@ jobs:
       # declarada y nunca compilada.
       - name: Check axioms
         run: bash check-axioms.bash
+
+      # ⭐⭐ ADOPTADO el 2026-09-17 (ADR-061 de ROBINSON_PlusPlus), y BLOQUEANTE desde el
+      # primer día. Es el control que RPP lleva meses usando; portarlo a FOL no fue
+      # burocracia: en su PRIMERA ejecución encontró TRES desfases de cifras vivos desde
+      # mayo de 2026 («1 sorry (eq/Henkin)» en dos árboles de directorios y
+      # «✅ Complete (1 sorry pendiente)» en la tabla de fases) y los SEIS módulos de
+      # `TheoryFramework/` sin proyectar en REFERENCE.md — de los cuales CUATRO quedaban
+      # absueltos por SUBCADENA con el matcher que traía RPP.
+      # ⛔ No ejecuta `lake build` (M-3: FOL no se construye desde FOL); la cifra de jobs
+      # la mide y la publica ROBINSON_PlusPlus.
+      # ⚠️ El bloque [B] necesita el repo hermano: los docs de FOL citan con razón símbolos de
+      # ROBINSON_PlusPlus (sus tres `axiom` de Lean, por ejemplo), y sin ese alcance el control
+      # los daría por MUERTOS. Un control con el alcance equivocado no comprueba: INVENTA.
+      # ⛔ `actions/checkout` no admite un `path:` fuera del workspace, así que RPP se clona
+      # DENTRO (`_rpp`) y el script lo recibe por `RPP_DIR`. Si el checkout falla, el control
+      # sigue: detecta que no está y lo anuncia como **alcance REDUCIDO** en vez de callarse.
+      # 🔑 Un control tiene TRES resultados — pasa, falla, no he podido comprobarlo — y el
+      #    tercero se dice.
+      - name: Checkout ROBINSON_PlusPlus (hermano, sólo para el bloque [B])
+        uses: actions/checkout@v4
+        with:
+          repository: julian1c2a/ROBINSON_PlusPlus
+          path: _rpp
+        continue-on-error: true
+
+      - name: Check doc sync
+        run: bash check-doc-sync.bash
+        env:
+          RPP_DIR: _rpp

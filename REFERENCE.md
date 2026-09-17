@@ -567,7 +567,7 @@ uno y qué cuesta**. Los `export` van en §6.13.
 | `SequentSound0.lean` | ⭐ **el molde no prueba de más**: `lkc_sound`, `lk0_to_derives0`, `lk0_not_empty` | ``propext, Classical.choice, Quot.sound`` | 048 |
 | `NDtoLK0.lean` | ⭐⭐⭐ **`ndToLK`** y `herbrandExtraction_of_cutElim` | ``propext, Quot.sound`` | 049 |
 | `Hauptsatz0.lean` | 🏁🏁🏁 **EL HAUPTSATZ**: ⭐⭐⭐ `hauptsatz`, `cut_elimination`, `herbrand_extraction`, `herbrand` | ``propext, Quot.sound`` | 050/051/**052** |
-| `Finitary0.lean` | 🏁 **consistencia SIN `Classical.choice`**: ⭐⭐ `derives0_consistent_fin` | ``propext, Quot.sound`` | **053** |
+| `Finitary0.lean` | 🏁 **consistencia SIN `Classical.choice`**: ⭐⭐ `derives0_consistent_fin`; ⭐ `lk0_not_empty_fin` sustituye al de `SequentSound0` (que arrastra el WKL), y `lk0_empty_of_no_bot` es **net‑0 puro** | ``propext, Quot.sound`` | **053**/**061** |
 | `Compacity0.lean` | 🏁 **compacidad + LS descendente**: `compactness₀`, `loewenheim_skolem_down` | ``propext, Classical.choice, Quot.sound`` (el WKL) | **054** |
 | `HerbrandBlock0.lean` | 🔶 **Herbrand de bloque**: ⭐ `derives0_exBlock_of_cert` (⟸ pagada) | ``propext, Quot.sound`` | **055** |
 | `Skolem0.lean` | 🏁 **Skolem CONSERVATIVO**: `henkin_conservative`; ⭐ el lema de coincidencia, **sin axiomas** | ``propext, Classical.choice, Quot.sound`` | **056** |
@@ -758,7 +758,7 @@ módulo. Es lo que exige AI‑GUIDE §14.
 
 **`Compacity0.lean`** — `consistency_of_satisfiable₀`, **`compactness₀`**, `CountableDom`, `IsSatisfiableCountable`, `countable_of_shift`, `model_existence_countable₀`, **`loewenheim_skolem_down`**
 
-**`Finitary0.lean`** — `tval`, `allTrue`, `someTrue`, `tval_lift`, `tval_subst`, `tval_eqInstance`, `allTrue_cons`, `allTrue_tl`, `allTrue_hd`, `allTrue_sub`, `allTrue_lift`, `someTrue_sub`, `someTrue_unlift`, `someTrue_nil`, **`lk0_tval`**, `lk0_empty`, `lk0_no_bot`, **`lkc_tval`**, `lkc_empty`, `lkc_no_bot`, **`derives0_consistent_fin`**, `derives0_not_P_fin`
+**`Finitary0.lean`** — `tval`, `allTrue`, `someTrue`, `tval_lift`, `tval_subst`, `tval_eqInstance`, `allTrue_cons`, `allTrue_tl`, `allTrue_hd`, `allTrue_sub`, `allTrue_lift`, `someTrue_sub`, `someTrue_unlift`, `someTrue_nil`, **`lk0_tval`**, `lk0_empty`, `lk0_no_bot`, **`lkc_tval`**, `lkc_empty`, `lkc_no_bot`, `lk0_empty_of_no_bot`, `lkc_empty_of_no_bot`, **`lk0_not_empty_fin`**, `lkc_not_empty_fin`, **`derives0_consistent_fin`**, `derives0_not_P_fin`
 
 **`Hauptsatz0.lean`** — `CutAdm`, `cutElim_of`, `LKh`, `lkh_mono`, `lkh_to_lk0`, `lk0_to_lkh`, `liftTerm_subst_le`, `liftTerms_subst_le`, `liftFormula_subst_le`, `substTerm_subst_le`, `substTerms_subst_le`, `substFormula_subst_le`, `eqInstance_subst`, `map_lift_subst`, `map_sub`, `lkh_subst`, `deg`, `deg_subst`, `deg_lift`, `eqInstance_lift`, `lkh_lift`, `sub_cons`, `sub_wk`, `sub_drop`, `swap_cons`, `sub_refl`, `subA_cons`, `subA_wk`, `mem_tl`, `mapA_sub`, `lk0_lift`, `lk0_subst`, `map_subst_lift`, `LeftPrin`, `leftPrin_close`, `leftPrin_mono`, `leftPrin_lift`, `CutAt`, `CutBelow`, `cutOf`, `cutPrinAux`, `cutLeftAux`, `cutAll`, **`hauptsatz`**, **`cut_elimination`**, **`herbrand_extraction`**, **`herbrand`**
 
@@ -816,6 +816,41 @@ cuáles había. *Un módulo sin proyectar se vuelve a construir.*
 ⬜ **Huérfanos medidos**: `Classical.lean`, `Tactics2.lean` y `Theorems/Deduction.lean` **no los
 importa nadie** del árbol. No se retiran aquí — retirar es una decisión con ADR, no una pasada de
 documentación — pero quedan **escritos**.
+
+### 6.15 · `TheoryFramework/` — la segunda `lean_lib`, y llevaba SIN PROYECTAR desde siempre
+
+⛔⛔ **Los SEIS módulos de `TheoryFramework` no estaban catalogados en ninguna parte** (medido el
+2026‑09‑17, primera ejecución de `check-doc-sync.bash` en FOL). Y **cuatro de los seis quedaban
+absueltos por SUBCADENA** con el control que trajo ROBINSON_PlusPlus — `Logic`, `Theory`,
+`Properties` y `FOL` aparecen sueltos por todo este fichero —, así que sólo saltaban dos.
+🔑 *Casar por subcadena no comprueba: absuelve.* El control de FOL casa por **ruta completa con
+frontera de palabra**, igual que para `FOL/`.
+
+**`TheoryFramework/Logic.lean`** — `LogicSystem` (clase: `Derives`, `Entails`), `SoundLogic`,
+`CompleteLogic`, `LogicSystem.DerivesSet`, `LogicSystem.EntailsSet`
+
+**`TheoryFramework/Theory.lean`** — `Theory` (estructura), `Theory.proves`, `Theory.models`,
+`Theory.empty`, `Theory.fromList`, `Theory.singleton`
+
+**`TheoryFramework/Properties.lean`** — `IsConsistent`, `SetIsConsistent`,
+`IsSyntacticallyComplete`, `IsAxiomRedundant`, `IsIrredundant`, `IsMaximalConsistent`
+
+**`TheoryFramework/Relations.lean`** — `TheoryExtension`, la `instance : LE (Theory F)`,
+`le_refl`, `le_trans`, `TheoryEquivalent`, `IsConservativeExtension`, `TheoryUnion`,
+`TheoryIntersection`, `le_union_left`, `le_union_right`, `intersection_le_left`,
+`intersection_le_right`
+
+**`TheoryFramework/MetaTheorems.lean`** — `proves_iff_models`, `proves_monotone`,
+`models_monotone`, `inconsistent_upward`, `consistent_of_le`, `equiv_of_conservative`,
+`TheoryEquivalent.symm`, `TheoryEquivalent.trans`, `empty_le`
+
+**`TheoryFramework/Instances/FOL.lean`** — `folSystem` (la `instance : LogicSystem Formula`)
+
+⚠️ **Lo que este marco NO da, y conviene decirlo aquí**: `LogicSystem` es una clase **paramétrica**
+sobre `Derives`/`Entails`, y su instancia para FOL (`folSystem`) se cablea sobre el `Derives`
+**contaminado** por los cuatro habitantes‑axioma de `FOL/MetaRules.lean`. ⇒ **M‑11 aplica a todo lo
+que se pruebe a través de ella**, y sus «metateoremas» no dicen nada sobre `Derives₀`. Entra en el
+build desde el 2026‑09‑12 (A‑5) para que **rompa si rompe**, no porque sea la capa vigente.
 
 ## 7. Documentation Status
 
