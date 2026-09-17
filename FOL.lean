@@ -34,6 +34,7 @@ import FOL.Skolem0
 import FOL.Prenex0
 import FOL.PrenexNF0
 import FOL.SkolemN0
+import FOL.SkolemNF0
 
 /-!
 # `FOL` — el barrel completo: núcleo **más** capa semántica

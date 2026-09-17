@@ -19,11 +19,11 @@
 > **Fuentes:** `cuarentena/README.md` · `AXIOMS.md` ·
 > `../ROBINSON_PlusPlus/doc/AUDITORIA-FOL-2026-09-12.md`
 
-**Last updated:** 2026-09-17 23:40
+**Last updated:** 2026-09-18 01:10
 **Author**: Julián Calderón Almendros
 
 > 📐 **CIFRAS CANÓNICAS — medidas, no copiadas** (`bash check-doc-sync.bash`, 2026‑09‑17):
-> **48 módulos activos** (`FOL/` 36 + `FOL/Theorems/` 6 + `TheoryFramework/` 6) ·
+> **49 módulos activos** (`FOL/` 37 + `FOL/Theorems/` 6 + `TheoryFramework/` 6) ·
 > **5 módulos en `cuarentena/`** · **4 `axiom` de Lean** en el build (+1 en `cuarentena/`) ·
 > **0 sorry**.
 >
