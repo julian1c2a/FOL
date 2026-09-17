@@ -142,6 +142,7 @@ This document complies with all requirements specified in [AI-GUIDE.md](AI-GUIDE
 | `PrenexNF0.lean` | `FOL.PrenexNF0` | `FOL.Prenex0`, `FOL.Derives1` | 🏁 **La FORMA NORMAL prenexa y su corrección** — ⭐⭐ `derives0_prenex_iff`. La **terminación no hace falta**: las seis fusiones son **estructurales**, porque se recurre sobre un argumento y se LEVANTA el otro. ADR‑058 |
 | `Prenex0.lean` | `FOL.Prenex0` | `FOL.Herbrand0`, `FOL.Lift0` | 🏁 **La CAPA PRENEXA**: las **ocho** equivalencias de desplazamiento de cuantificador sobre `Derives₀`. ⭐ «La variable no aparece en `B`» se **construye** (`liftFormula 0 B`), no se comprueba; y las tres direcciones clásicas salen de **constructores**, no de `Classical.choice`. ADR‑057 |
 | `Skolem0.lean` | `FOL.Skolem0` | `FOL.Canonical0` | 🏁 **El axioma de Skolem/Henkin es CONSERVATIVO** — ⭐⭐ `evalFormula_updateFunc`, el **lema de coincidencia** que faltaba entre `occursFormula` y `evalFormula` (net‑0, y es el bloqueo que una medición externa señaló); ⭐ el axioma de Skolem **ya estaba escrito**: es `henkinAx`. ADR‑056 |
+| `SkolemN0.lean` | `FOL.SkolemN0` | `FOL.Skolem0` | 🏁 **Skolem bajo un PREFIJO `∀ⁿ`, y sigue siendo CONSERVATIVO** — ⭐⭐ `evalTerms_vars`, la coincidencia **n‑aria** entre la lista de argumentos sintáctica (`vars n`) y la lista de valores semántica; ⭐ `envPush` se define **por `shiftEnv`** ⇒ el paso bajo el binder no lleva ni un `rw`. ADR‑060 |
 | `HerbrandBlock0.lean` | `FOL.HerbrandBlock0` | `FOL.Sequent0` | 🔶 **Herbrand para un BLOQUE de existenciales** — ⭐ la mitad ⟸ PAGADA (`derives0_exBlock_of_cert`, incondicional y sin el Hauptsatz) y la mitad ⟹ **enunciada** como `Prop` con su consumidor. ⭐ La pieza de riesgo es `subst_exBlock`, y el índice va `n + k` **a propósito**. ADR‑055 |
 | `Compacity0.lean` | `FOL.Compacity0` | `FOL.Canonical0` | 🏁 **COMPACIDAD y LÖWENHEIM–SKOLEM DESCENDENTE** — ⭐ `compactness₀` repara el `compactness_theorem` que `cuarentena/README.md:90` declara **VACUO**; ⭐ `loewenheim_skolem_down`: el modelo canónico **ya era numerable**, faltaba poder decirlo. ADR‑054 |
 | `Finitary0.lean` | `FOL.Finitary0` | `FOL.NDtoLK0` (⭐ **no** `Hauptsatz0`) | 🏁 **La consistencia de `Derives₀` SIN `Classical.choice`** — ⭐⭐ `derives0_consistent_fin`, el mismo enunciado que `derives0_consistent` (ADR‑034) con footprint **estrictamente menor**. La clave: `tval`, el modelo de un punto **evaluado a `Bool`** ⇒ el caso `implR` se decide por `cases`, no por tercio excluido. ADR‑053 |
@@ -570,6 +571,7 @@ uno y qué cuesta**. Los `export` van en §6.13.
 | `Compacity0.lean` | 🏁 **compacidad + LS descendente**: `compactness₀`, `loewenheim_skolem_down` | ``propext, Classical.choice, Quot.sound`` (el WKL) | **054** |
 | `HerbrandBlock0.lean` | 🔶 **Herbrand de bloque**: ⭐ `derives0_exBlock_of_cert` (⟸ pagada) | ``propext, Quot.sound`` | **055** |
 | `Skolem0.lean` | 🏁 **Skolem CONSERVATIVO**: `henkin_conservative`; ⭐ el lema de coincidencia, **sin axiomas** | ``propext, Classical.choice, Quot.sound`` | **056** |
+| `SkolemN0.lean` | 🏁 **Skolem con prefijo `∀ⁿ`**: `skolem_conservative_n`; ⭐ `evalTerms_vars` y `eval_allBlock_envPush`, **sin `choice`** | ``propext, Classical.choice, Quot.sound`` | **060** |
 | `Prenex0.lean` | 🏁 **capa prenexa**: las ocho equivalencias de desplazamiento | ``propext, Quot.sound`` | **057** |
 | `PrenexNF0.lean` | 🏁 **forma normal prenexa**: ⭐⭐ `derives0_prenex_iff` | ``propext, Quot.sound`` | **058** |
 
@@ -749,6 +751,8 @@ módulo. Es lo que exige AI‑GUIDE §14.
 **`Prenex0.lean`** — `inst_var0`, **`and_forall`**, **`and_ex`**, **`or_forall`**, **`or_ex`**, **`impl_forall_left`**, **`impl_ex_left`**, **`impl_forall_right`**, **`impl_ex_right`**, `Prenex`, `prenex_of_quantFree`
 
 **`Skolem0.lean`** — `updateFunc`, `evalTerm_updateFunc`, `evalTerms_updateFunc`, **`evalFormula_updateFunc`**, `evalTerm_new`, `skolemAxT`, `evalTerm_newT`, **`skolem_conservative`**, **`henkin_conservative`**
+
+**`SkolemN0.lean`** — `envPush`, `allBlock`, `vars`, `not_occurs_vars`, **`eval_allBlock_envPush`**, `evalTerms_lift_shift`, **`evalTerms_vars`**, `skF`, `skF_spec`, `skolemAxN`, **`eval_skolemAxN`**, **`skolem_conservative_n`**, `skolem_conservative_n_zero`
 
 **`HerbrandBlock0.lean`** — `exBlock`, `liftN`, **`subst_exBlock`**, `instB`, `quantFree_instB`, **`derives0_exBlock_of_inst`**, `herbrandDisjBlock`, `derives0_exBlock_of_disj`, `HerbrandCertBlock`, **`derives0_exBlock_of_cert`**, `HerbrandExtractionBlock`, `herbrand_block_iff`, `ex_bloque_igualdad`
 

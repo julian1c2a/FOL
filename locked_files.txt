@@ -28,6 +28,5 @@ cuarentena/README.md
 FOL/Compacity0.lean
 FOL/HerbrandBlock0.lean
 FOL/Prenex0.lean
-FOL.lean
 FOL/PrenexNF0.lean
 FOL/Skolem0.lean
