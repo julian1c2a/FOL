@@ -35,3 +35,4 @@ FOL/HerbrandBlock0.lean
 FOL/SkolemNF0.lean
 FOL.lean
 FOL/SkolemHerbrand0.lean
+FOL/DecEq.lean
