@@ -36,3 +36,5 @@ FOL/Fresh0.lean
 FOL/Enumeration.lean
 FOL/SymClasses.lean
 FOL.lean
+FOL/FOL.lean
+FOL/Derives0.lean
