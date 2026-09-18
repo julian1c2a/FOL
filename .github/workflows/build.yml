@@ -97,6 +97,23 @@ jobs:
         with:
           repository: julian1c2a/ROBINSON_PlusPlus
           path: _rpp
+          fetch-depth: 0
+        continue-on-error: true
+
+      # ⭐ El mismo certificado que en RPP (ADR-073). Aqui el hermano solo alimenta el bloque
+      # [B], pero el principio es el mismo: si el control mira otro repo, hay que decir CUAL.
+      # ⚠️ `|| true`: el checkout lleva `continue-on-error`, asi que puede no existir, y este
+      # paso no debe convertir un alcance REDUCIDO en un fallo.
+      - name: Certificar el par (FOL@sha, RPP@sha)
+        run: |
+          {
+            echo "### Par certificado"
+            echo ""
+            echo "| repo | sha |"
+            echo "|---|---|"
+            echo "| FOL | \`$(git rev-parse HEAD)\` |"
+            echo "| ROBINSON_PlusPlus (\`_rpp\`) | \`$(git -C _rpp rev-parse HEAD 2>/dev/null || echo 'NO CLONADO — alcance REDUCIDO')\` |"
+          } >> "$GITHUB_STEP_SUMMARY"
         continue-on-error: true
 
       - name: Check doc sync
