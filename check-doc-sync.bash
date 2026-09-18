@@ -260,6 +260,16 @@ AI-GUIDE.md
 cuarentena/README.md
 EOF
 
+# ⛔ GUARDA DEL CLON SUPERFICIAL (2026-09-18, ADR-072). En `--depth 1`, `git log -1 -- <f>`
+# devuelve HEAD para TODOS los ficheros ⇒ este control mediría basura y la CI se pondría roja
+# con falsos positivos. Pasó: la primera ejecución en CI. No se calla, se ROMPE diciendo qué
+# hacer. 🔑 *Un control que depende de la historia de git mide OTRA COSA bajo un clon
+# superficial, y la diferencia no se ve en local.*
+if [ "$(git rev-parse --is-shallow-repository 2>/dev/null)" = "true" ]; then
+  echo "  ❌ CLON SUPERFICIAL: \`git log\` no tiene historia, este control no puede medir."
+  echo "      Arreglo: \`fetch-depth: 0\` en el paso de checkout del workflow."
+  FAIL=1
+fi
 E_BAD=0      # documentos que fallan y NO estaban declarados
 E_SALDADA=0  # documentos declarados que ya están bien ⇒ hay que quitarlos de la tabla
 E_DECL=0     # deuda declarada que sigue vigente

@@ -15,6 +15,11 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          # ⚠⚠ Ver ADR-072: [E] compara cada `**Last updated:**` con la fecha del ultimo
+          # commit que toco ese fichero, y en un clon SUPERFICIAL `git log -1 -- <f>` devuelve
+          # HEAD para todo => el control mediría basura.
+          fetch-depth: 0
 
       - name: Install elan (Lean version manager)
         run: |
