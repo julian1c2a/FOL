@@ -2,7 +2,6 @@ FOL/MetaRules.lean
 FOL/Core.lean
 AXIOMS.md
 FOL/Theorems/Eq.lean
-FOL/Derives0.lean
 FOL/Soundness0.lean
 FOL/HenkinLimit0.lean
 FOL/Henkin0.lean

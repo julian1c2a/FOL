@@ -95,7 +95,7 @@ aplica**.
 
 /-- **Deducción natural clásica de FOL⁼, finitaria y sin habitantes‑axioma.**
 Los 21 constructores de `Derives` menos la ω‑regla `gen_rule`. ⇒ **se puede inducir sobre él**. -/
-inductive Derives₀ : List Formula → Formula → Prop where
+inductive Derives₀ {Sym : Type} : List (FormulaG Sym) → FormulaG Sym → Prop where
   | hyp : ∀ Γ f, f ∈ Γ → Derives₀ Γ f
 
   -- Reglas estándar de Deducción Natural

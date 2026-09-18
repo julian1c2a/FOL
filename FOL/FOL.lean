@@ -216,12 +216,16 @@ def replaceAt {Sym : Type} (f : FormulaG Sym) (p : Pos) (newSub : FormulaG Sym) 
 --  2. MEDIDO: RPP lo cita **192** veces y no cita `Derives₀` ni una. Parametrizarlo tocaría esas
 --     192 citas y reabriría el coste de ADR-068 (noConfusion heterogéneo, ausencia de `.inj`)
 --     con 22 constructores, a cambio de nada: la metateoría de FOL⁼ va sobre `Derives₀`.
---  3. `LocalRule` es su premisa y le sigue.
+--  3. ⛔ **RECTIFICADO (ADR-071)**: ADR-069 dijo aquí «`LocalRule` es su premisa y le
+--     sigue», y era FALSO. `LocalRule` es premisa de `rewrite_at`, que está en **`Derives₀`**
+--     también ⇒ sigue a `Derives₀` y **sí** se generifica. `Derives` la usa instanciada en
+--     `String`, que es exactamente lo que necesita.
+--     🔑 *Una premisa compartida sigue al consumidor MÁS GENÉRICO, no al primero que se mire.*
 -- ⇒ la generificación se CORTA aquí, y `derives0_to_derives` (Derives0.lean) queda como
 --    especialización sólo-String. *Cuando un tipo está contaminado, se declara al lado el que sí
 --    sirve* — la misma razón por la que `Derives₀` existe.
 
-inductive LocalRule : Formula → Formula → Prop where
+inductive LocalRule {Sym : Type} : FormulaG Sym → FormulaG Sym → Prop where
   | commuteImpl   : ∀ A B C, LocalRule (.impl A (.impl B C)) (.impl B (.impl A C))
   -- Se pueden añadir más reglas como De Morgan, etc.
 
