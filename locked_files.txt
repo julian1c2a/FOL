@@ -35,3 +35,6 @@ FOL/SymClasses.lean
 FOL.lean
 FOL/FOL.lean
 FOL/Derives0.lean
+FOL/Herbrand0.lean
+FOL/Sequent0.lean
+FOL/HerbrandBlock0.lean
