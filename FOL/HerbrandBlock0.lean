@@ -178,8 +178,12 @@ theorem derives0_exBlock_of_cert {n : Nat} {φ : Formula} {tss : List (List Term
 -- §4 · La mitad ⟹, ENUNCIADA como deuda y con su consumidor delante
 -- ============================================================
 
-/-- ⬜ La extracción para bloques. **No se postula**: se enuncia, y su consumidor va delante.
-La obstrucción está medida en la cabecera del módulo. -/
+/-- 🏁 La extracción para bloques. **PAGADA el 2026-09-18** (ADR-064). Testigo incondicional:
+**`FOL.BlockExtraction0.herbrand_extraction_block`**.
+
+Se sigue **enunciando** como `Prop` porque su consumidor (`herbrand_block_iff`) la toma como
+hipótesis. ⚠️ La cabecera del módulo ya decía «PAGADA» mientras esta línea seguía diciendo ⬜:
+**el mismo fichero se contradecía a sí mismo**, y lo cazó [G.1] (ADR-072). -/
 def HerbrandExtractionBlock : Prop :=
   ∀ (n : Nat) (φ : Formula), QuantFree φ → ([] ⊢₀ exBlock n φ) →
     ∃ tss E, HerbrandCertBlock n φ tss E

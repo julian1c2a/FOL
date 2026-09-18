@@ -37,7 +37,7 @@ Footprint: `[propext, Quot.sound]`. **Ni un `Classical.choice`**, en todo el mó
 | ⟸ | **certificado ⇒ demostración** | 🏁 **DEMOSTRADA aquí**, incondicional y finitaria |
 | ⟹ | **demostración ⇒ certificado** (H3) | ⬜ **DEUDA**, enunciada como `Prop`, no postulada |
 
-⛔ **La ⟹ es H3 —la eliminación de cortes— y NO está.** Aquí se **enuncia** como
+🏁 **La ⟹ es H3 —la eliminación de cortes— y está PAGADA** (ADR-050/052, `Hauptsatz0`). Aquí se **enuncia** como
 `HerbrandExtraction`, y se escribe **el consumidor**: `herbrand_iff`, que con ella convierte
 Herbrand en un `↔`. *Una deuda se enuncia como `Prop`, nunca se postula* — y el consumidor va
 antes, para que la guarda salga de él y no del molde.
@@ -265,11 +265,14 @@ def QuantFree : Formula → Prop
   | .forall _ => False
   | .ex _ => False
 
-/-- ⬜⬜ **LA DEUDA H3 — la extracción del certificado.** Se **enuncia**, no se postula.
+/-- 🏁 **H3 — la extracción del certificado. PAGADA el 2026-09-17** (ADR-050/051/052).
+Testigo incondicional: **`FOL.Hauptsatz0.herbrand_extraction`**, `[propext, Quot.sound]`.
 
-Es la mitad que necesita **eliminación de cortes**: de una derivación de `∃x φ(x)` hay que
-*leer* los testigos, y eso exige que la derivación no use cortes —o transformarla para que no los
-use—. ⛔ **No está hecha.** Ver `doc/PLAN-COMPLETITUD-FINITISTA.md` §5.4.
+Se sigue **enunciando** como `Prop` a propósito —es el idioma del proyecto, y sus consumidores
+(`herbrand_iff`, `herbrandExtraction_of`) la toman como hipótesis—, pero **ya no es una deuda**.
+
+⚠️ Esta cabecera decía «⛔ **No está hecha**» meses después de estarlo, y no lo vio ningún
+control: [E] mira la FECHA del titular, no lo que AFIRMA. De ahí sale [G.1] (ADR-072).
 
 ⚠️ `QuantFree φ` **no es decoración**: para `φ` con cuantificadores el enunciado es **falso**. -/
 def HerbrandExtraction : Prop :=

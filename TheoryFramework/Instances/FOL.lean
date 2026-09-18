@@ -30,8 +30,12 @@ fichero **no entraba en ningún build**.
    2026‑09‑11, porque **es FALSO** — con las meta‑reglas de `FOL/MetaRules.lean`, cualquier
    testigo suyo demuestra `False` sin hipótesis (`cuarentena/Inconsistencia.lean`, compilado,
    footprint `[propext, FOL.MetaRules.raa]`).
-2. ⚠️ `completeness` existe, pero se apoya en **cinco `axiom`** de `FOL/Completeness.lean`
-   introducidos en un commit titulado «100% sorry‑free». Ver `AXIOMS.md`.
+2. ⚠️ ~~`completeness` existe, pero se apoya en **cinco `axiom`** de `FOL/Completeness.lean`~~
+   — ⛔ **DOS COSAS FALSAS, corregidas el 2026‑09‑18 (ADR‑072)**: `FOL/Completeness.lean`
+   **no existe**, y `cuarentena/Completeness.lean` tiene **UN** `axiom`
+   (`henkin_extension_lemma`), no cinco (ADR‑030/031 retiraron los otros cuatro).
+   🏁 Y hoy hay algo mejor: **`FOL.Canonical0.completeness₀`** — completitud de FOL⁼ con
+   **cero axiomas del proyecto** (ADR‑041).
 3. ⛔ Y el fallo de fondo: **`sound` no debía ser un campo de `LogicSystem`** (A‑6). El marco
    estaba **postulando la solidez de toda instancia**.
 
@@ -44,8 +48,20 @@ un testigo de `Γ ⊢ f → Γ ⊨ f`, que es exactamente lo que demuestra `Fals
 meta‑reglas dejan de habitar `Derives` ([ADR‑025](../../cuarentena/README.md) §8), la instancia
 pasará a ser demostrable y **entonces** se declara.
 
-⬜ **`CompleteLogic Formula` tampoco se declara**, pero por otra razón: es **decisión pendiente**
-(D‑3) — hay que adjudicar antes si los cinco axiomas de `Completeness.lean` son aceptables.
+⬜ **`CompleteLogic Formula` tampoco se declara, y la deuda SIGUE VIGENTE** — pero su razón
+de 2026‑09‑12 («adjudicar antes si los cinco axiomas de `Completeness.lean` son aceptables»)
+**ya no es la buena**, porque ni hay cinco axiomas ni existe ese fichero.
+
+⛔ **La razón de verdad, medida el 2026‑09‑18 (ADR‑072)**: `folSystem` declara
+`derives := fun Γ f => Derives Γ f` — el cálculo **CONTAMINADO**—, mientras que
+`completeness₀` se prueba sobre **`Derives₀`**. ⇒ **`completeness₀` NO paga
+`CompleteLogic Formula`**: son dos cálculos distintos.
+🔑 *Una deuda puede sobrevivir a la desaparición de su motivo; comprobar que el motivo sigue
+en pie es parte de comprobar la deuda.*
+
+⭐ Las dos salidas, y hay que elegir con ADR: (a) declarar una segunda instancia
+`LogicSystem Formula` sobre `Derives₀` y colgar de ella `CompleteLogic`; o (b) dejarlo sin
+declarar y decir por qué, que es lo que hace este fichero hoy.
 
 ⇒ En consecuencia, `proves_iff_models` **no se aplica a `FOL⁼`**. Correcto: nunca se le pudo
 aplicar; lo que había era una instancia que lo fingía.

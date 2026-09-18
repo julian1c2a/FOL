@@ -26,7 +26,7 @@ demuestra lo único que valida esa forma: **que de una prueba sin corte salen lo
     LKc                    -- lo mismo MÁS la regla de corte (15)
     lk0_herbrand           -- ⭐⭐ la EXTRACCIÓN: de `LK₀ ⟹ ∃xφ` salen los términos Y las
                            --    instancias de igualdad que la derivación usa
-    CutElim                -- ⬜ LA ÚNICA DEUDA QUE QUEDA: el Hauptsatz
+    CutElim                -- 🏁 PAGADA (ADR-050/052): `Hauptsatz0.cut_elimination`
     herbrandExtraction_of  -- ⭐⭐⭐ CutElim + NDtoLK ⇒ H3
 
 ## ⭐ Por qué el orden es éste, y no al revés
@@ -500,7 +500,12 @@ theorem lk0_to_lkc {G D : List Formula} (h : LK₀ G D) : LKc G D := by
   | eqAx G D g hg _ ih => exact LKc.eqAx G D g hg ih
 
 
-/-- ⬜ LA ÚNICA DEUDA QUE QUEDA: el HAUPTSATZ. -/
+/-- 🏁 **El HAUPTSATZ — PAGADO el 2026-09-17** (ADR-050/051/052). Testigo incondicional:
+**`FOL.Hauptsatz0.cut_elimination`**, vía `hauptsatz : CutAdm`, `[propext, Quot.sound]`.
+
+Se sigue enunciando como `Prop` porque `herbrandExtraction_of` lo toma como hipótesis.
+⚠️ Esta línea decía «LA ÚNICA DEUDA QUE QUEDA» —y otras dos veces más en este fichero— con
+`hauptsatz` ya probado. Lo cazó [G.1] (ADR-072). -/
 def CutElim : Prop := ∀ Γ Δ, LKc Γ Δ → LK₀ Γ Δ
 
 /-- La traducción ND → secuentes con corte. ⭐ Ya NO lleva `E`: las instancias de igualdad

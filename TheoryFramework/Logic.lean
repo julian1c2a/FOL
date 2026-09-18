@@ -53,9 +53,12 @@ class SoundLogic (F : Type) [LogicSystem F] : Prop where
 
 /-- **Completitud (fuerte)** — una PROPIEDAD, no parte de «ser un sistema lógico».
 
-⚠️ `FOL/Completeness.lean` prueba `completeness`, pero **apoyándose en cinco `axiom`**
-(`formula_enum`, `formula_enum_surj`, …) introducidos en un commit titulado
-«100% sorry‑free». Antes de declarar la instancia, leer `AXIOMS.md`. -/
+⛔ **Corrección 2026‑09‑18 (ADR‑072)**: la nota que había aquí —«`FOL/Completeness.lean`
+prueba `completeness` apoyándose en **cinco `axiom`**»— era **falsa por partida doble** y ésta
+era su **tercera** aparición en el repo: ese fichero **no existe**, y `cuarentena/Completeness.lean`
+tiene **UN** `axiom`. 🏁 Hoy la completitud de FOL⁼ es **`FOL.Canonical0.completeness₀`**, con
+**cero axiomas del proyecto** (ADR‑041) — pero sobre **`Derives₀`**, no sobre el `Derives` que
+instancia `folSystem`, así que **no paga esta clase**. Ver `TheoryFramework/Instances/FOL.lean`. -/
 class CompleteLogic (F : Type) [LogicSystem F] : Prop where
   complete : ∀ {Γ : List F} {f : F},
     LogicSystem.semanticEntails Γ f → LogicSystem.derives Γ f

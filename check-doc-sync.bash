@@ -468,6 +468,70 @@ else
   FAIL=1
 fi
 
+# ─── [G] DEUDAS ENUNCIADAS QUE YA ESTÁN PAGADAS ─────────────────────────
+# ⛔ POR QUÉ EXISTE (2026-09-18, auditoría A1, ADR-072): ningún control miraba lo que un
+# docstring de módulo **AFIRMA QUE FALTA**. [E] mira la FECHA del titular, no lo que dice.
+# Medido en el barrido: de 24 líneas con ⬜ en 16 módulos, **19 anunciaban una deuda ya
+# pagada**, más ≥7 afirmaciones falsas sin ⬜. Casos: `Sequent0` titulaba el Hauptsatz como
+# «LA ÚNICA DEUDA QUE QUEDA» **tres veces** con `hauptsatz` ya probado; `Skolem0` decía
+# «⬜ MEDIDO que no existe nada de eso» del prefijo ∀ⁿ con `SkolemN0` entero al lado — y la
+# falsedad iba etiquetada **MEDIDO**.
+#
+# 🔑 Lo que hace esto comprobable A MÁQUINA es que el idioma del proyecto es exacto: *una
+# deuda se ENUNCIA como `Prop`, nunca se postula*, y se paga con `theorem X : ESA_PROP := …`.
+# No hay que leer prosa: se compara un nombre con otro.
+#
+# ⚠️ El testigo tiene que ser INCONDICIONAL. `herbrandExtraction_of (hcut) (htr)` no paga
+# nada: es el CONSUMIDOR. Por eso el patrón exige `: NOMBRE :=` sin binders delante — sin esa
+# restricción el control daría rojo el día que se escribe el consumidor, o sea siempre.
+# ⛔ Y NO entra el aviso «un párrafo ⬜ cita un nombre ya declarado»: medido, acierta 2 de 11
+# (`Skolem0` cita `shiftEnv`/`exBlock` justo para decir «esto SÍ está, lo otro no»).
+# 🔑 *Un control que grita lobo se deja de mirar.*
+echo ""
+echo "════ [G] DEUDAS ENUNCIADAS QUE YA TIENEN TESTIGO — ROJO ════"
+GSRC="FOL TheoryFramework"
+GDEBT="⬜|DEUDA|[Nn]o está hecha|[Nn]o está hecho|NO se paga aquí|[Nn]o existe nada"
+# ⭐ La exóneración: si la MISMA cabecera dice que está pagada, no hay nada que cazar.
+# ⚠️ No debilita el control: [G.1] sólo mira deudas cuyo testigo YA EXISTE, luego escribir
+# «PAGADA» ahí es escribir la verdad. Lo que caza es «dice ABIERTA y está CERRADA».
+GPAID="PAGADA|PAGADO|RESUELTA|RESUELTO|SALDADA|SALDADO|🏁"
+G_FAIL=0
+GPROPS=$(mktemp)
+grep -rnE "^def +[A-Za-z_][A-Za-z0-9_'₀₁₂ⁿ]* *: *Prop" $GSRC --include=*.lean > "$GPROPS" 2>/dev/null
+while IFS= read -r gp; do
+  [ -z "$gp" ] && continue
+  GF=${gp%%:*}; grest=${gp#*:}; GL=${grest%%:*}
+  GNAME=$(printf '%s' "$grest" | sed 's/^[0-9]*://' | awk '{print $2}')
+  [ -z "$GNAME" ] && continue
+  # El docstring INMEDIATAMENTE anterior, delimitado por `-/` y NO por línea en blanco:
+  # ⚠️ medido — un docstring largo lleva blancos DENTRO, y cortando ahí se pierde justo la
+  # línea del ⬜ (le pasaba a `Herbrand0.lean:268`, que quedaba fuera por dos líneas).
+  gi=$((GL-1)); GBLK=""
+  while [ "$gi" -gt 0 ]; do
+    gln=$(sed -n "${gi}p" "$GF")
+    case "$gln" in *"-/"*) [ -n "$GBLK" ] && break ;; esac
+    GBLK="$gln
+$GBLK"; gi=$((gi-1))
+    [ $((GL-gi)) -gt 40 ] && break
+  done
+  printf '%s' "$GBLK" | grep -qE "$GDEBT" || continue
+  printf '%s' "$GBLK" | grep -qE "$GPAID" && continue
+  GWIT=$(grep -rnE "^theorem +[A-Za-z_][A-Za-z0-9_'₀₁₂ⁿ]* *: *$GNAME *:=" $GSRC --include=*.lean 2>/dev/null | head -1)
+  if [ -n "$GWIT" ]; then
+    echo "  ❌ $GF:$GL — \`$GNAME\` se anuncia como DEUDA y YA TIENE TESTIGO INCONDICIONAL:"
+    echo "        $(printf '%s' "$GWIT" | cut -c1-130)"
+    G_FAIL=1
+  fi
+done < "$GPROPS"
+rm -f "$GPROPS"
+if [ "$G_FAIL" = "0" ]; then
+  echo "  ✓ ninguna deuda enunciada tiene ya testigo incondicional"
+else
+  echo "      ⚠️ La deuda está PAGADA y la cabecera sigue anunciándola abierta. Corregir la"
+  echo "      CABECERA, no el teorema. 🔑 Un módulo que dice que algo falta se vuelve a construir."
+  FAIL=1
+fi
+
 # ─── RESUMEN ────────────────────────────────────────────────────────────────
 echo
 if [ "$FAIL" = "0" ]; then
