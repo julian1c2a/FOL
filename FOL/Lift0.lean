@@ -303,14 +303,14 @@ theorem substFormula_lift_var : ∀ (f : Formula) (k : Nat),
   | impl a b iha ihb => intro k; simp only [liftFormula, substFormula, iha, ihb]
   | «forall» a ih =>
       intro k
-      have e : liftTerm 0 (Term.var k) = Term.var (k + 1) := by simp [liftTerm]
+      have e : (liftTerm 0 (Term.var k) : Term) = Term.var (k + 1) := by simp [liftTerm]
       simp only [liftFormula, substFormula, e]
       exact congrArg Formula.forall (ih (k + 1))
   | and a b iha ihb => intro k; simp only [liftFormula, substFormula, iha, ihb]
   | or a b iha ihb => intro k; simp only [liftFormula, substFormula, iha, ihb]
   | ex a ih =>
       intro k
-      have e : liftTerm 0 (Term.var k) = Term.var (k + 1) := by simp [liftTerm]
+      have e : (liftTerm 0 (Term.var k) : Term) = Term.var (k + 1) := by simp [liftTerm]
       simp only [liftFormula, substFormula, e]
       exact congrArg Formula.ex (ih (k + 1))
 

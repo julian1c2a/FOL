@@ -130,6 +130,7 @@ This document complies with all requirements specified in [AI-GUIDE.md](AI-GUIDE
 | `Lindenbaum0.lean` | `FOL.Lindenbaum0` | `FOL.HenkinLimit0` | ✅ Completo — **Lindenbaum sobre `Derives₀`** y ⭐⭐⭐ **`henkin_completion`**: el **ensamblaje de Henkin, cerrado**. ⛔ Aquí vive la no‑finitud del teorema (`if IsConsistent₀ …`, Π⁰₁). Pieza (3) del §6.4 (ADR‑040) |
 | `Eq0.lean` | `FOL.Eq0` | `FOL.Derives0`, `FOL.Theorems.Eq` | ✅ Completo — simetría, transitividad y las dos **congruencias** de la igualdad sobre `Derives₀`. ⭐ Traslado **literal** de `Theorems/Eq.lean`; footprint `[propext, Quot.sound]` (ADR‑041) |
 | `Canonical0.lean` | `FOL.Canonical0` | `FOL.Lindenbaum0`, `FOL.Eq0`, `FOL.Semantics`, `FOL.Soundness0` | ✅ Completo — 🏁🏁🏁 **`completeness₀ : Γ ⊨ f → Γ ⊢₀ f`** y **`derives0_complete_iff`**. Modelo canónico, `truth_lemma`, y ⭐ `eval_pullback_formula` (**net‑0 puro**). Con controles de **no vacuidad** (ADR‑041) |
+| `SymClasses.lean` | `FOL` | `FOL.FOL` | ✅ Completo — las **dos** clases que la metateoría le pide al tipo de símbolos: `FreshSym` (tres propiedades, medidas contra `cst_bound_sym`) y `EnumSym` (una sobreyección `Nat → Sym`, nada más). ⭐ Con la instancia `FreshSym (List Char)` **sin pasar por `String`** (ADR‑069) |
 | `DecEq.lean` | `FOL.DecEq` | `FOL.FOL` | ✅ Completo — `DecidableEq` **de verdad** para `TermG S` y `FormulaG S` (con `[DecidableEq S]`), **net‑0 pura**. ⛔ `deriving` NO aplica a `TermG` (inductivo anidado): la recursión mutua va a mano (ADR‑042); la de `FormulaG` sí se deriva. ADR‑068: `instDecidableEqTerm`/`instDecidableEqFormula` siguen ahí como `abbrev` |
 | `Propositional0.lean` | `FOL.Propositional0` | `FOL.Derives0`, `FOL.DecEq` | ✅ Completo — 🏁 **H1 y H2** de la vía H: `peval`, Kalmár y ⭐⭐ **`derives0_of_ptaut_ctx`**, la completitud proposicional para `Γ` FINITO. `[propext, Quot.sound]`: **ni un `Classical.choice`** (ADR‑042) |
 | `Herbrand0.lean` | `FOL.Herbrand0` | `FOL.Propositional0`, `FOL.Eq0` | ✅ Completo — 🏁 **H4** (mitad ⟸): ⭐⭐ **`derives0_ex_of_cert`**, el certificado de Herbrand, **dato sintáctico y verificable por cómputo** (`ptautCheck` reduce ⇒ `by rfl`). ⬜ H3 **enunciada** como `HerbrandExtraction` con su consumidor `herbrand_iff` (ADR‑043) |
@@ -662,6 +663,8 @@ choose_uniq
 Top-level definitions:
 `TermG`, `FormulaG`, `Term`, `Formula`, `Term.noConfusion`, `Formula.noConfusion`, `Formula.ex.inj`, `neg`, `top`, `lor`, `land`, `iff`, `ex`, `liftTerm`, `liftTerms`, `liftFormula`, `substTerm`, `substTerms`, `substFormula`, `Pos`, `getAt?`, `replaceAt`, `LocalRule`, `Derives`.
 
+⭐ **ADR‑069**: de `neg` a `replaceAt`, **todas genéricas en `Sym`**. ⛔ `LocalRule` y `Derives` se quedan en `String` **a propósito**: `Derives` es el cálculo contaminado (M‑11 / ADR‑029), RPP lo cita **192** veces y no cita `Derives₀` ni una, y la metateoría de FOL⁼ va sobre `Derives₀`.
+
 ### 6.3 Theorems/Impl.lean
 
 Exports from namespace `FOL.Theorems.Impl`:
@@ -837,6 +840,22 @@ cuáles había. *Un módulo sin proyectar se vuelve a construir.*
 ⬜ **Huérfanos medidos**: `Classical.lean`, `Tactics2.lean` y `Theorems/Deduction.lean` **no los
 importa nadie** del árbol. No se retiran aquí — retirar es una decisión con ADR, no una pasada de
 documentación — pero quedan **escritos**.
+
+### 6.16 · `SymClasses.lean` — lo que la metateoría le pide al tipo de SÍMBOLOS
+
+Top-level definitions:
+`FOL.FreshSym` (clase: `shift`, `cst`, `shift_inj`, `cst_inj`, `cst_ne_shift`),
+`FOL.EnumSym` (clase: `enum`, `enum_surj`),
+`FOL.instFreshSymListChar`.
+
+⭐ Las instancias de `String` viven donde viven sus pruebas: `FOL.Fresh0.instFreshSymString`
+(`Fresh0.lean`) y `FOL.Metamath.Enumeration.instEnumSymString` / `instEnumSymListChar`
+(`Enumeration.lean`).
+
+📐 El dividendo, **medido en el árbol** (ADR‑069 §4): en las **dos** clases la instancia de
+`List Char` es estrictamente más barata que la de `String` —`[propext]` frente a
+`[propext, Classical.choice, Quot.sound]` en `FreshSym`, y `[propext, Quot.sound]` frente al mismo
+triple en `EnumSym`—, porque no descompone ninguna cadena.
 
 ### 6.15 · `TheoryFramework/` — la segunda `lean_lib`, y llevaba SIN PROYECTAR desde siempre
 

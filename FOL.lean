@@ -18,6 +18,7 @@ import FOL.HenkinLimit0
 import FOL.Eq0
 import FOL.Lindenbaum0
 import FOL.Canonical0
+import FOL.SymClasses
 import FOL.DecEq
 import FOL.Propositional0
 import FOL.Herbrand0

@@ -70,11 +70,16 @@ theorem ex.inj {a b : Formula} (h : FormulaG.ex a = FormulaG.ex b) : a = b := by
 end Formula
 
 -- Definición de conectores lógicos derivados
-def neg (f : Formula) : Formula := Formula.impl f Formula.bottom
+-- ⭐ PASO 0-a de la migración `String → Sym` (ADR-069): genéricos en el tipo de los símbolos.
+-- ⚠️ El parámetro se llama `Sym` y NO `S`: `S` está ocupado por la TEORÍA (`Formula → Prop`)
+-- en `Henkin0`, `Fresh0`, `HenkinLimit0`, `Lindenbaum0` y `Canonical0`, donde además es el
+-- binder de la `local notation … ⊢₀* …`.
+def neg {Sym : Type} (f : FormulaG Sym) : FormulaG Sym := FormulaG.impl f FormulaG.bottom
 
-def top : Formula := neg Formula.bottom
+def top {Sym : Type} : FormulaG Sym := neg FormulaG.bottom
 
-def iff (f1 f2 : Formula) : Formula := Formula.and (Formula.impl f1 f2) (Formula.impl f2 f1)
+def iff {Sym : Type} (f1 f2 : FormulaG Sym) : FormulaG Sym :=
+  FormulaG.and (FormulaG.impl f1 f2) (FormulaG.impl f2 f1)
 
 -- Notaciones para hacer las fórmulas legibles
 notation "⊥" => Formula.bottom
@@ -96,22 +101,25 @@ instance : Coe String Formula where
 prefix:max "#" => Term.var
 
 -- 1.5. LIFT Y SUSTITUCIÓN (De Bruijn)
+-- ⭐ PASO 0-b de la migración (ADR-069). Esta es la capa que EXPONE el árbol: 32 ficheros de
+-- `FOL/` la tocan, 29 de ellos bloqueados, y 107 de RPP. Si el `rfl` sigue cerrando aquí,
+-- sigue cerrando en todas partes.
 
 -- LIFT (Desplazamiento de índices libres)
 -- Aumenta en 1 las variables libres a partir de la profundidad 'c'
 mutual
-def liftTerm (c : Nat) (t : Term) : Term :=
+def liftTerm {Sym : Type} (c : Nat) (t : TermG Sym) : TermG Sym :=
   match t with
   | .var n => if n < c then .var n else .var (n + 1)
   | .func f ts => .func f (liftTerms c ts)
 
-def liftTerms (c : Nat) (ts : List Term) : List Term :=
+def liftTerms {Sym : Type} (c : Nat) (ts : List (TermG Sym)) : List (TermG Sym) :=
   match ts with
   | [] => []
   | t :: ts' => liftTerm c t :: liftTerms c ts'
 end
 
-def liftFormula (c : Nat) (f : Formula) : Formula :=
+def liftFormula {Sym : Type} (c : Nat) (f : FormulaG Sym) : FormulaG Sym :=
   match f with
   | .bottom => .bottom
   | .atom p ts => .atom p (liftTerms c ts)
@@ -125,7 +133,7 @@ def liftFormula (c : Nat) (f : Formula) : Formula :=
 -- SUSTITUCIÓN
 -- Reemplaza la variable libre 'v' con el término 's'
 mutual
-def substTerm (v : Nat) (s : Term) (t : Term) : Term :=
+def substTerm {Sym : Type} (v : Nat) (s : TermG Sym) (t : TermG Sym) : TermG Sym :=
   match t with
   | .var n =>
       if n = v then s
@@ -133,13 +141,13 @@ def substTerm (v : Nat) (s : Term) (t : Term) : Term :=
       else .var n
   | .func f ts => .func f (substTerms v s ts)
 
-def substTerms (v : Nat) (s : Term) (ts : List Term) : List Term :=
+def substTerms {Sym : Type} (v : Nat) (s : TermG Sym) (ts : List (TermG Sym)) : List (TermG Sym) :=
   match ts with
   | [] => []
   | t :: ts' => substTerm v s t :: substTerms v s ts'
 end
 
-def substFormula (v : Nat) (s : Term) (f : Formula) : Formula :=
+def substFormula {Sym : Type} (v : Nat) (s : TermG Sym) (f : FormulaG Sym) : FormulaG Sym :=
   match f with
   | .bottom => .bottom
   | .atom p ts => .atom p (substTerms v s ts)
@@ -161,7 +169,7 @@ inductive Pos where
   deriving Repr
 
 -- Función para obtener la subfórmula en una posición dada
-def getAt? (f : Formula) : Pos → Option Formula
+def getAt? {Sym : Type} (f : FormulaG Sym) : Pos → Option (FormulaG Sym)
   | .root => some f
   | .left p =>
       match f with
@@ -177,7 +185,7 @@ def getAt? (f : Formula) : Pos → Option Formula
       | _ => none
 
 -- Función para reemplazar una subfórmula en una posición exacta
-def replaceAt (f : Formula) (p : Pos) (newSub : Formula) : Formula :=
+def replaceAt {Sym : Type} (f : FormulaG Sym) (p : Pos) (newSub : FormulaG Sym) : FormulaG Sym :=
   match p with
   | .root => newSub
   | .left p' =>
@@ -200,6 +208,18 @@ def replaceAt (f : Formula) (p : Pos) (newSub : Formula) : Formula :=
 
 -- 3. REGLAS DE TRANSFORMACIÓN
 -- Definimos reglas de reescritura lógica que pueden aplicarse localmente.
+
+-- ⛔⛔ `LocalRule` y `Derives` SE QUEDAN EN `String`, y es una decisión, no un olvido (ADR-069):
+--  1. `Derives` es el cálculo CONTAMINADO: `raa`/`imp_intro` toman funciones de Lean, luego es
+--     sintácticamente completo, y ADR-029 prohibe inducir sobre él de forma PERMANENTE (M-11).
+--     Es la herramienta de RPP, no el sujeto de la metateoría.
+--  2. MEDIDO: RPP lo cita **192** veces y no cita `Derives₀` ni una. Parametrizarlo tocaría esas
+--     192 citas y reabriría el coste de ADR-068 (noConfusion heterogéneo, ausencia de `.inj`)
+--     con 22 constructores, a cambio de nada: la metateoría de FOL⁼ va sobre `Derives₀`.
+--  3. `LocalRule` es su premisa y le sigue.
+-- ⇒ la generificación se CORTA aquí, y `derives0_to_derives` (Derives0.lean) queda como
+--    especialización sólo-String. *Cuando un tipo está contaminado, se declara al lado el que sí
+--    sirve* — la misma razón por la que `Derives₀` existe.
 
 inductive LocalRule : Formula → Formula → Prop where
   | commuteImpl   : ∀ A B C, LocalRule (.impl A (.impl B C)) (.impl B (.impl A C))

@@ -13,6 +13,7 @@ License: MIT
 -- @importance: medium
 
 import FOL.FOL
+import FOL.SymClasses
 
 /-!
 # `FOL.Enumeration` — las fórmulas son ENUMERABLES, y aquí está la sobreyección
@@ -187,6 +188,25 @@ theorem natToString_surj (s : String) : ∃ n, natToString n = s := by
   obtain ⟨n, hn⟩ := natToList_surj (s.toList.map Char.toNat)
   refine ⟨n, ?_⟩
   simp only [natToString, hn, map_ofNat_toNat, String.ofList_toList]
+
+/-- ⭐ `String` satisface `FOL.EnumSym` con lo que esta capa ya tiene probado (ADR-069). -/
+instance : FOL.EnumSym String where
+  enum := natToString
+  enum_surj := natToString_surj
+
+/-- ⭐⭐ Y `List Char` la satisface **más barato**, saliendo de la **capa 1**
+(`natToList_surj`, sobre `List Nat`) más `map_ofNat_toNat`: **no toca `String` en absoluto**.
+⇒ el día que la metateoría se instancie en `List Char`, el `Classical.choice` que hoy entra por
+DESCOMPONER un `String` no entra por esta puerta. Contéjese con la instancia de arriba:
+`#print axioms` las separa. -/
+instance : FOL.EnumSym (List Char) where
+  enum n := (natToList n).map Char.ofNat
+  enum_surj := by
+    intro s
+    obtain ⟨n, hn⟩ := natToList_surj (s.map Char.toNat)
+    refine ⟨n, ?_⟩
+    rw [hn]
+    exact map_ofNat_toNat s
 
 -- ============================================================
 -- Capa 3 · términos

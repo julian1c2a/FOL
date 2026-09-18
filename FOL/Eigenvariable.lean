@@ -68,19 +68,21 @@ namespace FOL.Eigenvariable
 mutual
 /-- Sustituye la **constante** `c` (es decir `Term.func c []`) por `Term.var k`, y levanta las
 variables libres `≥ k` para dejarle sitio. -/
-def absTerm (c : String) (k : Nat) : Term → Term
+def absTerm {Sym : Type} [DecidableEq Sym] (c : Sym) (k : Nat) : TermG Sym → TermG Sym
   | .var n => if n < k then .var n else .var (n + 1)
   | .func s [] => if s = c then .var k else .func s []
   | .func s (t :: ts) => .func s (absTerms c k (t :: ts))
 
-def absTerms (c : String) (k : Nat) : List Term → List Term
+def absTerms {Sym : Type} [DecidableEq Sym] (c : Sym) (k : Nat) :
+    List (TermG Sym) → List (TermG Sym)
   | [] => []
   | t :: ts => absTerm c k t :: absTerms c k ts
 end
 
 /-- ⚠️ Bajo un binder el índice de la variable nueva **sube**: `k` pasa a `k + 1`. Es la única
 diferencia real con `renameFormula`, y de ahí sale todo el coste extra. -/
-def absFormula (c : String) (k : Nat) : Formula → Formula
+def absFormula {Sym : Type} [DecidableEq Sym] (c : Sym) (k : Nat) :
+    FormulaG Sym → FormulaG Sym
   | .bottom => .bottom
   | .atom p ts => .atom p (absTerms c k ts)
   | .eq t u => .eq (absTerm c k t) (absTerm c k u)
@@ -354,16 +356,16 @@ theorem absDerives (c : String) {Γ : List Formula} {φ : Formula} (h : Γ ⊢�
 -- ============================================================
 
 mutual
-def occursTerm (c : String) : Term → Prop
+def occursTerm {Sym : Type} (c : Sym) : TermG Sym → Prop
   | .var _ => False
   | .func s ts => Or (s = c) (occursTerms c ts)
 
-def occursTerms (c : String) : List Term → Prop
+def occursTerms {Sym : Type} (c : Sym) : List (TermG Sym) → Prop
   | [] => False
   | t :: ts => Or (occursTerm c t) (occursTerms c ts)
 end
 
-def occursFormula (c : String) : Formula → Prop
+def occursFormula {Sym : Type} (c : Sym) : FormulaG Sym → Prop
   | .bottom => False
   | .atom _ ts => occursTerms c ts
   | .eq t u => Or (occursTerm c t) (occursTerm c u)

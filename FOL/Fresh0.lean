@@ -12,6 +12,7 @@ License: MIT
 -- @axiom_system: classical
 -- @importance: high
 
+import FOL.SymClasses
 import FOL.Henkin0
 import FOL.Rename
 
@@ -108,6 +109,17 @@ theorem cst_inj : ∀ m n : Nat, cst m = cst n → m = n
   | 0, _ + 1, h => absurd h (cst_zero_ne _)
   | _ + 1, 0, h => absurd h.symm (cst_zero_ne _)
   | m + 1, n + 1, h => congrArg (· + 1) (cst_inj m n ((String.append_right_inj "a").mp h))
+
+/-- ⭐ **La instancia**: `String` satisface `FOL.FreshSym` con los cinco nombres de arriba
+(ADR-069). ⛔ Las seis declaraciones **NO se retiran**: `HenkinLimit0`, `Lindenbaum0` y
+`Canonical0` usan `cst`, `shift` y `shiftTheory` **desnudos** en una docena de sitios, y
+retirarlas movería contenido bajo teoremas ya publicados. La instancia se añade **al lado**. -/
+instance : FOL.FreshSym String where
+  shift := shift
+  cst := cst
+  shift_inj := shift_inj
+  cst_inj := cst_inj
+  cst_ne_shift := cst_ne_shift
 
 -- ============================================================
 -- §3 · Ninguna `cst n` aparece en nada desplazado

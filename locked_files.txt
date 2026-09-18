@@ -1,14 +1,9 @@
 FOL/MetaRules.lean
 FOL/Core.lean
-FOL/Enumeration.lean
 AXIOMS.md
 FOL/Theorems/Eq.lean
 FOL/Derives0.lean
 FOL/Soundness0.lean
-FOL/Rename.lean
-FOL/Eigenvariable.lean
-FOL/Lift0.lean
-FOL/Fresh0.lean
 FOL/HenkinLimit0.lean
 FOL/Henkin0.lean
 FOL/Lindenbaum0.lean
@@ -33,6 +28,5 @@ FOL/Craig0.lean
 FOL/BlockExtraction0.lean
 FOL/HerbrandBlock0.lean
 FOL/SkolemNF0.lean
-FOL.lean
 FOL/SkolemHerbrand0.lean
 FOL/DecEq.lean

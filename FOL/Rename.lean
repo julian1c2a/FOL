@@ -97,18 +97,18 @@ namespace FOL.Rename
 
 mutual
 /-- Renombra los símbolos de FUNCIÓN de un término. Las variables no se tocan. -/
-def renameTerm (ρ : String → String) : Term → Term
+def renameTerm {Sym : Type} (ρ : Sym → Sym) : TermG Sym → TermG Sym
   | .var n => .var n
   | .func s ts => .func (ρ s) (renameTerms ρ ts)
 
-def renameTerms (ρ : String → String) : List Term → List Term
+def renameTerms {Sym : Type} (ρ : Sym → Sym) : List (TermG Sym) → List (TermG Sym)
   | [] => []
   | t :: ts => renameTerm ρ t :: renameTerms ρ ts
 end
 
 /-- Renombra los símbolos de función de una fórmula. ⚠️ El símbolo de RELACIÓN de un `atom`
 **no** se toca: es otro espacio de nombres. -/
-def renameFormula (ρ : String → String) : Formula → Formula
+def renameFormula {Sym : Type} (ρ : Sym → Sym) : FormulaG Sym → FormulaG Sym
   | .bottom => .bottom
   | .atom p ts => .atom p (renameTerms ρ ts)
   | .eq t u => .eq (renameTerm ρ t) (renameTerm ρ u)
