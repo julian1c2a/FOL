@@ -7,21 +7,67 @@
 -- 1. SINTAXIS: Términos y Fórmulas
 -- Usamos índices de De Bruijn para las variables (Nat) para evitar colisiones de nombres.
 
-inductive Term where
-  | var  : Nat → Term
-  | func : String → List Term → Term
+/-!
+### El tipo de los SÍMBOLOS es un PARÁMETRO (ADR-068, paso 4 del plan)
+
+`TermG S` / `FormulaG S` son el núcleo genérico; `Term`/`Formula` son los `abbrev` de hoy,
+`S := String`. ⚠️ El árbol entero sigue diciendo `Term`/`Formula` y **no cambió ni una
+línea**: la migración cuesta TRES ficheros (éste, `FOL/DecEq.lean` y
+`ROBINSON_PlusPlus/Meta/HilbertSeq.lean`) y los 147 footprints son idénticos.
+
+⭐ Por qué el parámetro y no `abbrev Sym := List Char` (plan §7.5): `List Char` es
+numerable y sirve para Gödel, pero si Löwenheim-Skolem **ascendente** entra en la hoja de
+ruta haría falta migrar **otra vez**. El parámetro sirve a los dos.
+
+⛔ Lo que esto **todavía no hace**: nada del árbol es genérico aún. Instanciar `S` en otro
+tipo exige antes enhebrar dos clases — `FreshSym` (lo que `Fresh0` fabrica) y `EnumSym`
+(la sobreyección `Nat → S` que `Enumeration` usa y de la que cuelgan Lindenbaum, Henkin y
+`completeness₀`). Medidas en `sondeos/SymbolParamCoste.lean`.
+-/
+inductive TermG (S : Type) where
+  | var  : Nat → TermG S
+  | func : S → List (TermG S) → TermG S
   deriving Repr, BEq
 
-inductive Formula where
-  | bottom : Formula
-  | atom   : String → List Term → Formula
-  | eq     : Term → Term → Formula
-  | impl   : Formula → Formula → Formula
-  | forall : Formula → Formula
-  | and    : Formula → Formula → Formula
-  | or     : Formula → Formula → Formula
-  | ex     : Formula → Formula
+inductive FormulaG (S : Type) where
+  | bottom : FormulaG S
+  | atom   : S → List (TermG S) → FormulaG S
+  | eq     : TermG S → TermG S → FormulaG S
+  | impl   : FormulaG S → FormulaG S → FormulaG S
+  | forall : FormulaG S → FormulaG S
+  | and    : FormulaG S → FormulaG S → FormulaG S
+  | or     : FormulaG S → FormulaG S → FormulaG S
+  | ex     : FormulaG S → FormulaG S
   deriving Repr, BEq
+
+abbrev Term := TermG String
+abbrev Formula := FormulaG String
+
+namespace Term
+  export TermG (var func var.injEq func.injEq rec recOn casesOn)
+
+/-- ⚠️ **El ÚNICO sitio donde parametrizar cuesta algo.** Para un inductivo CON parámetro
+Lean genera el `noConfusion` **heterogéneo** (`S = S' → t ≈ t'`), no el homogéneo. Este shim
+recupera la forma de siempre, y con él los 13 sitios de llamada del árbol no cambian. -/
+theorem noConfusion {P : Prop} {t t' : Term} (h : t = t') :
+    TermG.noConfusionType P t t' :=
+  TermG.noConfusion (S := String) (S' := String) rfl (heq_of_eq h)
+end Term
+
+namespace Formula
+  export FormulaG (bottom atom eq impl «forall» and or ex
+    atom.injEq eq.injEq impl.injEq «forall».injEq and.injEq or.injEq ex.injEq
+    rec recOn casesOn)
+
+/-- ⚠️ El mismo shim que en `Term`. -/
+theorem noConfusion {P : Prop} {t t' : Formula} (h : t = t') :
+    FormulaG.noConfusionType P t t' :=
+  FormulaG.noConfusion (S := String) (S' := String) rfl (heq_of_eq h)
+
+/-- ⚠️ Y la otra: para un inductivo con parámetro Lean genera `.injEq` pero **no** `.inj`. -/
+theorem ex.inj {a b : Formula} (h : FormulaG.ex a = FormulaG.ex b) : a = b := by
+  rw [FormulaG.ex.injEq] at h; exact h
+end Formula
 
 -- Definición de conectores lógicos derivados
 def neg (f : Formula) : Formula := Formula.impl f Formula.bottom

@@ -16,7 +16,6 @@ FOL/Eq0.lean
 FOL/Canonical0.lean
 FOL/Herbrand0.lean
 FOL/Propositional0.lean
-FOL/DecEq.lean
 FOL/Derives1.lean
 FOL/Derives2.lean
 FOL/NDtoLK0.lean

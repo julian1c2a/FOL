@@ -130,7 +130,7 @@ This document complies with all requirements specified in [AI-GUIDE.md](AI-GUIDE
 | `Lindenbaum0.lean` | `FOL.Lindenbaum0` | `FOL.HenkinLimit0` | ✅ Completo — **Lindenbaum sobre `Derives₀`** y ⭐⭐⭐ **`henkin_completion`**: el **ensamblaje de Henkin, cerrado**. ⛔ Aquí vive la no‑finitud del teorema (`if IsConsistent₀ …`, Π⁰₁). Pieza (3) del §6.4 (ADR‑040) |
 | `Eq0.lean` | `FOL.Eq0` | `FOL.Derives0`, `FOL.Theorems.Eq` | ✅ Completo — simetría, transitividad y las dos **congruencias** de la igualdad sobre `Derives₀`. ⭐ Traslado **literal** de `Theorems/Eq.lean`; footprint `[propext, Quot.sound]` (ADR‑041) |
 | `Canonical0.lean` | `FOL.Canonical0` | `FOL.Lindenbaum0`, `FOL.Eq0`, `FOL.Semantics`, `FOL.Soundness0` | ✅ Completo — 🏁🏁🏁 **`completeness₀ : Γ ⊨ f → Γ ⊢₀ f`** y **`derives0_complete_iff`**. Modelo canónico, `truth_lemma`, y ⭐ `eval_pullback_formula` (**net‑0 puro**). Con controles de **no vacuidad** (ADR‑041) |
-| `DecEq.lean` | `FOL.DecEq` | `FOL.FOL` | ✅ Completo — `DecidableEq` **de verdad** para `Term` y `Formula`, **net‑0 pura**. ⛔ `deriving` NO aplica a `Term` (inductivo anidado): la recursión mutua va a mano (ADR‑042) |
+| `DecEq.lean` | `FOL.DecEq` | `FOL.FOL` | ✅ Completo — `DecidableEq` **de verdad** para `TermG S` y `FormulaG S` (con `[DecidableEq S]`), **net‑0 pura**. ⛔ `deriving` NO aplica a `TermG` (inductivo anidado): la recursión mutua va a mano (ADR‑042); la de `FormulaG` sí se deriva. ADR‑068: `instDecidableEqTerm`/`instDecidableEqFormula` siguen ahí como `abbrev` |
 | `Propositional0.lean` | `FOL.Propositional0` | `FOL.Derives0`, `FOL.DecEq` | ✅ Completo — 🏁 **H1 y H2** de la vía H: `peval`, Kalmár y ⭐⭐ **`derives0_of_ptaut_ctx`**, la completitud proposicional para `Γ` FINITO. `[propext, Quot.sound]`: **ni un `Classical.choice`** (ADR‑042) |
 | `Herbrand0.lean` | `FOL.Herbrand0` | `FOL.Propositional0`, `FOL.Eq0` | ✅ Completo — 🏁 **H4** (mitad ⟸): ⭐⭐ **`derives0_ex_of_cert`**, el certificado de Herbrand, **dato sintáctico y verificable por cómputo** (`ptautCheck` reduce ⇒ `by rfl`). ⬜ H3 **enunciada** como `HerbrandExtraction` con su consumidor `herbrand_iff` (ADR‑043) |
 | `Derives1.lean` | *(raíz, como `Derives₀`)* · `FOL.Derives1` | `FOL.Lift0` | ✅ Completo — 🏁 **primera pieza de H3**: ⭐⭐ **`rewrite_at` es ADMISIBLE**. `Derives₁` = los 20 ctors de `Derives₀` **menos `rewrite_at`**, y `derives0_iff_derives1`. ⭐ `Derives₁.rec` **sin ningún axioma** (ADR‑044) |
@@ -259,8 +259,13 @@ Provides the core syntax, substitution operations using De Bruijn indices, AST n
 
 **Definitions**:
 
-- `Term`: Inductive type for terms (variables via `#n` and functions).
-- `Formula`: Inductive type for formulas (`⊥`, `atom`, `⇒`, `∀.`).
+- `TermG S`, `FormulaG S`: ⭐ el núcleo, **paramétrico en el tipo de los SÍMBOLOS**
+  (ADR-068). Los constructores y los `injEq` se reexportan a `Term`/`Formula` por
+  `export`; `Term.noConfusion`, `Formula.noConfusion` y `Formula.ex.inj` son **shims**,
+  porque para un inductivo CON parámetro Lean genera el `noConfusion` heterogéneo y no
+  genera `.inj`.
+- `Term`: `abbrev Term := TermG String` — terms (variables via `#n` and functions).
+- `Formula`: `abbrev Formula := FormulaG String` — formulas (`⊥`, `atom`, `⇒`, `∀.`).
 - `neg`, `top`, `lor`, `land`, `iff`, `ex`: Derived logical connectives.
 - `liftTerm`, `liftTerms`, `liftFormula`: De Bruijn lifting.
 - `substTerm`, `substTerms`, `substFormula`: Substitution of De Bruijn indices.
@@ -655,7 +660,7 @@ choose_uniq
 ### 6.2 FOL.lean
 
 Top-level definitions:
-`Term`, `Formula`, `neg`, `top`, `lor`, `land`, `iff`, `ex`, `liftTerm`, `liftTerms`, `liftFormula`, `substTerm`, `substTerms`, `substFormula`, `Pos`, `getAt?`, `replaceAt`, `LocalRule`, `Derives`.
+`TermG`, `FormulaG`, `Term`, `Formula`, `Term.noConfusion`, `Formula.noConfusion`, `Formula.ex.inj`, `neg`, `top`, `lor`, `land`, `iff`, `ex`, `liftTerm`, `liftTerms`, `liftFormula`, `substTerm`, `substTerms`, `substFormula`, `Pos`, `getAt?`, `replaceAt`, `LocalRule`, `Derives`.
 
 ### 6.3 Theorems/Impl.lean
 

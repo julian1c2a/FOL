@@ -65,9 +65,9 @@ ganaría nada y se perdería la trazabilidad.
 namespace FOL.DecEq
 
 mutual
-def decEqTerm : (a b : Term) → Decidable (a = b)
+def decEqTerm {S : Type} [DecidableEq S] : (a b : TermG S) → Decidable (a = b)
   | .var n, .var m =>
-      if h : n = m then isTrue (by rw [h]) else isFalse (fun he => h (Term.var.inj he))
+      if h : n = m then isTrue (by rw [h]) else isFalse (fun he => h (by injection he))
   | .var _, .func _ _ => isFalse (by intro h; cases h)
   | .func _ _, .var _ => isFalse (by intro h; cases h)
   | .func s ts, .func u us =>
@@ -77,7 +77,7 @@ def decEqTerm : (a b : Term) → Decidable (a = b)
         | isFalse ht => isFalse (fun h => ht (by cases h; rfl))
       else isFalse (fun h => hs (by cases h; rfl))
 
-def decEqTerms : (a b : List Term) → Decidable (a = b)
+def decEqTerms {S : Type} [DecidableEq S] : (a b : List (TermG S)) → Decidable (a = b)
   | [], [] => isTrue rfl
   | [], _ :: _ => isFalse (by intro h; cases h)
   | _ :: _, [] => isFalse (by intro h; cases h)
@@ -90,12 +90,16 @@ def decEqTerms : (a b : List Term) → Decidable (a = b)
       | isFalse h1 => isFalse (fun h => h1 (by cases h; rfl))
 end
 
-instance instDecidableEqTerm : DecidableEq Term := decEqTerm
+instance instDecidableEqTermG {S : Type} [DecidableEq S] : DecidableEq (TermG S) := decEqTerm
+
+abbrev instDecidableEqTerm : DecidableEq Term := instDecidableEqTermG
 
 end FOL.DecEq
 
--- ⭐ Ésta SÍ se deriva, una vez existe la de `Term`.
-deriving instance DecidableEq for Formula
+-- ⭐ Ésta SÍ se deriva, una vez existe la de `TermG`.
+deriving instance DecidableEq for FormulaG
+
+abbrev instDecidableEqFormula : DecidableEq Formula := instDecidableEqFormulaG
 
 #print axioms FOL.DecEq.instDecidableEqTerm
 #print axioms instDecidableEqFormula
