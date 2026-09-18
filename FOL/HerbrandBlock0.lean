@@ -44,7 +44,20 @@ Todo depende de poder sustituir **a través** del bloque:
 `n + 0` **sí** reduce y el consumidor no paga nada. *El orden de una suma en un enunciado no es
 cosmético: decide si el consumidor reescribe o no.* Es el primo del §14 de las trampas de notación.
 
-## ⬜ La mitad que NO se paga aquí: ⟹, y la obstrucción está MEDIDA
+## 🏁 La mitad ⟹ — **PAGADA el 2026‑09‑18** en `FOL.BlockExtraction0` (ADR‑064)
+
+⭐⭐ Y la obstrucción de abajo era correcta en el QUÉ y falsa en el CUÁNTO: sí había que llevar
+la tupla parcial, pero **`instB` YA la lleva** — `instB n us φ` con `us` más corta que `n`
+devuelve el bloque PENDIENTE (`instB 2 [t] φ = exBlock 1 (φ[1 := t])`). No hubo que definir
+ninguna función nueva.
+🔑 *Antes de construir el dato que falta, mirar si una función que ya existe lo devuelve en su
+caso degenerado.*
+
+✅ **Y la estimación de abajo ACERTÓ**: ~350–450 l. estimadas, **≈400 medidas**. Es la primera de
+esta serie que cae dentro de su propio rango — lo que se abarató fue la PIEZA conceptual (no
+hubo `peelB` que escribir), no el total.
+
+### Lo que se midió en su momento, y se conserva porque acertó en la forma
 
 `HerbrandExtractionBlock` se **enuncia** como `Prop` con su consumidor (`herbrand_block_iff`), y
 **no se postula**. ⛔ No sale de `herbrand` (n = 1) por composición: el cuerpo de un bloque de

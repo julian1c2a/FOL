@@ -24,7 +24,6 @@ FOL/Sequent0.lean
 FOL/Hauptsatz0.lean
 cuarentena/README.md
 FOL/Compacity0.lean
-FOL/HerbrandBlock0.lean
 FOL/Prenex0.lean
 FOL/PrenexNF0.lean
 FOL/Skolem0.lean
@@ -32,5 +31,4 @@ FOL/SkolemN0.lean
 FOL/Finitary0.lean
 FOL/SequentSound0.lean
 FOL/SkolemNF0.lean
-FOL.lean
 FOL/Craig0.lean
