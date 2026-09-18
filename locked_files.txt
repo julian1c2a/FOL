@@ -32,3 +32,5 @@ FOL/SkolemN0.lean
 FOL/Finitary0.lean
 FOL/SequentSound0.lean
 FOL/SkolemNF0.lean
+FOL.lean
+FOL/Craig0.lean
