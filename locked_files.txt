@@ -34,3 +34,4 @@ FOL/Craig0.lean
 FOL.lean
 FOL/BlockExtraction0.lean
 FOL/HerbrandBlock0.lean
+FOL/SkolemNF0.lean
