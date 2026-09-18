@@ -1,7 +1,18 @@
 # Changelog
 
-**Last updated:** 2026-05-16
+**Last updated:** 2026-09-18
 **Author**: Julián Calderón Almendros
+
+> ⛔⛔ **ESTE FICHERO ESTUVO CONGELADO EN 2026-05-16 CON 115 COMMITS DETRÁS**, y no fue un
+> descuido inocuo: el control `[E]` de `check-doc-sync.bash` usaba **la entrada más reciente de
+> este CHANGELOG como referencia** para juzgar si los titulares de los demás documentos se habían
+> quedado atrás. Con la referencia congelada, ningún documento podía estar «por detrás» de ella
+> ⇒ **el control aprobaba siempre** (ADR-072).
+> 🔑 *Un diario que nadie escribe no es sólo un diario vacío: es una referencia falsa para
+> todo lo que se apoye en él.*
+> ⚠️ Las entradas de abajo, del 2026-09-11 en adelante, se han reconstruido desde `git log` y
+> desde las ADR de `../ROBINSON_PlusPlus/DECISIONS.md`. Son un **ÍNDICE de lo que aterrizó**, no
+> un inventario exhaustivo de los 115 commits; la fuente de verdad de cada pieza es su ADR.
 
 All notable changes to this project will be documented in this file.
 
@@ -9,6 +20,81 @@ Format based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+
+### Added (2026-09-18) — el tipo de los SÍMBOLOS pasa a ser un PARÁMETRO
+
+- **ADR-068** — `TermG (S : Type)` / `FormulaG (S : Type)` en `FOL/FOL.lean`, con
+  `abbrev Term := TermG String` y `abbrev Formula := FormulaG String`, más los `export` de
+  constructores y `injEq` y **tres shims** (`Term.noConfusion`, `Formula.noConfusion`,
+  `Formula.ex.inj`): para un inductivo CON parámetro, Lean 4.31 genera el `noConfusion`
+  **heterogéneo** y **no** genera `Ctor.inj`. Coste medido: **3 ficheros**, 147 footprints
+  idénticos.
+- **ADR-069** — la **capa de operaciones** genérica en `Sym`: `neg`/`top`/`iff`, `lift*`,
+  `subst*`, `getAt?`/`replaceAt`, más `occurs*`/`abs*` (`Eigenvariable`) y `rename*` (`Rename`).
+  Nuevo módulo **`FOL/SymClasses.lean`** con las clases `FreshSym` y `EnumSym` y la instancia
+  `FreshSym (List Char)`; las de `String` viven donde viven sus pruebas.
+  ⛔ `Derives` y `LocalRule` se dejan en `String` — decisión, no olvido.
+- **ADR-071** — `Derives₀` y `LocalRule` genéricos, con el parámetro **implícito** para que la
+  notación `⊢₀` sobreviva. Dos firmas, cero errores en los 22 ficheros consumidores.
+  ⛔ Rectifica ADR-069: `LocalRule` sigue a `Derives₀`, no a `Derives`.
+- **ADR-072** — el control `[E]` de `check-doc-sync.bash`, **rearmado**: la referencia deja de ser
+  este fichero y pasa a calcularse por documento (`git log -1` del propio documento), con tabla
+  de deuda declarada y rotura en los dos sentidos.
+
+### Added (2026-09-17) — el HAUPTSATZ, el catálogo clásico y la forma normal de Skolem
+
+- **ADR-050/051/052** — `FOL/Hauptsatz0.lean`: **`hauptsatz : CutAdm`**, `cut_elimination`,
+  `herbrand_extraction` y **`herbrand`** ya incondicional. `[propext, Quot.sound]`.
+- **ADR-053…056** — el catálogo clásico: `derives0_consistent_fin` (consistencia **sin**
+  `Classical.choice`), `compactness₀`, `loewenheim_skolem_down`, `derives0_exBlock_of_cert`,
+  `henkin_conservative`.
+- **ADR-057…060** — la capa **prenexa** (`Prenex0`, `PrenexNF0`) y **Skolem** (`Skolem0`,
+  `SkolemN0`), incluido el axioma bajo un prefijo `∀ⁿ`.
+- **ADR-061** — FOL adopta `check-doc-sync.bash`; en su primera ejecución encuentra nueve cosas.
+- **CI** — FOL vuelve a tener CI: no la tenía desde mayo, y las dos veces que había corrido
+  **falló en 0 s**. El gate de `sorry` pasa a ser **bloqueante**.
+
+### Added (2026-09-16) — COMPLETITUD, y la vía H
+
+- **ADR-039/040/041** — `FOL/Canonical0.lean`: **`completeness₀ : Γ ⊨ f → Γ ⊢₀ f`** y
+  `derives0_complete_iff`, con **cero axiomas del proyecto**. La no-finitud queda en **una línea**
+  Π⁰₁ (el `if IsConsistent₀` de `LindenbaumStep`): es el **WKL**.
+- **ADR-042…049** — la vía H: `Derives₁`, `Derives₂`, el certificado de Herbrand,
+  `LK₀`/`LKc`, `ndToLK`, y la solidez del cálculo de secuentes.
+
+### Added (2026-09-14) — `Derives₀`, y con él una metateoría que significa algo
+
+- **ADR-033** — **`Derives₀`**: los 21 constructores **sin la ω-regla ni los cuatro
+  habitantes-axioma** ⇒ se puede inducir sobre él (M-11 no aplica).
+- **ADR-034…037** — `derives0_soundness` (el repo tiene por fin un cálculo de FOL⁼ **sólido**),
+  el renombrado y su recíproca, el paso de **eigenvariable**, y `henkin_step_consistent`.
+
+### Added (2026-09-13) — la Completitud, de cinco axiomas a uno
+
+- **ADR-030** — la enumerabilidad de `Formula` deja de ser un postulado (`FOL/Enumeration.lean`).
+- **ADR-031** — las dos congruencias de la igualdad, demostradas.
+- **ADR-032** — `henkin_extension_lemma` **medido**: sale, y **por eso no se paga**; queda
+  protegido por `check-axioms.bash`, que rompe **también si el contador baja a 0**.
+
+### Changed (2026-09-12) — la cuarentena, los axiomas y la doctrina
+
+- FOL pasa de **13 a 4** `axiom`, y los cuatro son los que el kernel obliga.
+- Se retiran tres librerías, entra `TheoryFramework`, y `git-lock` deja de proteger lo que no era.
+
+### Removed (2026-09-11) — ⛔ `soundness` era FALSO
+
+- `soundness : Γ ⊢ f → Γ ⊨ f` **no es demostrable porque no es verdad**, y junto con `raa`
+  demostraba **`False` sin hipótesis**. Evidencia compilada en `cuarentena/Inconsistencia.lean`.
+  De aquí sale **M-11**: *un `axiom` que HABITA un inductivo prohibe demostrar nada sobre él por
+  INDUCCIÓN*. ⚠️ Y `gen` **no** es la ω-regla — su docstring lo decía y era falso.
+
+### Changed (2026-05-28 … 2026-07-12) — lo que hubo entre medias
+
+- `subst_lift_cancel_formula` era un **`axiom` FALSO**; pasa a teorema en su forma restringida
+  verdadera (2026-06-23), y la corrección se propaga a `FOLPure`/`FOL_poli` en septiembre.
+- Conmutaciones De Bruijn en `Theorems/Eq.lean`, meta-reglas ω en `MetaRules.lean`, `dne`,
+  semantica polimórfica, modelo cociente para FOL⁼.
+- Toolchain a **Lean v4.31.0** (2026-07-04) y plantilla unificada de gobernanza (2026-07-12).
 
 ### Added (2026-05-16)
 

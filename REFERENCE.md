@@ -20,9 +20,15 @@
 > **Fuentes:** `cuarentena/README.md` · `AXIOMS.md` ·
 > `../ROBINSON_PlusPlus/doc/AUDITORIA-FOL-2026-09-12.md`
 
-**Last updated:** 2026-05-08 18:25
+**Last updated:** 2026-09-18 — ⚠️ esta marca decía **2026-05-08** y la versión de Lean
+**v4.28.0**, las dos falsas; lo destapó el control `[E]` al rearmarse (ADR-072). Cambios reales
+desde entonces, sólo los de hoy: **ADR-068** (el tipo de los símbolos es un parámetro — `TermG`,
+`FormulaG`, los `abbrev` y los tres shims), **ADR-069** (la capa de operaciones y
+`FOL/SymClasses.lean`) y **ADR-071** (`Derives₀` y `LocalRule` genéricos).
+⛔ El CUERPO de este documento **no se ha re-auditado entero**: lo anterior al 2026-09-12 sigue
+bajo el aviso de estado de arriba.
 **Author**: Julián Calderón Almendros
-**Lean version**: v4.28.0
+**Lean version**: v4.31.0
 
 ---
 

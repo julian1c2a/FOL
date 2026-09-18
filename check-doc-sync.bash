@@ -227,38 +227,80 @@ else
 fi
 
 echo ""
-echo "════ [E] FRESCURA DEL TITULAR — AVISO, requiere juicio ════"
-# ⭐ Añadido el 2026-09-11 por la auditoría (hallazgo F-2). El control [A] comprueba las
-# CIFRAS del banner y [D] que exista una marca de tiempo, pero NADIE comprobaba la FRASE.
-# Resultado medido: SEIS documentos autoritativos compartían el mismo titular del 2026-09-09
-# —«C3: 5 de 7 reflectores · D3 a DOS obligaciones»— con las cifras de abajo ya al día.
-# C3 se cerró el 10e y D3 se probó el 10g. El titular estaba duplicado ⇒ el error se multiplicó
-# por seis, y ningún control lo veía porque no es un número.
+echo "════ [E] FRESCURA DEL TITULAR — ROJO (objetivo: lo decide git) ════"
+# ⭐ Añadido el 2026-09-11 por la auditoría (hallazgo F-2): [A] comprueba las CIFRAS del banner
+# y [D] que EXISTA una marca de tiempo, pero nadie comprobaba que la marca fuera CIERTA.
 #
-# La heurística: la fecha del TITULAR de cada doc autoritativo no debería ser anterior a la
-# entrada más reciente del CHANGELOG. Si lo es, o el titular se quedó atrás o falta marcarlo.
-NEWEST=$(grep -ohE "20[0-9]{2}[-‑][0-9]{2}[-‑][0-9]{2}" CHANGELOG.md 2>/dev/null | sed "s/‑/-/g" | sort -r | head -1)
-E_HITS=0
-if [ -n "$NEWEST" ]; then
-  for d in $DOCS; do
-    [ -e "$d" ] || continue
-    HEAD_DATE=$(head -12 "$d" | grep -ohE "20[0-9]{2}[-‑][0-9]{2}[-‑][0-9]{2}" | sed "s/‑/-/g" | sort -r | head -1)
-    [ -z "$HEAD_DATE" ] && continue
-    if [ "$HEAD_DATE" \< "$NEWEST" ]; then
-      echo "  ⚠️  $d: titular fechado $HEAD_DATE, y el CHANGELOG llega a $NEWEST"
-      echo "      $(head -12 "$d" | grep -m1 -E "ESTADO REAL|^\*\*Estado |^> \*\*Estado " | cut -c1-120)"
-      E_HITS=$((E_HITS+1))
-    fi
-  done
-  if [ "$E_HITS" = "0" ]; then
-    echo "  ✓ ningún titular se ha quedado atrás del CHANGELOG ($NEWEST)"
-  else
-    echo "  ⚠️  $E_HITS titular(es) por detrás del CHANGELOG."
-    echo "      ⚠️ El titular es una FRASE: [A] no lo ve. Comprobar que lo que AFIRMA sigue"
-    echo "      siendo cierto, no sólo que sus cifras cuadren."
+# ⛔⛔ REARMADO EL 2026-09-18 (auditoría A3, ADR-072). Estaba desarmado por TRES vías y daba
+# verde sin comprobar nada:
+#   1. La referencia era la entrada más reciente de CHANGELOG.md — un documento que un HUMANO
+#      tiene que actualizar. Congelado en 2026-05-16 con **111 commits** detrás, `NEWEST` se
+#      quedaba viejo y NINGÚN doc podía estar «por detrás»: aprobaba siempre.
+#   2. `E_HITS` no tocaba `FAIL` en ninguna rama, ni en la de «control VACÍO».
+#   3. Leía la fecha con `head -12`, y `**Last updated:**` vive en la línea 22-38 ⇒ medía la
+#      fecha de OTRA cosa (el aviso histórico de la cabecera).
+#
+# 🔑 *Un control cuya REFERENCIA es un documento que alguien tiene que mantener se pudre con
+# él. La referencia tiene que CALCULARSE.* Aquí se calcula, y por documento: la fecha del
+# ÚLTIMO COMMIT QUE TOCÓ ESE DOCUMENTO, que no se puede quedar vieja.
+#
+# ⚠️ LA TABLA DE DEUDA, y por qué existe: al rearmarlo, la medición dio 21 defectos en 24
+# documentos — deuda ANTERIOR, acumulada mientras el control estaba ciego. Ponerlo en rojo de
+# golpe habría dejado el repo en rojo indefinidamente; callarla habría sido volver al verde
+# falso. Se declara, como en `check-warnings.bash` (ADR-065), y el control **ROMPE EN LOS DOS
+# SENTIDOS**: si un doc NO declarado falla, rojo; y si un doc declarado ya está bien, también
+# rojo — *la deuda se saldó, quítala de la tabla*. Así la cifra sólo puede BAJAR.
+read -r -d '' E_DEUDA <<'EOF'
+DEPENDENCIES.md
+DECISIONS.md
+README.md
+AXIOMS.md
+NEXT-STEPS.md
+AI-GUIDE.md
+cuarentena/README.md
+EOF
+
+E_BAD=0      # documentos que fallan y NO estaban declarados
+E_SALDADA=0  # documentos declarados que ya están bien ⇒ hay que quitarlos de la tabla
+E_DECL=0     # deuda declarada que sigue vigente
+for d in $DOCS; do
+  [ -e "$d" ] || continue
+  GIT_DATE=$(git log -1 --format=%ad --date=short -- "$d" 2>/dev/null)
+  LU=$(grep -m1 -iE "^\*\*Last updated" "$d" 2>/dev/null \
+       | grep -ohE "20[0-9]{2}[-‑][0-9]{2}[-‑][0-9]{2}" | sed "s/‑/-/g" | head -1)
+  EN_TABLA=0
+  while IFS= read -r t; do
+    [ -n "$t" ] || continue
+    [ "$t" = "$d" ] && EN_TABLA=1
+  done <<< "$E_DEUDA"
+
+  ESTADO="ok"
+  MOTIVO=""
+  if [ -z "$LU" ]; then
+    ESTADO="mal"; MOTIVO="sin marca \`**Last updated:**\`"
+  elif [ -z "$GIT_DATE" ]; then
+    ESTADO="mal"; MOTIVO="sin historia en git"
+  elif [ "$LU" \< "$GIT_DATE" ]; then
+    ESTADO="mal"; MOTIVO="la marca dice $LU y el último commit que lo tocó es $GIT_DATE"
   fi
+
+  if [ "$ESTADO" = "mal" ] && [ "$EN_TABLA" = "0" ]; then
+    echo "  ❌ $d: $MOTIVO"
+    E_BAD=$((E_BAD+1))
+  elif [ "$ESTADO" = "mal" ]; then
+    E_DECL=$((E_DECL+1))
+  elif [ "$EN_TABLA" = "1" ]; then
+    echo "  ❌ $d: la deuda ESTÁ SALDADA — quítalo de la tabla E_DEUDA de este script."
+    E_SALDADA=$((E_SALDADA+1))
+  fi
+done
+echo "  deuda declarada: $E_DECL   ·   sin declarar: $E_BAD   ·   saldadas sin quitar: $E_SALDADA"
+if [ "$E_BAD" = "0" ] && [ "$E_SALDADA" = "0" ]; then
+  echo "  ✓ ninguna marca de tiempo miente fuera de la deuda declarada"
 else
-  echo "  ⚠️  no pude leer la fecha más reciente del CHANGELOG — control VACÍO"
+  echo "      ⚠️ El titular es una FRASE: [A] no lo ve. Al actualizar la marca, comprobar que lo"
+  echo "      que el titular AFIRMA sigue siendo cierto, no sólo que sus cifras cuadren."
+  FAIL=1
 fi
 
 # ─── 3. SÍMBOLOS MUERTOS ─────────────────────────────────────────────────────
