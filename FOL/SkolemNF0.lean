@@ -54,8 +54,9 @@ Entrega **una** de las dos direcciones, y es la que vale para la conservatividad
 * 🏁 `skolem_conservative_nf` — los axiomas de Skolem **se retiran todos**, iterando
   `FOL.SkolemN0.skolem_conservative_n` sobre la lista con la frescura correcta.
 
-⬜ **No entrega** la dirección `φ → skolemize φ` *con* los axiomas. Esa exige empujar el axioma
-de Skolem **bajo el prefijo `∀ⁿ`** (la regla K iterada), y **no está medida**.
+🏁 **Y la dirección `φ → skolemize φ` también** (§8, ADR‑065): exigía empujar el axioma bajo el
+prefijo `∀ⁿ` — la regla K iterada — y resultó ser **un solo lema**, porque `allBlock n (∀A)` y
+`allBlock (n+1) A` son la MISMA fórmula. 📏 Las dos mitades, **sin `Classical.choice`**.
 
 ## ⚠️ Y un puente que faltaba en el árbol
 
@@ -524,6 +525,82 @@ theorem skolemNF_shape (k : Nat) (φ : Formula) :
       And (skolemize k (prenex φ) = allBlock m ψ) (QuantFree ψ) :=
   skolemize_shape k (prenex φ) (prenex_isPrenex φ)
 
+
+-- ═══════════════════════════════════════════════════════════════════════════
+-- §8 · 🏁 LA DIRECCIÓN ⟹ — con los axiomas delante, el original DA la forma normal
+--
+-- ⭐⭐ La identidad que la hace directa: `allBlock n (∀A)` y `allBlock (n+1) A` son **la misma
+-- fórmula** — n universales seguidos de `∀A` son n+1 universales seguidos de `A`. ⇒ el caso
+-- `.forall` de la inducción es la hipótesis de inducción TAL CUAL, sin tocar un binder, y todo
+-- el manejo de eigenvariables se concentra en UN lema: la regla K iterada.
+-- ═══════════════════════════════════════════════════════════════════════════
+
+theorem allBlock_forall : ∀ (n : Nat) (A : Formula),
+    allBlock n (Formula.forall A) = allBlock (n + 1) A
+  | 0, _ => rfl
+  | n + 1, A => by
+      show Formula.forall (allBlock n (Formula.forall A))
+           = Formula.forall (allBlock (n + 1) A)
+      rw [allBlock_forall n A]
+
+/-- De `Γ ⊢₀ ∀X` a `Γ.map (lift 0) ⊢₀ X`: levantar y después instanciar en `x₀`.
+⭐ La vuelta del levantamiento es `inst_var0`, y por eso no cuesta nada. -/
+theorem derives0_under_forall {Γ : List Formula} {X : Formula}
+    (h : Γ ⊢₀ Formula.forall X) : (Γ.map (liftFormula 0)) ⊢₀ X := by
+  have h1 := FOL.Lift0.derives0_lift h 0
+  have h2 : (Γ.map (liftFormula 0)) ⊢₀ Formula.forall (liftFormula 1 X) := h1
+  have h3 := Derives₀.elim_forall _ (liftFormula 1 X) (Term.var 0) h2
+  rwa [inst_var0] at h3
+
+/-- ⭐⭐ **La regla K iterada**: de `∀ⁿ(P ⇒ Q)` y `∀ⁿP` sale `∀ⁿQ`. Es el único sitio del frente
+donde hay que bajar bajo un binder y volver. -/
+theorem derives0_allBlock_mp : ∀ (n : Nat) (Γ : List Formula) (P Q : Formula),
+    (Γ ⊢₀ allBlock n (Formula.impl P Q)) → (Γ ⊢₀ allBlock n P) → Γ ⊢₀ allBlock n Q
+  | 0, _, _, _, h1, h2 => Derives₀.elim_impl _ _ _ h1 h2
+  | n + 1, Γ, P, Q, h1, h2 => by
+      refine Derives₀.intro_forall _ _ ?_
+      exact derives0_allBlock_mp n _ P Q
+        (derives0_under_forall h1) (derives0_under_forall h2)
+
+/-- 🏁 **La forma normal se DERIVA del original**, con sus axiomas de Skolem en el contexto.
+📏 Y sale **sin `Classical.choice`**: la dirección ⟹ es tan finitaria como la ⟸. -/
+theorem derives0_skolemizeF : ∀ (fuel k n : Nat) (f : Formula) (Γ : List Formula),
+    (∀ g, g ∈ skolemAxiomsF fuel k n f → g ∈ Γ) →
+    (Γ ⊢₀ allBlock n f) → Γ ⊢₀ allBlock n (skolemizeF fuel k n f)
+  | 0, _, _, _, _, _, h => h
+  | _ + 1, _, _, .bottom, _, _, h => h
+  | _ + 1, _, _, .atom _ _, _, _, h => h
+  | _ + 1, _, _, .eq _ _, _, _, h => h
+  | _ + 1, _, _, .impl _ _, _, _, h => h
+  | _ + 1, _, _, .and _ _, _, _, h => h
+  | _ + 1, _, _, .or _ _, _, _, h => h
+  | fuel + 1, k, n, .forall A, Γ, hax, h => by
+      show Γ ⊢₀ allBlock n (Formula.forall (skolemizeF fuel k (n + 1) A))
+      rw [allBlock_forall n (skolemizeF fuel k (n + 1) A)]
+      refine derives0_skolemizeF fuel k (n + 1) A Γ hax ?_
+      rw [← allBlock_forall n A]
+      exact h
+  | fuel + 1, k, n, .ex A, Γ, hax, h => by
+      have hmem : skolemAxN (cst k) n A ∈ Γ := hax _ (List.Mem.head _)
+      have hax1 : Γ ⊢₀ allBlock n (Formula.impl (Formula.ex A)
+          (substFormula 0 (Term.func (cst k) (vars n)) A)) :=
+        Derives₀.hyp _ _ hmem
+      have hstep : Γ ⊢₀ allBlock n (substFormula 0 (Term.func (cst k) (vars n)) A) :=
+        derives0_allBlock_mp n Γ _ _ hax1 h
+      exact derives0_skolemizeF fuel (k + 1) n _ Γ
+        (fun g hg => hax g (List.Mem.tail _ hg)) hstep
+
+theorem derives0_skolemize (k : Nat) (f : Formula) (Γ : List Formula)
+    (hax : ∀ g, g ∈ skolemAxioms k f → g ∈ Γ) (h : Γ ⊢₀ f) : Γ ⊢₀ skolemize k f :=
+  derives0_skolemizeF (qdepth f) k 0 f Γ hax h
+
+/-- 🏁🏁 **LAS DOS DIRECCIONES**: con los axiomas de Skolem en el contexto, la fórmula y su forma
+normal son **interderivables**. 📏 Y las dos mitades **sin `Classical.choice`** — el WKL entra
+sólo al RETIRAR los axiomas (§5), no al usarlos. -/
+theorem derives0_skolemize_iff (k : Nat) (f : Formula) (Γ : List Formula)
+    (hax : ∀ g, g ∈ skolemAxioms k f → g ∈ Γ) : Iff (Γ ⊢₀ f) (Γ ⊢₀ skolemize k f) :=
+  ⟨derives0_skolemize k f Γ hax, derives0_of_skolemizeF _ _ _ _ Γ⟩
+
 end FOL.SkolemNF0
 
 #print axioms FOL.SkolemNF0.qdepth_subst
@@ -534,3 +611,7 @@ end FOL.SkolemNF0
 #print axioms FOL.SkolemNF0.skolem_conservative_nf
 #print axioms FOL.SkolemNF0.derives0_of_skolemNF
 #print axioms FOL.SkolemNF0.skolemNF_shape
+#print axioms FOL.SkolemNF0.allBlock_forall
+#print axioms FOL.SkolemNF0.derives0_allBlock_mp
+#print axioms FOL.SkolemNF0.derives0_skolemize
+#print axioms FOL.SkolemNF0.derives0_skolemize_iff
