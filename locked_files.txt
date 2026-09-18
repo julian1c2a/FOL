@@ -30,3 +30,10 @@ FOL/HerbrandBlock0.lean
 FOL/SkolemNF0.lean
 FOL/SkolemHerbrand0.lean
 FOL/DecEq.lean
+FOL/Lift0.lean
+FOL/Eigenvariable.lean
+FOL/Rename.lean
+FOL/Fresh0.lean
+FOL/Enumeration.lean
+FOL/SymClasses.lean
+FOL.lean
