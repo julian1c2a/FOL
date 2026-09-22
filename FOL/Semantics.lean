@@ -20,17 +20,24 @@ namespace FOL.Metamath.Semantics
 -- Fase 5: Semántica y Modelos
 -- ============================================================
 
-structure Model (D : Type) where
-  func : String → List D → D
-  rel  : String → List D → Prop
+/-- **Estructura de primer orden con el símbolo como PARÁMETRO** (2026‑09‑22).
+
+⭐ Misma técnica que `TermG`/`FormulaG` (ADR‑068/069): el genérico lleva `G`, y `Model` queda
+como el `abbrev` en `String`, de modo que **las nueve consumidoras no se tocan**. -/
+structure ModelG (S D : Type) where
+  func : S → List D → D
+  rel  : S → List D → Prop
+
+/-- Modelo sobre el alfabeto concreto. Lo que usaban los nueve ficheros; no cambia. -/
+abbrev Model (D : Type) := ModelG String D
 
 mutual
-def evalTerm {D : Type} (M : Model D) (v : Nat → D) (t : Term) : D :=
+def evalTerm {S D : Type} (M : ModelG S D) (v : Nat → D) (t : TermG S) : D :=
   match t with
   | .var n => v n
   | .func f ts => M.func f (evalTerms M v ts)
 
-def evalTerms {D : Type} (M : Model D) (v : Nat → D) (ts : List Term) : List D :=
+def evalTerms {S D : Type} (M : ModelG S D) (v : Nat → D) (ts : List (TermG S)) : List D :=
   match ts with
   | [] => []
   | t :: ts' => evalTerm M v t :: evalTerms M v ts'
@@ -51,7 +58,7 @@ theorem updateEnv_zero {D : Type} (v : Nat → D) (d : D) (n : Nat) :
     updateEnv 0 v d n = shiftEnv v d n := by
   cases n <;> simp [updateEnv, shiftEnv]
 
-def evalFormula {D : Type} (M : Model D) (v : Nat → D) (f : Formula) : Prop :=
+def evalFormula {S D : Type} (M : ModelG S D) (v : Nat → D) (f : FormulaG S) : Prop :=
   match f with
   | .bottom => False
   | .atom p ts => M.rel p (evalTerms M v ts)
@@ -62,7 +69,7 @@ def evalFormula {D : Type} (M : Model D) (v : Nat → D) (f : Formula) : Prop :=
   | .or f1 f2 => evalFormula M v f1 ∨ evalFormula M v f2
   | .ex f1 => ∃ (d : D), evalFormula M (shiftEnv v d) f1
 
-def contextSatisfies {D : Type} (M : Model D) (v : Nat → D) (Γ : List Formula) : Prop :=
+def contextSatisfies {S D : Type} (M : ModelG S D) (v : Nat → D) (Γ : List (FormulaG S)) : Prop :=
   ∀ f, f ∈ Γ → evalFormula M v f
 
 def satisfies (Γ : List Formula) (f : Formula) : Prop :=

@@ -1,6 +1,6 @@
 # Changelog
 
-**Last updated:** 2026-09-18
+**Last updated:** 2026-09-22
 **Author**: Julián Calderón Almendros
 
 > ⛔⛔ **ESTE FICHERO ESTUVO CONGELADO EN 2026-05-16 CON 115 COMMITS DETRÁS**, y no fue un
@@ -18,6 +18,19 @@ All notable changes to this project will be documented in this file.
 
 Format based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+
+## 2026-09-22 — `ModelG`: el símbolo, parámetro también en la SEMÁNTICA
+
+* **`ModelG (S D : Type)`** sustituye a `Model (D : Type)`, y `Model` queda como
+  `abbrev Model (D : Type) := ModelG String D`. `evalTerm`, `evalTerms`, `evalFormula` y
+  `contextSatisfies` pasan a `{S D}` sobre `TermG S` / `FormulaG S`.
+* ⭐⭐ **Alcance 9 ficheros, trabajo 1.** `Model` se citaba en nueve ficheros (68 veces); con el
+  `abbrev`, **ninguno de los ocho restantes cambió**. FOL **54 jobs** y RPP **145 jobs** verdes a
+  la primera. Es la lección de ADR‑068 otra vez: *medir el ALCANCE de un tipo no es medir el
+  TRABAJO*.
+* ⬜ **Segunda entrega pendiente**: `Canonical0` (el modelo canónico) sigue en `String`. Es la
+  que une la rama sintáctica con la semántica, y la que necesitará `FreshSym`
+  (`sondeos/SymbolParamCoste.lean`).
 
 ## [Unreleased]
 

@@ -122,7 +122,7 @@ This document complies with all requirements specified in [AI-GUIDE.md](AI-GUIDE
 | `Theorems/Quantifiers.lean` | `FOL.Theorems.Quantifiers`| `FOL.FOL`, `FOL.Theorems.Impl`, `FOL.Theorems.Neg`, `FOL.Theorems.Derived` | ✅ Completo |
 | `Tactics.lean` | `FOL.Tactics` | `FOL.FOL`, `Lean` | ✅ Completo |
 | `Deduction.lean` | `FOL.Metamath.Deduction` | `FOL.FOL`, `FOL.Tactics` | ✅ Completo |
-| `Semantics.lean` | `FOL.Metamath.Semantics` | `FOL.FOL` | ✅ Completo |
+| `Semantics.lean` | `FOL.Metamath.Semantics` | `FOL.FOL` | ✅ Completo — ⭐ `ModelG (S D)` con el símbolo como **parámetro** desde 2026‑09‑22; `Model` es su `abbrev` en `String` |
 | `Theorems/Eq.lean` | `FOL.Theorems.Eq` | `FOL.FOL` | ✅ Completo |
 | `Enumeration.lean` | `FOL.Metamath.Enumeration` | `FOL.FOL` | ✅ Completo — `natToFormula` y su sobreyectividad, **computables**, cero axiomas (ADR‑030) |
 | `Derives0.lean` | *(raíz, como `Derives`)* | `FOL.FOL` | ✅ Completo — **`Derives₀`**: 21 constructores, **cero habitantes‑axioma** ⇒ **inducible**. Paso 0 del plan finitista |
@@ -462,7 +462,14 @@ Metaprogramming and macros to automate repetitive natural deduction tasks.
 
 **Definitions**:
 
-- `Model`: Evaluates logic terms and predicates. `structure Model (D : Type)`
+- `ModelG`: estructura de primer orden con el **símbolo como parámetro**.
+  `structure ModelG (S D : Type)` con `func : S → List D → D` y `rel : S → List D → Prop`.
+- `Model`: el `abbrev` en el alfabeto concreto — `abbrev Model (D : Type) := ModelG String D`.
+  ⭐ Por eso **las nueve consumidoras de `Model` no cambiaron** al generificar (2026‑09‑22):
+  misma técnica que `TermG`/`FormulaG` (ADR‑068/069). `evalTerm`, `evalTerms`, `evalFormula`
+  y `contextSatisfies` sí son ya genéricas en `{S D}`.
+  ⬜ **Falta la segunda entrega**: `Canonical0` sigue en `String`, y es la que une la rama
+  sintáctica con la semántica.
 - `evalTerm`: Evaluates a `Term` into the model's domain.
 - `evalTerms`: Evaluates a list of terms.
 - `shiftEnv`: Shifts De Bruijn variable environment.
