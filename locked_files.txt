@@ -6,7 +6,6 @@ FOL/Soundness0.lean
 FOL/HenkinLimit0.lean
 FOL/Henkin0.lean
 FOL/Eq0.lean
-FOL/Canonical0.lean
 FOL/NDtoLK0.lean
 FOL/Hauptsatz0.lean
 cuarentena/README.md

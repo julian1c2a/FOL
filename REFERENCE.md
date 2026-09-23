@@ -137,6 +137,7 @@ This document complies with all requirements specified in [AI-GUIDE.md](AI-GUIDE
 | `HenkinLimit0.lean` | `FOL.HenkinLimit0` | `FOL.Fresh0`, `FOL.Enumeration` | ✅ Completo — ⭐⭐ la **iteración ω**: `henLimit_consistent` y `henLimit_witness`. **La extensión de Henkin, construida.** Pieza (2) del §6.4 (ADR‑039) |
 | `Lindenbaum0.lean` | `FOL.Lindenbaum0` | `FOL.HenkinLimit0` | ✅ Completo — **Lindenbaum sobre `Derives₀`** y ⭐⭐⭐ **`henkin_completion`**: el **ensamblaje de Henkin, cerrado**. ⛔ Aquí vive la no‑finitud del teorema (`if IsConsistent₀ …`, Π⁰₁). Pieza (3) del §6.4 (ADR‑040) |
 | `Eq0.lean` | `FOL.Eq0` | `FOL.Derives0`, `FOL.Theorems.Eq` | ✅ Completo — simetría, transitividad y las dos **congruencias** de la igualdad sobre `Derives₀`. ⭐ Traslado **literal** de `Theorems/Eq.lean`; footprint `[propext, Quot.sound]` (ADR‑041) |
+| `Complexity.lean` | `FOL.Complexity` | `FOL.FOL` | ✅ Completo — `formulaComplexity` y `complexity_substFormula`, **puramente sintácticos**. ⭐ Bajados de `Canonical0` el 2026‑09‑23 (**encargo de PeanoRF §3**): estaban detrás de toda la cadena clásica de completitud sin necesitarla. Footprint **`[propext]`** |
 | `Canonical0.lean` | `FOL.Canonical0` | `FOL.Lindenbaum0`, `FOL.Eq0`, `FOL.Semantics`, `FOL.Soundness0` | ✅ Completo — 🏁🏁🏁 **`completeness₀ : Γ ⊨ f → Γ ⊢₀ f`** y **`derives0_complete_iff`**. Modelo canónico, `truth_lemma`, y ⭐ `eval_pullback_formula` (**net‑0 puro**). Con controles de **no vacuidad** (ADR‑041) |
 | `SymClasses.lean` | `FOL` | `FOL.FOL` | ✅ Completo — las **dos** clases que la metateoría le pide al tipo de símbolos: `FreshSym` (tres propiedades, medidas contra `cst_bound_sym`) y `EnumSym` (una sobreyección `Nat → Sym`, nada más). ⭐ Con la instancia `FreshSym (List Char)` **sin pasar por `String`** (ADR‑069) |
 | `DecEq.lean` | `FOL.DecEq` | `FOL.FOL` | ✅ Completo — `DecidableEq` **de verdad** para `TermG S` y `FormulaG S` (con `[DecidableEq S]`), **net‑0 pura**. ⛔ `deriving` NO aplica a `TermG` (inductivo anidado): la recursión mutua va a mano (ADR‑042); la de `FormulaG` sí se deriva. ADR‑068: `instDecidableEqTerm`/`instDecidableEqFormula` siguen ahí como `abbrev` |
@@ -738,6 +739,8 @@ Exports from namespace `FOL.Metamath.Compacity`:
 módulo. Es lo que exige AI‑GUIDE §14.
 
 **`Enumeration.lean`** — `unpair`, `unpair_step_down`, `unpair_step_next`, `unpair_reach`, `unpair_surj`, `unpair_sum_le`, `unpair_fst_le`, `unpair_snd_le`, `natToList`, `natToList_surj`, `map_ofNat_toNat`, `natToString`, `natToString_surj`, `natToTerm`, `natToTerms`, `termSize`, `termsSize`, `term_surj_aux`, `natToTerm_surj`, `natToTerms_surj`, `formulaSize`, `natToFormula`, `formula_surj_aux`, `natToFormula_surj`
+
+**`Complexity.lean`** — `formulaComplexity`, `complexity_substFormula`
 
 **`Derives0.lean`** — `Derives₀`, `derives0_to_derives`, `derives0_raa`
 

@@ -16,6 +16,7 @@ import FOL.Lindenbaum0
 import FOL.Eq0
 import FOL.Semantics
 import FOL.Soundness0
+import FOL.Complexity
 
 /-!
 # `FOL.Canonical0` — **el modelo canónico**, el lema de la verdad y la **COMPLETITUD**
@@ -72,6 +73,7 @@ open FOL.Fresh0
 open FOL.Rename
 open FOL.Lindenbaum0
 open FOL.Eq0
+open FOL.Complexity
 open Classical
 
 local notation:50 S " ⊢₀* " f => DerivesSet₀ S f
@@ -296,30 +298,9 @@ end
 -- §5 · Los dos cuantificadores — ⭐ aquí, y sólo aquí, paga `IsHenkin₀`
 -- ============================================================
 
-def formulaComplexity : Formula → Nat
-  | .bottom => 0
-  | .atom _ _ => 0
-  | .eq _ _ => 0
-  | .impl f1 f2 => max (formulaComplexity f1) (formulaComplexity f2) + 1
-  | .forall f1 => formulaComplexity f1 + 1
-  | .and f1 f2 => max (formulaComplexity f1) (formulaComplexity f2) + 1
-  | .or f1 f2 => max (formulaComplexity f1) (formulaComplexity f2) + 1
-  | .ex f1 => formulaComplexity f1 + 1
-
-/-- 🔑 **Sustituir no cambia la complejidad** — sin esto, la inducción del lema de la verdad no
-cierra, porque el caso `∀` baja a `substFormula 0 t f₁`, que no es subtérmino de `∀f₁`. -/
-@[simp]
-theorem complexity_substFormula (v : Nat) (t : Term) (f : Formula) :
-    formulaComplexity (substFormula v t f) = formulaComplexity f := by
-  induction f generalizing v t with
-  | bottom => rfl
-  | atom _ _ => rfl
-  | eq _ _ => rfl
-  | impl _ _ ih1 ih2 => simp only [formulaComplexity, substFormula, ih1, ih2]
-  | and _ _ ih1 ih2 => simp only [formulaComplexity, substFormula, ih1, ih2]
-  | or _ _ ih1 ih2 => simp only [formulaComplexity, substFormula, ih1, ih2]
-  | «forall» _ ih => simp only [formulaComplexity, substFormula, ih]
-  | ex _ ih => simp only [formulaComplexity, substFormula, ih]
+-- ⭐ `formulaComplexity` y `complexity_substFormula` **bajaron a `FOL.Complexity`**
+-- el 2026‑09‑23 (encargo de PeanoRF §3): son puramente sintácticos y estaban detrás de
+-- toda la cadena clásica de completitud. Los nombres NO cambian — entran por el `open`.
 
 theorem max_cons_ex {S : Formula → Prop} (hMax : IsMaximalConsistent₀ S) (hHenkin : IsHenkin₀ S)
     {A : Formula} : S (Formula.ex A) ↔ ∃ t, S (substFormula 0 t A) := by
