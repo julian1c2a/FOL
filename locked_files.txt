@@ -35,3 +35,7 @@ FOL/Sequent0.lean
 FOL/Skolem0.lean
 FOL/Canonical0.lean
 FOL/Complexity.lean
+AXIOMS.md
+cuarentena/README.md
+FOL.lean
+FOL/Inconsistencia.lean
