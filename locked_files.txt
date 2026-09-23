@@ -37,3 +37,5 @@ FOL/Propositional0.lean
 FOL/Rename.lean
 FOL/Sequent0.lean
 FOL/Skolem0.lean
+FOL/Canonical0.lean
+FOL/Complexity.lean
