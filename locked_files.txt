@@ -37,3 +37,6 @@ FOL/Inconsistencia.lean
 FOL/Enumeration.lean
 FOL/FOL.lean
 FOL/SymClasses.lean
+FOL/Canonical0.lean
+FOL/Compacity0.lean
+FOL/Herbrand0.lean
