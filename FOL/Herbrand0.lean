@@ -142,6 +142,40 @@ def ptautCheck (φ : Formula) : Bool := pcheck (patoms φ) (fun _ => false) φ
 theorem ptaut_of_check {φ : Formula} (h : ptautCheck φ = true) : PTaut φ :=
   fun w => pcheck_sound (patoms φ) _ φ h w (fun _ ha hn => absurd ha hn)
 
+/-- ⭐⭐ **La mitad que faltaba: el verificador también es COMPLETO.** El dual exacto de
+`pcheck_sound`, por la misma inducción sobre la lista de átomos: si toda valuación que coincide con
+`v` fuera de `L` hace verdadera `φ`, la expansión de Shannon lo confirma.
+
+⚠️ **Por qué importa**: hasta aquí un certificado de Herbrand se podía **confirmar** por `rfl`
+pero no **refutar** —un `ptautCheck φ = false` no decía nada—. Con esto dice que `φ` **no** es
+tautología. -/
+theorem pcheck_complete : ∀ (L : List Formula) (v : PVal) (φ : Formula),
+    (∀ w : PVal, (∀ a, a ∈ patoms φ → a ∉ L → w a = v a) → peval w φ = true) →
+      pcheck L v φ = true
+  | [], v, φ, h => h v (fun _ _ _ => rfl)
+  | a :: L, v, φ, h => by
+      have hb : ∀ b : Bool, pcheck L (upd v a b) φ = true := fun b =>
+        pcheck_complete L (upd v a b) φ (fun w hw => h w (fun x hx hxL => by
+          have hxa : x ≠ a := fun e => hxL (e ▸ List.Mem.head _)
+          have hxL' : x ∉ L := fun hm => hxL (List.Mem.tail _ hm)
+          rw [hw x hx hxL', upd_other v a b hxa]))
+      exact (Bool.and_eq_true _ _).mpr ⟨hb true, hb false⟩
+
+/-- 🏁 **El verificador DECIDE la tautología proposicional**: es un sí‑y‑sólo‑sí. -/
+theorem ptautCheck_iff {φ : Formula} : ptautCheck φ = true ↔ PTaut φ :=
+  ⟨ptaut_of_check, fun h => pcheck_complete (patoms φ) _ φ (fun w _ => h w)⟩
+
+/-- 🏁 **`PTaut` es DECIDIBLE, y por cómputo.** Se construye con un `if` explícito sobre
+`ptautCheck`, sin depender de `decidable_of_iff`.
+
+⛔ **Lo que decide, dicho con su nombre**: tautología **proposicional**, no validez de primer orden.
+`peval` trata `∀`, `∃` **y la igualdad** como átomos, así que `t ≐ t` —derivable por `refl`— **no**
+es `PTaut`. Que el fragmento sin cuantificadores sea decidible *por tabla de verdad* es **falso** en
+este marco; lo cierto es la versión relativa a la teoría de la igualdad. -/
+instance instDecidablePTaut (φ : Formula) : Decidable (PTaut φ) :=
+  if h : ptautCheck φ = true then isTrue (ptautCheck_iff.mp h)
+  else isFalse (fun hp => h (ptautCheck_iff.mpr hp))
+
 -- ============================================================
 -- §2 · El corte sobre premisas DERIVABLES — la mitad fácil
 -- ============================================================
@@ -320,9 +354,25 @@ theorem ex_igualdad : [] ⊢₀ Formula.ex (Formula.eq (Term.var 0) c) := by
     show (peval v (Formula.eq c c) || peval v (disjOf [])) = true
     simp [h1]
 
+
+-- ⚠️ **CONTROL DEL DECISOR** (2026‑09‑23). Un decisor que sólo contesta «sí» no decide nada: aquí
+-- contesta **las dos cosas**, por `decide`, y el tercero es el caso que prueba que decide lo que su
+-- nombre dice —tautología PROPOSICIONAL— y no otra cosa.
+
+/-- Sí: `P(x) ⇒ P(x)` es tautología. -/
+example : PTaut (Formula.impl Px Px) := by decide
+
+/-- No: `P(x)` sola no lo es. Esto es lo que antes **no** se podía decir. -/
+example : Not (PTaut Px) := by decide
+
+/-- ⛔ Y `c ≐ c` **no** es tautología proposicional aunque sea **derivable** por `refl`: el decisor
+decide el esqueleto, no la validez de primer orden. -/
+example : Not (PTaut (Formula.eq c c)) := by decide
 end FOL.Herbrand0
 
 #print axioms FOL.Herbrand0.ptaut_of_check
+#print axioms FOL.Herbrand0.pcheck_complete
+#print axioms FOL.Herbrand0.ptautCheck_iff
 #print axioms FOL.Herbrand0.derives0_discharge
 #print axioms FOL.Herbrand0.derives0_of_eqInstance
 #print axioms FOL.Herbrand0.derives0_ex_of_cert

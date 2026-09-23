@@ -122,6 +122,26 @@ theorem max_cons_and {S : Formula → Prop} (hMax : IsMaximalConsistent₀ S) {A
       (derivesSet0_map2 (fun Γ h1 h2 => Derives₀.intro_and Γ A B h1 h2)
         (derivesSet0_hyp h.1) (derivesSet0_hyp h.2))
 
+/-- ⭐ **La negación, en un maximal consistente, es la ausencia.** Falta en la familia `max_cons_*`,
+y es la única conectiva que faltaba: `neg f` es `f ⇒ ⊥` por definición (`FOL/FOL.lean`), así que
+sale de `max_cons_impl_iff` y `max_cons_bot` sin más. -/
+theorem max_cons_neg {S : Formula → Prop} (hMax : IsMaximalConsistent₀ S) {f : Formula} :
+    S (neg f) ↔ Not (S f) :=
+  ⟨fun hN hf => max_cons_bot hMax ((max_cons_impl_iff hMax).mp hN hf),
+   fun hNf => (max_cons_impl_iff hMax).mpr (fun hf => absurd hf hNf)⟩
+
+/-- ⭐ **Teoría sintácticamente COMPLETA**: decide cada fórmula. Es la forma que usa la teoría de
+modelos, y `IsMaximalConsistent₀` (`Lindenbaum0.lean`) **no** se definía así: se definía por
+NO‑AMPLIABILIDAD. -/
+def IsSyntacticallyComplete₀ (S : Formula → Prop) : Prop :=
+  ∀ f, Or (S f) (S (neg f))
+
+/-- ⭐ **Todo maximal consistente es completo.** ⚠️ Usa el tercio excluido del METANIVEL
+(`Classical.em` sobre `S f`), no el del cálculo: `S` es un predicado de Lean arbitrario. -/
+theorem max_cons_complete {S : Formula → Prop} (hMax : IsMaximalConsistent₀ S) :
+    IsSyntacticallyComplete₀ S := fun f =>
+  (Classical.em (S f)).elim Or.inl (fun h => Or.inr ((max_cons_neg hMax).mpr h))
+
 theorem max_cons_or {S : Formula → Prop} (hMax : IsMaximalConsistent₀ S) {A B : Formula} :
     S (Formula.or A B) ↔ Or (S A) (S B) := by
   constructor
@@ -583,6 +603,8 @@ end FOL.Canonical0
 #print axioms FOL.Canonical0.eval_pullback_formula
 #print axioms FOL.Canonical0.model_existence_lemma₀
 #print axioms FOL.Canonical0.completeness₀
+#print axioms FOL.Canonical0.max_cons_neg
+#print axioms FOL.Canonical0.max_cons_complete
 #print axioms FOL.Canonical0.derives0_complete_iff
 #print axioms FOL.Canonical0.derives0_em
 #print axioms FOL.Canonical0.derives0_peirce

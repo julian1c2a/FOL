@@ -77,6 +77,16 @@ theorem consistency_of_satisfiable₀ {S : Formula → Prop} (hSat : IsSatisfiab
   obtain ⟨D, M, v, hEval⟩ := hSat
   exact FOL.Metamath.Soundness0.derives0_soundness hDer D M v (fun g hg => hEval g (hΓ g hg))
 
+/-- 🏁 **EL TEOREMA DE EXISTENCIA DE MODELO, bicondicional** — la forma de **Henkin** de la
+completitud: una teoría es consistente **si y sólo si** tiene modelo.
+
+⭐ Las dos mitades ya estaban, una en cada módulo: `model_existence_lemma₀` (`Canonical0`, la
+difícil) y `consistency_of_satisfiable₀` (aquí, la de solidez). Nadie las había juntado, y es con
+esta forma —sobre CONJUNTOS, no sobre contextos finitos como `derives0_complete_iff`— con la que la
+teoría de modelos cita la completitud. -/
+theorem model_existence_iff {S : Formula → Prop} : IsConsistent₀ S ↔ IsSatisfiable S :=
+  ⟨model_existence_lemma₀, consistency_of_satisfiable₀⟩
+
 theorem compactness₀ (S : Formula → Prop) :
     Iff (IsSatisfiable S)
         (∀ Γ : List Formula, (∀ f, f ∈ Γ → S f) → IsSatisfiable (fun x => x ∈ Γ)) := by
@@ -127,6 +137,7 @@ theorem loewenheim_skolem_down {S : Formula → Prop} (hSat : IsSatisfiable S) :
 end FOL.Compacity0
 
 #print axioms FOL.Compacity0.consistency_of_satisfiable₀
+#print axioms FOL.Compacity0.model_existence_iff
 #print axioms FOL.Compacity0.compactness₀
 #print axioms FOL.Compacity0.model_existence_countable₀
 #print axioms FOL.Compacity0.loewenheim_skolem_down

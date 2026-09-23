@@ -7,7 +7,6 @@ FOL/Henkin0.lean
 FOL/Eq0.lean
 FOL/NDtoLK0.lean
 FOL/Hauptsatz0.lean
-FOL/Compacity0.lean
 FOL/PrenexNF0.lean
 FOL/SkolemN0.lean
 FOL/Finitary0.lean
@@ -24,14 +23,12 @@ FOL/HerbrandBlock0.lean
 FOL/Derives0.lean
 FOL/Derives1.lean
 FOL/Derives2.lean
-FOL/Herbrand0.lean
 FOL/Lindenbaum0.lean
 FOL/Prenex0.lean
 FOL/Propositional0.lean
 FOL/Rename.lean
 FOL/Sequent0.lean
 FOL/Skolem0.lean
-FOL/Canonical0.lean
 FOL/Complexity.lean
 AXIOMS.md
 cuarentena/README.md
