@@ -19,7 +19,7 @@
 > **Fuentes:** `cuarentena/README.md` · `AXIOMS.md` ·
 > `../ROBINSON_PlusPlus/doc/AUDITORIA-FOL-2026-09-12.md`
 
-**Last updated:** 2026-09-18 15:40
+**Last updated:** 2026-09-23 — ⭐ entra `FOL/Complexity.lean` (encargo PeanoRF §3) y la cifra canónica pasa a **54 módulos**. ⚠️ La marca decía **2026-09-18 15:40** y `[E]` la cazó el mismo día que se movió el cuerpo — que es para lo que está el control.
 **Author**: Julián Calderón Almendros
 
 > 📐 **CIFRAS CANÓNICAS — medidas, no copiadas** (`bash check-doc-sync.bash`, 2026‑09‑23):
