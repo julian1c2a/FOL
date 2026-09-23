@@ -38,3 +38,5 @@ FOL/SymClasses.lean
 FOL/Canonical0.lean
 FOL/Compacity0.lean
 FOL/Herbrand0.lean
+FOL.lean
+FOL/Inversion0.lean
