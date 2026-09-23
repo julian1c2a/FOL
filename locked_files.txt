@@ -38,3 +38,4 @@ FOL/Complexity.lean
 AXIOMS.md
 cuarentena/README.md
 FOL.lean
+FOL/Inconsistencia.lean
