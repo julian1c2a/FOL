@@ -29,6 +29,7 @@ import FOL.Sequent0
 import FOL.SequentSound0
 import FOL.NDtoLK0
 import FOL.Hauptsatz0
+import FOL.Inversion0
 import FOL.Finitary0
 import FOL.Compacity0
 import FOL.HerbrandBlock0

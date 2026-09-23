@@ -32,10 +32,8 @@ FOL/Skolem0.lean
 FOL/Complexity.lean
 AXIOMS.md
 cuarentena/README.md
-FOL.lean
 FOL/Inconsistencia.lean
 FOL/Enumeration.lean
-FOL/FOL.lean
 FOL/SymClasses.lean
 FOL/Canonical0.lean
 FOL/Compacity0.lean
