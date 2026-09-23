@@ -20,7 +20,6 @@ FOL/DecEq.lean
 FOL/Lift0.lean
 FOL/Eigenvariable.lean
 FOL/Fresh0.lean
-FOL/SymClasses.lean
 FOL/HerbrandBlock0.lean
 FOL/Derives0.lean
 FOL/Derives1.lean

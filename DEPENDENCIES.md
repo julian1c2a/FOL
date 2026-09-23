@@ -100,7 +100,7 @@ Importa: `FOL.FOL`, `MetaRules`, `Tactics`, `Theorems.{Derived,Impl,Neg,Quantifi
 `Deduction`, `Semantics`, `Soundness`, `Completeness`, `Compacity`.
 
 **⚠️ No importados por el barrel** (existen en disco, no wireados — ver ADR-010):
-`FOL.Classical`, `FOL.Tactics2`, `FOL.Theorems.{Deduction,Eq,Soundness}`.
+`FOL.Classical`, `FOL.Tactics2`, `FOL.Theorems.{Deduction,Eq,Soundness}`. ⚠️ **2026‑09‑23**: `Classical` y `Theorems.Deduction` **se borraron** (duplicados literales); `Theorems.Soundness` se había borrado con la cuarentena; queda `Tactics2`, sin decidir.
 
 ### FOLPure (sin igualdad) — barrel `FOLPure.lean`
 

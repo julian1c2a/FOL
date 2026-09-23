@@ -3,7 +3,7 @@ import FOL.FOL
 /-!
 # `FOL.SymClasses` — lo que hay que saber del tipo de los SÍMBOLOS
 
-**Last updated:** 2026-09-18
+**Last updated:** 2026-09-23
 
 ADR-068 metió el parámetro (`TermG Sym` / `FormulaG Sym`) y ADR-069 generificó la capa de
 operaciones. Falta lo que **no** es sintaxis: la metateoría de FOL⁼ le pide al tipo de símbolos
@@ -33,6 +33,11 @@ la dirección `∃ n`.
 `S` al tipo de símbolos habría chocado en cinco módulos, y el choque se ve **tarde**.
 
 ## ⛔ Y lo que este módulo NO hace
+
+⛔ **Y la vía de instanciarlas en la cadena de completitud queda CERRADA** (2026‑09‑23, ver
+`FOL/FOL.lean`): su única justificación escrita era LS ascendente, y `EnumSym` —esta misma clase,
+líneas abajo— es falsa para los tipos no numerables que LS↑ necesita. Las clases **se quedan**:
+están bien planteadas, `FreshSym (List Char)` está construida, y reabrir la vía es enhebrarlas.
 
 Declarar las clases **no** permite todavía instanciar `Sym := List Char` en la metateoría:
 `Fresh0` y `Enumeration` siguen siendo `String` por dentro. Para que esto no sea una capa

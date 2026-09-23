@@ -1,6 +1,6 @@
 # Changelog
 
-**Last updated:** 2026-09-22
+**Last updated:** 2026-09-23
 **Author**: Julián Calderón Almendros
 
 > ⛔⛔ **ESTE FICHERO ESTUVO CONGELADO EN 2026-05-16 CON 115 COMMITS DETRÁS**, y no fue un
@@ -19,6 +19,40 @@ All notable changes to this project will be documented in this file.
 Format based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## 2026-09-23 — El CIERRE de FOL: lo que los cálculos NO son, y un censo que mira lo que se dice
+
+⚠️ Registrada el mismo día: el sondeo de candidatos señaló que este CHANGELOG **no recogía el
+cierre** —la misma forma que dejó congelado el control `[E]` (ADR‑072)—. Detalle en
+`../ROBINSON_PlusPlus/DECISIONS.md`, **RPP‑098** y **RPP‑099**.
+
+* ⛔⛔ **La propiedad de disyunción para `Derives₀` es FALSA** (`Derives₀` es ND **clásica**).
+  Contraejemplo: `derives0_em_ctx` + `derives0_not_complete`, dos piezas que ya estaban en el árbol.
+  Aterriza como `FOL.Inconsistencia.derives0_no_disjunction_property`. La que sí se quería —la de
+  `Derivesᵢ`, el fragmento intuicionista— está probada en PeanoRF.
+* ⭐ **`FOL/Inconsistencia.lean` SUBE AL BUILD** desde `cuarentena/`: era la evidencia de que la
+  solidez de `Derives` es falsa, y vivía donde nada se compila.
+* 🗑️ **`cuarentena/` se vacía de código**: borrados `Soundness`, `Compacity`, `Theorems_Soundness`
+  (teoremas falsos) y `Completeness` (superado por `completeness₀`) ⇒ **4 `axiom` y ninguno más en
+  ninguna parte**.
+* 🗑️ **Borrados dos duplicados literales**: `FOL/Theorems/Deduction.lean` (el `deduction_theorem` de
+  `FOL/Deduction.lean`) y `FOL/Classical.lean` (dos `def` de las librerías retiradas). ⬜ `Tactics2.lean`
+  no lo es, y queda sin decidir.
+* 🔧 **`[G.2]`** en `check-doc-sync.bash`: el censo de marcadores de deuda con trinquete en los dos
+  sentidos. Tapa el hueco medido de `[G.1]`, que sólo miraba docstrings pegados a un `def X : Prop`.
+* 📝 **Nueve cabeceras** anunciaban abierto lo que estaba probado al lado; corregidas nombrando quién
+  las paga.
+* ⭐ **`FOL/Complexity.lean`** (encargo §3 de PeanoRF): `formulaComplexity` y `complexity_substFormula`,
+  puramente sintácticos, bajan de `Canonical0`.
+* ⛔ **`folSystem` retirada** y la vía de `TheoryFramework` **cerrada con su mapa de vuelta escrito**.
+* ⛔ **La vía de la 2ª entrega de `ModelG` queda CERRADA**: su única justificación escrita (LS
+  ascendente) estaba bloqueada por otra cosa —la indexación por `Nat` de la cadena de completitud—, y
+  `EnumSym` es falsa para los tipos no numerables que LS↑ necesita. El parámetro se queda.
+* ⭐ **Propuesta (C) aceptada con PeanoRF**: `Subst`, `DerivesI`, `SubstDerives`, `Consistency`, `Eq`,
+  `Collapse` y `Slash` bajan a FOL (siete, no tres: su corrección). `Slash` entrará con `lock`, no con
+  `freeze`.
+* ❄️ **Política de congelación** (propietario): FOL no se congela hasta estar terminado; se trabaja
+  con `lock` por fichero, y se congela **fichero a fichero lo que se MIDA como intocable**.
+
 ## 2026-09-22 — `ModelG`: el símbolo, parámetro también en la SEMÁNTICA
 
 * **`ModelG (S D : Type)`** sustituye a `Model (D : Type)`, y `Model` queda como
@@ -28,9 +62,8 @@ this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
   `abbrev`, **ninguno de los ocho restantes cambió**. FOL **54 jobs** y RPP **145 jobs** verdes a
   la primera. Es la lección de ADR‑068 otra vez: *medir el ALCANCE de un tipo no es medir el
   TRABAJO*.
-* ⬜ **Segunda entrega pendiente**: `Canonical0` (el modelo canónico) sigue en `String`. Es la
-  que une la rama sintáctica con la semántica, y la que necesitará `FreshSym`
-  (`sondeos/SymbolParamCoste.lean`).
+* ~~⬜ **Segunda entrega pendiente**: `Canonical0` (el modelo canónico) sigue en `String`.~~
+  ⛔ **CERRADA el 2026‑09‑23** — ver la entrada de arriba.
 
 ## [Unreleased]
 

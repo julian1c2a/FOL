@@ -817,8 +817,6 @@ primera versión, ya mirándolo, seguía absolviendo a tres — casaba por **sub
 **basename** (una sola entrada `Deduction.lean` absolvía a los **dos** ficheros con ese nombre).
 🔑 *Un control que casa por subcadena no comprueba: absuelve.*
 
-**`Classical.lean`** — `doubleNegAxiom`, `excludedMiddleAxiom`
-
 **`Core.lean`** — *(barril: sólo `import`s, cero declaraciones propias)*. Es `FOL.FOL`,
 `MetaRules`, `Tactics`, `Deduction` y los cinco `Theorems/*`; `FOL.lean` (el de la raíz) es `Core`
 **más** `Semantics`, `Enumeration` y toda la escalera finitista.
@@ -837,13 +835,6 @@ resultado de incompletitud puede enunciarse sobre `⊢` (`Meta/OmegaStrength.lea
 
 **`Tactics2.lean`** — las tres macros `prove_mem`, `derive_hyp`, `derive_weaken`
 
-**`Theorems/Deduction.lean`** — `deduction_theorem`
-
-⚠️ **DUPLICADO MEDIDO**: es *letra por letra* el mismo teorema que `FOL/Deduction.lean` (§6.8), en
-otro `namespace` (`FOL.Theorems.Deduction` frente a `FOL.Metamath.Deduction`). ⇒ lo que §6.8
-proyecta es el **otro** fichero. Quien importa la deducción es `Core.lean`, y lo que importa es
-`FOL.Deduction`.
-
 **`Theorems/Eq.lean`** — `substTerm_liftTerm`, `substTerms_liftTerms`, `substTerm_lift_comm`,
 `substTerms_lift_comm`, `derive_eq_symm`, `derive_eq_trans`, `substTerm_liftLift`,
 `substTerms_liftLift`, `liftTerm_comm_zero`, `liftTerms_comm_zero`, `substFormula_lift_comm`,
@@ -857,9 +848,18 @@ proyectar: `Hauptsatz0.lean` tuvo que **medir dos veces** que le faltaban dos mi
 familia (`liftFormula_subst_le` y `substFormula_subst_le`, §6.13) porque el catálogo no decía
 cuáles había. *Un módulo sin proyectar se vuelve a construir.*
 
-⬜ **Huérfanos medidos**: `Classical.lean`, `Tactics2.lean` y `Theorems/Deduction.lean` **no los
-importa nadie** del árbol. No se retiran aquí — retirar es una decisión con ADR, no una pasada de
-documentación — pero quedan **escritos**.
+🗑️ **Huérfanos — decididos el 2026‑09‑23** (propietario: *«si es duplicado literal, se borra»*):
+
+| fichero | ¿duplicado literal? | destino |
+|---|---|---|
+| `Theorems/Deduction.lean` | ✅ mismo teorema, nombre y prueba que `FOL/Deduction.lean`; sólo cambiaban el `namespace` y un comentario | **BORRADO** |
+| `Classical.lean` | ✅ sus dos `def` eran **byte a byte** las de `cuarentena/librerias-retiradas/{FOLPure,FOL_poli,PropLogic}/Classical.lean` | **BORRADO** |
+| `Tactics2.lean` | ⛔ **no**: comparte `tryMem`/`derive_hyp` con `Tactics.lean`, pero trae un `prove_mem` propio y un `derive_weaken` a medio escribir | ⬜ **sin decidir** |
+
+⚠️ El registro previo decía que `Theorems/Deduction.lean` era *«letra por letra»* el mismo; **byte a byte
+no lo era** (cabecera y `namespace`). Lo era en lo que importa: el teorema. Se midió antes de borrar.
+⚠️ Y `Tactics2.lean` **no se puede compilar tal cual**: declara `tryMem` y `derive_hyp` en la raíz, igual
+que `Tactics.lean` ⇒ importar los dos juntos es una **declaración duplicada**.
 
 ### 6.16 · `SymClasses.lean` — lo que la metateoría le pide al tipo de SÍMBOLOS
 

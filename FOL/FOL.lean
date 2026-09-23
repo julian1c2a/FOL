@@ -15,14 +15,28 @@
 línea**: la migración cuesta TRES ficheros (éste, `FOL/DecEq.lean` y
 `ROBINSON_PlusPlus/Meta/HilbertSeq.lean`) y los 147 footprints son idénticos.
 
-⭐ Por qué el parámetro y no `abbrev Sym := List Char` (plan §7.5): `List Char` es
-numerable y sirve para Gödel, pero si Löwenheim-Skolem **ascendente** entra en la hoja de
-ruta haría falta migrar **otra vez**. El parámetro sirve a los dos.
+⛔⛔ **La razón que aquí se daba para el parámetro era FALSA, y se midió el 2026‑09‑23.**
+Decía: *«`List Char` es numerable y sirve para Gödel, pero si Löwenheim-Skolem **ascendente**
+entra en la hoja de ruta haría falta migrar otra vez»*. **El parámetro no es lo que bloquea
+LS↑**: la cadena de completitud está indexada por `Nat` **por construcción**
+(`LindenbaumStep : Nat → …`, `FreshSym.cst : Nat → Sym`), y `EnumSym` —la clase que esto
+presentaba como la habilitadora— lo reconoce en su propio docstring: *«con `Sym` genérico esto
+no es demostrable —hay tipos no numerables—»* (`SymClasses.lean`). ⇒ **la clase que habilitaría
+LS↑ es justo la que es FALSA para los lenguajes que LS↑ necesita.** Un LS↑ a cardinal
+arbitrario pide un Lindenbaum **transfinito**, y sin Mathlib no hay Zorn.
 
-⛔ Lo que esto **todavía no hace**: nada del árbol es genérico aún. Instanciar `S` en otro
-tipo exige antes enhebrar dos clases — `FreshSym` (lo que `Fresh0` fabrica) y `EnumSym`
-(la sobreyección `Nat → S` que `Enumeration` usa y de la que cuelgan Lindenbaum, Henkin y
-`completeness₀`). Medidas en `sondeos/SymbolParamCoste.lean`.
+⛔ **Y la 2ª entrega —`Canonical0` genérico en el símbolo— queda CERRADA**, por decisión del
+propietario del 2026‑09‑23: nadie la consume (RPP y PeanoRF sólo instancian `String`) y su única
+justificación escrita era la de arriba.
+
+⭐ **El parámetro se queda**, y no es un error: costó tres ficheros, no rompió nada, y la sintaxis,
+`Derives₀`, `LocalRule` y la semántica (`ModelG`) ya son genéricos. Lo que se cierra es seguir
+empujándolo por la cadena de completitud. ⬜ **Para reabrirla**: enhebrar `FreshSym` y `EnumSym` por
+`Fresh0` → `Henkin0` → `HenkinLimit0` → `Lindenbaum0` → `Canonical0` (coste en
+`sondeos/SymbolParamCoste.lean`), sabiendo que eso **no** da LS↑.
+
+⭐ Y el **modelo infinito por compacidad** (LS↑ hasta ℵ₀) **no la necesita**: basta con
+ℵ₀ constantes frescas, y `FreshSym.cst : Nat → String` las da.
 -/
 inductive TermG (S : Type) where
   | var  : Nat → TermG S
