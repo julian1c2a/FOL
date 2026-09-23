@@ -72,6 +72,26 @@ namespace TheoryFramework.Instances
 open FOL
 open FOL.Metamath.Semantics
 
+-- ⛔⛔⛔ **LA VÍA DE `TheoryFramework` QUEDA CERRADA — 2026‑09‑23, decisión del propietario.**
+--
+-- 📐 **Lo medido**: retirada `folSystem`, esta librería (6 módulos, 456 l.) queda **sin
+-- ningún habitante y sin ningún consumidor**. `proves_iff_models` (`MetaTheorems.lean`) pide
+-- `[SoundLogic F]` y `[CompleteLogic F]`, y **no existe ninguna instancia de ninguna de las dos**.
+--
+-- ⚠️ Es exactamente la forma que mandó `FOLPure`, `PropLogic` y `FOL_poli` a cuarentena
+-- (`cuarentena/README.md` §7) — con **una diferencia que importa**: aquéllas estaban
+-- **declaradas y nunca compiladas**, y ésta **sí se compila** y la vigilan los controles. Por eso
+-- se queda donde está en vez de irse a cuarentena.
+--
+-- ⭐ **Y se queda a propósito**, no por inercia: el marco está bien planteado y la única razón
+-- de que esté vacío es que su instancia apuntaba al cálculo equivocado. Si el camino vuelve por
+-- aquí —y la vía de vuelta está escrita abajo— lo que hay que hacer es **una** declaración,
+-- no reconstruir nada.
+--
+-- 🔑 *Una vía que se cierra con su mapa de vuelta escrito no es una vía perdida; una que se
+-- borra, sí.*
+--
+
 -- ⛔⛔ **`folSystem` RETIRADA el 2026‑09‑23** (decisión del propietario, cierre de FOL).
 --
 -- Declaraba `derives := fun Γ f => Derives Γ f` — el cálculo **CONTAMINADO** —, y por eso

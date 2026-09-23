@@ -19,6 +19,8 @@ License: MIT
 import FOL.FOL
 import FOL.MetaRules
 import FOL.Semantics
+import FOL.Propositional0
+import FOL.Soundness0
 
 /-!
 # ⛔⛔ La EVIDENCIA COMPILADA: `Derives` no admite teorema de solidez
@@ -101,7 +103,53 @@ theorem inconsistencia_de_cualquier_solidez
   simp only [evalFormula, neg] at h
   exact h trivial
 
+
+-- ============================================================
+-- §2 · ⛔⛔ Y la PROPIEDAD DE DISYUNCIÓN es FALSA para `Derives₀`
+-- ============================================================
+
+/-! ## ⛔⛔ El segundo enunciado que NO tiene testigo
+
+⭐⭐ **Añadido el 2026‑09‑23, y la historia vale más que el teorema.** El propietario decidió ir a
+por la **propiedad de disyunción** como último resultado de FOL. Se verificó el objetivo antes de
+construir nada, y **no sobrevivió**: `Derives₀` es deducción natural **CLÁSICA** (`Derives0.lean:95`,
+con `dne_rule`, `dne_schema` y `forall_not_ex_not` como constructores), y la propiedad de
+disyunción es la marca de lo **INTUICIONISTA**.
+
+⭐ **El contraejemplo estaba partido en dos mitades del propio árbol**, a dos módulos de
+distancia, y nadie las había puesto juntas:
+
+| pieza | dónde | qué da |
+|---|---|---|
+| `derives0_em_ctx` | `FOL/Propositional0.lean` | `Δ ⊢₀ A ∨ ¬A`, finitario, por `dne_rule` |
+| `derives0_not_complete` | `FOL/Soundness0.lean` | `∃A, ⊬₀ A ∧ ⊬₀ ¬A`, dos modelos sobre `Unit` |
+
+🔑 *No era un objetivo difícil: era un objetivo imposible.* Y la refutación costaba cinco
+líneas con piezas que ya estaban compiladas — se habría encontrado **después** de abrir el frente.
+
+⭐ **Lo que SÍ es cierto** está probado en otro árbol: `PeanoRF/Calculus/Slash.lean`, por la barra
+de Kleene, sobre `Derivesᵢ` = `Derives₀` **menos los tres constructores clásicos** y sobre esta
+misma `Formula`. ⛔ No es importable desde aquí: su cadena baja a `ROBINSON_PlusPlus` y a `Peano`.
+
+⚠️ **Este teorema y el de §1 son hermanos**, y por eso viven juntos: los dos dicen que un
+enunciado **no tiene testigo**, y los dos lo dicen del cálculo que el proyecto usa. -/
+
+/-- La **propiedad de disyunción**, enunciada como `Prop` — el idioma del proyecto: una
+obligación se enuncia, nunca se postula. -/
+def DisjunctionProperty : Prop :=
+  ∀ A B : Formula, (([] : List Formula) ⊢₀ Formula.or A B) →
+    Or (([] : List Formula) ⊢₀ A) (([] : List Formula) ⊢₀ B)
+
+/-- ⛔⛔ **Y es FALSA**, con el tercio excluso como contraejemplo. -/
+theorem derives0_no_disjunction_property : Not DisjunctionProperty := by
+  intro hdp
+  obtain ⟨A, hA, hnA⟩ := FOL.Metamath.Soundness0.derives0_not_complete
+  rcases hdp A (neg A) (FOL.Propositional0.derives0_em_ctx [] A) with h | h
+  · exact hA h
+  · exact hnA h
+
 end FOL.Inconsistencia
 
 /-! ## FOOTPRINT — sólo `raa` y los tres de Lean. Ni un axioma más. -/
 #print axioms FOL.Inconsistencia.inconsistencia_de_cualquier_solidez
+#print axioms FOL.Inconsistencia.derives0_no_disjunction_property
