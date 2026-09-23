@@ -75,8 +75,13 @@ líneas** en vez de ~330, mismo footprint.
 Se adoptó ésta, y la razón conviene que quede escrita: aquélla da una sobreyección **semántica**
 —`formula_enum` no computa nada—, y ésta da una **efectiva**, que es la que un proyecto sobre
 representabilidad y conjuntos r.e. quiere tener. `#eval (List.range 12).map natToFormula` funciona.
-El precio son 230 líneas. ⬜ Si el propietario prefiere la corta, el cambio es de una línea en
-`cuarentena/Completeness.lean`.
+El precio son 230 líneas.
+
+⛔ **La alternativa corta ya no existe como opción** (2026‑09‑23): se ofrecía como *«un cambio de
+una línea en `cuarentena/Completeness.lean`»*, y ese módulo se **borró** en el cierre de FOL
+(ADR‑099, E2), superado por `Canonical0.completeness₀`. La oferta cayó con su referente; la
+versión efectiva de aquí es la única. ⚠️ Lo cuenta el propio control que la dejó pasar: `[G.2]`
+comprueba que un marcador esté **clasificado**, no que lo que nombra **exista**.
 -/
 
 namespace FOL.Metamath.Enumeration
