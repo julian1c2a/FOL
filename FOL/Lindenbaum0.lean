@@ -34,8 +34,8 @@ cada existencial**.* Es exactamente la hipótesis que el modelo canónico consum
    `FOL.Metamath.Deduction.deduction_theorem`.
 2. **§2** — Lindenbaum: la cadena `LindenbaumStep`, el límite, y `lindenbaum_lemma`.
 3. **§3** — lo mínimo sobre un maximal consistente que el ensamblaje necesita: `max_cons_bot`,
-   `max_cons_contains` y `max_cons_impl`. ⬜ El resto de la familia (`and`, `or`, `ex`, `forall`)
-   va con el modelo canónico, que es el siguiente tramo.
+   `max_cons_contains` y `max_cons_impl`. 🏁 El resto de la familia (`and`, `or`, `ex`, `forall`)
+   fue con el modelo canónico, como aquí se predijo: está en `FOL.Canonical0` §1 y §5.
 4. **§4** — ⭐⭐ `henkin_completion`.
 
 ## ⛔ Dónde está, y dónde NO está, la no‑finitud

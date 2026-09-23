@@ -92,12 +92,13 @@ la inducción no se heredan**. *El corte es exactamente lo que rompe esta lectur
 `FOL.SequentSound0`, donde el corte es **semánticamente trivial**: *el corte es gratis para la
 verdad y carísimo para la demostración.*
 
-## ⬜ La obligación que queda — enunciada, no postulada
+## 🏁 La obligación que quedaba — **PAGADA**
 
     CutElim : ∀ Γ Δ, LKc Γ Δ → LK₀ Γ Δ                       -- el HAUPTSATZ
 
-y **el consumidor está escrito**: `herbrandExtraction_of (hcut) (htr) : HerbrandExtraction`, con
-`htr` ya **demostrado** en `FOL.NDtoLK0`. ⇒ con `CutElim`, H3 y la vía H quedan cerradas.
+🏁 **`FOL.Hauptsatz0.cut_elimination : CutElim`** (ADR‑050/052), incondicional. Y el consumidor
+ya estaba escrito: `herbrandExtraction_of (hcut) (htr)`, con `htr` demostrado en `FOL.NDtoLK0`.
+⇒ **H3 y la vía H están cerradas.**
 
 ## 📏 Footprint
 

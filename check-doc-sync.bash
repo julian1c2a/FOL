@@ -542,6 +542,111 @@ else
   FAIL=1
 fi
 
+# ─── [G.2] CENSO DE MARCADORES DE DEUDA — trinquete en los DOS sentidos ───
+# ⛔ POR QUÉ EXISTE (2026-09-23): [G.1] tiene un hueco MEDIDO. Sólo lee el docstring **pegado
+# a un `def X : Prop`** y sólo acepta como pago un `theorem X : X :=`. ⇒ no ve dos clases
+# enteras, y el 2026-09-23 las dos estaban pobladas:
+#   (a) la ⬜ que vive en la **cabecera `/-! … -/` del módulo**, que no cuelga de ningún `Prop`;
+#   (b) la deuda que paga **otro módulo entero** (`PrenexNF0` pagaba `Prenex0`; `SkolemN0`
+#       pagaba `Skolem0`; `Canonical0` pagaba `Lindenbaum0`; `Eigenvariable` pagaba `Rename`).
+# Medido ese día: **23 marcadores, 9 de ellos anunciando abierto algo probado al lado**, con
+# [G.1] en VERDE. Es el mismo recuento que ADR-072 hizo al crear [G.1] — 19 de 24 —, o sea que
+# el problema **vuelve a crecer** en cuanto no hay trinquete.
+#
+# 🔑 Lo que [G.2] automatiza NO es «la deuda tiene testigo» (eso es [G.1]): es
+# **«la deuda ha sido MIRADA y CLASIFICADA»**. No juzga; obliga a que alguien haya juzgado.
+#
+# ⚠️ Rompe en los DOS sentidos, como [B] y [E]:
+#   * marcador SIN declarar        ⇒ ROJO (clasifícalo)
+#   * fila declarada que ya NO casa ⇒ ROJO (quítala: la deuda se pagó o el texto cambió)
+#   * ancla que casa DOS veces      ⇒ ROJO (ambigua; no vale absolver por subcadena)
+# 🔑 *Un contador exacto rompe también hacia abajo.*
+#
+# Las cuatro clases:
+#   ABIERTA   — deuda real y viva. La nota dice qué falta.
+#   DIFERIDA  — se puede hacer y se decidió NO hacerlo ahora. La nota dice por qué.
+#   OFERTA    — no es deuda: una alternativa ofrecida al propietario.
+#   HISTORIAL — el marcador CITA una deuda pasada (entre «» o tachada). La nota dice quién la pagó.
+echo ""
+echo "════ [G.2] CENSO DE MARCADORES DE DEUDA — ROJO ════"
+G2SRC="FOL TheoryFramework"
+G2PAT="⬜|DEUDA|[Nn]o está hecha|[Nn]o está hecho|NO se paga aquí|[Nn]o existe nada|ÚNICA DEUDA|[Nn]o medido"
+G2_FAIL=0
+G2TAB=$(mktemp); G2CUR=$(mktemp)
+
+# ── LA TABLA ──  fichero § ancla (subcadena ÚNICA en ese fichero) § clase § nota
+cat > "$G2TAB" <<'G2EOF'
+FOL/Craig0.lean§derivación de `LKp` a mano§ABIERTA§no hay puente LK₀→LKp; ⬜ sin medir
+FOL/SkolemHerbrand0.lean§⬜ **no medido**§ABIERTA§componer con `skolem_conservative_nf` para volver a φ y Γ; ⬜ sin medir
+TheoryFramework/Instances/FOL.lean§`CompleteLogic Formula` tampoco se declara§ABIERTA§`folSystem` apunta a `Derives` (contaminado) y `completeness₀` es sobre `Derives₀`
+FOL/Lift0.lean§la razón es de riesgo, no de gusto§DIFERIDA§refactor de ~150 l. de enunciados; se hace DESPUÉS del ensamblaje
+FOL/Enumeration.lean§Si el propietario prefiere la corta§OFERTA§alternativa de 230 l. ofrecida; no es deuda
+FOL/Derives1.lean§Esta sección se titulaba§HISTORIAL§H3 la paga `Hauptsatz0.cut_elimination`
+FOL/Derives2.lean§Se titulaba§HISTORIAL§H3 la paga `Hauptsatz0.hauptsatz`
+FOL/Herbrand0.lean§Esta cabecera decía§HISTORIAL§H3 la paga `Hauptsatz0.herbrand_extraction`
+FOL/HerbrandBlock0.lean§ya decía «PAGADA» mientras esta línea§HISTORIAL§la paga `BlockExtraction0.herbrand_extraction_block`
+FOL/Prenex0.lean§~~Lo que falta para la forma normal~~§HISTORIAL§la paga `FOL.PrenexNF0` (y refuta su estimación)
+FOL/Prenex0.lean§Estimado ~200 l., riesgo medio§HISTORIAL§la estimación que `PrenexNF0` refutó
+FOL/Rename.lean§~~Lo que esto NO es todavía~~§HISTORIAL§la paga `Eigenvariable.derives0_gen_fresh`
+FOL/Sequent0.lean§LA ÚNICA DEUDA QUE QUEDA§HISTORIAL§`CutElim` la paga `Hauptsatz0.cut_elimination`
+FOL/Skolem0.lean§la falsedad iba etiquetada§HISTORIAL§la paga `SkolemN0.skolem_conservative_n`
+FOL/Skolem0.lean§~~Lo que falta: el axioma bajo un PREFIJO§HISTORIAL§la paga `SkolemN0`
+FOL/Skolem0.lean§**MEDIDO que no existe nada de eso**§HISTORIAL§`envPush` resultó no hacer falta
+FOL/Skolem0.lean§~200 l., riesgo **medio**, y el riesgo§HISTORIAL§la estimación que `SkolemN0` refutó
+G2EOF
+
+grep -rnE "$G2PAT" $G2SRC --include=*.lean 2>/dev/null > "$G2CUR"
+G2N=$(wc -l < "$G2CUR" | tr -d ' ')
+G2D=$(grep -c . "$G2TAB" | tr -d ' ')
+
+# (i) cada fila declarada casa EXACTAMENTE una vez
+while IFS= read -r g2row; do
+  [ -z "$g2row" ] && continue
+  g2f=$(printf '%s' "$g2row" | awk -F'§' '{print $1}')
+  g2a=$(printf '%s' "$g2row" | awk -F'§' '{print $2}')
+  g2c=$(printf '%s' "$g2row" | awk -F'§' '{print $3}')
+  g2hits=$(grep -F -- "$g2a" "$G2CUR" | grep -c "^$g2f:" | tr -d ' ')
+  if [ "$g2hits" = "0" ]; then
+    echo "  ❌ $g2f — la fila declarada ($g2c) YA NO CASA con ningún marcador:"
+    echo "        ancla: $g2a"
+    echo "        ⇒ o la deuda se pagó (quita la fila) o el texto cambió (ajusta el ancla)."
+    G2_FAIL=1
+  elif [ "$g2hits" != "1" ]; then
+    echo "  ❌ $g2f — ancla AMBIGUA ($g2hits marcadores): $g2a"
+    echo "        ⇒ casar por subcadena ABSUELVE si el ancla no es única. Afínala."
+    G2_FAIL=1
+  fi
+done < "$G2TAB"
+
+# (ii) ningún marcador sin declarar  — y el recuento tiene que CUADRAR
+if [ "$G2N" != "$G2D" ]; then
+  echo "  ❌ marcadores en el árbol: $G2N · filas declaradas: $G2D"
+  while IFS= read -r g2l; do
+    [ -z "$g2l" ] && continue
+    g2lf=${g2l%%:*}
+    g2found=0
+    while IFS= read -r g2row; do
+      [ -z "$g2row" ] && continue
+      g2f=$(printf '%s' "$g2row" | awk -F'§' '{print $1}')
+      [ "$g2f" = "$g2lf" ] || continue
+      g2a=$(printf '%s' "$g2row" | awk -F'§' '{print $2}')
+      case "$g2l" in *"$g2a"*) g2found=1; break ;; esac
+    done < "$G2TAB"
+    [ "$g2found" = "0" ] && echo "        SIN DECLARAR → $(printf '%s' "$g2l" | cut -c1-118)"
+  done < "$G2CUR"
+  G2_FAIL=1
+fi
+
+rm -f "$G2TAB" "$G2CUR"
+if [ "$G2_FAIL" = "0" ]; then
+  echo "  ✓ los $G2N marcadores de deuda están TODOS clasificados"
+else
+  echo "      ⚠️ Un marcador sin clasificar es una deuda que nadie ha mirado. Clásificalo en"
+  echo "      la TABLA de [G.2] como ABIERTA / DIFERIDA / OFERTA / HISTORIAL, con su nota."
+  echo "      🔑 [G.1] comprueba que la deuda tiene TESTIGO; [G.2], que ha sido MIRADA."
+  FAIL=1
+fi
+
 # ─── RESUMEN ────────────────────────────────────────────────────────────────
 echo
 if [ "$FAIL" = "0" ]; then

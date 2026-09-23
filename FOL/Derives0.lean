@@ -85,12 +85,13 @@ módulo entra por el barrel `FOL`, que RPP **no importa**.
 `Derives`/`DerivesW`), y da lo mismo para lo que hace falta: un cálculo sobre el que **M‑11 no
 aplica**.
 
-## ⬜ Lo que viene después (y va en este orden)
+## 🏁 Lo que venía después — **los TRES, hechos**
 
-1. ⚠️⚠️ **`derives0_soundness : Γ ⊢₀ f → Γ ⊨ f`** — el agujero de verdad del repo. Plantilla:
-   `prf0_soundness`. Sin solidez, una completitud no dice nada.
-2. El lema de **renombrado** sobre derivaciones, que desbloquea la extensión de Henkin de verdad.
-3. Portar `cuarentena/Completeness.lean` a `Derives₀`.
+1. 🏁 **`derives0_soundness`** — `FOL.Metamath.Soundness0` (ADR‑034).
+2. 🏁 El lema de **renombrado** — `FOL.Rename`, más el paso de eigenvariable
+   (`FOL.Eigenvariable.derives0_gen_fresh`), que era la mitad que faltaba.
+3. 🏁 Portada la completitud a `Derives₀` — `FOL.Canonical0.completeness₀`, y con ella
+   `derives0_complete_iff`, compacidad y Löwenheim–Skolem descendente.
 -/
 
 /-- **Deducción natural clásica de FOL⁼, finitaria y sin habitantes‑axioma.**

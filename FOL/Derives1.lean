@@ -73,7 +73,11 @@ es el **esquema de recursión**.
 `[propext, Quot.sound]`. **Ni un `Classical.choice`**: la admisibilidad de `rewrite_at` es
 enteramente constructiva.
 
-## ⬜ Lo que sigue faltando para H3
+## 🏁 Lo que faltaba para H3 — y ya no falta
+
+⚠️ Esta sección se titulaba «⬜ Lo que sigue faltando para H3» con **H3 ya probada**
+(`FOL.Hauptsatz0.cut_elimination`, ADR‑050/052). Se deja el contenido porque describe bien la
+RUTA que se siguió; lo que cambia es el tiempo verbal.
 
 `subst` — la regla de Leibniz. La vía estándar es reducirla a **instancias de congruencia**
 (`FOL.Herbrand0.EqInstance` ya las tiene, y ya están probadas derivables), dejando el cálculo en

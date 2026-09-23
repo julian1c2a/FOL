@@ -35,7 +35,7 @@ Footprint: `[propext, Quot.sound]`. **Ni un `Classical.choice`**, en todo el mó
 | | dirección | estado |
 |---|---|---|
 | ⟸ | **certificado ⇒ demostración** | 🏁 **DEMOSTRADA aquí**, incondicional y finitaria |
-| ⟹ | **demostración ⇒ certificado** (H3) | ⬜ **DEUDA**, enunciada como `Prop`, no postulada |
+| ⟹ | **demostración ⇒ certificado** (H3) | 🏁 **PAGADA** (ADR‑050/052) — `FOL.Hauptsatz0.herbrand_extraction`, **incondicional**, `[propext, Quot.sound]` |
 
 🏁 **La ⟹ es H3 —la eliminación de cortes— y está PAGADA** (ADR-050/052, `Hauptsatz0`). Aquí se **enuncia** como
 `HerbrandExtraction`, y se escribe **el consumidor**: `herbrand_iff`, que con ella convierte
@@ -68,7 +68,9 @@ Pero es la mitad fácil, y es lo que permite que el certificado descargue su pro
 
 ⚠️ **Un solo cuantificador.** `∃x φ(x)`, no `∃x̄`. La versión n‑aria es iteración rutinaria pero
 la aritmética de De Bruijn bajo binders anidados (`substFormula 0 t (∃ψ) = ∃ (substFormula 1 (lift t) ψ)`)
-pide su propia capa de lemas. ⬜ No hecho, y dicho.
+pide su propia capa de lemas. 🏁 **HECHO**: la versión de BLOQUE está en
+`FOL.HerbrandBlock0` (`exBlock`, `subst_exBlock`) y su extracción en
+`FOL.BlockExtraction0.herbrand_extraction_block`, también incondicional.
 -/
 
 namespace FOL.Herbrand0
@@ -251,7 +253,7 @@ theorem derives0_ex_of_cert {φ : Formula} {ts : List Term} {E : List Formula}
   exact fun g hg => derives0_of_eqInstance (h.1 g hg)
 
 -- ============================================================
--- §6 · ⬜ H3, ENUNCIADA — y su CONSUMIDOR
+-- §6 · 🏁 H3, ENUNCIADA **y PAGADA** — y su CONSUMIDOR
 -- ============================================================
 
 /-- Fórmulas sin cuantificadores: la hipótesis sin la cual **Herbrand es falso**. -/

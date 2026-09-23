@@ -20,7 +20,9 @@
 > **Fuentes:** `cuarentena/README.md` · `AXIOMS.md` ·
 > `../ROBINSON_PlusPlus/doc/AUDITORIA-FOL-2026-09-12.md`
 
-**Last updated:** 2026-09-18 — ⚠️ esta marca decía **2026-05-08** y la versión de Lean
+**Last updated:** 2026-09-23 — ⭐ el 2026‑09‑22 entró **ADR‑083** (`ModelG (S D)`, el símbolo
+parámetro también en la semántica; la fila de `Semantics.lean` lo dice) y **la marca no se
+movió**: lo cazó `[E]` el 2026‑09‑23. ⚠️ Antes decía **2026-09-18**, y antes **2026-05-08** con la versión de Lean
 **v4.28.0**, las dos falsas; lo destapó el control `[E]` al rearmarse (ADR-072). Cambios reales
 desde entonces, sólo los de hoy: **ADR-068** (el tipo de los símbolos es un parámetro — `TermG`,
 `FormulaG`, los `abbrev` y los tres shims), **ADR-069** (la capa de operaciones y

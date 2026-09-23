@@ -65,7 +65,15 @@ la necesita **sólo** el paso «inyectiva ⇒ tiene inversa». Por eso la forma 
 `derives0_rename_inv`, que pide la inversa — y en la construcción de Henkin la inversa **se tiene
 escrita**, porque el renombrado es explícito.
 
-## ⬜ Lo que esto NO es todavía
+## 🏁 Lo que esto no era todavía — y ya lo es
+
+🏁 **La otra mitad está**: el paso de eigenvariable es
+`FOL.Eigenvariable.derives0_gen_fresh`, y la operación que aquí se llama `abstractConst` existe
+como `absTerm`/`absFormula` (`FOL/Eigenvariable.lean:71,84`). Con las dos mitades, la extensión de
+Henkin está construida (`FOL.Henkin0`, `FOL.HenkinLimit0`) y `completeness₀` cierra.
+⚠️ El párrafo de abajo se deja porque nombra bien la diferencia entre renombrar y abstraer.
+
+## ⬜~~Lo que esto NO es todavía~~ (cerrado)
 
 ⚠️ Con esto **aún no está la extensión de Henkin**. Falta la otra mitad, y conviene tenerla con
 nombre: el paso de **eigenvariable** — de `Γ ⊢₀ φ(c)` con `c` fresca concluir `Γ ⊢₀ ∀x φ(x)`.

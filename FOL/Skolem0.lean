@@ -81,7 +81,15 @@ una hace un trabajo distinto: en Γ para transportar el contexto, en A para eleg
 `Classical.choice` es el de `completeness₀`, el **WKL** de siempre (plan §6.3), más la elección del
 testigo. ⛔ Vía W, no vía H.
 
-## ⬜ Lo que falta: el axioma bajo un PREFIJO de universales
+## 🏁 El axioma bajo un PREFIJO de universales — **HECHO en `FOL.SkolemN0`**
+
+🏁 `FOL.SkolemN0.skolem_conservative_n` lo cierra, y la pieza que aquí se dio por inexistente
+—reconstruir el entorno desde una lista— resultó no hacer falta: `envPush` se **construye** con
+`shiftEnv` y las dos ecuaciones del paso inductivo salen `rfl`.
+⚠️ Lo de abajo decía «**MEDIDO** que no existe nada de eso», y la falsedad iba etiquetada
+**MEDIDO**. Se deja como historial.
+
+## ⬜~~Lo que falta: el axioma bajo un PREFIJO de universales~~ (refutado)
 
     ∀y₁…∀y_k ( (∃x A) → A[x := c(y₁,…,y_k)] )
 

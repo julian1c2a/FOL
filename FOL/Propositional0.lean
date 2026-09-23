@@ -62,8 +62,9 @@ justamente `a` (o `¬a`), que es la cabeza del contexto objetivo.
 esqueleto proposicional es `p → q`, que no es tautología. La solidez proposicional es falsa, y
 tiene que serlo: el cálculo sabe más que su esqueleto.
 
-⬜ Y falta lo gordo de la vía H: **H3**, la eliminación de cortes / normalización, y **H4**, la
-extracción de testigos. Ver §5.2 del plan.
+🏁 **Y la vía H está ENTERA**, contra lo que esta línea decía: **H3** es
+`FOL.Hauptsatz0.cut_elimination` y **H4** es `FOL.Herbrand0` (el certificado) más
+`FOL.BlockExtraction0` (la extracción n‑aria). Ver §5.2 y §5.4 del plan.
 -/
 
 namespace FOL.Propositional0

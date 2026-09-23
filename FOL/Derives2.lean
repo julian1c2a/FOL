@@ -82,7 +82,10 @@ así que `Derives₂` no es más fuerte.
 `[propext, Quot.sound]`. **Ni un `Classical.choice`.** ⭐ Y `Derives₂.rec` **no depende de ningún
 axioma**.
 
-## ⬜ Lo que sigue faltando para H3
+## 🏁 Lo que faltaba para H3 — y ya no falta
+
+⚠️ Se titulaba «⬜ Lo que sigue faltando» con el Hauptsatz ya probado
+(`FOL.Hauptsatz0.hauptsatz` / `cut_elimination`). El párrafo describe la ruta, no una deuda.
 
 **El Hauptsatz.** Esto no elimina cortes: pone el cálculo en la forma en que el Hauptsatz se puede
 plantear. Siguen siendo «de corte» `elim_impl`, `elim_and_l/r`, `elim_or` y `elim_ex` — los cinco

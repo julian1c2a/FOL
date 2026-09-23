@@ -55,7 +55,14 @@ axioma**) y del constructor `Derives₀.forall_not_ex_not`. ⇒ footprint `[prop
 **ni un `Classical.choice`**. 🔑 *La fuerza clásica de este cálculo está en sus CONSTRUCTORES, no en
 el metanivel* — y por eso se puede usar sin encarecer el footprint.
 
-## ⬜ Lo que falta para la forma normal
+## 🏁 La forma normal — **HECHA en `FOL.PrenexNF0`**
+
+⚠️ Lo de abajo se escribió como deuda y **el compilador lo refutó**: `prenex` y
+`derives0_prenex_iff` están en `FOL.PrenexNF0`, y las seis definiciones las acepta Lean por
+recursión **estructural** — sin `termination_by`. Se deja el párrafo porque la estimación
+fallida es parte del historial.
+
+## ⬜~~Lo que falta para la forma normal~~ (refutado)
 
 Estas ocho son el **motor**. Falta la **función** `prenex : Formula → Formula` con su terminación y
 su teorema de corrección (`Γ ⊢₀ φ ↔ Γ ⊢₀ prenex φ`), que es una recursión sobre la estructura con
