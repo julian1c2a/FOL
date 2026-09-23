@@ -1,6 +1,5 @@
 FOL/MetaRules.lean
 FOL/Core.lean
-AXIOMS.md
 FOL/Theorems/Eq.lean
 FOL/Soundness0.lean
 FOL/HenkinLimit0.lean
@@ -8,7 +7,6 @@ FOL/Henkin0.lean
 FOL/Eq0.lean
 FOL/NDtoLK0.lean
 FOL/Hauptsatz0.lean
-cuarentena/README.md
 FOL/Compacity0.lean
 FOL/PrenexNF0.lean
 FOL/SkolemN0.lean
@@ -24,8 +22,6 @@ FOL/Eigenvariable.lean
 FOL/Fresh0.lean
 FOL/Enumeration.lean
 FOL/SymClasses.lean
-FOL.lean
-FOL/FOL.lean
 FOL/HerbrandBlock0.lean
 FOL/Derives0.lean
 FOL/Derives1.lean

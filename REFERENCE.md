@@ -742,6 +742,8 @@ módulo. Es lo que exige AI‑GUIDE §14.
 
 **`Complexity.lean`** — `formulaComplexity`, `complexity_substFormula`
 
+**`Inconsistencia.lean`** — `Mfalse`, `Mtrue`, `P`, `ctx_nil`, `inconsistencia_de_cualquier_solidez`
+
 **`Derives0.lean`** — `Derives₀`, `derives0_to_derives`, `derives0_raa`
 
 **`Soundness0.lean`** — `derives0_soundness`, `Mtrue`, `Mfalse`, `derives0_consistent`, `P`, `derives0_not_derives_P`, `derives0_not_derives_negP`, `derives0_not_complete`

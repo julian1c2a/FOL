@@ -72,12 +72,23 @@ namespace TheoryFramework.Instances
 open FOL
 open FOL.Metamath.Semantics
 
-/-- **`FOL⁼` como sistema lógico** — el núcleo y nada más.
-    `Formula`, `Derives` y `neg` viven en la raíz (`FOL/FOL.lean` no abre `namespace`). -/
-instance folSystem : LogicSystem Formula where
-  derives         := fun Γ f => Derives Γ f
-  bottom          := .bottom
-  neg             := neg
-  semanticEntails := FOL.Metamath.Semantics.satisfies
+-- ⛔⛔ **`folSystem` RETIRADA el 2026‑09‑23** (decisión del propietario, cierre de FOL).
+--
+-- Declaraba `derives := fun Γ f => Derives Γ f` — el cálculo **CONTAMINADO** —, y por eso
+-- `SoundLogic Formula` era INHABITABLE y `CompleteLogic Formula` **no** la pagaba
+-- `completeness₀`: son dos cálculos distintos (ADR‑072).
+--
+-- 📐 **Lo que decidió retirarla es una MEDICIÓN**: `folSystem` se declaraba **una vez** y
+-- **no la consumía nadie en código** — las otras tres apariciones del nombre en el árbol eran
+-- prosa. Una instancia sin consumidores que además apunta al cálculo equivocado no es un
+-- puente: es una afirmación sobre el sujeto equivocado.
+--
+-- ⚠️ **Este módulo se queda, y a propósito**: lo que vale de él es la cabecera de arriba, que
+-- explica **por qué no hay instancia** y qué haría falta para que la hubiera. Borrarlo dejaría
+-- la pregunta sin respuesta escrita, que es como la deuda sobrevivió a su propio motivo.
+--
+-- ⬜ **Para reabrirlo**: declarar `LogicSystem Formula` sobre **`Derives₀`**. Entonces
+-- `SoundLogic` la paga `derives0_soundness` y `CompleteLogic` la paga `completeness₀`, y
+-- `proves_iff_models` deja de ser inusable. Es la opción (a) de la cabecera.
 
 end TheoryFramework.Instances

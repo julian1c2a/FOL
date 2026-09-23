@@ -578,7 +578,8 @@ G2TAB=$(mktemp); G2CUR=$(mktemp)
 cat > "$G2TAB" <<'G2EOF'
 FOL/Craig0.lean§derivación de `LKp` a mano§ABIERTA§no hay puente LK₀→LKp; ⬜ sin medir
 FOL/SkolemHerbrand0.lean§⬜ **no medido**§ABIERTA§componer con `skolem_conservative_nf` para volver a φ y Γ; ⬜ sin medir
-TheoryFramework/Instances/FOL.lean§`CompleteLogic Formula` tampoco se declara§ABIERTA§`folSystem` apunta a `Derives` (contaminado) y `completeness₀` es sobre `Derives₀`
+TheoryFramework/Instances/FOL.lean§`CompleteLogic Formula` tampoco se declara§DIFERIDA§`folSystem` RETIRADA el 2026-09-23; la salida (declararla sobre `Derives₀`) esta escrita
+TheoryFramework/Instances/FOL.lean§**Para reabrirlo**§DIFERIDA§la via para volver a tener instancia: `LogicSystem Formula` sobre `Derives₀`
 FOL/Lift0.lean§la razón es de riesgo, no de gusto§DIFERIDA§refactor de ~150 l. de enunciados; se hace DESPUÉS del ensamblaje
 FOL/Enumeration.lean§Si el propietario prefiere la corta§OFERTA§alternativa de 230 l. ofrecida; no es deuda
 FOL/Derives1.lean§Esta sección se titulaba§HISTORIAL§H3 la paga `Hauptsatz0.cut_elimination`

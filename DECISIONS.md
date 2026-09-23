@@ -126,6 +126,20 @@ teoremas derivados facilita localizar cada pieza.
 
 ---
 
+> ## ⛔⛔ ESTE FICHERO ESTÁ DORMIDO DESDE ADR‑010 — aviso añadido el 2026‑09‑23
+>
+> **El log de decisiones VIVO de FOL es `../ROBINSON_PlusPlus/DECISIONS.md`**, que va por
+> ADR‑098. Todas las decisiones sobre este repositorio desde el 2026‑09‑12 están ahí — entre
+> ellas ADR‑047 (la corrección de PeanoRF), ADR‑061 (`check-doc-sync` adoptado), ADR‑065,
+> ADR‑072 (el control `[E]` rearmado y `[G.1]`), ADR‑083 (`ModelG`) y ADR‑098 (el cierre).
+>
+> ⚠️ **Y hay una colisión de numeración con PeanoRF**: los dos repositorios tienen un
+> ADR‑047 y los dos son sobre esta misma relación. Prefijo obligatorio en los dos sentidos:
+> **`RPP‑047`** / **`PRF‑047`**.
+>
+> 🔑 *Un log de decisiones que nadie escribe no es un log vacío: es un puntero falso.*
+> Es la misma causa que congeló el `CHANGELOG` y con él el control `[E]` (ADR‑072).
+
 ## ADR-007: Árbol de documentación `doc/REFERENCE-{tema}.md`
 
 **Fecha**: 2026-04-20

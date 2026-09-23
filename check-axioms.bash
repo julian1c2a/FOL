@@ -20,7 +20,7 @@ ESPERADO_TF=0
 # medido se pudre.
 # ⚠️ NO incluye `cuarentena/librerias-retiradas/` (15 axiomas): son librerías MUERTAS, fuera del
 # lakefile, y su cifra no es una promesa de nadie.
-ESPERADO_CUAR=1
+ESPERADO_CUAR=0
 
 echo "════ AXIOMAS DE LEAN, por librería ════"
 FAIL=0

@@ -1,6 +1,22 @@
 # AXIOMS.md — el censo de `axiom` de FOL
 
-> ## ESTADO REAL — 2026‑09‑13 · **4 `axiom` de Lean** en el build · 0 `sorry` · Lean v4.31.0
+> ## ⭐⭐ ESTADO REAL — 2026‑09‑23 · **4 `axiom` de Lean**, y **NI UNO MÁS EN NINGUNA PARTE**
+>
+> `cuarentena/` **se vació de código** (decisiones E1/E2/E3 del cierre): los tres módulos con
+> teoremas FALSOS y el `Completeness.lean` superado por `Canonical0.completeness₀` **se
+> borraron**, y con ellos el único `axiom` del repositorio que vivía fuera del build
+> (`henkin_extension_lemma`).
+>
+> ⚠️ **Esto NO revierte ADR‑032**, que decidió que ese axioma se quedaba: lo que desaparece
+> es el **módulo** que lo alojaba, superado por un teorema que no lo necesita. La decisión de
+> ADR‑032 queda **sin objeto**, no revocada.
+>
+> ⭐ Y `cuarentena/Inconsistencia.lean` —la **evidencia** de que la solidez de `Derives` es
+> falsa— **subió al build** como `FOL/Inconsistencia.lean`: footprint
+> `[propext, FOL.MetaRules.raa]`. 🔑 *Congelar un repositorio con su pieza de evidencia sin
+> compilar es congelar una afirmación, no un hecho.*
+
+> ## ESTADO — 2026‑09‑13 · **4 `axiom` de Lean** en el build · 0 `sorry` · Lean v4.31.0
 >
 > **Librerías en el build:** `FOL` (**4** axiomas) · `TheoryFramework` (0).
 > ⭐ **Y los cuatro son exactamente los que el kernel obliga a postular** — ver §1.

@@ -2,6 +2,19 @@
 Copyright (c) 2026. All rights reserved.
 Author: Julián Calderón Almendros
 License: MIT
+
+> ## ⭐⭐ 2026‑09‑23 · ESTE MÓDULO SUBE AL BUILD (decisión E3 del cierre)
+>
+> Vivía en `cuarentena/`, que **no se compila**. Y `cuarentena/README.md` §7 decía, con esas
+> palabras, que un directorio no compilado es **cómo un `axiom` falso sobrevivió ochenta días**.
+> ⇒ la **evidencia** de que la solidez de `Derives` es falsa **no la verificaba ningún build**.
+>
+> 🔑 *Congelar un repositorio con su pieza de evidencia sin compilar es congelar una
+> afirmación, no un hecho.*
+>
+> ⚠️ **Y es seguro tenerlo en la librería principal**: el teorema es **CONDICIONAL**
+> —`(solidez : …) → False`—, no afirma `False`. Lo que dice es que **ese enunciado no tiene
+> testigo**, y por eso no hay nada que aislar.
 -/
 import FOL.FOL
 import FOL.MetaRules
@@ -60,7 +73,7 @@ Enunciar la solidez sobre un cálculo **sin axiomas habitándolo**. `ROBINSON_Pl
 
 open FOL.Metamath.Semantics
 
-namespace FOL.Cuarentena.Inconsistencia
+namespace FOL.Inconsistencia
 
 /-- Modelo trivial sobre `Unit` con TODAS las relaciones falsas. -/
 def Mfalse : Model Unit := { func := fun _ _ => (), rel := fun _ _ => False }
@@ -88,7 +101,7 @@ theorem inconsistencia_de_cualquier_solidez
   simp only [evalFormula, neg] at h
   exact h trivial
 
-end FOL.Cuarentena.Inconsistencia
+end FOL.Inconsistencia
 
 /-! ## FOOTPRINT — sólo `raa` y los tres de Lean. Ni un axioma más. -/
-#print axioms FOL.Cuarentena.Inconsistencia.inconsistencia_de_cualquier_solidez
+#print axioms FOL.Inconsistencia.inconsistencia_de_cualquier_solidez

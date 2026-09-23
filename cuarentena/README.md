@@ -1,4 +1,25 @@
-# `cuarentena/` — ⛔ **tres módulos apartados el 2026‑09‑11**
+# `cuarentena/` — ⛔ **tres módulos apartados el 2026‑09‑11**, y **VACIADA el 2026‑09‑23**
+
+> ## ⭐⭐ ESTE DIRECTORIO YA NO TIENE CÓDIGO — 2026‑09‑23
+>
+> | fichero | qué se hizo | por qué |
+> |---|---|---|
+> | `Soundness.lean` | **BORRADO** | el teorema es FALSO; su sujeto está reparado en `FOL/Soundness0.lean` |
+> | `Compacity.lean` | **BORRADO** | vacuo (pasaba por `soundness`); reparado en `FOL/Compacity0.lean` |
+> | `Theorems_Soundness.lean` | **BORRADO** | sólo re‑exportaba `soundness` |
+> | `Completeness.lean` | **BORRADO** | superado por `FOL/Canonical0.lean` (`completeness₀`), y con él se va el único `axiom` fuera del build |
+> | `Inconsistencia.lean` | ⭐ **SUBE AL BUILD** → `FOL/Inconsistencia.lean` | era la **evidencia**, y vivía donde nada se compila |
+>
+> ⚠️ **Este README se queda**, y el texto de abajo también: es el **registro** de por qué
+> hubo cuarentena, y §7 es la lección que justificó E3 — *un directorio que no se compila es
+> cómo un `axiom` falso sobrevivió ochenta días*.
+>
+> ⛔ `cuarentena/librerias-retiradas/` **no se toca**: sigue fuera del build, con sus 15
+> axiomas, y `check-axioms.bash` la cuenta aparte.
+>
+> ⚠️ Las referencias de abajo a `Soundness.lean`, `Compacity.lean`,
+> `Theorems_Soundness.lean` y `Completeness.lean` son **históricas**: esos ficheros ya no
+> existen en el árbol.
 
 **Creado:** 2026‑09‑11 · **Autor:** Julián Calderón Almendros
 

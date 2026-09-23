@@ -23,8 +23,8 @@
 **Author**: Julián Calderón Almendros
 
 > 📐 **CIFRAS CANÓNICAS — medidas, no copiadas** (`bash check-doc-sync.bash`, 2026‑09‑23):
-> **54 módulos activos** (`FOL/` 42 + `FOL/Theorems/` 6 + `TheoryFramework/` 6) ·
-> **5 módulos en `cuarentena/`** · **4 `axiom` de Lean** en el build (+1 en `cuarentena/`) ·
+> **55 módulos activos** (`FOL/` 43 + `FOL/Theorems/` 6 + `TheoryFramework/` 6) ·
+> **0 módulos en `cuarentena/`** · **4 `axiom` de Lean** en el build ·
 > **0 sorry**.
 >
 > ⚠️ Esta línea existe para que el control tenga **contra qué comparar**: sin ella,

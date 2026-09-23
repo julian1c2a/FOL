@@ -9,6 +9,7 @@ import FOL.Semantics
 import FOL.Enumeration
 import FOL.Derives0
 import FOL.Soundness0
+import FOL.Inconsistencia
 import FOL.Rename
 import FOL.Eigenvariable
 import FOL.Lift0
