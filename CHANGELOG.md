@@ -19,6 +19,22 @@ All notable changes to this project will be documented in this file.
 Format based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## 2026-09-26 (madrugada, 2) — D3a: la interpolación de Craig para `Derives₀`, CON igualdad
+
+* 🏁🏁 **`FOL/Interpolation0.lean`** (módulo nuevo ⇒ **54 módulos activos**): `craig₀ : [A] ⊢₀ B → ∃ C,
+  [A] ⊢₀ C ∧ [C] ⊢₀ B ∧ PredSub C [A] ∧ PredSub C [B]`, y `craig_ctx₀` con contexto. La igualdad es
+  símbolo lógico; la condición va sobre los símbolos de relación. **`[propext, Quot.sound]`**: ni un
+  `Classical.choice`. Compiló a la primera (síntesis de dos diseños independientes y un juez).
+* ⭐ **El puente** `lk0_to_lkp`: una derivación de `LK₀` da una de `LKp` con las instancias de igualdad
+  en el antecedente, cerradas con `∀` (`EqGen`) para atravesar `allR`/`exL`.
+* ⭐⭐ **Sin borrar predicados**: cada instancia menciona a lo sumo un símbolo de relación; las de
+  predicados ajenos a `A` van al lado de Maehara donde la intersección de lenguajes no las deja pasar.
+* ⭐ **Dividendo**: `lk0_to_derives0_fin`, `LK₀ → ⊢₀` SINTÁCTICO (la única traducción del árbol era
+  `SequentSound0.lk0_to_derives0`, que es la completitud).
+* ⚠️ Control con lenguajes incomparables y la igualdad trabajando (`craig₀_example`); los controles
+  con `A := ⊤` o un `B` sin predicados se descartaron por VACUOS (se cumplen con `C := ⊤` / `C := B`).
+* Sale la última ABIERTA de `[G.2]` (`Craig0`): el censo queda en 15 (0 ABIERTA). ⇒ **D3, cerrada.**
+
 ## 2026-09-26 (madrugada) — D3b: el teorema de Herbrand para `φ` y `Γ` cualesquiera
 
 * 🏁🏁 **`SkolemHerbrand0` §3**: `herbrand_validity_ctx₀` — `Γ ⊢₀ φ` si y sólo si hay un certificado

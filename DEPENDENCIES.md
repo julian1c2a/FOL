@@ -9,7 +9,7 @@
 > **dos**, `FOL` y `TheoryFramework`; `FOLPure`, `PropLogic` y `FOL_poli` se retiraron el 2026-09-12),
 > y de sus siete nodos de `FOL`, tres son ficheros **borrados** (`Soundness`, `Completeness`,
 > `Compacity`). No tiene **ni uno** de los 27 módulos `FOL/*0.lean`, que son hoy el grueso de la librería.
-> Medido el 2026-09-26 (tras borrar `Tactics2`): 53 módulos activos y 95 aristas `import` internas (96 líneas `import`; una es `import Lean`).
+> Medido el 2026-09-26 (tras borrar `Tactics2` y crear `Interpolation0`): 54 módulos activos y 97 aristas `import` internas entre módulos (98 líneas `import`; una es `import Lean`), más las del barril.
 > ⚠️ Añadir a mano lo del cierre (T4 y T6 no crean módulos; sólo la arista `Compacity0 → Skolem0`)
 > a un grafo al que le faltan más de cuarenta nodos no lo arregla: hay que **regenerarlo desde las
 > líneas `import`**, o borrarlo. Mientras tanto, la fuente de verdad son esas líneas y el catálogo de

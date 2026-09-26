@@ -34,7 +34,7 @@ las decisiones D1, D2, D4, D5, D6 y D7 del propietario, **ejecutadas** el 2026-0
 |---|---|---|
 | D1 | `Tactics2.lean` | ✅ **borrado** (idéntico, salvo el `import`, a la copia de `FOL_poli`) |
 | D2 | `IsSyntacticallyComplete₀`, por pertenencia | ✅ **`IsMemComplete`** (sin subíndice: no depende de cálculo; y libre el nombre canónico para la teoría completa sobre sentencias) |
-| D3 | Las dos **ABIERTA** de `[G.2]` (el propietario: «vamos a por D3») | **D3b ✅ PAGADA**: `SkolemHerbrand0.herbrand_validity_ctx₀` — `Γ ⊢₀ φ` sii certificado de Herbrand para la forma de Herbrand de `Γ ⇒ φ`; no había que mover la negación, sino skolemizar lo que se refuta. ⬜ **D3a** (el puente `LK₀`→`LKp` para Craig con igualdad, `Craig0`): diseño en curso |
+| D3 | Las dos **ABIERTA** de `[G.2]` (el propietario: «vamos a por D3») | ✅ **CERRADA, las dos.** **D3b**: `SkolemHerbrand0.herbrand_validity_ctx₀` — `Γ ⊢₀ φ` sii certificado de Herbrand para la forma de Herbrand de `Γ ⇒ φ`; no había que mover la negación, sino skolemizar lo que se refuta. **D3a**: `Interpolation0.craig₀` — Craig para `⊢₀` CON igualdad, `[propext, Quot.sound]`, vía el puente `lk0_to_lkp`; sin borrar predicados (la partición de Maehara basta) |
 | D4 | La vía de `ModelG` | ✅ medida TERMINADA y **CERRADA definitiva** (sin receta de reapertura; fuera de `[G.2]`) |
 | D5 | El refactor de `Lift0` | ✅ **hecho**: núcleo genérico `absTerm'` en `Eigenvariable`; 40 nombres conservados; −56 líneas de código (no «~150»); una inducción y un transporte menos |
 | D6 | ¿Qué marca `₀`? | ✅ **regla decidida** (`NAMING-CONVENTIONS.md` §9, FOL **y** RPP): `₀` clásico, `ᵢ` intuicionista, sin subíndice lo que no depende de cálculo. Renombres: `model_existence_iff₀`, `compactness`, `IsHenkin`, `DisjunctionProperty₀`; RPP `Prf₀` → `Prfᵢ`. ⬜ Queda abierta una cosa: RPP deja `Prf` (el Hilbert clásico) sin subíndice como excepción histórica —como `Derives` en FOL—; llamarlo `Prf₀` costaría 4565 apariciones en 97 ficheros |
@@ -53,7 +53,7 @@ las decisiones D1, D2, D4, D5, D6 y D7 del propietario, **ejecutadas** el 2026-0
 |---|---|
 | W1 | ✅ **hecha** la pasada de higiene de docstrings (58 correcciones en 16 módulos) |
 | W2 | `REFERENCE.md`: §3.13 dice «veintiún módulos», §2 no tiene la capa `₀`, §7.1 lista módulos retirados, §3.10 presenta `soundness` como «✅ Completo» |
-| W3 | `DEPENDENCIES.md`: regenerarlo desde las líneas `import` (53 módulos, 95 aristas) o borrarlo |
+| W3 | `DEPENDENCIES.md`: regenerarlo desde las líneas `import` (54 módulos) o borrarlo |
 | W4 | `../ROBINSON_PlusPlus/doc/PLAN-COMPLETITUD-FINITISTA.md`: filas obsoletas (l. ~569 y la tabla de §8) |
 
 ### ❄️ Congelación

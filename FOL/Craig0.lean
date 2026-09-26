@@ -84,9 +84,12 @@ entonces las dos mitades salen de los CONSTRUCTORES más `substFormula_lift_var`
 
 ## ⚠️ Lo que este módulo NO da
 
-* ⛔ **No hay puente HACIA `LKp`.** `ndToLK` produce `LK₀` y usa `eqAx`; para consumir `craig` hay
-  que exhibir una derivación de `LKp` a mano. ⬜ No medido.
-* ⛔ **No es interpolación para FOLᐟ.** `LKp` no tiene los axiomas de la igualdad.
+* 🏁 **El puente HACIA `LKp` —y con él Craig para `⊢₀` CON igualdad— está en `FOL.Interpolation0`**
+  (D3a, 2026‑09‑26): `lk0_to_lkp` deja en el antecedente las instancias de igualdad que `eqAx`
+  usaba, cerradas con `∀`, y `craig₀` interpola lo que `Derives₀` deriva. Hasta entonces, consumir
+  `craig` exigía exhibir una derivación de `LKp` a mano.
+* ⚠️ **Este módulo, solo, no es interpolación para FOLᐟ**: `LKp` no tiene los axiomas de la
+  igualdad. La versión con igualdad es `Interpolation0.craig₀`.
 * ⚠️ **No incluye la condición sobre VARIABLES LIBRES** de la interpolación de Craig clásica, sólo
   la de símbolos de relación. Para **sentencias** (fórmulas cerradas) esa condición es vacua y el
   enunciado de aquí es el completo; para fórmulas abiertas, es estrictamente más débil, y se dice.

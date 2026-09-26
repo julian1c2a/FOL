@@ -4,7 +4,6 @@ FOL/Eq0.lean
 FOL/NDtoLK0.lean
 FOL/PrenexNF0.lean
 FOL/SkolemN0.lean
-FOL/Craig0.lean
 FOL/BlockExtraction0.lean
 FOL/SkolemNF0.lean
 FOL/DecEq.lean
@@ -17,7 +16,6 @@ FOL/Sequent0.lean
 FOL/Hauptsatz0.lean
 FOL/Herbrand0.lean
 FOL/Inversion0.lean
-FOL.lean
 AXIOMS.md
 FOL/Inconsistencia.lean
 FOL/Derives0.lean
