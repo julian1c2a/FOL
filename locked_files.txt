@@ -39,3 +39,6 @@ FOL/Eigenvariable.lean
 FOL/Lift0.lean
 cuarentena/README.md
 FOL/SkolemHerbrand0.lean
+FOL/Interpolation0.lean
+FOL/Craig0.lean
+FOL.lean
