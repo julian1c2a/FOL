@@ -40,3 +40,4 @@ FOL/Compacity0.lean
 FOL/Eigenvariable.lean
 FOL/Lift0.lean
 cuarentena/README.md
+FOL/SkolemHerbrand0.lean
