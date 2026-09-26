@@ -9,7 +9,7 @@
 > La prosa de este documento (explicaciones, motivación) va en español para que quede
 > clara sin ambigüedad.
 
-**Última actualización:** 2026-07-12
+**Última actualización:** 2026-09-26 — §9: subíndices de cálculo (D6, decidida) y entrada de axiomas corregida
 **Autor**: Julián Calderón Almendros
 
 ---
@@ -328,13 +328,78 @@ arquitectónica concreta (ADR).
 ### Axiomas sin prefijo de dominio (verificado 2026-07-12)
 
 A diferencia del patrón `TAG_ShortName` que otras plantillas de este ecosistema
-sugieren para axiomas, los axiomas de `MetaRules.lean`/`Theorems/*.lean` (`imp_intro`,
-`gen`, `raa`, `dne`, `or_elim`, `ex_elim`, `formula_enum`, `henkin_extension_lemma`,
-`subst_lift_cancel_formula`, …) usan nombres descriptivos planos, sin prefijo `TAG_` ni
-sufijo de sub-librería (`FOL`/`FOLPure`/`PropLogic`/`FOL_poli` se distinguen solo por
-el namespace que los envuelve, no por el nombre del axioma en sí — ver
-`DECISIONS.md` ADR-004). No introducir un prefijo de dominio nuevo sin discutirlo antes
+sugieren para axiomas, los axiomas de `MetaRules.lean` usan nombres descriptivos planos,
+sin prefijo `TAG_`. Hoy son **cuatro**: `imp_intro`, `raa`, `or_elim`, `ex_elim`
+(`AXIOMS.md`, 2026-09-23). ⚠️ Esta entrada listaba además `gen`, `dne` y
+`subst_lift_cancel_formula`, hoy teoremas; `formula_enum`, sustituido por la construcción
+`Enumeration.natToFormula`; y `henkin_extension_lemma`, borrado con la cuarentena en
+`62dc2d5`. Las sub-librerías `FOLPure`/`PropLogic`/`FOL_poli` están retiradas en
+`cuarentena/librerias-retiradas/` (ver `DECISIONS.md` ADR-004). No introducir un prefijo de dominio nuevo sin discutirlo antes
 en `DECISIONS.md`.
+
+### Subíndices de cálculo — `₀`, `₁`, `₂`, `ᵢ` (DECIDIDA por el propietario el 2026-09-26, D6)
+
+**El subíndice nombra un CÁLCULO** (una relación de derivabilidad), no una cualidad: no
+significa «fundamental», ni «base», ni «cero axiomas», ni «intuicionista». Su origen es un
+ordinal de plan: `Derives₀` es el «PASO 0» de
+`../ROBINSON_PlusPlus/doc/PLAN-COMPLETITUD-FINITISTA.md` §3 (ADR-033 de RPP), y
+`Derives₁`/`Derives₂` siguieron la serie.
+
+| marca | cálculo | notación | snake_case / fichero |
+|---|---|---|---|
+| sin marca | `Derives` (`FOL/FOL.lean`): herramienta, no sujeto (ADR-024/033 de RPP) | `⊢` | `derives_…` |
+| `₀` | `Derives₀`: deducción natural **clásica** de FOL⁼, finitaria, sin habitantes-axioma | `⊢₀` | `derives0_…`, `derivesSet0_…`; módulos `*0.lean` |
+| `₁`, `₂` | `Derives₁`, `Derives₂`: presentaciones **equivalentes** a `Derives₀` (`derives0_iff_derives1`, `derives0_iff_derives2`) | `⊢₁`, `⊢₂` | `derives1_…`, `derives2_…` |
+| `₀` en `LK₀` | secuentes clásicos **sin corte** (`LKc` = `LK₀` + corte; `LKh`, `LKp` son variantes con letra normal) | — | `lk0_…` |
+| `ᵢ` | `Derivesᵢ`: deducción natural **intuicionista** (los 18 constructores no clásicos de `Derives₀`), cuando llegue de PeanoRF | `⊢ᵢ` | `derivesI_…`; `DerivesI.lean` |
+
+**Reglas.**
+
+1. **Nociones relativas a un cálculo** —definiciones que clasifican conjuntos, contextos o
+   enunciados POR DERIVABILIDAD— llevan el subíndice de su cálculo: `DerivesSet₀`,
+   `IsConsistent₀`, `IsMaximalConsistent₀` (y sus análogos `ᵢ`). Motivo medido: sus homónimos
+   sin subíndice están VIVOS en `TheoryFramework` (`LogicSystem.DerivesSet`,
+   `TheoryFramework.IsConsistent`, `TheoryFramework.IsMaximalConsistent`) con OTRA definición.
+   Las construcciones que sólo reciben una prueba de esas nociones (`canonicalModel`,
+   `QuotientDomain`, `LindenbaumStep`…) no la llevan.
+2. **Nada que no dependa de un cálculo lleva subíndice**: ni los predicados por pertenencia
+   (`IsHenkin`) ni los enunciados puramente semánticos (`compactness`,
+   `loewenheim_skolem_down`, `infinite_model_of_large`).
+3. **Teoremas que dependen de un cálculo**: prefijo snake_case cuando el cálculo es el sujeto
+   (`derives0_soundness`, `derives0_qf_iff`, `lk0_sound`, `derivesI_to_derives0`), o subíndice
+   final sobre un nombre propio de la literatura (`completeness₀`, `model_existence_lemma₀`).
+   Los lemas auxiliares pueden ir sin marca: los desambigua el namespace del módulo
+   (`FOL.Canonical0.max_cons_neg`, `FOL.Inversion0.inv_allR`).
+   - **Coherencia de familia**: un teorema que empaqueta teoremas marcados (el `iff` de dos
+     mitades) lleva la misma marca que ellas.
+   - `derives_…` sin dígito ni letra queda reservado a `Derives` (`⊢`).
+4. **Ningún cálculo es el «por defecto»**: los nombres SIN marca se reservan a lo que no
+   depende de cálculo. Así, declarar fundamental el cálculo intuicionista (o darle semántica
+   propia) no obliga a renombrar nada del clásico. La única excepción es HISTÓRICA: `Derives`
+   (`⊢`), la herramienta de RPP, que no es sujeto de ninguna metateoría (su solidez es falsa).
+5. **Módulos**: el sufijo `0` del fichero es HISTÓRICO («capa del Paso 0»), no una garantía,
+   y esta regla no pide renombrar ninguno. Medido: `Rename`, `Eigenvariable`, `Derives1`,
+   `Derives2` e `Inconsistencia` hablan de `⊢₀` sin llevarlo; `NDtoLK0` lo lleva sin mencionar
+   `⊢₀` (usa `⊢₂` y `LKc`).
+6. **Alcance: FOL y RPP** (decisión del propietario: «así lo pasaremos también a RPP, de forma
+   que no quede al aire»). En RPP, el cálculo de Hilbert intuicionista se llamaba `Prf₀` —lo
+   contrario de lo que `₀` dice aquí— y el 2026-09-26 pasó a **`Prfᵢ`** (`prf0_…` → `prfI_…`).
+   En Peano, `ℕ₀` es un dominio, no un cálculo: otro repositorio, fuera de esta regla.
+
+**Renombres aplicados el 2026-09-26** para que la regla sea verdad en el árbol:
+
+| antes | después | regla |
+|---|---|---|
+| `Lindenbaum0.IsHenkin₀` | `IsHenkin` | 2 (pertenencia pura) |
+| `Canonical0.IsSyntacticallyComplete₀` | `IsMemComplete` (D2) — **no** `IsSyntacticallyComplete`, que en `TheoryFramework` es por derivabilidad | 2 (pertenencia pura) |
+| `Compacity0.compactness₀` | `compactness` | 2 (semántica pura) |
+| `Compacity0.model_existence_iff` | `model_existence_iff₀` | 3, familia (`model_existence_lemma₀` + `consistency_of_satisfiable₀`) |
+| `Inconsistencia.DisjunctionProperty` | `DisjunctionProperty₀` | 1 (es de `⊢₀`, y FALSA) — antes de que llegue la `disjunction_property` de `⊢ᵢ` (VERDADERA) |
+| RPP `Meta/Hilbert.Prf₀` | `Prfᵢ` (y `prf0_…` → `prfI_…`) | tabla de arriba: es el intuicionista |
+
+Al entregar PeanoRF (propuesta C), la regla 3 pide además `derivesI_` en
+`Slash.derives_empty_of_slashed`, `derives_rewrite_subst` y `derives_rewrite_back`, y marca en
+`disjunction_property`/`existence_property`.
 
 ---
 

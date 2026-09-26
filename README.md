@@ -9,7 +9,7 @@
 > | lo que decía | lo medido |
 > |---|---|
 > | «Teorema de Corrección (Soundness): `Γ ⊢ A → Γ ⊨ A`» ✅ | 🏁 **Sí, sobre `Derives₀`** (2026-09-14): `derives0_soundness : Γ ⊢₀ f → Γ ⊨ f` (`FOL/Soundness0.lean`), y con ella `derives0_consistent`. ⛔ La de **`Derives`** sigue siendo **FALSA** en presencia de `FOL/MetaRules.lean`: `FOL/Inconsistencia.lean`, hoy **en el build** |
-> | «Compacidad» ✅ | 🏁 `compactness₀`, `loewenheim_skolem_down` y el modelo infinito `infinite_model_of_large`, en `FOL/Compacity0.lean`. El `Compacity.lean` vacuo **se borró** el 2026-09-23 |
+> | «Compacidad» ✅ | 🏁 `compactness`, `loewenheim_skolem_down` y el modelo infinito `infinite_model_of_large`, en `FOL/Compacity0.lean`. El `Compacity.lean` vacuo **se borró** el 2026-09-23 |
 > | «Completitud» ✅ / «1 sorry» | 🏁 `completeness₀ : Γ ⊨ f → Γ ⊢₀ f` (`FOL/Canonical0.lean`, 2026-09-16), con **cero axiomas del proyecto**: `[propext, Classical.choice, Quot.sound]`, y ese `Classical.choice` es el WKL de `Lindenbaum0` (ADR-041). `Completeness.lean` y su último postulado, `henkin_extension_lemma`, **se borraron** el 2026-09-23. Ver **`AXIOMS.md`** |
 > | «4 `lean_lib`, ~43 módulos, 1 sorry, v4.28.0» | **2 `lean_lib`** (`FOL`, `TheoryFramework`) · **4 `axiom`**, los de `MetaRules` que el kernel obliga, y ninguno más fuera de las librerías retiradas · **0 sorry** · **v4.31.0**. `FOLPure`, `PropLogic` y `FOL_poli` **retiradas** el 2026-09-12 a `cuarentena/librerias-retiradas/` |
 >
@@ -52,8 +52,8 @@ Este ecosistema formaliza la sintaxis, semántica y metamatemática de la Lógic
 1. Teorema de Deducción.
 2. 🏁 **Teorema de Corrección** sobre `Derives₀` (`derives0_soundness`). ⛔ La de `Derives` es FALSA con `MetaRules`: ver el aviso.
 3. Construcción de Henkin + Lema de Lindenbaum.
-4. 🏁 **Teorema de Completitud** sobre `Derives₀`: `completeness₀ : Γ ⊨ f → Γ ⊢₀ f`, cero axiomas del proyecto; y su forma de Henkin, `model_existence_iff`.
-5. 🏁 **Compacidad** (`compactness₀`), **Löwenheim–Skolem descendente** y el **modelo infinito por compacidad** (`infinite_model_of_large`: numerable e infinito).
+4. 🏁 **Teorema de Completitud** sobre `Derives₀`: `completeness₀ : Γ ⊨ f → Γ ⊢₀ f`, cero axiomas del proyecto; y su forma de Henkin, `model_existence_iff₀`.
+5. 🏁 **Compacidad** (`compactness`), **Löwenheim–Skolem descendente** y el **modelo infinito por compacidad** (`infinite_model_of_large`: numerable e infinito).
 6. Hauptsatz (`hauptsatz`), Herbrand, Craig, Skolem y forma prenexa; el fragmento sin cuantificadores caracterizado (`derives0_qf_iff`); decisor proposicional (`ptautCheck_iff`); inversión de `LK₀`. Catálogo: `REFERENCE.md` §6. ⛔ Los metateoremas genéricos sobre `LogicSystem` siguen en el build, pero el marco **no tiene instancias** desde el 2026-09-23.
 
 ## Modules — ⚠️ HISTÓRICO (2026-05-16): el catálogo vigente es `REFERENCE.md` §6

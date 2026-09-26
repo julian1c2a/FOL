@@ -17,13 +17,13 @@ import FOL.NDtoLK0
 /-!
 # `FOL.Finitary0` — 🏁 la CONSISTENCIA de `Derives₀`, **sin `Classical.choice`**
 
-⭐⭐ **El dividendo que justifica el precio del Hauptsatz.** El mismo enunciado que
+⭐⭐ **Un dividendo de la vía sintáctica** (⚠️ no del Hauptsatz: ver §«Dónde NO paga el Hauptsatz»). El mismo enunciado que
 `FOL.Metamath.Soundness0.derives0_consistent`, con footprint **estrictamente menor**:
 
 | teorema | ruta | footprint |
 |---|---|---|
 | `derives0_consistent` (ADR‑034) | semántica: `derives0_soundness` + el modelo `Mtrue` | `[propext, Classical.choice, Quot.sound]` |
-| ⭐ `derives0_consistent_fin` (aquí) | **sintáctica**: `ndToLK` + `cut_elimination` + `lk0_tval` | **`[propext, Quot.sound]`** |
+| ⭐ `derives0_consistent_fin` (aquí) | **sintáctica**: `derives0_iff_derives2` + `ndToLK` + `lkc_no_bot`, sin Hauptsatz | **`[propext, Quot.sound]`** |
 
 🔑 Es el mismo patrón que `derives0_em`/`derives0_peirce`, demostrados dos veces —por completitud y
 por Kalmár— con footprint estrictamente menor por la vía H. *Mismo enunciado, menos supuestos.*
@@ -32,7 +32,7 @@ por Kalmár— con footprint estrictamente menor por la vía H. *Mismo enunciado
 
 No del modelo: `derives0_consistent` **ya** usa un modelo de un punto (`Mtrue : Model Unit`,
 `FOL/Soundness0.lean`). Venía de `derives0_soundness`, cuya prueba usa **cuatro
-`Classical.byContradiction`** (`FOL/Soundness0.lean:172‑182) — porque `eval` devuelve `Prop` y la
+`Classical.byContradiction`** (en `derives0_soundness`, `FOL/Soundness0.lean`) — porque `eval` devuelve `Prop` y la
 semántica de Tarski es clásica. *El modelo era finitario; la solidez no.*
 
 ## ⭐ La salida: evaluar a `Bool`, no a `Prop`
@@ -73,11 +73,11 @@ Herbrand (H3), no por esto.
 
 ## ⭐⭐ Y lo que este módulo SÍ mejora, que es más de lo que parecía
 
-`lk0_not_empty` (`FOL/SequentSound0.lean:300`) demuestra hoy `¬ LK₀ [] []` pasando por
-`lk0_to_derives0`, **que es `completeness₀`** (`SequentSound0.lean:290`). Es decir: la consistencia
+`lk0_not_empty` (`FOL/SequentSound0.lean`) demuestra hoy `¬ LK₀ [] []` pasando por
+`lk0_to_derives0`, **que es `completeness₀`**. Es decir: la consistencia
 del cálculo de secuentes se compra hoy **con el teorema de completitud**, y arrastra con él el
 `Classical.choice` que ADR‑041 identificó como el **WKL**.
-⇒ `lk0_empty` y `lkc_empty` lo sustituyen con `[propext, Quot.sound]`. Y son **más fuertes**:
+⇒ `lk0_empty` y `lkc_empty` lo sustituyen con `[propext, Quot.sound]`, y `lk0_no_bot`/`lkc_no_bot` son **más fuertes**:
 `¬ LK₀ [] [⊥]` implica `¬ LK₀ [] []` por `struct`, no al revés.
 
 🏁 **Y eso último ya no es prosa** (2026‑09‑17): `lk0_empty_of_no_bot` y `lkc_empty_of_no_bot` lo

@@ -60,7 +60,7 @@ El único punto clásico está en el **símbolo**: `∃ N, ∀ m ≥ N, cst m �
   de `doc/PLAN-COMPLETITUD-FINITISTA.md` §7, que es deuda del núcleo y no de la lógica.
 
 ⚠️ Nada de esto es el `Classical.choice` de la completitud: ése es el `if IsConsistent …` de
-Lindenbaum (§6.3), y todavía no ha entrado.
+Lindenbaum (§6.3), que entra más arriba en la cadena (`FOL.Lindenbaum0`).
 -/
 
 namespace FOL.Fresh0

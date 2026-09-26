@@ -9,17 +9,17 @@
 > | lo que decía | lo medido |
 > |---|---|
 > | «Teorema de Corrección (Soundness): `Γ ⊢ A → Γ ⊨ A`» ✅ | 🏁 **Sí, sobre `Derives₀`** (2026-09-14): `derives0_soundness : Γ ⊢₀ f → Γ ⊨ f` (`FOL/Soundness0.lean`), y con ella `derives0_consistent`. ⛔ La de **`Derives`** sigue siendo **FALSA** en presencia de `FOL/MetaRules.lean`: `FOL/Inconsistencia.lean`, hoy **en el build** |
-> | «Compacidad» ✅ | 🏁 `compactness₀`, `loewenheim_skolem_down` y el modelo infinito `infinite_model_of_large`, en `FOL/Compacity0.lean`. El `Compacity.lean` vacuo **se borró** el 2026-09-23 |
+> | «Compacidad» ✅ | 🏁 `compactness`, `loewenheim_skolem_down` y el modelo infinito `infinite_model_of_large`, en `FOL/Compacity0.lean`. El `Compacity.lean` vacuo **se borró** el 2026-09-23 |
 > | «Completitud» ✅ / «1 sorry» | 🏁 `completeness₀ : Γ ⊨ f → Γ ⊢₀ f` (`FOL/Canonical0.lean`, 2026-09-16), con **cero axiomas del proyecto**: `[propext, Classical.choice, Quot.sound]`, y ese `Classical.choice` es el WKL de `Lindenbaum0` (ADR-041). `Completeness.lean` y su último postulado, `henkin_extension_lemma`, **se borraron** el 2026-09-23. Ver **`AXIOMS.md`** |
 > | «4 `lean_lib`, ~43 módulos, 1 sorry, v4.28.0» | **2 `lean_lib`** (`FOL`, `TheoryFramework`) · **4 `axiom`**, los de `MetaRules` que el kernel obliga, y ninguno más fuera de las librerías retiradas · **0 sorry** · **v4.31.0**. `FOLPure`, `PropLogic` y `FOL_poli` **retiradas** el 2026-09-12 a `cuarentena/librerias-retiradas/` |
 >
 > ⭐ **Los seis teoremas del cierre (T1 a T6, 2026-09-23 y 2026-09-26) están en el árbol**, sobre `Derives₀`; el catálogo, en `CURRENT-STATUS-PROJECT.md` («Estado vigente») y `REFERENCE.md` §6. ⛔ Y lo que NO hay: la propiedad de disyunción para `Derives₀` es **FALSA** (`derives0_no_disjunction_property`).
-> (Este aviso decía que «lo único sólido MEDIDO» era `prf0_soundness`, en RPP: dejó de serlo el 2026-09-14.)
+> (Este aviso decía que «lo único sólido MEDIDO» era `prf0_soundness` (hoy `prfI_soundness`), en RPP: dejó de serlo el 2026-09-14.)
 >
 > **Fuentes:** `cuarentena/README.md` · `AXIOMS.md` ·
 > `../ROBINSON_PlusPlus/doc/AUDITORIA-FOL-2026-09-12.md`
 
-**Last updated:** 2026-09-26 — 🗑️ D1: `Tactics2.lean` borrado ⇒ **53 módulos activos**. Antes, el mismo día: ⭐ entran T4 (`Hauptsatz0` §9) y T6 (`Compacity0` §3): **los seis teoremas del cierre están en el árbol**; aviso de cabecera reescrito (el del 2026-09-12 negaba Corrección, Completitud y Compacidad) y sección «Estado vigente» nueva. Antes (2026-09-23): entra `FOL/Complexity.lean` (encargo PeanoRF §3) y la cifra canónica pasa a **54 módulos**. ⚠️ La marca decía **2026-09-18 15:40** y `[E]` la cazó el mismo día que se movió el cuerpo — que es para lo que está el control.
+**Last updated:** 2026-09-26 — D2/D4/D5/D6/D7 ejecutadas: refactor `absTerm'` (D5), regla de subíndices y sus renombres (T1 = `model_existence_iff₀`, T2 = `IsMemComplete`, `compactness`), vía de `ModelG` y migración a `List Char` CERRADAS, higiene de docstrings. Antes, 🗑️ D1: `Tactics2.lean` borrado ⇒ **53 módulos activos**. Antes, el mismo día: ⭐ entran T4 (`Hauptsatz0` §9) y T6 (`Compacity0` §3): **los seis teoremas del cierre están en el árbol**; aviso de cabecera reescrito (el del 2026-09-12 negaba Corrección, Completitud y Compacidad) y sección «Estado vigente» nueva. Antes (2026-09-23): entra `FOL/Complexity.lean` (encargo PeanoRF §3) y la cifra canónica pasa a **54 módulos**. ⚠️ La marca decía **2026-09-18 15:40** y `[E]` la cazó el mismo día que se movió el cuerpo — que es para lo que está el control.
 **Author**: Julián Calderón Almendros
 
 > 📐 **CIFRAS CANÓNICAS — medidas, no copiadas** (`bash check-doc-sync.bash`, 2026-09-26):
@@ -49,9 +49,9 @@ de esta tabla compila sin `sorry` y **sin axiomas del proyecto**; los footprints
 | Corrección, consistencia | `derives0_soundness`, `derives0_consistent` | `Soundness0` | `[propext, Classical.choice, Quot.sound]` |
 | Consistencia finitaria | `derives0_consistent_fin` | `Finitary0` | `[propext, Quot.sound]` |
 | Completitud | `completeness₀`, `derives0_complete_iff` | `Canonical0` | `[propext, Classical.choice, Quot.sound]` |
-| **T1** · existencia de modelo | `model_existence_iff` | `Compacity0` | ídem |
-| **T2** · el maximal consistente decide cada fórmula (por pertenencia; ⚠️ aún no la «teoría completa» sobre sentencias) | `max_cons_neg`, `IsSyntacticallyComplete₀`, `max_cons_complete` | `Canonical0` | ídem |
-| Compacidad, LS↓ | `compactness₀`, `loewenheim_skolem_down` | `Compacity0` | ídem |
+| **T1** · existencia de modelo | `model_existence_iff₀` | `Compacity0` | ídem |
+| **T2** · el maximal consistente decide cada fórmula (por pertenencia; ⚠️ aún no la «teoría completa» sobre sentencias) | `max_cons_neg`, `IsMemComplete`, `max_cons_complete` | `Canonical0` | ídem |
+| Compacidad, LS↓ | `compactness`, `loewenheim_skolem_down` | `Compacity0` | ídem |
 | **T6** · modelo numerable e infinito | `infinite_model_of_large` | `Compacity0` §3 | ídem |
 | Hauptsatz, Herbrand | `hauptsatz`, `cut_elimination`, `herbrand` | `Hauptsatz0` | `[propext, Quot.sound]` |
 | **T4** · fragmento sin cuantificadores | `derives0_qf_iff` (caracteriza, NO decide) | `Hauptsatz0` §9 | `[propext, Quot.sound]` |

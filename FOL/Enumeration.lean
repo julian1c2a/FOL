@@ -201,9 +201,9 @@ instance : FOL.EnumSym String where
 
 /-- ⭐⭐ Y `List Char` la satisface **más barato**, saliendo de la **capa 1**
 (`natToList_surj`, sobre `List Nat`) más `map_ofNat_toNat`: **no toca `String` en absoluto**.
-⇒ el día que la metateoría se instancie en `List Char`, el `Classical.choice` que hoy entra por
-DESCOMPONER un `String` no entra por esta puerta. Contéjese con la instancia de arriba:
-`#print axioms` las separa. -/
+⇒ el `Classical.choice` que entra al DESCOMPONER un `String` no entra por esta puerta.
+Contéjese con la instancia de arriba: `#print axioms` las separa. ⚠️ Es una MEDIDA, no una capa
+en uso: la metateoría no se instancia en `List Char` (vía CERRADA, ver `FOL/FOL.lean`). -/
 instance : FOL.EnumSym (List Char) where
   enum n := (natToList n).map Char.ofNat
   enum_surj := by

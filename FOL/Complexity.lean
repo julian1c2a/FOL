@@ -42,12 +42,12 @@ ADR‑068: *mover una definición no tiene por qué mover sus citas.*
 
 ## 📏 Footprint
 
-`complexity_substFormula` — **cero axiomas**. Es una inducción estructural sobre `Formula`.
+`complexity_substFormula` — `[propext]` (medido); cero axiomas del proyecto. Es una inducción estructural sobre `Formula`.
 
 ## ⚠️ La copia de `cuarentena/`
 
-`cuarentena/Completeness.lean:528` tiene su propia copia de las dos. No se toca: `cuarentena/`
-**no se compila**, y su destino se decide aparte.
+`cuarentena/Completeness.lean` tenía su propia copia de las dos; se **borró** el 2026‑09‑23 con
+el resto del código de `cuarentena/`, así que ya no hay copia.
 -/
 
 namespace FOL.Complexity

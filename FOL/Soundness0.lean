@@ -24,7 +24,7 @@ import FOL.Semantics
 
 ## Por qué esto es el agujero que había que tapar
 
-⛔ **La solidez de `Derives` es FALSA**: `cuarentena/Inconsistencia.lean` compila `False` a partir
+⛔ **La solidez de `Derives` es FALSA**: `FOL/Inconsistencia.lean` compila `False` a partir
 de cualquier teorema de esa forma, con footprint `[propext, FOL.MetaRules.raa]`. La causa es
 **M‑11**: los cuatro axiomas de `MetaRules` **habitan** el tipo, así que la inducción sobre sus 22
 constructores no cubre todos los habitantes.
@@ -53,7 +53,7 @@ puede decir algo, que es exactamente lo que el plan necesitaba.
 
 ## Procedencia
 
-⭐ Los **18 casos originales** se rescatan de `cuarentena/Soundness.lean`: la prueba **era correcta
+⭐ Los **18 casos originales** se rescataron del ya borrado `cuarentena/Soundness.lean`: la prueba **era correcta
 caso por caso** —es deducción natural intuicionista y cada regla es semánticamente válida—; lo que
 la invalidaba era **el tipo sobre el que inducía**, no su contenido.
 🔑 *Cuando un teorema cae por M‑11, su demostración suele estar bien: lo que hay que cambiar es el
@@ -205,7 +205,7 @@ def Mtrue : Model Unit := ⟨fun _ _ => (), fun _ _ => True⟩
 def Mfalse : Model Unit := ⟨fun _ _ => (), fun _ _ => False⟩
 
 /-- 🏁 **CONSISTENCIA de `Derives₀`** — la primera de un cálculo de FOL⁼ en este proyecto.
-⛔ Para `Derives` esto **no se puede**: su solidez es falsa (`cuarentena/Inconsistencia.lean`). -/
+⛔ Para `Derives` esto **no se puede**: su solidez es falsa (`FOL/Inconsistencia.lean`). -/
 theorem derives0_consistent : ¬ (([] : List Formula) ⊢₀ Formula.bottom) := by
   intro h
   exact derives0_soundness h Unit Mtrue (fun _ => ()) (fun _ hf => absurd hf (List.not_mem_nil))

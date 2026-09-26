@@ -72,8 +72,8 @@ open FOL.Eigenvariable
 open FOL.Lift0
 
 -- ⚠️ `open Classical` SÓLO por el `filter` del paso 1, que necesita `DecidableEq Formula`.
--- `Formula` deriva `BEq` y un `DecidableEq` real es construible (§14 del censo de choice); no se
--- ha hecho porque no es el cuello de botella.
+-- `Formula` deriva `BEq`; el `DecidableEq` real ya existe (`instDecidableEqFormula`, `FOL/DecEq.lean`,
+-- sin axiomas), pero este módulo no importa `FOL.DecEq` y sigue con `open Classical`.
 open Classical
 
 /-- Derivabilidad desde un CONJUNTO: existe un contexto **finito** dentro de `S` que lo deriva.

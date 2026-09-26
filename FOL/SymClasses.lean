@@ -3,7 +3,7 @@ import FOL.FOL
 /-!
 # `FOL.SymClasses` — lo que hay que saber del tipo de los SÍMBOLOS
 
-**Last updated:** 2026-09-23
+**Last updated:** 2026-09-26
 
 ADR-068 metió el parámetro (`TermG Sym` / `FormulaG Sym`) y ADR-069 generificó la capa de
 operaciones. Falta lo que **no** es sintaxis: la metateoría de FOL⁼ le pide al tipo de símbolos
@@ -36,13 +36,18 @@ la dirección `∃ n`.
 
 ⛔ **Y la vía de instanciarlas en la cadena de completitud queda CERRADA** (2026‑09‑23, ver
 `FOL/FOL.lean`): su única justificación escrita era LS ascendente, y `EnumSym` —esta misma clase,
-líneas abajo— es falsa para los tipos no numerables que LS↑ necesita. Las clases **se quedan**:
-están bien planteadas, `FreshSym (List Char)` está construida, y reabrir la vía es enhebrarlas.
+líneas abajo— es falsa para los tipos no numerables que LS↑ necesita. Y el cierre es
+**DEFINITIVO** (decisión del propietario del 2026-09-26): no hay receta para reabrirla.
 
-Declarar las clases **no** permite todavía instanciar `Sym := List Char` en la metateoría:
-`Fresh0` y `Enumeration` siguen siendo `String` por dentro. Para que esto no sea una capa
-*cierta y vacua*, aquí va ya la instancia de `List Char` de `FreshSym` — **construida sin pasar
-por `String`** —, y las de `EnumSym` van en `Enumeration.lean`, donde vive su prueba.
+⭐ Las clases **se quedan**, como MEDIDA y no como capa en uso: dicen exactamente qué le pediría
+esa cadena al tipo de símbolos, y **ningún** módulo las consume (ninguna firma del árbol lleva
+`[FreshSym _]` ni `[EnumSym _]`). `Fresh0`, `Enumeration` y la cadena de completitud son `String`
+por dentro y así se quedan. Para que la medida no sea *cierta y vacua*, aquí va la instancia de
+`List Char` de `FreshSym` — **construida sin pasar por `String`** —, y las de `EnumSym` van en
+`Enumeration.lean`, donde vive su prueba.
+Y la migración `String`→`List Char` del plan §7.3 de RPP queda **ABANDONADA en FOL** (D7,
+2026-09-26): la parte de FOL está hecha como parámetro, y terminarla no movería ningún
+footprint titular de FOL (su `Classical.choice` es el WKL).
 -/
 
 namespace FOL

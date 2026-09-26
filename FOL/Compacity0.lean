@@ -18,8 +18,8 @@ import FOL.Skolem0
 /-!
 # `FOL.Compacity0` — 🏁 COMPACIDAD, 🏁 LÖWENHEIM–SKOLEM DESCENDENTE y 🏁 EL MODELO INFINITO NUMERABLE, sobre `Derives₀`
 
-    model_existence_iff   : IsConsistent₀ S ↔ IsSatisfiable S
-    compactness₀          : IsSatisfiable S ↔ (todo subconjunto FINITO de S es satisfacible)
+    model_existence_iff₀   : IsConsistent₀ S ↔ IsSatisfiable S
+    compactness          : IsSatisfiable S ↔ (todo subconjunto FINITO de S es satisfacible)
     loewenheim_skolem_down: IsSatisfiable S → IsSatisfiableCountable S
     infinite_model_of_large: HasLargeModels S → ∃ modelo NUMERABLE e INFINITO de S     (§3)
 
@@ -29,7 +29,7 @@ import FOL.Skolem0
 el resto de la cuarentena (RPP‑099 §5)—: su `compactness_theorem` estaba declarado **VACUO** —con
 esas palabras— en `cuarentena/README.md` y en el barril `FOL.lean`: *«su prueba pasaba por
 `soundness`»*, y la solidez de `Derives` es **falsa** (M‑11).
-⇒ `compactness₀` es el mismo teorema con el **SUJETO** cambiado. 🔑 Es el patrón ya escarmentado
+⇒ `compactness` es el mismo teorema con el **SUJETO** cambiado. 🔑 Es el patrón ya escarmentado
 del proyecto: *cuando un teorema cae, su prueba suele estar bien — lo que cambia es el sujeto.*
 
 ## ⭐⭐ La compacidad SINTÁCTICA ya estaba metida en la definición
@@ -120,10 +120,10 @@ completitud: una teoría es consistente **si y sólo si** tiene modelo.
 difícil) y `consistency_of_satisfiable₀` (aquí, la de solidez). Nadie las había juntado, y es con
 esta forma —sobre CONJUNTOS, no sobre contextos finitos como `derives0_complete_iff`— con la que la
 teoría de modelos cita la completitud. -/
-theorem model_existence_iff {S : Formula → Prop} : IsConsistent₀ S ↔ IsSatisfiable S :=
+theorem model_existence_iff₀ {S : Formula → Prop} : IsConsistent₀ S ↔ IsSatisfiable S :=
   ⟨model_existence_lemma₀, consistency_of_satisfiable₀⟩
 
-theorem compactness₀ (S : Formula → Prop) :
+theorem compactness (S : Formula → Prop) :
     Iff (IsSatisfiable S)
         (∀ Γ : List Formula, (∀ f, f ∈ Γ → S f) → IsSatisfiable (fun x => x ∈ Γ)) := by
   constructor
@@ -246,7 +246,7 @@ theorem infinite_model_of_large_fresh {S : Formula → Prop}
     ∃ (D : Type) (M : Model D) (v : Nat → D),
       And (And (CountableDom D) (InfiniteDom D)) (∀ f, S f → evalFormula M v f) := by
   obtain ⟨D, M, v, hC, hM⟩ := loewenheim_skolem_down
-    ((compactness₀ (infTheory S)).mpr (infTheory_finSat hFresh hLarge))
+    ((compactness (infTheory S)).mpr (infTheory_finSat hFresh hLarge))
   refine ⟨D, M, v, ⟨hC, ⟨fun i => evalTerm M v (Term.func (cst i) []), fun i j hij => ?_⟩⟩,
     fun f hf => hM f (Or.inl hf)⟩
   exact Decidable.byContradiction (fun hne => hM (neqAx i j) (Or.inr ⟨i, j, hne, rfl⟩) hij)
@@ -310,8 +310,8 @@ end Infinito
 end FOL.Compacity0
 
 #print axioms FOL.Compacity0.consistency_of_satisfiable₀
-#print axioms FOL.Compacity0.model_existence_iff
-#print axioms FOL.Compacity0.compactness₀
+#print axioms FOL.Compacity0.model_existence_iff₀
+#print axioms FOL.Compacity0.compactness
 #print axioms FOL.Compacity0.model_existence_countable₀
 #print axioms FOL.Compacity0.loewenheim_skolem_down
 #print axioms FOL.Compacity0.evalFormula_updateCsts

@@ -98,7 +98,7 @@ Footprint medido: **`[propext, FOL.MetaRules.raa]`**. Ni `Classical.choice` hace
   `FOL` — sólo `FOL.FOL`, `FOL.MetaRules`, `FOL.Tactics`, `FOL.Deduction` y `FOL.Theorems.*`.
   Sus 131 módulos y la cadena de Gödel no están en contexto inconsistente.
 * ⚠️ **`FOL/Semantics.lean` está BIEN** y se queda en la librería. Es sólido y es útil: es
-  exactamente lo que permitió demostrar `prf0_soundness` (§6).
+  exactamente lo que permitió demostrar `prfI_soundness` (§6).
 * ⚠️ **Las meta‑reglas no están «mal»**. Dicen lo que dicen: `⊢` es una noción metateórica de
   verdad, no una relación de derivabilidad. La otra cara está medida en
   `ROBINSON_PlusPlus/Meta/OmegaStrength.lean`: con `raa`, `⊢` **decide toda sentencia** (lo que no
@@ -126,9 +126,9 @@ entró en esta cuarentena al día siguiente por un motivo **distinto** (decisió
 
 Enunciar la solidez sobre un cálculo **sin axiomas habitándolo**. `ROBINSON_PlusPlus` tiene uno:
 
-    Prf₀ — 17 constructores, CERO axiomas habitándolo (medido)
+    Prfᵢ — 17 constructores, CERO axiomas habitándolo (medido)
 
-`prf0_soundness : Prf₀ φ → satisfies axioms φ` está **demostrado**, por inducción sobre los 17
+`prfI_soundness : Prfᵢ φ → satisfies axioms φ` está **demostrado**, por inducción sobre los 17
 constructores, con footprint **`[propext, Classical.choice, Quot.sound]`** — net‑0 puro.
 Está en `ROBINSON_PlusPlus/sondeos/AnclaSoundness.lean`.
 

@@ -26,7 +26,7 @@ import FOL.FOL
 1. ⛔ **Es sintácticamente COMPLETO**: `raa` toma una **función de Lean**, así que si `Γ ⊬ A` esa
    función existe **vacuamente** y `Γ ⊢ ¬A`. Todo contexto decide toda fórmula, en tres líneas
    (`../ROBINSON_PlusPlus/sondeos/HenkinSaleDeRaa.lean`). ⇒ **no es r.e.**
-2. ⛔ **No es SÓLIDO**: `cuarentena/Inconsistencia.lean` compila `False` a partir de cualquier
+2. ⛔ **No es SÓLIDO**: `FOL/Inconsistencia.lean` compila `False` a partir de cualquier
    teorema de solidez para `Derives`, con footprint `[propext, FOL.MetaRules.raa]`.
 3. ⛔ **No admite INDUCCIÓN** (**M‑11**, ADR‑029, y es **permanente**): los cuatro axiomas de
    `FOL/MetaRules.lean` habitan el tipo y no son aplicaciones de constructor.
@@ -45,7 +45,7 @@ finitaria, y **con cero habitantes‑axioma**.
 | axiomas que lo habitan | **4** (suelo permanente, ADR‑029) | **0** |
 | ¿`induction`? | ⛔ **nunca** | ✅ **sí** |
 | ¿ω‑regla `gen_rule`? | sí | ❌ **no** — premisa infinitaria |
-| ¿sintácticamente completo? | ⛔ sí (patología) | se espera que no, y por eso vale |
+| ¿sintácticamente completo? | ⛔ sí (patología) | ❌ no (`derives0_not_complete`), y por eso vale |
 
 ### ⚠️ Por qué se quita también `gen_rule`
 
@@ -53,8 +53,8 @@ finitaria, y **con cero habitantes‑axioma**.
 términos. Un cálculo **finitario** no la lleva. La introducción de `∀` la da `intro_forall`
 —la regla de la eigenvariable, con De Bruijn—, que es la estándar.
 
-⭐ **Y el coste para lo que ya existe es CERO**: `cuarentena/Completeness.lean` usa **14**
-constructores distintos de `Derives` y **`gen_rule` no está entre ellos** (medido). El desarrollo
+⭐ **Y el coste para lo que ya existía fue CERO**: `cuarentena/Completeness.lean` (borrado el
+2026‑09‑23) usaba **14** constructores de `Derives` y **`gen_rule` no estaba entre ellos** (medido). El desarrollo
 de completitud ya vive dentro del fragmento finitario.
 
 ### ⚠️ Lo que NO se pierde al quitar los cuatro axiomas

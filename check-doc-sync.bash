@@ -580,9 +580,7 @@ FOL/Craig0.lean§derivación de `LKp` a mano§ABIERTA§no hay puente LK₀→LKp
 FOL/SkolemHerbrand0.lean§⬜ **no medido**§ABIERTA§componer con `skolem_conservative_nf` para volver a φ y Γ; ⬜ sin medir
 TheoryFramework/Instances/FOL.lean§`CompleteLogic Formula` tampoco se declara§DIFERIDA§`folSystem` RETIRADA el 2026-09-23; la salida (declararla sobre `Derives₀`) esta escrita
 FOL/Hauptsatz0.lean§coste no está medido§OFERTA§la version ACOTADA (decisor) de `derives0_qf_iff`: un lema sobre `EqPropCert`, fuera del catalogo del cierre
-FOL/FOL.lean§**Para reabrirla**§DIFERIDA§la via de ModelG en la cadena de completitud, CERRADA el 2026-09-23; enhebrar FreshSym/EnumSym
 TheoryFramework/Instances/FOL.lean§**Para reabrirlo**§DIFERIDA§la via para volver a tener instancia: `LogicSystem Formula` sobre `Derives₀`
-FOL/Lift0.lean§la razón es de riesgo, no de gusto§DIFERIDA§refactor de ~150 l. de enunciados; se hace DESPUÉS del ensamblaje
 FOL/Derives1.lean§Esta sección se titulaba§HISTORIAL§H3 la paga `Hauptsatz0.cut_elimination`
 FOL/Derives2.lean§Se titulaba§HISTORIAL§H3 la paga `Hauptsatz0.hauptsatz`
 FOL/Herbrand0.lean§Esta cabecera decía§HISTORIAL§H3 la paga `Hauptsatz0.herbrand_extraction`

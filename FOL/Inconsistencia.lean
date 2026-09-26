@@ -25,10 +25,10 @@ import FOL.Soundness0
 /-!
 # ⛔⛔ La EVIDENCIA COMPILADA: `Derives` no admite teorema de solidez
 
-Medido el **2026‑09‑11**. Este fichero está en `cuarentena/` a propósito: **no forma parte de la
-librería** (el glob de `lean_lib «FOL»` sólo recorre `FOL/`), así que su `False` no contamina nada.
-Compruébalo a mano con `lake env lean cuarentena/Inconsistencia.lean` desde la raíz de
-`ROBINSON_PlusPlus`.
+Medido el **2026‑09‑11**, cuando vivía en `cuarentena/`. Desde el 2026‑09‑23 está **en la
+librería** (`FOL.lean` lo importa y el build lo compila; ver la nota de arriba), y no contamina
+nada porque el teorema es **condicional**. Su footprint lo vigila
+`../ROBINSON_PlusPlus/check-footprints.bash`.
 
 ## Qué se demuestra aquí
 
@@ -41,14 +41,14 @@ prueba más cuidadosa lo arreglaría.
 
 ## Por qué
 
-`Derives` es un `inductive` de **18 constructores**, todos semánticamente válidos. Pero
-`FOL/MetaRules.lean` declara **seis `axiom`s que lo HABITAN** —y el censo corregido el 2026‑09‑12
-da **OCHO** en la librería y **DOCE** con RPP, ver `README.md` §2— (`imp_intro`, `gen`, `raa`,
-`or_elim`, `ex_elim`) — y tienen que ser axiomas, porque sus premisas son **funciones de Lean**, es
+`Derives` es un `inductive` de **22 constructores**; los 21 que comparte con `Derives₀` son
+semánticamente válidos (`derives0_soundness`). Pero `FOL/MetaRules.lean` declara **cuatro `axiom`s
+que lo HABITAN** (`imp_intro`, `raa`, `or_elim`, `ex_elim`; censo en `AXIOMS.md`) — y tienen que
+ser axiomas, porque sus premisas son **funciones de Lean**, es
 decir ocurrencias negativas que Lean rechazaría en un `inductive`.
 
 ⇒ `Derives` tiene habitantes que **no son aplicaciones de constructor**. Un teorema probado por
-`induction` cubre los 18 casos, pero **se aplica a todos los habitantes**. Es el fallo clásico de
+`induction` cubre los 22 casos, pero **se aplica a todos los habitantes**. Es el fallo clásico de
 `axiom foo : UnInductivo`: rompe la garantía de «no hay basura».
 
 El detonador concreto es `raa`: si `Γ ⊬ A`, la función `Γ ⊢ A → Γ ⊢ ⊥` existe **vacuamente**, luego
@@ -61,7 +61,7 @@ algún modelo de `Γ`. Y con `Γ = []` bastan **dos modelos triviales sobre `Uni
   ni el barrel raíz `FOL`; sólo `FOL.FOL`, `FOL.MetaRules`, `FOL.Tactics`, `FOL.Deduction` y
   `FOL.Theorems.*`. Su árbol de 131 módulos y la cadena de Gödel no están en contexto inconsistente.
 * ⚠️ **No dice que `FOL/Semantics.lean` esté mal.** Está bien, y es útil: es lo que permitió probar
-  `prf0_soundness` en `ROBINSON_PlusPlus/sondeos/AnclaSoundness.lean`.
+  `prfI_soundness` en `ROBINSON_PlusPlus/sondeos/AnclaSoundness.lean`.
 * ⚠️ **No dice que las meta‑reglas estén mal.** Dicen lo que dicen: `⊢` es una noción metateórica de
   verdad, no una relación de derivabilidad. `Meta/OmegaStrength.lean` mide la otra cara —`⊢` decide
   toda sentencia— y de ahí que **no sea r.e.**
@@ -69,7 +69,7 @@ algún modelo de `Γ`. Y con `Γ = []` bastan **dos modelos triviales sobre `Uni
 ## La salida buena
 
 Enunciar la solidez sobre un cálculo **sin axiomas habitándolo**. `ROBINSON_PlusPlus` tiene uno:
-`Prf₀` (17 constructores, **cero** axiomas). `prf0_soundness` está probado, con footprint
+`Prfᵢ` (17 constructores, **cero** axiomas). `prfI_soundness` está probado, con footprint
 `[propext, Classical.choice, Quot.sound]`.
 -/
 
@@ -112,7 +112,7 @@ theorem inconsistencia_de_cualquier_solidez
 
 ⭐⭐ **Añadido el 2026‑09‑23, y la historia vale más que el teorema.** El propietario decidió ir a
 por la **propiedad de disyunción** como último resultado de FOL. Se verificó el objetivo antes de
-construir nada, y **no sobrevivió**: `Derives₀` es deducción natural **CLÁSICA** (`Derives0.lean:95`,
+construir nada, y **no sobrevivió**: `Derives₀` es deducción natural **CLÁSICA** (`FOL/Derives0.lean`,
 con `dne_rule`, `dne_schema` y `forall_not_ex_not` como constructores), y la propiedad de
 disyunción es la marca de lo **INTUICIONISTA**.
 
@@ -136,12 +136,12 @@ enunciado **no tiene testigo**, y los dos lo dicen del cálculo que el proyecto 
 
 /-- La **propiedad de disyunción**, enunciada como `Prop` — el idioma del proyecto: una
 obligación se enuncia, nunca se postula. -/
-def DisjunctionProperty : Prop :=
+def DisjunctionProperty₀ : Prop :=
   ∀ A B : Formula, (([] : List Formula) ⊢₀ Formula.or A B) →
     Or (([] : List Formula) ⊢₀ A) (([] : List Formula) ⊢₀ B)
 
 /-- ⛔⛔ **Y es FALSA**, con el tercio excluso como contraejemplo. -/
-theorem derives0_no_disjunction_property : Not DisjunctionProperty := by
+theorem derives0_no_disjunction_property : Not DisjunctionProperty₀ := by
   intro hdp
   obtain ⟨A, hA, hnA⟩ := FOL.Metamath.Soundness0.derives0_not_complete
   rcases hdp A (neg A) (FOL.Propositional0.derives0_em_ctx [] A) with h | h

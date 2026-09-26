@@ -19,6 +19,33 @@ All notable changes to this project will be documented in this file.
 Format based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## 2026-09-26 (noche) — D2, D4, D5, D6 y D7 ejecutadas; la regla de subíndices, también en RPP
+
+* 🔧 **D5 · el refactor de `Lift0`, HECHO.** El núcleo es `absTerm' P` (`FOL/Eigenvariable.lean`),
+  genérico en un predicado de símbolos: `absTerm c` es su caso `(· = c)` por definición, y `liftTerm k`
+  su caso sin símbolos por un lema (`Lift0.absFormula'_none`), sin tocar `FOL/FOL.lean`. Los 40 nombres
+  de antes se conservan con su enunciado; footprints idénticos; compiló a la primera. ⚠️ La vieja nota
+  prometía «~150 líneas»: el par pasa de 806 a 797 (−56 de código). Lo que compra es **una** inducción
+  de lift/subst/`getAt?`/`replaceAt` y **un** transporte de 21 casos menos (de ocho). Sale la DIFERIDA
+  de `Lift0` de `[G.2]`.
+* 📐 **D6 · la regla de subíndices** (`NAMING-CONVENTIONS.md` §9): el subíndice nombra un CÁLCULO —`₀`
+  el clásico, `ᵢ` el intuicionista— y sin subíndice va lo que no depende de ninguno. Renombres:
+  `model_existence_iff` → **`model_existence_iff₀`** (T1), `compactness₀` → **`compactness`**,
+  `IsHenkin₀` → **`IsHenkin`**, `DisjunctionProperty` → **`DisjunctionProperty₀`**; y en RPP, `Prf₀`
+  (que era el INTUICIONISTA) → **`Prfᵢ`** (RPP‑102).
+* 🏷️ **D2** · `IsSyntacticallyComplete₀` → **`IsMemComplete`**: completa POR PERTENENCIA, sin
+  subíndice (no depende de cálculo), y dejando libre el nombre canónico para la teoría completa sobre
+  sentencias.
+* ⛔ **D4 · la vía de `ModelG`, CERRADA definitiva**: medida terminada (lo decidido, en el árbol;
+  `FreshSym`/`EnumSym` sin consumidores). Sale su marcador de `[G.2]` (19 → 17 con el de `Lift0`).
+* ⛔ **D7 · la migración `String`→`List Char`, CERRADA como ABANDONADA en FOL**: la parte de FOL está
+  hecha como parámetro; instanciar no movería ningún footprint titular.
+* 📝 **Higiene de docstrings** (58 correcciones en 16 módulos): citas a ficheros borrados de
+  `cuarentena/`, prosa en futuro caducada, cifras de constructores/axiomas de `Inconsistencia`, la
+  etiqueta «LS↑ hasta ℵ₀», `Complexity` («cero axiomas» con `[propext]` medido).
+* 📨 **Carta a PeanoRF** (`RESPUESTA-PEANORF-2026-09-26.md`): la condición «FOL no depende de nada más
+  allá de sí mismo», lo que hoy la incumple (los siete), el aviso de D5 y la nomenclatura de D6.
+
 ## 2026-09-26 (tarde) — Las decisiones D1-D7 del propietario, y `Tactics2.lean` borrado
 
 * 🗑️ **D1 · `FOL/Tactics2.lean` BORRADO**: era idéntico, salvo la línea del `import`, a

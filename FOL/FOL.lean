@@ -12,8 +12,11 @@
 
 `TermG S` / `FormulaG S` son el núcleo genérico; `Term`/`Formula` son los `abbrev` de hoy,
 `S := String`. ⚠️ El árbol entero sigue diciendo `Term`/`Formula` y **no cambió ni una
-línea**: la migración cuesta TRES ficheros (éste, `FOL/DecEq.lean` y
-`ROBINSON_PlusPlus/Meta/HilbertSeq.lean`) y los 147 footprints son idénticos.
+línea**: meter el PARÁMETRO costó TRES ficheros (éste, `FOL/DecEq.lean` y
+`ROBINSON_PlusPlus/Meta/HilbertSeq.lean`) y los 147 footprints de entonces salieron idénticos (ADR-068).
+⛔ Eso **no** es la migración `String`→`List Char` (plan §7.3 de RPP): los `abbrev` siguen en
+`String`, y la instanciación en `List Char` queda ABANDONADA en FOL (D7): no mueve ningún
+footprint titular de FOL (su `Classical.choice` es el WKL) y su dividendo es de RPP (`strCode`).
 
 ⛔⛔ **La razón que aquí se daba para el parámetro era FALSA, y se midió el 2026‑09‑23.**
 Decía: *«`List Char` es numerable y sirve para Gödel, pero si Löwenheim-Skolem **ascendente**
@@ -31,12 +34,16 @@ justificación escrita era la de arriba.
 
 ⭐ **El parámetro se queda**, y no es un error: costó tres ficheros, no rompió nada, y la sintaxis,
 `Derives₀`, `LocalRule` y la semántica (`ModelG`) ya son genéricos. Lo que se cierra es seguir
-empujándolo por la cadena de completitud. ⬜ **Para reabrirla**: enhebrar `FreshSym` y `EnumSym` por
-`Fresh0` → `Henkin0` → `HenkinLimit0` → `Lindenbaum0` → `Canonical0` (coste en
-`sondeos/SymbolParamCoste.lean`), sabiendo que eso **no** da LS↑.
+empujándolo por la cadena de completitud.
 
-⭐ Y el **modelo infinito por compacidad** (LS↑ hasta ℵ₀) **no la necesita**: basta con
-ℵ₀ constantes frescas, y `FreshSym.cst : Nat → String` las da.
+⛔ **Y el cierre es DEFINITIVO** (decisión del propietario del 2026-09-26): no hay receta para
+reabrirla. `Fresh0`, `Henkin0`, `HenkinLimit0`, `Lindenbaum0`, `Canonical0` y `Enumeration` son
+`String` por dentro y así se quedan; las clases de `SymClasses.lean` se quedan como MEDIDA de lo
+que esa cadena le pediría al tipo de símbolos, y **ningún** módulo las consume. Enhebrarlas
+tampoco daría LS↑ (ver arriba).
+
+⭐ Y el **modelo infinito numerable** (`Compacity0.infinite_model_of_large`, que **no** es LS↑)
+**no la necesita**: basta con ℵ₀ constantes frescas, y `Fresh0.cst : Nat → String` las da.
 -/
 inductive TermG (S : Type) where
   | var  : Nat → TermG S

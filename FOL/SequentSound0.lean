@@ -30,9 +30,9 @@ mismo enunciado con `[propext, Quot.sound]` en vez del **WKL**, y derivada del e
 fuerte `lk0_no_bot`. Ver el docstring de `lk0_not_empty` abajo para por qué la prueba de aquí **no**
 se sustituye (ADR‑061).
 
-⚠️ **Por qué importa y no es adorno**: `LK₀` es el cálculo sobre el que se va a enunciar y
-demostrar el Hauptsatz. Si fuera **demasiado fuerte**, `CutElim` podría ser cierto y no servir —o
-peor, se perseguiría un teorema falso durante las mil líneas del Hauptsatz—. Esto lo cierra
+⚠️ **Por qué importa y no es adorno**: `LK₀` es el cálculo sobre el que se enuncia y
+demuestra el Hauptsatz (`FOL.Hauptsatz0`). Si fuera **demasiado fuerte**, `CutElim` podría ser cierto y no servir —o
+peor, se perseguiría un teorema falso durante las mil líneas del Hauptsatz—. Esto lo cerró
 **antes** de pagar esa pieza.
 
 ## ⭐ La ruta SEMÁNTICA es mucho más barata que la sintáctica
@@ -47,7 +47,7 @@ semántica.* Es la primera vez que este repo cobra ese dividendo, y sólo se pue
 
 ## ⭐ Una sola inducción para los dos cálculos
 
-Se prueba sobre **`LKc`** —el que **tiene** corte, 14 casos— y `lk0_sound` sale aplicando
+Se prueba sobre **`LKc`** —el que **tiene** corte, 15 casos— y `lk0_sound` sale aplicando
 `lk0_to_lkc`. Hacerlo al revés habría costado dos inducciones.
 
 ⭐⭐ **Y el caso `cut` es semánticamente TRIVIAL**: si algún elemento de `A :: Δ` vale y, suponiendo
@@ -67,7 +67,7 @@ entorno `shiftEnv v d`, con el contexto levantado. Las dos piezas son
     contextSatisfies_lift_zero   -- el contexto levantado vale en el entorno desplazado
     eval_liftFormula_zero        -- y lo levantado se lee abajo
 
-⭐ y **las dos acaban de quedar limpias** gracias a la corrección de PeanoRF (ADR‑047): antes
+⭐ y **las dos acaban de quedar limpias** gracias a la corrección de PeanoRF (RPP‑047): antes
 arrastraban `Classical.choice` por un `omega` sobre una meta no aritmética. Sin ese arreglo este
 módulo habría heredado ese `Classical.choice` **sin que se distinguiera del legítimo**.
 

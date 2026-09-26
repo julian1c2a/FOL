@@ -13,7 +13,7 @@ constructores de `Derives` (que usan hipótesis-en-contexto, `A :: Γ ⊢ B`).
 Aquí las hipótesis son funciones Lean (`Γ ⊢ A → Γ ⊢ B`) y, en `gen`, la
 **ω-regla** (`∀ n : Term, Γ ⊢ A[n] → Γ ⊢ ∀A`).
 
-**Estatus**: `imp_intro`, `gen`, `raa`, `dne`, `or_elim`, `ex_elim` son **axiomas**.
+**Estatus**: `imp_intro`, `raa`, `or_elim`, `ex_elim` son **axiomas**; `gen` y `dne`, teoremas (D‑2).
 
 ⚠️⚠️ **DOCTRINA CORREGIDA EL 2026‑09‑12 (A‑4).** Este docstring decía que **los seis**
 «no son derivables … **tienen que ser axiomas**». **Es falso para la mitad**, y está
@@ -25,24 +25,24 @@ Aquí las hipótesis son funciones Lean (`Γ ⊢ A → Γ ⊢ B`) y, en `gen`, l
 | ✅ **PODRÍAN ser CONSTRUCTORES** | `gen`, `dne` | son *shapes* legales. Un `inductive` que los incluya **typechequea** (`EXIT 0`, recursor sin axiomas) — **`gen` incluido**, pese a su premisa infinitaria sobre `Term` |
 
 🔑 **El criterio que de verdad separa no es «meta‑regla» sino PREMISA‑FUNCIÓN.** Y de ahí
-que «inevitable» fuese falso: ver la decisión abierta **D‑2** en `AXIOMS.md` §2 (mover los
-evitables a constructores dejaría **13 → 9** axiomas sin tocar la fuerza del cálculo).
+que «inevitable» fuese falso: ver la decisión **D‑2** en `AXIOMS.md` §2.1, **ya ejecutada** el 2026‑09‑12 (los
+evitables pasaron a constructores: **13 → 9**; hoy la librería tiene **4**).
 
 ⛔⛔ **AVISO CAPITAL, MEDIDO EL 2026‑09‑11 — estos axiomas HABITAN un tipo
 INDUCTIVO, y eso tiene una consecuencia que este docstring negaba.**
 
-`Derives` es un `inductive` de 18 constructores. Estos **seis** axiomas producen habitantes suyos
-que **no son aplicaciones de constructor** — y ⚠️ **no son los únicos**: el censo corregido el
-2026‑09‑12 da **OCHO en esta librería** (falta un **segundo `dne`** en `Theorems/Neg.lean:57`, en
-forma de esquema, y `forall_not_impl_exists_not` en `Theorems/Quantifiers.lean:115`) y **DOCE**
-contando `ROBINSON_PlusPlus`. Por tanto:
+`Derives` es un `inductive` de 22 constructores. Estos **cuatro** axiomas producen habitantes suyos
+que **no son aplicaciones de constructor**. (El censo del 2026‑09‑12 daba **OCHO** en esta
+librería: los seis de aquí, el `dne` en esquema de `Theorems/Neg.lean` y
+`forall_not_impl_exists_not` de `Theorems/Quantifiers.lean`; D‑2 pasó cuatro a constructores,
+`AXIOMS.md` §2.1.) Por tanto:
 
 > ⛔ **NINGÚN teorema sobre `Derives` puede demostrarse por INDUCCIÓN.** La
-> inducción cubre los 18 constructores, pero el enunciado cuantifica sobre
+> inducción cubre los 22 constructores, pero el enunciado cuantifica sobre
 > **todos** los habitantes, y los que producen estos axiomas no están cubiertos.
 
-Eso no es una precaución teórica: `cuarentena/Soundness.lean` lo hacía, y de ahí
-sale **`False` sin hipótesis** (`cuarentena/Inconsistencia.lean`, compilado).
+Eso no es una precaución teórica: `cuarentena/Soundness.lean` (borrado) lo hacía, y de ahí
+salía **`False` sin hipótesis** (`FOL/Inconsistencia.lean`, compilado).
 
 ⚠️ Y por eso **se ha retirado la frase que decía que el sistema resultante es
 «sólido y completo relativo a ℕ»**: la solidez es precisamente lo que NO se
@@ -53,9 +53,9 @@ tiene. `ROBINSON_PlusPlus/Meta/OmegaStrength.lean` mide la otra cara: con `raa`,
 numerales — premisa estrictamente mayor, luego regla más débil. La fuerza viene
 de `raa` e `imp_intro`, que toman **funciones de Lean**.
 
-Los constructores finitarios y sólidos para *todo* modelo son los 18 de
-`Derives`; su solidez sí es demostrable, y lo está —para el cálculo de Hilbert
-`Prf₀`, que **no tiene ningún axioma habitándolo**— en
+Los constructores finitarios y sólidos para *todo* modelo son los 21 de
+`Derives` salvo `gen_rule` (= `Derives₀`); su solidez sí es demostrable, y lo está —para el cálculo de Hilbert
+`Prfᵢ`, que **no tiene ningún axioma habitándolo**— en
 `ROBINSON_PlusPlus/sondeos/AnclaSoundness.lean`.
 
 El resto (`mp`, `and_intro`, `and_elim_*`, `or_intro_*`, `false_elim`,

@@ -34,14 +34,14 @@ argumentos y el entorno De Bruijn, que es lo caro del caso general.
 ADR‑056 §5 dijo que faltaba «suministro de símbolos frescos **n‑arios**». **Falso, y medido**: en
 este árbol `Term.func` toma un `String` y una lista de **cualquier** longitud, así que **la aridad
 no está en el tipo**; y `occursFormula c f` mira el **nombre**, no la aridad. ⇒ `cst : Nat → String`
-(`FOL/Fresh0.lean:91`) ya da infinitos símbolos de Skolem de cualquier aridad.
+(`FOL/Fresh0.lean`) ya da infinitos símbolos de Skolem de cualquier aridad.
 ⚠️ Van **cuatro** obstrucciones mías declaradas y luego refutadas en dos días.
 
 ## ⭐⭐ El puente que NO existía, y era el bloqueo medido
 
 Una medición externa señaló el bloqueo de Skolem, y acertó: **no había ningún lema que conectara
-`occursFormula` (sintáctico, `FOL/Eigenvariable.lean:366`) con `evalFormula` (semántico,
-`FOL/Semantics.lean:54`)**. Sin él, la frescura de un símbolo no dice **nada** semánticamente: se
+`occursFormula` (sintáctico, `FOL/Eigenvariable.lean`) con `evalFormula` (semántico,
+`FOL/Semantics.lean`)**. Sin él, la frescura de un símbolo no dice **nada** semánticamente: se
 puede decir «`c` no aparece en `f`» y no poder concluir que reinterpretar `c` no cambia el valor
 de `f`. Ésa es la pieza:
 
@@ -53,7 +53,7 @@ argumento de frescura que quiera decir algo semántico — no sólo por Skolem.
 
 ## ⭐ Y el axioma de Skolem YA ESTABA ESCRITO: es `henkinAx`
 
-    henkinAx c A = (∃A) ⇒ A[c]            -- FOL/Henkin0.lean:90
+    henkinAx c A = (∃A) ⇒ A[c]            -- FOL.Henkin0.henkinAx
 
 Es literalmente el axioma de Skolem para un existencial cuyo cuerpo no tiene más variables libres.
 ⇒ no hay que definir nada nuevo: *antes de construir, buscar*.

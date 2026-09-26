@@ -62,14 +62,14 @@ mismo teorema aplicado a la inversa.*
 
 ⭐ **La separación es exacta y vale la pena leerla**: la conservatividad **no** necesita elección;
 la necesita **sólo** el paso «inyectiva ⇒ tiene inversa». Por eso la forma buena es
-`derives0_rename_inv`, que pide la inversa — y en la construcción de Henkin la inversa **se tiene
-escrita**, porque el renombrado es explícito.
+`derives0_rename_inv`, que pide la inversa. ⚠️ La construcción de Henkin **no** la escribe:
+`Fresh0.derivesSet0_shift_inv` usa `invOf shift` (vía `invOf_spec shift_inj`), y por ahí entra `Classical.choice`.
 
 ## 🏁 Lo que esto no era todavía — y ya lo es
 
 🏁 **La otra mitad está**: el paso de eigenvariable es
 `FOL.Eigenvariable.derives0_gen_fresh`, y la operación que aquí se llama `abstractConst` existe
-como `absTerm`/`absFormula` (`FOL/Eigenvariable.lean:71,84`). Con las dos mitades, la extensión de
+como `absTerm`/`absFormula` (`FOL/Eigenvariable.lean`). Con las dos mitades, la extensión de
 Henkin está construida (`FOL.Henkin0`, `FOL.HenkinLimit0`) y `completeness₀` cierra.
 ⚠️ El párrafo de abajo se deja porque nombra bien la diferencia entre renombrar y abstraer.
 
@@ -331,8 +331,8 @@ renombrado se cancelan. Cero casos, cuatro líneas.
 mismo teorema aplicado a la inversa.* No hay que volver a inducir sobre el cálculo.
 
 ⚠️ **Se pide la inversa, no la inyectividad**, y a propósito: así el enunciado es **constructivo**
-(`[propext, Quot.sound]`) y no pierde nada — el renombrado que Henkin necesita es explícito
-(«mete todo en un sublenguaje») y viene con su inversa escrita. La versión con hipótesis de
+(`[propext, Quot.sound]`). ⚠️ El renombrado que Henkin usa es explícito
+(«mete todo en un sublenguaje»), pero `FOL.Fresh0` **no** escribe su inversa: usa `invOf`. La versión con hipótesis de
 **inyectividad** está debajo como corolario, y ésa sí paga `Classical.choice` para fabricar la
 inversa.
 -/
@@ -409,7 +409,7 @@ theorem invOf_spec {ρ : String → String} (hinj : ∀ s t, ρ s = ρ t → s =
 
 /-- **Conservatividad con la hipótesis habitual**: `ρ` inyectiva.
 ⚠️ Su footprint lleva `Classical.choice`, y no por la lógica sino **por fabricar la inversa**.
-Si se tiene la inversa a mano —y en la construcción de Henkin se tiene—, usar
+Si se tiene la inversa a mano (⚠️ `FOL.Fresh0` no la tiene: usa `invOf`), usar
 `derives0_rename_inv`, que es constructivo. -/
 theorem derives0_rename_conservative {ρ : String → String} (hinj : ∀ s t, ρ s = ρ t → s = t)
     {Γ : List Formula} {f : Formula}

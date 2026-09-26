@@ -5,14 +5,14 @@ License: MIT
 -/
 
 -- TheoryFramework/Instances/FOL.lean
--- Instancia `LogicSystem` para la lógica de primer orden con igualdad (FOL⁼).
+-- Por qué NO hay instancia `LogicSystem` para FOL⁼ (`folSystem`, retirada el 2026‑09‑23).
 
 import TheoryFramework.Logic
 import FOL.FOL
 import FOL.Semantics
 
 /-!
-# `FOL⁼` como `LogicSystem` — y **sólo** como `LogicSystem`
+# `FOL⁼` y `LogicSystem` — por qué **no** hay instancia (desde el 2026‑09‑23)
 
 ## ⚠️ Qué decía este fichero antes del 2026‑09‑12, y por qué era falso
 
@@ -26,13 +26,13 @@ Tres cosas estaban mal a la vez, y **ninguna la veía nadie** porque el módulo 
 la `lean_lib` no llevaba `globs`, así que sólo se compilaba lo que el barrel alcanzaba, y este
 fichero **no entraba en ningún build**.
 
-1. ⛔ **`FOL.Metamath.Soundness` ya no existe**: `soundness` está en `cuarentena/` desde el
-   2026‑09‑11, porque **es FALSO** — con las meta‑reglas de `FOL/MetaRules.lean`, cualquier
-   testigo suyo demuestra `False` sin hipótesis (`cuarentena/Inconsistencia.lean`, compilado,
+1. ⛔ **`FOL.Metamath.Soundness` ya no existe**: `soundness` se apartó a `cuarentena/` el
+   2026‑09‑11 (y se borró el 2026‑09‑23) porque **es FALSO** — con las meta‑reglas de `FOL/MetaRules.lean`, cualquier
+   testigo suyo demuestra `False` sin hipótesis (`FOL/Inconsistencia.lean`, compilado,
    footprint `[propext, FOL.MetaRules.raa]`).
 2. ⚠️ ~~`completeness` existe, pero se apoya en **cinco `axiom`** de `FOL/Completeness.lean`~~
    — ⛔ **DOS COSAS FALSAS, corregidas el 2026‑09‑18 (ADR‑072)**: `FOL/Completeness.lean`
-   **no existe**, y `cuarentena/Completeness.lean` tiene **UN** `axiom`
+   **no existe**, y `cuarentena/Completeness.lean` (borrado el 2026‑09‑23) tenía **UN** `axiom`
    (`henkin_extension_lemma`), no cinco (ADR‑030/031 retiraron los otros cuatro).
    🏁 Y hoy hay algo mejor: **`FOL.Canonical0.completeness₀`** — completitud de FOL⁼ con
    **cero axiomas del proyecto** (ADR‑041).
@@ -41,7 +41,7 @@ fichero **no entraba en ningún build**.
 
 ## Lo que se declara hoy
 
-**Sólo el núcleo**: `derives`, `bottom`, `neg`, `semanticEntails`. Eso es lo que `FOL⁼` **es**.
+**Nada**: `folSystem`, que declaraba sólo el núcleo (`derives`, `bottom`, `neg`, `semanticEntails`), se retiró el 2026‑09‑23 (ver abajo).
 
 ⛔ **NO se declara `SoundLogic Formula`, y no es un olvido: es INHABITABLE.** Declararla exigiría
 un testigo de `Γ ⊢ f → Γ ⊨ f`, que es exactamente lo que demuestra `False`. Si algún día las
@@ -52,7 +52,7 @@ pasará a ser demostrable y **entonces** se declara.
 de 2026‑09‑12 («adjudicar antes si los cinco axiomas de `Completeness.lean` son aceptables»)
 **ya no es la buena**, porque ni hay cinco axiomas ni existe ese fichero.
 
-⛔ **La razón de verdad, medida el 2026‑09‑18 (ADR‑072)**: `folSystem` declara
+⛔ **La razón de verdad, medida el 2026‑09‑18 (ADR‑072)**: `folSystem` declaraba
 `derives := fun Γ f => Derives Γ f` — el cálculo **CONTAMINADO**—, mientras que
 `completeness₀` se prueba sobre **`Derives₀`**. ⇒ **`completeness₀` NO paga
 `CompleteLogic Formula`**: son dos cálculos distintos.

@@ -21,7 +21,7 @@ Pieza (3) del ensamblaje de `doc/PLAN-COMPLETITUD-FINITISTA.md` §6.4. Con ella 
 completo** queda demostrado en un solo enunciado:
 
     henkin_completion : IsConsistent₀ S →
-      ∃ T, IsMaximalConsistent₀ T ∧ IsHenkin₀ T ∧ (∀ f, shiftTheory S f → T f)
+      ∃ T, IsMaximalConsistent₀ T ∧ IsHenkin T ∧ (∀ f, shiftTheory S f → T f)
 
 *Toda teoría consistente se extiende a una **maximal consistente** que además **tiene testigo para
 cada existencial**.* Es exactamente la hipótesis que el modelo canónico consume.
@@ -30,8 +30,8 @@ cada existencial**.* Es exactamente la hipótesis que el modelo canónico consum
 
 1. **§1** — las cuatro propiedades estructurales de `⊢₀*`. ⭐ `derivesSet0_intro_impl` es
    **el teorema de deducción**, y sobre `Derives₀` **no hay que demostrarlo**: `intro_impl` es un
-   **constructor**. La versión de `cuarentena/Completeness.lean` invocaba
-   `FOL.Metamath.Deduction.deduction_theorem`.
+   **constructor**. La versión de `cuarentena/Completeness.lean` (borrado el 2026‑09‑23)
+   invocaba `FOL.Metamath.Deduction.deduction_theorem`.
 2. **§2** — Lindenbaum: la cadena `LindenbaumStep`, el límite, y `lindenbaum_lemma`.
 3. **§3** — lo mínimo sobre un maximal consistente que el ensamblaje necesita: `max_cons_bot`,
    `max_cons_contains` y `max_cons_impl`. 🏁 El resto de la familia (`and`, `or`, `ex`, `forall`)
@@ -50,7 +50,7 @@ y por eso el entregable de la vía W **no es un footprint limpio** sino un `Clas
 **explicado**: ≡ completitud sobre RCA₀, y WKL₀ es Π⁰₂‑conservativo sobre PRA.
 
 ⚠️ Los `Classical.choice` de `FOL.Fresh0` y `FOL.HenkinLimit0` **no eran** éste: eran
-`Exists.choose` y `String`. Éste sí.
+`Exists.choose`, el tercio excluso de `cst_bound_sym` y `String`. Éste sí.
 
 🔑 **Un `Classical.choice` explicado vale más que un `Classical.choice` escondido.**
 
@@ -217,13 +217,13 @@ theorem max_cons_impl {S : Formula → Prop} (hMax : IsMaximalConsistent₀ S) {
 -- ============================================================
 
 /-- Un conjunto tiene la propiedad de Henkin si **contiene testigos para sus existenciales**. -/
-def IsHenkin₀ (S : Formula → Prop) : Prop :=
+def IsHenkin (S : Formula → Prop) : Prop :=
   ∀ f, S (Formula.ex f) → ∃ t : Term, S (substFormula 0 t f)
 
 /-- ⭐⭐⭐ **EL ENSAMBLAJE DE HENKIN, CERRADO.** Toda teoría consistente se extiende a una
 **maximal consistente** que además **tiene testigo para cada existencial**.
 
-⭐ El paso de `henLimit` a `IsHenkin₀` es de dos líneas: el axioma de Henkin `(∃A) → A[c]` está en
+⭐ El paso de `henLimit` a `IsHenkin` es de dos líneas: el axioma de Henkin `(∃A) → A[c]` está en
 `T` porque `T ⊇ henLimit S`, y un maximal consistente está **cerrado por modus ponens**
 (`max_cons_impl`). *El trabajo estaba en construir `henLimit`, no en usarlo.*
 
@@ -232,7 +232,7 @@ Es conservativa —`derivesSet0_shift_inv` (`FOL.Fresh0`)—, así que no se pie
 enunciado tiene que decirlo. -/
 theorem henkin_completion {S : Formula → Prop} (hCons : IsConsistent₀ S) :
     ∃ T : Formula → Prop, And (IsMaximalConsistent₀ T)
-      (And (IsHenkin₀ T) (∀ f, shiftTheory S f → T f)) := by
+      (And (IsHenkin T) (∀ f, shiftTheory S f → T f)) := by
   obtain ⟨T, hMax, hSub⟩ := lindenbaum_lemma (henLimit_consistent hCons)
   refine ⟨T, hMax, ?_, fun f hf => hSub f (shiftTheory_sub_henLimit S f hf)⟩
   intro A hEx

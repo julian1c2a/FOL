@@ -30,126 +30,88 @@ lateral vive en el contexto **levantado** `A :: Γ'.map (liftFormula 0)`. Hay qu
 `∀(¬A)`, y para eso hace falta exactamente este lema.
 
 ⭐ Una vez dentro, `elim_forall` en `Term.var 0` lo cierra, porque
-`substFormula 0 (var 0) (liftFormula 1 (¬A)) = ¬A` — que es `subst_lift_var`, abajo.
+`substFormula 0 (var 0) (liftFormula 1 (¬A)) = ¬A` — que es `substFormula_lift_var`, abajo.
 
-## ⚠️ Nota de ingeniería, escrita a propósito
+## ⭐ Sin inducciones propias sobre la sintaxis (D5, 2026-09-26)
 
-Este módulo es **casi una copia** de `FOL.Eigenvariable`: `absTerm c k` coincide con `liftTerm k`
-en todo salvo en la constante `c`. Un `absTerm'` parametrizado por un **predicado** de símbolos
-daría los dos con una sola inducción, y `liftTerm` sería el caso del predicado vacío.
+Este módulo **era** una copia de `FOL.Eigenvariable` —`absTerm c k` coincide con `liftTerm k` en
+todo salvo en la constante `c`—. Desde D5 el núcleo es `absTerm' P` (genérico en un predicado de
+símbolos, en `FOL.Eigenvariable`) y `liftTerm k` es su caso **sin símbolos**:
 
-⬜ **No se ha hecho, y la razón es de riesgo, no de gusto**: `FOL.Eigenvariable` ya está compilado
-y vigilado por `check-footprints.bash`; refactorizarlo para ahorrar ~150 líneas de enunciados
-—no de ideas— se haría **después** de cerrar el ensamblaje, no en medio. Queda anotado para no
-perderlo.
+    absFormula'_none : absFormula' (fun _ => False) k f = liftFormula k f     -- §0
+
+⇒ §1-§4 son **corolarios**: mismos nombres, mismos enunciados, sin inducción propia sobre
+términos, fórmulas ni derivaciones. Sólo §5 —que no tiene gemelo en `FOL.Eigenvariable`— conserva
+las suyas.
+
+⚠️ **Lo que D5 compra, medido**: NO líneas —la vieja nota de ingeniería prometía «~150» y el par de
+módulos pasó de 806 a 797 (−56 de código)—, sino **una** inducción de lift/subst/`getAt?`/
+`replaceAt` y **un** transporte de 21 casos menos. Quedan otras inducciones sobre los constructores
+de `Derives₀` (`Derives1`, `Derives2`, `NDtoLK0`, `Rename`, `Soundness0`…): D5 quita una, no todas.
 -/
 
 namespace FOL.Lift0
 
-open FOL.Eigenvariable (posDepth)
+open FOL.Eigenvariable
+
+-- ============================================================
+-- §0 · El caso SIN SÍMBOLOS de `absTerm'` es `liftTerm`
+-- ============================================================
+
+theorem absTerm'_none (k : Nat) (t : Term) : absTerm' (fun _ => False) k t = liftTerm k t :=
+  absTerm'_eq_lift (fun _ => False) k t (fun _ _ h => h)
+
+theorem absTerms'_none (k : Nat) (ts : List Term) :
+    absTerms' (fun _ => False) k ts = liftTerms k ts :=
+  absTerms'_eq_lift (fun _ => False) k ts (fun _ _ h => h)
+
+theorem absFormula'_none (k : Nat) (f : Formula) :
+    absFormula' (fun _ => False) k f = liftFormula k f :=
+  absFormula'_eq_lift (fun _ => False) f k (fun _ _ h => h)
+
+theorem map_absFormula'_none (k : Nat) (Γ : List Formula) :
+    Γ.map (absFormula' (fun _ => False) k) = Γ.map (liftFormula k) := by
+  induction Γ with
+  | nil => rfl
+  | cons g Γ' ih => simp only [List.map_cons, absFormula'_none, ih]
 
 -- ============================================================
 -- §1 · Lift contra lift, con `j ≤ k`
 -- ============================================================
 
-mutual
 theorem liftTerm_lift : ∀ (j k : Nat) (_ : j ≤ k) (t : Term),
     liftTerm j (liftTerm k t) = liftTerm (k + 1) (liftTerm j t) := by
   intro j k hjk t
-  cases t with
-  | var n =>
-      by_cases h1 : n < k
-      · by_cases h2 : n < j
-        · simp [liftTerm, h1, h2, show n < k + 1 by omega]
-        · simp [liftTerm, h1, h2, show n + 1 < k + 1 by omega]
-      · have h2 : ¬ n < j := by omega
-        simp [liftTerm, h1, h2, show ¬ n + 1 < j by omega, show ¬ n + 1 < k + 1 by omega]
-  | func s ts =>
-      simp only [liftTerm]
-      congr 1
-      exact liftTerms_lift j k hjk ts
+  simpa only [absTerm'_none] using absTerm'_lift (fun _ => False) j k hjk t
 
 theorem liftTerms_lift : ∀ (j k : Nat) (_ : j ≤ k) (ts : List Term),
     liftTerms j (liftTerms k ts) = liftTerms (k + 1) (liftTerms j ts) := by
   intro j k hjk ts
-  cases ts with
-  | nil => rfl
-  | cons t ts' =>
-      simp only [liftTerms, List.cons.injEq]
-      exact ⟨liftTerm_lift j k hjk t, liftTerms_lift j k hjk ts'⟩
-end
+  simpa only [absTerms'_none] using absTerms'_lift (fun _ => False) j k hjk ts
 
 theorem liftFormula_lift : ∀ (f : Formula) (j k : Nat), j ≤ k →
     liftFormula j (liftFormula k f) = liftFormula (k + 1) (liftFormula j f) := by
-  intro f
-  induction f with
-  | bottom => intro j k _; rfl
-  | atom p ts => intro j k h; simp only [liftFormula, liftTerms_lift j k h]
-  | eq t u => intro j k h; simp only [liftFormula, liftTerm_lift j k h]
-  | impl a b iha ihb => intro j k h; simp only [liftFormula, iha j k h, ihb j k h]
-  | «forall» a ih => intro j k h; simp only [liftFormula, ih (j + 1) (k + 1) (by omega)]
-  | and a b iha ihb => intro j k h; simp only [liftFormula, iha j k h, ihb j k h]
-  | or a b iha ihb => intro j k h; simp only [liftFormula, iha j k h, ihb j k h]
-  | ex a ih => intro j k h; simp only [liftFormula, ih (j + 1) (k + 1) (by omega)]
+  intro f j k h
+  simpa only [absFormula'_none] using absFormula'_lift (fun _ => False) f j k h
 
 -- ============================================================
 -- §2 · Lift contra sustitución, con `v ≤ k`
 -- ============================================================
 
-mutual
 theorem liftTerm_subst : ∀ (v k : Nat) (_ : v ≤ k) (s t : Term),
     liftTerm k (substTerm v s t) = substTerm v (liftTerm k s) (liftTerm (k + 1) t) := by
   intro v k hvk s t
-  cases t with
-  | var n =>
-      by_cases h1 : n = v
-      · subst h1
-        simp [liftTerm, substTerm, show n < k + 1 by omega]
-      · by_cases h2 : n > v
-        · by_cases h3 : n < k + 1
-          · have e1 : n - 1 < k := by omega
-            simp [liftTerm, substTerm, h1, h2, h3, e1]
-          · have e1 : ¬ n - 1 < k := by omega
-            have e2 : n + 1 ≠ v := by omega
-            have e3 : n + 1 > v := by omega
-            simp [liftTerm, substTerm, h1, h2, h3, e1, e2, e3]
-            omega
-        · have e0 : n < k + 1 := by omega
-          have e1 : n < k := by omega
-          simp [liftTerm, substTerm, h1, h2, e0, e1]
-  | func g ts =>
-      simp only [liftTerm, substTerm]
-      congr 1
-      exact liftTerms_subst v k hvk s ts
+  simpa only [absTerm'_none] using absTerm'_subst (fun _ => False) v k hvk s t
 
 theorem liftTerms_subst : ∀ (v k : Nat) (_ : v ≤ k) (s : Term) (ts : List Term),
     liftTerms k (substTerms v s ts) = substTerms v (liftTerm k s) (liftTerms (k + 1) ts) := by
   intro v k hvk s ts
-  cases ts with
-  | nil => rfl
-  | cons t ts' =>
-      simp only [liftTerms, substTerms, List.cons.injEq]
-      exact ⟨liftTerm_subst v k hvk s t, liftTerms_subst v k hvk s ts'⟩
-end
+  simpa only [absTerm'_none, absTerms'_none] using absTerms'_subst (fun _ => False) v k hvk s ts
 
 theorem liftFormula_subst : ∀ (f : Formula) (v k : Nat), v ≤ k → ∀ (s : Term),
     liftFormula k (substFormula v s f) = substFormula v (liftTerm k s) (liftFormula (k + 1) f) := by
-  intro f
-  induction f with
-  | bottom => intro v k _ s; rfl
-  | atom p ts => intro v k h s; simp only [liftFormula, substFormula, liftTerms_subst v k h s]
-  | eq t u => intro v k h s; simp only [liftFormula, substFormula, liftTerm_subst v k h s]
-  | impl a b iha ihb => intro v k h s; simp only [liftFormula, substFormula, iha v k h s, ihb v k h s]
-  | «forall» a ih =>
-      intro v k h s
-      simp only [liftFormula, substFormula, ih (v + 1) (k + 1) (by omega) (liftTerm 0 s),
-        liftTerm_lift 0 k (by omega)]
-  | and a b iha ihb => intro v k h s; simp only [liftFormula, substFormula, iha v k h s, ihb v k h s]
-  | or a b iha ihb => intro v k h s; simp only [liftFormula, substFormula, iha v k h s, ihb v k h s]
-  | ex a ih =>
-      intro v k h s
-      simp only [liftFormula, substFormula, ih (v + 1) (k + 1) (by omega) (liftTerm 0 s),
-        liftTerm_lift 0 k (by omega)]
+  intro f v k h s
+  simpa only [absTerm'_none, absFormula'_none] using absFormula'_subst (fun _ => False) f v k h s
 
 -- ============================================================
 -- §3 · Navegación
@@ -157,34 +119,21 @@ theorem liftFormula_subst : ∀ (f : Formula) (v k : Nat), v ≤ k → ∀ (s : 
 
 theorem lift_getAt? : ∀ (p : Pos) (k : Nat) (f : Formula),
     getAt? (liftFormula k f) p = (getAt? f p).map (liftFormula (k + posDepth p)) := by
-  intro p
-  induction p with
-  | root => intro k f; simp [getAt?, posDepth]
-  | left p' ih => intro k f; cases f <;> simp only [getAt?, liftFormula, ih, posDepth] <;> rfl
-  | right p' ih => intro k f; cases f <;> simp only [getAt?, liftFormula, ih, posDepth] <;> rfl
-  | body p' ih =>
-      intro k f
-      cases f <;>
-        simp only [getAt?, liftFormula, ih, posDepth, Nat.add_assoc, Nat.add_comm 1] <;> rfl
+  intro p k f
+  rw [← absFormula'_none k f, abs'_getAt? (fun _ => False) p k f]
+  cases getAt? f p with
+  | none => rfl
+  | some g => exact congrArg some (absFormula'_none _ g)
 
 theorem lift_replaceAt : ∀ (p : Pos) (k : Nat) (f newSub : Formula),
     replaceAt (liftFormula k f) p (liftFormula (k + posDepth p) newSub)
       = liftFormula k (replaceAt f p newSub) := by
-  intro p
-  induction p with
-  | root => intro k f n; simp [replaceAt, posDepth]
-  | left p' ih => intro k f n; cases f <;> simp only [replaceAt, liftFormula, ih, posDepth]
-  | right p' ih => intro k f n; cases f <;> simp only [replaceAt, liftFormula, ih, posDepth]
-  | body p' ih =>
-      intro k f n
-      have e : k + (posDepth p' + 1) = (k + 1) + posDepth p' := by omega
-      cases f <;> simp only [replaceAt, liftFormula, posDepth, e, ih]
+  intro p k f n
+  simpa only [absFormula'_none] using abs'_replaceAt (fun _ => False) p k f n
 
 theorem lift_localRule (k : Nat) {A B : Formula} (h : LocalRule A B) :
     LocalRule (liftFormula k A) (liftFormula k B) := by
-  cases h with
-  | commuteImpl A B C =>
-      exact LocalRule.commuteImpl (liftFormula k A) (liftFormula k B) (liftFormula k C)
+  simpa only [absFormula'_none] using abs'_localRule (fun _ => False) k h
 
 theorem map_lift_lift (k : Nat) (Γ : List Formula) :
     (Γ.map (liftFormula k)).map (liftFormula 0)
@@ -197,67 +146,13 @@ theorem map_lift_lift (k : Nat) (Γ : List Formula) :
 -- §4 · ⭐ EL LEMA
 -- ============================================================
 
-/-- **Debilitamiento bajo levantamiento.** ⚠️ El `∀ k` va **dentro**, como en `absDerives`: en
-`intro_forall` y `elim_ex` la hipótesis inductiva se usa a nivel `k + 1`. -/
+/-- **Debilitamiento bajo levantamiento.** Es `absDerives'` sin símbolos. ⚠️ El `∀ k` va
+**dentro**: en `intro_forall` y `elim_ex` la hipótesis inductiva se usa a nivel `k + 1`. -/
 theorem derives0_lift {Γ : List Formula} {φ : Formula} (h : Γ ⊢₀ φ) :
     ∀ k : Nat, (Γ.map (liftFormula k)) ⊢₀ liftFormula k φ := by
-  induction h with
-  | hyp Γ' f' hIn => intro k; exact Derives₀.hyp _ _ (List.mem_map_of_mem hIn)
-  | intro_impl Γ' A B _ ih => intro k; exact Derives₀.intro_impl _ _ _ (ih k)
-  | elim_impl Γ' A B _ _ ih1 ih2 => intro k; exact Derives₀.elim_impl _ _ _ (ih1 k) (ih2 k)
-  | intro_and Γ' A B _ _ ih1 ih2 => intro k; exact Derives₀.intro_and _ _ _ (ih1 k) (ih2 k)
-  | elim_and_l Γ' A B _ ih => intro k; exact Derives₀.elim_and_l _ _ _ (ih k)
-  | elim_and_r Γ' A B _ ih => intro k; exact Derives₀.elim_and_r _ _ _ (ih k)
-  | intro_or_l Γ' A B _ ih => intro k; exact Derives₀.intro_or_l _ _ _ (ih k)
-  | intro_or_r Γ' A B _ ih => intro k; exact Derives₀.intro_or_r _ _ _ (ih k)
-  | elim_or Γ' A B C _ _ _ ih1 ih2 ih3 =>
-      intro k; exact Derives₀.elim_or _ _ _ _ (ih1 k) (ih2 k) (ih3 k)
-  | intro_forall Γ' A _ ih =>
-      intro k
-      refine Derives₀.intro_forall _ _ ?_
-      rw [map_lift_lift]
-      exact ih (k + 1)
-  | elim_forall Γ' A t _ ih =>
-      intro k
-      have := Derives₀.elim_forall (Γ'.map (liftFormula k)) (liftFormula (k + 1) A)
-                (liftTerm k t) (ih k)
-      rw [liftFormula_subst A 0 k (Nat.zero_le _)]
-      exact this
-  | intro_ex Γ' A t _ ih =>
-      intro k
-      refine Derives₀.intro_ex _ _ (liftTerm k t) ?_
-      rw [← liftFormula_subst A 0 k (Nat.zero_le _)]
-      exact ih k
-  | elim_ex Γ' A B _ _ ih1 ih2 =>
-      intro k
-      refine Derives₀.elim_ex _ (liftFormula (k + 1) A) _ (ih1 k) ?_
-      rw [liftFormula_lift B 0 k (Nat.zero_le _), map_lift_lift]
-      exact ih2 (k + 1)
-  | bot_elim Γ' A _ ih => intro k; exact Derives₀.bot_elim _ _ (ih k)
-  | weakening Γ' Γ'' f' _ hSub ih =>
-      intro k
-      refine Derives₀.weakening _ _ _ (ih k) ?_
-      intro x hx
-      obtain ⟨y, hy, rfl⟩ := List.mem_map.mp hx
-      exact List.mem_map_of_mem (hSub y hy)
-  | rewrite_at Γ' f' f'' p sub sub' _ hget hrule heq ih =>
-      intro k
-      refine Derives₀.rewrite_at _ _ _ p (liftFormula (k + posDepth p) sub)
-        (liftFormula (k + posDepth p) sub') (ih k) ?_ ?_ ?_
-      · rw [lift_getAt?, hget]; rfl
-      · exact lift_localRule _ hrule
-      · rw [heq, ← lift_replaceAt]
-  | dne_rule Γ' A _ ih => intro k; exact Derives₀.dne_rule _ _ (ih k)
-  | dne_schema Γ' A => intro k; exact Derives₀.dne_schema _ _
-  | forall_not_ex_not Γ' A => intro k; exact Derives₀.forall_not_ex_not _ _
-  | refl Γ' t => intro k; exact Derives₀.refl _ _
-  | subst Γ' t₁ t₂ f' _ _ ih1 ih2 =>
-      intro k
-      have := Derives₀.subst (Γ'.map (liftFormula k)) (liftTerm k t₁) (liftTerm k t₂)
-                (liftFormula (k + 1) f') (ih1 k)
-                (by rw [← liftFormula_subst f' 0 k (Nat.zero_le _)]; exact ih2 k)
-      rw [liftFormula_subst f' 0 k (Nat.zero_le _)]
-      exact this
+  intro k
+  have h' := absDerives' (fun _ => False) h k
+  rwa [map_absFormula'_none, absFormula'_none] at h'
 
 -- ============================================================
 -- §5 · La pieza que cierra el `∃`/`∀`

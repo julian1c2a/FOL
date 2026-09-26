@@ -29,11 +29,12 @@ y, junto con `derives0_soundness` (ADR‑034), **`derives0_complete_iff : Γ ⊢
 
 ⭐⭐ Es la primera vez que este proyecto tiene **las dos direcciones** sobre un mismo cálculo de
 FOL⁼. ⛔ Recuérdese que sobre `Derives` **no puede haberlas**: su solidez es FALSA
-(`cuarentena/Inconsistencia.lean`) y `axioms ⊢` es sintácticamente completo (M‑10).
+(`FOL/Inconsistencia.lean`) y `axioms ⊢` es sintácticamente completo (M‑10).
 
 ## El recorrido
 
-1. **§1** — lo que falta de la familia `max_cons_*`: `impl` en forma de `↔`, `and`, `or`.
+1. **§1** — lo que falta de la familia `max_cons_*`: `impl` en forma de `↔`, `and`, `neg`, `or`, y
+   `max_cons_complete`: el maximal es completo POR PERTENENCIA (`IsMemComplete`).
 2. **§2** — la **equivalencia sintáctica** `t ≈ u :⇔ S (t ≐ u)` y su `Setoid`. Aquí pagan
    `derives0_eq_symm` y `derives0_eq_trans` (`FOL.Eq0`).
 3. **§3** — `PointwiseEqv` y las dos **congruencias**, que es lo que hace que el cociente esté
@@ -42,7 +43,7 @@ FOL⁼. ⛔ Recuérdese que sobre `Derives` **no puede haberlas**: su solidez es
 4. **§4** — el **modelo canónico**: el dominio es `Term / ≈`, `func` es la aplicación de símbolos
    y `rel` es la pertenencia a `S`. Más `evalTerm_canonical`: *evaluar un término en el modelo
    canónico es su propia clase.*
-5. **§5** — `max_cons_ex` y `max_cons_forall`. ⭐ Aquí es donde paga `IsHenkin₀`, y **sólo aquí**.
+5. **§5** — `max_cons_ex` y `max_cons_forall`. ⭐ Aquí es donde paga `IsHenkin`, y **sólo aquí**.
 6. **§6** — **`truth_lemma`**: la semántica coincide con la sintaxis. Inducción por
    **complejidad**, no por estructura, porque el caso `∀` pasa por `substFormula` —y por eso hace
    falta `complexity_substFormula`: *sustituir no cambia la complejidad*.
@@ -54,7 +55,7 @@ FOL⁼. ⛔ Recuérdese que sobre `Derives` **no puede haberlas**: su solidez es
 ## ⛔ Dónde está la no‑finitud, otra vez
 
 **No aquí.** Todo este módulo es constructivo salvo el uso de `Classical.choose` en `quotientOut`
-y los `byContradiction`. La no‑finitud del teorema está **una capa más abajo**, en el
+y el tercio excluso (`byContradiction`, `by_cases`, `em`, `byCases`). La no‑finitud del teorema está **una capa más abajo**, en el
 `if IsConsistent₀ (Sₙ ∪ {φₙ})` de `FOL.Lindenbaum0` (Π⁰₁) — ADR‑040 §2.
 
 ⇒ El entregable de la vía W es, como el plan decía, **`completeness₀` con footprint
@@ -130,16 +131,28 @@ theorem max_cons_neg {S : Formula → Prop} (hMax : IsMaximalConsistent₀ S) {f
   ⟨fun hN hf => max_cons_bot hMax ((max_cons_impl_iff hMax).mp hN hf),
    fun hNf => (max_cons_impl_iff hMax).mpr (fun hf => absurd hf hNf)⟩
 
-/-- ⭐ **Teoría sintácticamente COMPLETA**: decide cada fórmula. Es la forma que usa la teoría de
-modelos, y `IsMaximalConsistent₀` (`Lindenbaum0.lean`) **no** se definía así: se definía por
+/-- **Completo POR PERTENENCIA**: para cada fórmula `f`, **abiertas incluidas**, `S` contiene `f`
+o contiene `neg f`. Es lo que `max_cons_complete` prueba de todo maximal consistente.
+
+⛔ **NO es la «teoría completa»** de la teoría de modelos, que va por DERIVABILIDAD y sólo sobre
+SENTENCIAS (`T ⊢ φ` o `T ⊢ ¬φ` para cada `φ` cerrada). Este árbol no tiene predicado de
+sentencia, y el nombre deja libre el canónico para esa noción. Tampoco es
+`TheoryFramework.IsSyntacticallyComplete`, que va por derivabilidad sobre todas las fórmulas.
+
+La pertenencia no ve las consecuencias: un conjunto de axiomas no cerrado por derivación no la
+cumple aunque su teoría decida cada sentencia (ningún conjunto FINITO la cumple: hay infinitas
+fórmulas). Y no es una completitud nueva: sobre un conjunto consistente equivale a ser maximal
+(si `f ∉ S`, entonces `neg f ∈ S` y `S ∪ {f} ⊢₀* ⊥`; argumento de libro, ese recíproco no se
+enuncia aquí). Sólo cambia la forma: `IsMaximalConsistent₀` (`Lindenbaum0.lean`) se define por
 NO‑AMPLIABILIDAD. -/
-def IsSyntacticallyComplete₀ (S : Formula → Prop) : Prop :=
+def IsMemComplete (S : Formula → Prop) : Prop :=
   ∀ f, Or (S f) (S (neg f))
 
-/-- ⭐ **Todo maximal consistente es completo.** ⚠️ Usa el tercio excluido del METANIVEL
+/-- ⭐ **Todo maximal consistente es completo POR PERTENENCIA** (`IsMemComplete`; ⛔ no es
+la «teoría completa» sobre sentencias). ⚠️ Usa el tercio excluido del METANIVEL
 (`Classical.em` sobre `S f`), no el del cálculo: `S` es un predicado de Lean arbitrario. -/
 theorem max_cons_complete {S : Formula → Prop} (hMax : IsMaximalConsistent₀ S) :
-    IsSyntacticallyComplete₀ S := fun f =>
+    IsMemComplete S := fun f =>
   (Classical.em (S f)).elim Or.inl (fun h => Or.inr ((max_cons_neg hMax).mpr h))
 
 theorem max_cons_or {S : Formula → Prop} (hMax : IsMaximalConsistent₀ S) {A B : Formula} :
@@ -315,14 +328,14 @@ theorem evalTerms_canonical (S : Formula → Prop) (hMax : IsMaximalConsistent�
 end
 
 -- ============================================================
--- §5 · Los dos cuantificadores — ⭐ aquí, y sólo aquí, paga `IsHenkin₀`
+-- §5 · Los dos cuantificadores — ⭐ aquí, y sólo aquí, paga `IsHenkin`
 -- ============================================================
 
 -- ⭐ `formulaComplexity` y `complexity_substFormula` **bajaron a `FOL.Complexity`**
 -- el 2026‑09‑23 (encargo de PeanoRF §3): son puramente sintácticos y estaban detrás de
 -- toda la cadena clásica de completitud. Los nombres NO cambian — entran por el `open`.
 
-theorem max_cons_ex {S : Formula → Prop} (hMax : IsMaximalConsistent₀ S) (hHenkin : IsHenkin₀ S)
+theorem max_cons_ex {S : Formula → Prop} (hMax : IsMaximalConsistent₀ S) (hHenkin : IsHenkin S)
     {A : Formula} : S (Formula.ex A) ↔ ∃ t, S (substFormula 0 t A) := by
   refine ⟨fun hEx => hHenkin A hEx, fun h => ?_⟩
   obtain ⟨t, ht⟩ := h
@@ -334,7 +347,7 @@ theorem max_cons_ex {S : Formula → Prop} (hMax : IsMaximalConsistent₀ S) (hH
   · exact Derives₀.intro_ex _ A t (Derives₀.hyp _ _ (List.Mem.head _))
 
 theorem max_cons_forall {S : Formula → Prop} (hMax : IsMaximalConsistent₀ S)
-    (hHenkin : IsHenkin₀ S) {A : Formula} :
+    (hHenkin : IsHenkin S) {A : Formula} :
     S (Formula.forall A) ↔ ∀ t, S (substFormula 0 t A) := by
   constructor
   · intro hAll t
@@ -372,7 +385,7 @@ theorem max_cons_forall {S : Formula → Prop} (hMax : IsMaximalConsistent₀ S)
 -- ============================================================
 
 theorem truth_lemma_lt {S : Formula → Prop} (hMax : IsMaximalConsistent₀ S)
-    (hHenkin : IsHenkin₀ S) (n : Nat) : ∀ f, formulaComplexity f < n →
+    (hHenkin : IsHenkin S) (n : Nat) : ∀ f, formulaComplexity f < n →
     (evalFormula (canonicalModel S hMax) (canonicalEnv S hMax) f ↔ S f) := by
   induction n with
   | zero => intro f hLt; exact absurd hLt (Nat.not_lt_zero _)
@@ -461,7 +474,7 @@ theorem truth_lemma_lt {S : Formula → Prop} (hMax : IsMaximalConsistent₀ S)
       exact (max_cons_ex hMax hHenkin).symm
 
 /-- ⭐⭐⭐ **La semántica coincide con la sintaxis en el modelo canónico.** -/
-theorem truth_lemma {S : Formula → Prop} (hMax : IsMaximalConsistent₀ S) (hHenkin : IsHenkin₀ S)
+theorem truth_lemma {S : Formula → Prop} (hMax : IsMaximalConsistent₀ S) (hHenkin : IsHenkin S)
     (f : Formula) : evalFormula (canonicalModel S hMax) (canonicalEnv S hMax) f ↔ S f :=
   truth_lemma_lt hMax hHenkin (formulaComplexity f + 1) f (Nat.lt_succ_self _)
 

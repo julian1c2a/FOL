@@ -44,8 +44,8 @@ class LogicSystem (F : Type) where
 /-- **Solidez** — una PROPIEDAD, no parte de «ser un sistema lógico».
 
 ⛔ `FOL` **no puede habitarla**: con las meta‑reglas de `FOL/MetaRules.lean`, un testigo de
-este campo demuestra `False` (`cuarentena/Inconsistencia.lean`, compilado). El único cálculo
-del ecosistema del que se ha probado la solidez es `Prf₀`
+este campo demuestra `False` (`FOL/Inconsistencia.lean`, compilado). Cálculos del ecosistema con
+solidez probada: `Derives₀` (`Soundness0.derives0_soundness`), `LK₀`/`LKc` (`SequentSound0`) y `Prf₀`
 (`../ROBINSON_PlusPlus/sondeos/AnclaSoundness.lean`). -/
 class SoundLogic (F : Type) [LogicSystem F] : Prop where
   sound : ∀ {Γ : List F} {f : F},
@@ -56,9 +56,9 @@ class SoundLogic (F : Type) [LogicSystem F] : Prop where
 ⛔ **Corrección 2026‑09‑18 (ADR‑072)**: la nota que había aquí —«`FOL/Completeness.lean`
 prueba `completeness` apoyándose en **cinco `axiom`**»— era **falsa por partida doble** y ésta
 era su **tercera** aparición en el repo: ese fichero **no existe**, y `cuarentena/Completeness.lean`
-tiene **UN** `axiom`. 🏁 Hoy la completitud de FOL⁼ es **`FOL.Canonical0.completeness₀`**, con
+tenía **UN** `axiom` (el fichero se borró el 2026‑09‑23). 🏁 Hoy la completitud de FOL⁼ es **`FOL.Canonical0.completeness₀`**, con
 **cero axiomas del proyecto** (ADR‑041) — pero sobre **`Derives₀`**, no sobre el `Derives` que
-instancia `folSystem`, así que **no paga esta clase**. Ver `TheoryFramework/Instances/FOL.lean`. -/
+instanciaba `folSystem` (retirada el 2026‑09‑23), así que **no paga esta clase**. Ver `TheoryFramework/Instances/FOL.lean`. -/
 class CompleteLogic (F : Type) [LogicSystem F] : Prop where
   complete : ∀ {Γ : List F} {f : F},
     LogicSystem.semanticEntails Γ f → LogicSystem.derives Γ f
