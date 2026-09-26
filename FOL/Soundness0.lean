@@ -33,7 +33,7 @@ constructores no cubre todos los habitantes.
 un teorema de verdad**.
 
 ⚠️ **Y no es contabilidad**: sin solidez, una completitud no dice nada. `Γ ⊢₀ f ↔ Γ ⊨ f` sólo
-tiene contenido con **las dos** direcciones, y hasta hoy el repo no tenía ninguna para FOL⁼.
+tiene contenido con **las dos** direcciones, y hasta el 2026‑09‑14 el repo no tenía ninguna para FOL⁼.
 
 ## Lo que sale como corolario, y es lo que importa
 
@@ -59,7 +59,7 @@ la invalidaba era **el tipo sobre el que inducía**, no su contenido.
 🔑 *Cuando un teorema cae por M‑11, su demostración suele estar bien: lo que hay que cambiar es el
 sujeto.*
 
-Los **tres nuevos** —`dne_rule`, `dne_schema`, `forall_not_ex_not`, constructores desde D‑2— son
+Los **tres nuevos** —`dne_rule`, `dne_schema`, `forall_not_ex_not`, constructores desde la D‑2 de ADR‑028— son
 los únicos que necesitan **lógica clásica** en el metanivel (`Classical.byContradiction`), y por eso
 `Classical.choice` aparece en el footprint. Es legítimo y esperado: la semántica es clásica.
 ⚠️ Sin Mathlib **no hay `by_contra`**; se usa `Classical.byContradiction` a mano.
@@ -165,7 +165,7 @@ theorem derives0_soundness {Γ f} (h : Γ ⊢₀ f) : Γ ⊨ f := by
     have hEquiv := replaceAt_soundness M v h_get hSubEq
     rw [h_replace]
     exact hEquiv.mp hEvalF
-  -- ⚠️ Los TRES siguientes son los constructores clásicos que D-2 añadió, y los únicos que
+  -- ⚠️ Los TRES siguientes son los constructores clásicos que la D‑2 de ADR‑028 añadió, y los únicos que
   -- necesitan lógica clásica en el METANIVEL. Sin Mathlib no hay `by_contra`.
   | dne_rule Γ' A _ ih =>
     intro D M v hΓ
@@ -231,7 +231,7 @@ justamente la patología que lo inhabilita: completo ⇒ **no r.e.** ⇒ incumpl
 de Gödel I (ADR‑024, **M‑10**). -/
 -- ⚠️ `And` y `Not` EXPLÍCITOS, no `∧` ni `¬`: en este fichero la notación de FOL⁼ los tiene
 -- tomados (`∧` es `Formula.and` y `¬ ` es `neg`), y el enunciado es META, no objeto.
--- Es la trampa §12 de `feedback_lean_notation_traps`, y vuelve a morder aquí.
+-- Es una trampa de notación conocida, y vuelve a morder aquí.
 theorem derives0_not_complete :
     ∃ A : Formula, And (Not (([] : List Formula) ⊢₀ A)) (Not (([] : List Formula) ⊢₀ neg A)) :=
   ⟨P, derives0_not_derives_P, derives0_not_derives_negP⟩

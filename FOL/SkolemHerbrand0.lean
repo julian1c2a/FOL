@@ -27,6 +27,9 @@ import FOL.BlockExtraction0
     herbrand_validity_ctx₀    : (Γ ⊢₀ φ)  ↔ … la misma, para Γ ⇒ φ            (§3, D3)
 
 📏 §1‑§2: `[propext, Quot.sound]`, **ni un `Classical.choice`**. §3 (volver a `φ`): los titulares
+(`derives0_neg_iff_neg_skolemNF`, `herbrand_refutation₀`, `herbrand_validity₀`, `herbrand_validity_ctx₀`;
+no los auxiliares `derives0_iff_neg_neg`, sin axiomas, ni `implChain_of_derives0`/`derives0_iff_implChain`,
+`[propext]`)
 llevan `[propext, Classical.choice, Quot.sound]` — medido —, porque retirar los axiomas de Skolem
 (`skolem_conservative_nf`) pasa por la completitud (el WKL). Por la estructura de la prueba entra
 sólo en la dirección «certificado ⇒ derivación de `φ`» (la que retira los axiomas de Skolem); la otra
@@ -42,7 +45,7 @@ Skolem los quita**. Las dos piezas no componen: se encuentran **al otro lado de 
 
     ¬(∀ᵐ ψ)  ⊣⊢  ∃ᵐ (¬ψ)
 
-⭐ Y la mitad cara **ya era un constructor**: `Derives₀.forall_not_ex_not` (`Derives0.lean:141`) es
+⭐ Y la mitad cara **ya era un constructor**: `Derives₀.forall_not_ex_not` (`FOL/Derives0.lean`) es
 `¬∀A ⇒ ∃¬A`. Iterarla sobre el bloque es `impAll_ex` + `impAll_trans`, tres líneas por dirección.
 La recíproca (`∃¬A ⇒ ¬∀A`) es **intuicionista** y se construye con `elim_ex` + `elim_forall`.
 

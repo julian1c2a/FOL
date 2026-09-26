@@ -8,7 +8,7 @@ License: MIT
 -- See AI-GUIDE.md §12 for the "proyectar" protocol.
 -- See NAMING-CONVENTIONS.md for naming rules.
 --
--- Dependencies: FOL.Lindenbaum0, FOL.Eq0, FOL.Semantics
+-- Dependencies: FOL.Lindenbaum0, FOL.Eq0, FOL.Semantics, FOL.Soundness0, FOL.Complexity
 -- @axiom_system: classical
 -- @importance: high
 
@@ -21,7 +21,7 @@ import FOL.Complexity
 /-!
 # `FOL.Canonical0` — **el modelo canónico**, el lema de la verdad y la **COMPLETITUD**
 
-El último tramo de `doc/PLAN-COMPLETITUD-FINITISTA.md` §6, vía W. Con él:
+El último tramo de `../ROBINSON_PlusPlus/doc/PLAN-COMPLETITUD-FINITISTA.md` §6, vía W. Con él:
 
     completeness₀ : Γ ⊨ f → Γ ⊢₀ f
 
@@ -135,7 +135,7 @@ theorem max_cons_neg {S : Formula → Prop} (hMax : IsMaximalConsistent₀ S) {f
 o contiene `neg f`. Es lo que `max_cons_complete` prueba de todo maximal consistente.
 
 ⛔ **NO es la «teoría completa»** de la teoría de modelos, que va por DERIVABILIDAD y sólo sobre
-SENTENCIAS (`T ⊢ φ` o `T ⊢ ¬φ` para cada `φ` cerrada). Este árbol no tiene predicado de
+SENTENCIAS (`T ⊢ φ` o `T ⊢ ¬φ` para cada `φ` cerrada). A 2026‑09‑26 este árbol no tiene predicado de
 sentencia, y el nombre deja libre el canónico para esa noción. Tampoco es
 `TheoryFramework.IsSyntacticallyComplete`, que va por derivabilidad sobre todas las fórmulas.
 
@@ -596,8 +596,11 @@ theorem derives0_complete_iff {Γ : List Formula} {f : Formula} : (Γ ⊢₀ f) 
 -- ============================================================
 
 -- ⚠️ Un teorema de completitud puede ser cierto y **no servir para nada** si el consecuente es
--- trivial. Estas dos líneas lo descartan: producen derivaciones REALES de `Derives₀` que NO son
--- un constructor ni una cadena corta de ellos, pasando por el modelo canónico.
+-- trivial. Estas dos líneas sólo muestran que se APLICA a una validez demostrada en Lean, pasando por el
+-- modelo canónico. ⚠️ `Derives₀` es un `Prop`: una prueba por completitud no es «otra» derivación, y
+-- las dos conclusiones tienen además derivación directa (`FOL.Propositional0.derives0_em_ctx`,
+-- `derives0_peirce_prop`). Que el consecuente no es trivial lo dice `derives0_consistent`
+-- (`FOL/Soundness0.lean`).
 
 /-- ⭐ **El tercio excluso a nivel OBJETO, obtenido POR COMPLETITUD.** -/
 theorem derives0_em (A : Formula) : [] ⊢₀ Formula.or A (neg A) :=

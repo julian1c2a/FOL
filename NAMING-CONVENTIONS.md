@@ -383,7 +383,9 @@ ordinal de plan: `Derives₀` es el «PASO 0» de
    `⊢₀` (usa `⊢₂` y `LKc`).
 6. **Alcance: FOL y RPP** (decisión del propietario: «así lo pasaremos también a RPP, de forma
    que no quede al aire»). En RPP, el cálculo de Hilbert intuicionista se llamaba `Prf₀` —lo
-   contrario de lo que `₀` dice aquí— y el 2026-09-26 pasó a **`Prfᵢ`** (`prf0_…` → `prfI_…`).
+   contrario de lo que `₀` dice aquí— y el 2026-09-26 pasó a **`Prfᵢ`** (`prf0_…` → `prfI_…`). El
+   Hilbert **clásico** de RPP, `Prf`, se queda sin subíndice por decisión del propietario: excepción
+   histórica, como `Derives` (regla 4).
    En Peano, `ℕ₀` es un dominio, no un cálculo: otro repositorio, fuera de esta regla.
 
 **Renombres aplicados el 2026-09-26** para que la regla sea verdad en el árbol:

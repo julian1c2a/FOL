@@ -1,6 +1,6 @@
 # Changelog
 
-**Last updated:** 2026-09-26
+**Last updated:** 2026-09-27
 **Author**: Julián Calderón Almendros
 
 > ⛔⛔ **ESTE FICHERO ESTUVO CONGELADO EN 2026-05-16 CON 115 COMMITS DETRÁS**, y no fue un
@@ -18,6 +18,27 @@ All notable changes to this project will be documented in this file.
 
 Format based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+
+## 2026-09-27 — Documentación al día, y la criba de congelación con refutación
+
+* 📝 **W2 · `REFERENCE.md`** contrastado con el árbol (60 ediciones): §2 regenerado de las líneas
+  `import` (54 módulos), §3.13 (34 filas, no «veintiún»; la vía H ya tiene su Hauptsatz), §7.1 sin
+  módulos retirados, §3.1/§3.10‑§3.12 marcados BORRADOS con quién los sustituye, y unas veinte
+  afirmaciones falsas más (símbolos que no existen, firmas sin `h_dne`, `LocalRule`, `folSystem`…).
+* 🔧 **W3 · `DEPENDENCIES.md` REGENERADO** por `gen-dependencies.py` (nuevo): 54 módulos, 97 aristas,
+  profundidad 12, ningún módulo fuera del build, ningún import externo salvo `Lean`. Se CALCULA
+  (`--check`); sale de la deuda de `[E]`.
+* 📝 **W4 · el plan de RPP**: filas obsoletas anotadas (16 ediciones).
+* ❄️ **Criba de congelación con refutación** (dos lentes —estabilidad y verdad de lo escrito— y un
+  juez): de los 23 que pasan los criterios medibles, **1 congelable ya** (`PrenexNF0`), **4 tras
+  arreglos** (`Prenex0`, `SequentSound0`, `Soundness0`, `Rename`; arreglos aplicados), **18 todavía
+  no** (la entrega de PeanoRF, y tres decisiones del propietario: nombres de los titulares sin
+  subíndice, los `sub_*` duplicados en `Hauptsatz0`/`Craig0`, y la OFERTA de `Hauptsatz0`).
+  59 correcciones de docstrings en 18 módulos (falsedades medidas: `Craig0` llamaba «CONFIRMADA» la
+  obstrucción que `craig₀` refutó; `SkolemNF0` decía que `herbrand` pide un `∀`; `SequentSound0`
+  contaba 14 constructores de `LKc`; `Fresh0`/`Compacity0` atribuían `Classical.choice` a comparar
+  `String`…). `criba-congelacion.py` ve ahora la OFERTA y el consumidor futuro de `Complexity`.
+* 🏷️ **`Prf` (el Hilbert clásico de RPP) se queda sin subíndice**: decisión del propietario.
 
 ## 2026-09-26 (madrugada, 2) — D3a: la interpolación de Craig para `Derives₀`, CON igualdad
 

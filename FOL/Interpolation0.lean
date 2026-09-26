@@ -25,7 +25,7 @@ import FOL.Hauptsatz0
 
 Paga la deuda que `FOL.Craig0` declaraba ABIERTA (D3a, 2026‑09‑26): `craig` valía para `LKp`, el
 fragmento SIN `eqAx`, y no había puente desde lo que el proyecto deriva. 📏 **`[propext, Quot.sound]`**
-en todos los titulares: **ni un `Classical.choice`**.
+en todos los titulares (`predF_em` y `eqGen_side`, ninguno): **ni un `Classical.choice`**.
 
 ## ⭐ El puente: la igualdad, al ANTECEDENTE y cerrada con `∀`
 
@@ -281,7 +281,7 @@ theorem derives0_of_disjOf_single {Γ : List Formula} {X : Formula} (h : Γ ⊢�
   Derives₀.elim_or Γ X Formula.bottom X h (Derives₀.hyp _ _ (List.Mem.head _))
     (Derives₀.bot_elim _ _ (Derives₀.hyp _ _ (List.Mem.head _)))
 
-/-- `Herbrand0.derives0_discharge` (Herbrand0:188) con contexto. -/
+/-- `Herbrand0.derives0_discharge` (`FOL/Herbrand0.lean`), con contexto. -/
 theorem derives0_discharge_ctx : ∀ (E Γ : List Formula) (ψ : Formula),
     ((E ++ Γ) ⊢₀ ψ) → (∀ g, g ∈ E → ([] ⊢₀ g)) → Γ ⊢₀ ψ
   | [], _, _, h, _ => h

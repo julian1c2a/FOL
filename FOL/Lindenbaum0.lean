@@ -17,7 +17,8 @@ import FOL.HenkinLimit0
 /-!
 # `FOL.Lindenbaum0` — **Lindenbaum sobre `Derives₀`**, y el ensamblaje de Henkin cerrado
 
-Pieza (3) del ensamblaje de `doc/PLAN-COMPLETITUD-FINITISTA.md` §6.4. Con ella el **ensamblaje
+Pieza (3) del ensamblaje de
+`../ROBINSON_PlusPlus/doc/PLAN-COMPLETITUD-FINITISTA.md` §6.4. Con ella el **ensamblaje
 completo** queda demostrado en un solo enunciado:
 
     henkin_completion : IsConsistent₀ S →
@@ -45,7 +46,8 @@ Aquí. En una línea:
     if IsConsistent₀ (Sₙ ∪ {φₙ}) then … else …
 
 Esa condición es **Π⁰₁** y se decide con `Classical.propDecidable`. **Ahí cabe toda la no‑finitud
-del teorema de completitud** — es el WKL del que habla `doc/PLAN-COMPLETITUD-FINITISTA.md` §6.3,
+del teorema de completitud** — es el WKL del que habla
+`../ROBINSON_PlusPlus/doc/PLAN-COMPLETITUD-FINITISTA.md` §6.3,
 y por eso el entregable de la vía W **no es un footprint limpio** sino un `Classical.choice`
 **explicado**: ≡ completitud sobre RCA₀, y WKL₀ es Π⁰₂‑conservativo sobre PRA.
 

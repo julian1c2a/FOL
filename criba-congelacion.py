@@ -96,7 +96,8 @@ for s in SEVEN:
     if re.search(r'^\s*import\s+PeanoRF\.Prelim', src, re.M):
         for imp in re.findall(r'^\s*import\s+(FOL\.[A-Za-z0-9_.]+)', rd(PRF + 'Prelim.lean'), re.M):
             via_prelim.add(modpath(imp))
-chain_direct = closure(direct_fol | {'FOL/FOL.lean'})   # Subst -> import FOL.FOL tras el re-apuntado
+# Slash -> FOL.Complexity al retirar fdepth (RESPUESTA-PEANORF-2026-09-26 §1.6)
+chain_direct = closure(direct_fol | {'FOL/FOL.lean', 'FOL/Complexity.lean'})   # Subst -> import FOL.FOL tras el re-apuntado
 chain_prelim = closure(via_prelim) - chain_direct
 
 print('modulos activos:', len(mods), '| compilados:', len(compiled & set(mods)))
@@ -111,7 +112,7 @@ print()
 for m in mods:
     pr = prints[m]; rw = rowmod.get(m, [])
     notrow = [p for p in pr if p not in rw]
-    marks = [c for c, a, n in g2.get(m, []) if c in ('ABIERTA', 'DIFERIDA')]
+    marks = [c for c, a, n in g2.get(m, []) if c in ('ABIERTA', 'DIFERIDA', 'OFERTA')]
     tags = []
     if marks: tags.append('C1:' + '+'.join(marks))
     if m in chain_direct: tags.append('C3:cadena')

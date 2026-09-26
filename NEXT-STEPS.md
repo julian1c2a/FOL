@@ -9,7 +9,7 @@
 > | lo que decía | lo medido |
 > |---|---|
 > | «Teorema de Corrección (Soundness): `Γ ⊢ A → Γ ⊨ A`» ✅ | 🏁 **Sí, sobre `Derives₀`** (2026-09-14): `derives0_soundness : Γ ⊢₀ f → Γ ⊨ f` (`FOL/Soundness0.lean`), y con ella `derives0_consistent`. ⛔ La de **`Derives`** sigue siendo **FALSA** en presencia de `FOL/MetaRules.lean`: `FOL/Inconsistencia.lean`, hoy **en el build** |
-> | «Compacidad» ✅ | 🏁 `compactness₀`, `loewenheim_skolem_down` y el modelo infinito `infinite_model_of_large`, en `FOL/Compacity0.lean`. El `Compacity.lean` vacuo **se borró** el 2026-09-23 |
+> | «Compacidad» ✅ | 🏁 `compactness`, `loewenheim_skolem_down` y el modelo infinito `infinite_model_of_large`, en `FOL/Compacity0.lean`. El `Compacity.lean` vacuo **se borró** el 2026-09-23 |
 > | «Completitud» ✅ / «1 sorry» | 🏁 `completeness₀ : Γ ⊨ f → Γ ⊢₀ f` (`FOL/Canonical0.lean`, 2026-09-16), con **cero axiomas del proyecto**: `[propext, Classical.choice, Quot.sound]`, y ese `Classical.choice` es el WKL de `Lindenbaum0` (ADR-041). `Completeness.lean` y su último postulado, `henkin_extension_lemma`, **se borraron** el 2026-09-23. Ver **`AXIOMS.md`** |
 > | «4 `lean_lib`, ~43 módulos, 1 sorry, v4.28.0» | **2 `lean_lib`** (`FOL`, `TheoryFramework`) · **4 `axiom`**, los de `MetaRules` que el kernel obliga, y ninguno más fuera de las librerías retiradas · **0 sorry** · **v4.31.0**. `FOLPure`, `PropLogic` y `FOL_poli` **retiradas** el 2026-09-12 a `cuarentena/librerias-retiradas/` |
 >
@@ -19,7 +19,7 @@
 > **Fuentes:** `cuarentena/README.md` · `AXIOMS.md` ·
 > `../ROBINSON_PlusPlus/doc/AUDITORIA-FOL-2026-09-12.md`
 
-**Last updated:** 2026-09-26 — aviso reescrito y sección «Lo que queda» nueva; el plan de fases de abajo es HISTÓRICO (2026-05-16).
+**Last updated:** 2026-09-27 — W2, W3 y W4 hechas; la criba de congelación, pasada con refutación (1 congelable ya, 4 tras arreglos —aplicados—, 18 todavía no). Antes (2026-09-26): aviso reescrito y sección «Lo que queda» nueva; el plan de fases de abajo es HISTÓRICO (2026-05-16).
 **Autor**: Julián Calderón Almendros
 
 ## ⬜ Lo que queda para CERRAR FOL — 2026-09-26 (noche)
@@ -37,7 +37,7 @@ las decisiones D1, D2, D4, D5, D6 y D7 del propietario, **ejecutadas** el 2026-0
 | D3 | Las dos **ABIERTA** de `[G.2]` (el propietario: «vamos a por D3») | ✅ **CERRADA, las dos.** **D3b**: `SkolemHerbrand0.herbrand_validity_ctx₀` — `Γ ⊢₀ φ` sii certificado de Herbrand para la forma de Herbrand de `Γ ⇒ φ`; no había que mover la negación, sino skolemizar lo que se refuta. **D3a**: `Interpolation0.craig₀` — Craig para `⊢₀` CON igualdad, `[propext, Quot.sound]`, vía el puente `lk0_to_lkp`; sin borrar predicados (la partición de Maehara basta) |
 | D4 | La vía de `ModelG` | ✅ medida TERMINADA y **CERRADA definitiva** (sin receta de reapertura; fuera de `[G.2]`) |
 | D5 | El refactor de `Lift0` | ✅ **hecho**: núcleo genérico `absTerm'` en `Eigenvariable`; 40 nombres conservados; −56 líneas de código (no «~150»); una inducción y un transporte menos |
-| D6 | ¿Qué marca `₀`? | ✅ **regla decidida** (`NAMING-CONVENTIONS.md` §9, FOL **y** RPP): `₀` clásico, `ᵢ` intuicionista, sin subíndice lo que no depende de cálculo. Renombres: `model_existence_iff₀`, `compactness`, `IsHenkin`, `DisjunctionProperty₀`; RPP `Prf₀` → `Prfᵢ`. ⬜ Queda abierta una cosa: RPP deja `Prf` (el Hilbert clásico) sin subíndice como excepción histórica —como `Derives` en FOL—; llamarlo `Prf₀` costaría 4565 apariciones en 97 ficheros |
+| D6 | ¿Qué marca `₀`? | ✅ **regla decidida** (`NAMING-CONVENTIONS.md` §9, FOL **y** RPP): `₀` clásico, `ᵢ` intuicionista, sin subíndice lo que no depende de cálculo. Renombres: `model_existence_iff₀`, `compactness`, `IsHenkin`, `DisjunctionProperty₀`; RPP `Prf₀` → `Prfᵢ`. Y `Prf` (el Hilbert clásico de RPP) **se queda sin subíndice**: decisión del propietario (2026‑09‑26), excepción histórica como `Derives` en FOL |
 | D7 | Migración `String`→`List Char` | ✅ **CERRADA como ABANDONADA en FOL** (no estaba terminada; instanciar no mueve ningún footprint titular) |
 
 ### Externo
@@ -52,19 +52,21 @@ las decisiones D1, D2, D4, D5, D6 y D7 del propietario, **ejecutadas** el 2026-0
 | # | qué |
 |---|---|
 | W1 | ✅ **hecha** la pasada de higiene de docstrings (58 correcciones en 16 módulos) |
-| W2 | `REFERENCE.md`: §3.13 dice «veintiún módulos», §2 no tiene la capa `₀`, §7.1 lista módulos retirados, §3.10 presenta `soundness` como «✅ Completo» |
-| W3 | `DEPENDENCIES.md`: regenerarlo desde las líneas `import` (54 módulos) o borrarlo |
-| W4 | `../ROBINSON_PlusPlus/doc/PLAN-COMPLETITUD-FINITISTA.md`: filas obsoletas (l. ~569 y la tabla de §8) |
+| W2 | ✅ `REFERENCE.md` contrastado con el árbol: §2 regenerado de las líneas `import`, §3.13, §7.1, §3.1/§3.10‑§3.12 (módulos borrados) y ~20 afirmaciones falsas más (60 ediciones, 2026‑09‑27) |
+| W3 | ✅ `DEPENDENCIES.md` **regenerado** por `py gen-dependencies.py` (54 módulos, 97 aristas; `--check` dice si está al día); fuera de la deuda de `[E]` |
+| W4 | ✅ `../ROBINSON_PlusPlus/doc/PLAN-COMPLETITUD-FINITISTA.md`: filas obsoletas anotadas (Barendregt general, la tabla de §8, citas a `Completeness.lean`, `ESPERADO_CUAR`, §6.11/§6.12, §9) |
 
 ### ❄️ Congelación
 
 Nada congelado todavía. `py criba-congelacion.py` hay que **re‑correrlo** tras este ciclo (W1, D4, D5
 y los renombres cambian los criterios 1 y 2), y pasar otra refutación adversarial antes de congelar.
 Lo que seguirá bloqueando: la entrega de PeanoRF (su cierre transitivo, 14 módulos, no se congela
-hasta que compile aquí) y D3.
+hasta que compile aquí;
+15 con `FOL.Complexity`, que `Slash` importará al retirar `fdepth`). D3 ya no bloquea: CERRADA (RPP‑103).
 
 ⛔ **Fuera de alcance, con su motivo**: LS↑ (ver `Compacity0` §3); la versión ACOTADA de
-`derives0_qf_iff` (OFERTA en `[G.2]`, coste no medido); Beth y Robinson (piden el puente `LK₀`→`LKp`
+`derives0_qf_iff` (OFERTA en `[G.2]`, coste no medido); Beth y Robinson (el puente `LK₀`→`LKp`
+ya existe, `Interpolation0.lk0_to_lkp`; piden además
 y renombrar símbolos de relación); la noción de **sentencia** (bloqueo transversal: sin ella no se
 enuncian bien la equivalencia elemental ni la categoricidad); y la propiedad de disyunción para
 `Derives₀`, que es **FALSA**.

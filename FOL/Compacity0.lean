@@ -34,7 +34,7 @@ del proyecto: *cuando un teorema cae, su prueba suele estar bien — lo que camb
 
 ## ⭐⭐ La compacidad SINTÁCTICA ya estaba metida en la definición
 
-`DerivesSet₀ S f := ∃ Γ : List Formula, (∀ g ∈ Γ, S g) ∧ (Γ ⊢₀ f)` (`FOL/Henkin0.lean:82`): la
+`DerivesSet₀ S f := ∃ Γ : List Formula, (∀ g ∈ Γ, S g) ∧ (Γ ⊢₀ f)` (`FOL.Henkin0.DerivesSet₀`): la
 derivabilidad desde un **conjunto** pide un contexto **finito** por construcción.
 ⇒ la mitad difícil de la compacidad no hay que demostrarla: **está en el tipo**. Lo único que hay
 que hacer es cruzar `derives0_soundness` con `model_existence_lemma₀`, y son dos `obtain`.
@@ -73,12 +73,13 @@ numerable — con tres piezas y nada más:
 ⚠️ **NO es LS↑**: ningún teorema de §3 sube desde un modelo infinito a uno de cardinal mayor. Con
 `Formula = FormulaG String` sólo hay ℵ₀ constantes nuevas; la vía de constantes pediría un tipo de
 símbolos no numerable (la 2ª entrega de `ModelG`, `Canonical0` genérico en el símbolo, está
-CERRADA: ver `FOL/FOL.lean`) más un Lindenbaum transfinito, y la vía de ultraproductos no está en
+CERRADA: ver `FOL/FOL.lean`) más un Lindenbaum transfinito, y la vía de ultraproductos no estaba, a
+2026‑09‑26, en
 el árbol. La conclusión es «numerable e infinito»; la biyección con `Nat` no se construye.
 Los cuatro controles (`infiniteDom_nat`, `not_infiniteDom_unit`, `hasLargeModels_empty`,
 `not_hasLargeModels_one`) prueban que las dos definiciones DISCRIMINAN: `InfiniteDom` (Nat sí, Unit
 no) y `HasLargeModels` (la teoría vacía sí, `∀x∀y. x ≐ y` no). Que la conclusión tampoco es trivial
-se sigue de lo segundo, porque la conclusión implica `HasLargeModels S`; ese eslabón no está
+se sigue de lo segundo, porque la conclusión implica `HasLargeModels S`; ese eslabón no estaba, a 2026‑09‑26,
 compilado.
 
 ## 📏 Footprint
@@ -90,7 +91,7 @@ nueva. ⛔ Y por eso esto **no** es finitario, al revés que `FOL.Finitary0`: es
 ⚠️ **En §3 el `Classical.choice` NO viene sólo de la completitud**: `infTheory_finSat` y
 `evalTerm_updateCsts` lo llevan SIN pasar por `model_existence_lemma₀`. Es el de `FOL.Fresh0`
 (`cst_bound_list`, `cst_inj`; ver su §Footprint: el tercio excluso de `cst_bound_sym` y la
-comparación de `String`).
+implementación de `String` —descomponerlo, no compararlo—).
 `infinite_model_of_large` pasa además por `Rename.invOf` (vía `hasLargeModels_shift`). El conjunto
 de axiomas es el mismo; las procedencias son varias, y sólo una es el WKL.
 Excepciones de §3, medidas: `evalFormula_updateCsts` sólo `[propext]`, y los controles

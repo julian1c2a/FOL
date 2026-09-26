@@ -17,7 +17,8 @@ import FOL.Derives0
 /-!
 # `FOL.Rename` — renombrado de símbolos de función, y que `Derives₀` lo respeta
 
-⭐⭐ **Pieza del Paso 2** de `../ROBINSON_PlusPlus/doc/PLAN-COMPLETITUD-FINITISTA.md` §6.2.
+⭐⭐ **Pieza de la vía W** (Henkin real: el «Paso 2» de ADR‑037 §4) de
+`../ROBINSON_PlusPlus/doc/PLAN-COMPLETITUD-FINITISTA.md` §6.2.
 
     derives0_rename (ρ : String → String) :
         Γ ⊢₀ f  →  Γ.map (renameFormula ρ) ⊢₀ renameFormula ρ f

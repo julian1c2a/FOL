@@ -30,12 +30,17 @@ mismo enunciado con `[propext, Quot.sound]` en vez del **WKL**, y derivada del e
 fuerte `lk0_no_bot`. Ver el docstring de `lk0_not_empty` abajo para por qué la prueba de aquí **no**
 se sustituye (ADR‑061).
 
+⚠⚠ **Y de `lk0_to_derives0` hay, desde el 2026‑09‑26, una versión MEJOR fuera de aquí**:
+`FOL.Interpolation0.lk0_to_derives0_fin`, mismo enunciado, con `[propext, Quot.sound]` en vez del
+**WKL**, por la vía SINTÁCTICA (`lk0_refute`) y sin `completeness₀`. La de aquí se queda por el mismo
+motivo (ADR‑061): el footprint de un corolario dice la verdad del módulo en que vive.
+
 ⚠️ **Por qué importa y no es adorno**: `LK₀` es el cálculo sobre el que se enuncia y
 demuestra el Hauptsatz (`FOL.Hauptsatz0`). Si fuera **demasiado fuerte**, `CutElim` podría ser cierto y no servir —o
 peor, se perseguiría un teorema falso durante las mil líneas del Hauptsatz—. Esto lo cerró
 **antes** de pagar esa pieza.
 
-## ⭐ La ruta SEMÁNTICA es mucho más barata que la sintáctica
+## ⭐ La ruta SEMÁNTICA llegó primero (la sintáctica, medida el 2026‑09‑26, costó lo mismo)
 
 ADR‑046 §5 estimó `LK₀ Γ Δ → Derives₂ Γ (disjOf Δ)` en ~250 l. con riesgo en `allR`: exigía sacar
 una disyunción de dentro de un cuantificador. **Por la semántica ese caso es rutina**, y el
@@ -44,6 +49,12 @@ resultado sintáctico cae **como corolario** vía `completeness₀` (ADR‑041) 
 
 🔑 *Cuando las dos direcciones están demostradas, un resultado sintáctico se puede comprar por la
 semántica.* Es la primera vez que este repo cobra ese dividendo, y sólo se puede desde ADR‑041.
+
+⚠️ **Rectificado el 2026‑09‑26** (D3a, ADR‑103): la ruta SINTÁCTICA existe —`FOL.Interpolation0.lk0_refute`,
+en forma de REFUTACIÓN, que esquiva sacar la disyunción de dentro del cuantificador— y cuesta lo mismo
+que la semántica de este módulo (unas 190–195 líneas de código cada una, sin contar comentarios ni
+líneas en blanco), sin pasar por `completeness₀`. Lo que la semántica abarató fue la ESTIMACIÓN de
+ADR‑046 §5 (~250 l.), no la prueba.
 
 ## ⭐ Una sola inducción para los dos cálculos
 
@@ -127,7 +138,7 @@ theorem eqInstance_valid {g : Formula} (hg : FOL.Herbrand0.EqInstance g)
       rw [← evalTerms_hole M v pre post h]
       exact ha
 
--- ⭐ Se prueba para `LKc` (14 casos) y `LK₀` sale por el encaje: una sola inducción.
+-- ⭐ Se prueba para `LKc` (15 casos) y `LK₀` sale por el encaje: una sola inducción.
 theorem lkc_sound : ∀ {Γ Δ : List Formula}, LKc Γ Δ →
     ∀ {D : Type} (M : Model D) (v : Nat → D),
       (∀ g, g ∈ Γ → evalFormula M v g) → ∃ d, And (d ∈ Δ) (evalFormula M v d) := by

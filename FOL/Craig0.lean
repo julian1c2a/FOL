@@ -23,15 +23,18 @@ import FOL.Lift0
     craig   : LKp [A] [B] → ∃ C, LKp [A] [C] ∧ LKp [C] [B] ∧ PredSub C [A] ∧ PredSub C [B]
 
 📏 **`[propext, Quot.sound]` en todo el módulo: ni un `Classical.choice`, ni un axioma del
-proyecto.** `lkp_to_lk0`, `predF_lift` y `predF_subst`, **sin ningún axioma**.
+proyecto.** `lkp_to_lk0`, `predF_lift`, `predF_subst` y el control `lkp_example`, **sin ningún axioma**.
 
-## ⛔ Por qué `LKp` y no `LK₀` — la obstrucción, que está CONFIRMADA
+## ⛔ Por qué `LKp` y no `LK₀` — la obstrucción del paso INGENUO (rectificada: ADR‑103)
 
-`LK₀.eqAx` mete en el antécedente una instancia de igualdad `g` **arbitraria**: sus símbolos no
+`LK₀.eqAx` mete en el antecedente una instancia de igualdad `g` **arbitraria**: sus símbolos no
 tienen por qué estar en el secuente. Las derivaciones del paso sí salen —basta meter `g` siempre
 en el lado 1— pero la **condición de lenguaje** se rompe, porque el interpolante puede heredar
-símbolos de `g`. ⇒ lo entregable es la interpolación para un cálculo **distinto**, `LKp`, que
-**no es el que el proyecto usa** (ADR‑056 §1 ya lo dejó medido; esto es su «Nivel 1»).
+símbolos de `g`. ⇒ ADR‑056 §1 concluyó que lo entregable era la interpolación para un cálculo
+**distinto**, `LKp`, que **no es el que el proyecto usa** (su «Nivel 1»). ⚠️ **Rectificado** (ADR‑103,
+2026‑09‑26): la obstrucción es del paso que mete `g` siempre en el lado 1, no del teorema. Repartiendo
+las instancias de igualdad por predicado entre los dos lados de Maehara, la condición de lenguaje se
+cumple, y Craig para `⊢₀` CON igualdad **sí** es entregable: `FOL.Interpolation0.craig₀`.
 
 ## ⛔⛔ Y la condición va sobre los símbolos de RELACIÓN, no sobre los de FUNCIÓN
 

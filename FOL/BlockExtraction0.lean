@@ -21,7 +21,7 @@ import FOL.Hauptsatz0
     herbrand_extraction_block : HerbrandExtractionBlock
     herbrand_block : ([] ⊢₀ exBlock n φ) ↔ ∃ tss E, HerbrandCertBlock n φ tss E
 
-📏 `[propext, Quot.sound]` en todo el módulo: **ni un `Classical.choice`** — como toda la vía H.
+📏 `[propext, Quot.sound]` en todo el módulo (`instB_nil`, ninguno): **ni un `Classical.choice`** — como toda la vía H.
 
 ## ⭐⭐ La medición que cambió el coste: **`instB` YA ERA la función de resto parcial**
 
@@ -41,7 +41,7 @@ El caso que parecía basura de `instB` **no lo es**:
     BlockInv n φ d := QuantFree d  ∨  ∃ us, us.length ≤ n ∧ d = instB n us φ
 
 🔑 *Antes de construir el dato que falta, mirar si una función que ya existe lo devuelve en su caso
-degenerado.* Van ocho de «antes de construir, buscar».
+degenerado.* Otra más de «antes de construir, buscar».
 
 ## ⭐ La pieza de riesgo, y era una sola
 

@@ -28,7 +28,7 @@
 > **Fuentes:** `cuarentena/README.md` · `AXIOMS.md` ·
 > `../ROBINSON_PlusPlus/doc/AUDITORIA-FOL-2026-09-12.md`
 
-**Last updated:** 2026-09-26 — D3a: `Interpolation0.lean` nuevo (Craig para `⊢₀` con igualdad). Antes, D3b: Herbrand para `φ` y `Γ` cualesquiera (`SkolemHerbrand0` §3). Antes, el mismo día: D2/D5/D6: `IsSyntacticallyComplete₀` → `IsMemComplete`, `model_existence_iff` → `model_existence_iff₀`, `compactness₀` → `compactness`, `IsHenkin₀` → `IsHenkin`, `DisjunctionProperty` → `DisjunctionProperty₀` (regla de subíndices, `NAMING-CONVENTIONS.md` §9); el núcleo genérico `absTerm'` proyectado en §6. Antes, el mismo día: 🗑️ `Tactics2.lean` borrado (D1): fuera de §6 y la tabla de huérfanos dice por qué. Antes, el mismo día: 🏁 proyectados los **seis teoremas del cierre de FOL** (T1-T6) en §1, §3.13 y §6.13:
+**Last updated:** 2026-09-27 — W2 (aplicado el 2026-09-27): el cuerpo, contrastado con el árbol (54 módulos). §2 regenerado de las líneas `import`; §1.1 sin `Prelim.lean` y con `Core`, `MetaRules`, `Inconsistencia` y los seis de `TheoryFramework/`; `Soundness`/`Completeness`/`Compacity` dados por BORRADOS el 2026-09-23 (no «en `cuarentena/`»); §3.13 (34 módulos; a la vía H ya no le falta el Hauptsatz); §3.2-§3.9, §5 y §6 con los nombres reales (`∧`/`∨`/`∃` son constructores; `excluded_middle`, `de_morgan_2`, `forall_dne` y `dual_forall_exists` no existen; `folSystem`, retirada); §7.1. Antes, D3a: `Interpolation0.lean` nuevo (Craig para `⊢₀` con igualdad). Antes, D3b: Herbrand para `φ` y `Γ` cualesquiera (`SkolemHerbrand0` §3). Antes, el mismo día: D2/D5/D6: `IsSyntacticallyComplete₀` → `IsMemComplete`, `model_existence_iff` → `model_existence_iff₀`, `compactness₀` → `compactness`, `IsHenkin₀` → `IsHenkin`, `DisjunctionProperty` → `DisjunctionProperty₀` (regla de subíndices, `NAMING-CONVENTIONS.md` §9); el núcleo genérico `absTerm'` proyectado en §6. Antes, el mismo día: 🗑️ `Tactics2.lean` borrado (D1): fuera de §6 y la tabla de huérfanos dice por qué. Antes, el mismo día: 🏁 proyectados los **seis teoremas del cierre de FOL** (T1-T6) en §1, §3.13 y §6.13:
 T1 `model_existence_iff₀` y T6 el modelo infinito (`Compacity0` §3, que ahora importa `FOL.Skolem0`),
 T2 `max_cons_complete` (`Canonical0`), T3 `instDecidablePTaut` (`Herbrand0`), T4 `derives0_qf_iff`
 (`Hauptsatz0` §9) y T5 `Inversion0`, al que le faltaba la fila de §3.13. Su ADR es **RPP‑100**. Y `Inversion0` gana `inv_allR`/`inv_exL`.
@@ -132,24 +132,26 @@ This document complies with all requirements specified in [AI-GUIDE.md](AI-GUIDE
 
 | Module | Namespace | Dependencies | Status |
 |--------|-----------|--------------|--------|
-| `Prelim.lean` | top-level | `Init.Classical` | ✅ Completo |
 | `FOL.lean` | top-level | none | ✅ Completo |
-| `Theorems/Impl.lean` | `FOL.Theorems.Impl` | `FOL.FOL`, `FOL.Prelim` | ✅ Completo |
-| `Theorems/Neg.lean` | `FOL.Theorems.Neg` | `FOL.FOL`, `FOL.Prelim` | ✅ Completo |
-| `Theorems/Derived.lean` | `FOL.Theorems.Derived`| `FOL.FOL`, `FOL.Prelim` | ✅ Completo |
+| `MetaRules.lean` | `FOL.MetaRules` | `FOL.FOL` | ⛔ Vivo y **contaminante**: 16 meta-reglas sobre `Derives`, **cuatro de ellas `axiom`** (`imp_intro`, `raa`, `or_elim`, `ex_elim`), los únicos del build. Por ellas la solidez de `Derives` es FALSA y M-11 prohíbe inducir sobre `Derives` (§6.14, ADR-029) |
+| `Core.lean` | *(barril, sin declaraciones)* | `FOL.FOL`, `FOL.MetaRules`, `FOL.Tactics`, `FOL.Deduction` y los cinco `FOL.Theorems.*` | ✅ Completo — el núcleo de `Derives` en un solo `import` (§6.14) |
+| `Theorems/Impl.lean` | `FOL.Theorems.Impl` | `FOL.FOL`, `FOL.Tactics` | ✅ Completo |
+| `Theorems/Neg.lean` | `FOL.Theorems.Neg` | `FOL.FOL` | ✅ Completo |
+| `Theorems/Derived.lean` | `FOL.Theorems.Derived`| `FOL.FOL`, `FOL.Theorems.Neg` | ✅ Completo |
 | `Theorems/Quantifiers.lean` | `FOL.Theorems.Quantifiers`| `FOL.FOL`, `FOL.Theorems.Impl`, `FOL.Theorems.Neg`, `FOL.Theorems.Derived` | ✅ Completo |
-| `Tactics.lean` | `FOL.Tactics` | `FOL.FOL`, `Lean` | ✅ Completo |
+| `Tactics.lean` | top-level | `FOL.FOL`, `Lean` | ✅ Completo |
 | `Deduction.lean` | `FOL.Metamath.Deduction` | `FOL.FOL`, `FOL.Tactics` | ✅ Completo |
 | `Semantics.lean` | `FOL.Metamath.Semantics` | `FOL.FOL` | ✅ Completo — ⭐ `ModelG (S D)` con el símbolo como **parámetro** desde 2026‑09‑22; `Model` es su `abbrev` en `String` |
-| `Theorems/Eq.lean` | `FOL.Theorems.Eq` | `FOL.FOL` | ✅ Completo |
-| `Enumeration.lean` | `FOL.Metamath.Enumeration` | `FOL.FOL` | ✅ Completo — `natToFormula` y su sobreyectividad, **computables**, cero axiomas (ADR‑030) |
+| `Theorems/Eq.lean` | `FOL` | `FOL.FOL` | ✅ Completo |
+| `Enumeration.lean` | `FOL.Metamath.Enumeration` | `FOL.FOL`, `FOL.SymClasses` | ✅ Completo — `natToFormula` y su sobreyectividad, **computables**, cero axiomas (ADR‑030) |
 | `Derives0.lean` | *(raíz, como `Derives`)* | `FOL.FOL` | ✅ Completo — **`Derives₀`**: 21 constructores, **cero habitantes‑axioma** ⇒ **inducible**. Paso 0 del plan finitista |
 | `Soundness0.lean` | `FOL.Metamath.Soundness0` | `FOL.Derives0`, `FOL.Semantics` | ✅ Completo — **`derives0_soundness`**, y con ella la **consistencia** de `Derives₀` y que **no es sintácticamente completo**. Paso 1 |
+| `Inconsistencia.lean` | `FOL.Inconsistencia` | `FOL.FOL`, `FOL.MetaRules`, `FOL.Semantics`, `FOL.Propositional0`, `FOL.Soundness0` | ✅ Completo — la EVIDENCIA, compilada: `inconsistencia_de_cualquier_solidez` (todo testigo de la solidez de `Derives` da `False`; footprint `[propext, FOL.MetaRules.raa]`) y `derives0_no_disjunction_property` (la propiedad de disyunción para `Derives₀` es FALSA). En el build desde el 2026-09-23; antes, en `cuarentena/` |
 | `Rename.lean` | `FOL.Rename` | `FOL.Derives0` | ✅ Completo — **`derives0_rename`**: `Derives₀` respeta el renombrado de símbolos de función. Footprint `[propext, Quot.sound]`. Pieza del Paso 2 (Henkin) |
 | `Eigenvariable.lean` | `FOL.Eigenvariable` | `FOL.Derives0` | ✅ Completo — **`derives0_gen_fresh`**: de una constante FRESCA a un `∀`. Footprint `[propext, Quot.sound]`. La otra mitad del Paso 2. ⭐ D5 (2026‑09‑26): el núcleo es `absTerm' P`, genérico en un predicado de símbolos; `absTerm c` es su caso `(· = c)` |
 | `Lift0.lean` | `FOL.Lift0` | `FOL.Eigenvariable` | ✅ Completo — **`derives0_lift`** (debilitamiento bajo levantamiento) y **`derives0_ex_forall_neg_absurd`**. `[propext, Quot.sound]`. ⭐ D5 (2026‑09‑26): `liftTerm k` es el caso SIN símbolos de `absTerm'` (`absFormula'_none`), así que §1‑§4 son corolarios; el ahorro medido es pequeño (806 → 797 líneas el par), lo que se gana es una inducción y un transporte menos |
 | `Henkin0.lean` | `FOL.Henkin0` | `FOL.Lift0` | ✅ Completo — ⭐⭐ **`henkin_step_consistent`**: añadir el testigo de Henkin con constante fresca preserva la consistencia |
-| `Fresh0.lean` | `FOL.Fresh0` | `FOL.Henkin0`, `FOL.Rename` | ✅ Completo — el **suministro de constantes frescas**: `shiftTheory` (la teoría en un sublenguaje, conservativa y equiconsistente) y ⭐ `cst_bound_formula` / `exists_fresh`. Pieza (1) del §6.4 (ADR‑039) |
+| `Fresh0.lean` | `FOL.Fresh0` | `FOL.SymClasses`, `FOL.Henkin0`, `FOL.Rename` | ✅ Completo — el **suministro de constantes frescas**: `shiftTheory` (la teoría en un sublenguaje, conservativa y equiconsistente) y ⭐ `cst_bound_formula` / `exists_fresh`. Pieza (1) del §6.4 (ADR‑039) |
 | `HenkinLimit0.lean` | `FOL.HenkinLimit0` | `FOL.Fresh0`, `FOL.Enumeration` | ✅ Completo — ⭐⭐ la **iteración ω**: `henLimit_consistent` y `henLimit_witness`. **La extensión de Henkin, construida.** Pieza (2) del §6.4 (ADR‑039) |
 | `Lindenbaum0.lean` | `FOL.Lindenbaum0` | `FOL.HenkinLimit0` | ✅ Completo — **Lindenbaum sobre `Derives₀`** y ⭐⭐⭐ **`henkin_completion`**: el **ensamblaje de Henkin, cerrado**. ⛔ Aquí vive la no‑finitud del teorema (`if IsConsistent₀ …`, Π⁰₁). Pieza (3) del §6.4 (ADR‑040) |
 | `Eq0.lean` | `FOL.Eq0` | `FOL.Derives0`, `FOL.Theorems.Eq` | ✅ Completo — simetría, transitividad y las dos **congruencias** de la igualdad sobre `Derives₀`. ⭐ Traslado **literal** de `Theorems/Eq.lean`; footprint `[propext, Quot.sound]` (ADR‑041) |
@@ -162,9 +164,9 @@ This document complies with all requirements specified in [AI-GUIDE.md](AI-GUIDE
 | `Herbrand0.lean` | `FOL.Herbrand0` | `FOL.Propositional0`, `FOL.Eq0` | ✅ Completo — 🏁 **H4** (mitad ⟸): ⭐⭐ **`derives0_ex_of_cert`**, el certificado de Herbrand, **dato sintáctico y verificable por cómputo** (`ptautCheck` reduce ⇒ `by rfl`). ⭐ **T3 del cierre** (ADR‑100): `pcheck_complete`, `ptautCheck_iff` e `instDecidablePTaut`. El verificador también **refuta**, así que `PTaut` es **decidible por cómputo**, y `ptautCheck_iff` cuesta sólo `[propext]`. ⛔ Decide la tautología **proposicional**, no la validez: `c ≐ c` es derivable y no es `PTaut`. H3 se **enuncia** aquí como `HerbrandExtraction` con su consumidor `herbrand_iff`, y 🏁 la paga `Hauptsatz0.herbrand_extraction` (el resto, ADR‑043) |
 | `Derives1.lean` | *(raíz, como `Derives₀`)* · `FOL.Derives1` | `FOL.Lift0` | ✅ Completo — 🏁 **primera pieza de H3**: ⭐⭐ **`rewrite_at` es ADMISIBLE**. `Derives₁` = los 20 ctors de `Derives₀` **menos `rewrite_at`**, y `derives0_iff_derives1`. ⭐ `Derives₁.rec` **sin ningún axioma** (ADR‑044) |
 | `Derives2.lean` | *(raíz)* · `FOL.Derives2` | `FOL.Derives1`, `FOL.Theorems.Eq` | ✅ Completo — 🏁 **segunda pieza de H3**: ⭐⭐ **`subst` es ADMISIBLE** desde tres congruencias primitivas (`eq_substFormula`), más `derives2_lift` y `derives0_iff_derives2`. ⭐ `Derives₂.rec` **sin ningún axioma** (ADR‑045) |
-| `Sequent0.lean` | *(raíz)* · `FOL.Sequent0` | `FOL.Derives2`, `FOL.Herbrand0` | ✅ Completo — `LK₀` (14 ctors, sin corte) y `LKc` (15, con corte), **con `eqAx`** —el *theory‑cut*—; ⭐⭐ **`lk0_herbrand`**, la EXTRACCIÓN, que devuelve los términos **y** las instancias de igualdad. ⬜ Queda **`CutElim`** (ADR‑046, revisado en ADR‑049) |
+| `Sequent0.lean` | *(raíz)* · `FOL.Sequent0` | `FOL.Derives2`, `FOL.Herbrand0` | ✅ Completo — `LK₀` (14 ctors, sin corte) y `LKc` (15, con corte), **con `eqAx`** —el *theory‑cut*—; ⭐⭐ **`lk0_herbrand`**, la EXTRACCIÓN, que devuelve los términos **y** las instancias de igualdad. 🏁 `CutElim`, que aquí se enunció (ADR‑046, revisado en ADR‑049), lo paga `Hauptsatz0.cut_elimination` (ADR-050/051/052) |
 | `SequentSound0.lean` | `FOL.SequentSound0` | `FOL.Sequent0`, `FOL.Canonical0` | ✅ Completo — ⭐ **el molde no prueba de más**: `lkc_sound`/`lk0_sound`, el corolario sintáctico `lk0_to_derives0` **por la semántica** y `lk0_not_empty`. ⚠️ Clásico **por la matemática** (secuentes multiconclusión) (ADR‑048) |
-| `NDtoLK0.lean` | `FOL.NDtoLK0` | `FOL.Sequent0` | ✅ Completo — ⭐⭐⭐ **`ndToLK` DEMOSTRADA** (los 22 casos) y **`herbrandExtraction_of_cutElim : CutElim → HerbrandExtraction`**: H3 se queda con **una sola** deuda (ADR‑049) |
+| `NDtoLK0.lean` | `FOL.NDtoLK0` | `FOL.Sequent0` | ✅ Completo — ⭐⭐⭐ **`ndToLK` DEMOSTRADA** (los 22 casos) y **`herbrandExtraction_of_cutElim : CutElim → HerbrandExtraction`**: H3 se quedaba con **una sola** deuda —🏁 la paga `Hauptsatz0.cut_elimination`— (ADR‑049) |
 | `Hauptsatz0.lean` | *(raíz `LKh`)* · `FOL.Hauptsatz0` | `FOL.Sequent0`, `FOL.NDtoLK0` | 🏁🏁🏁 **EL HAUPTSATZ** — ⭐⭐⭐ `hauptsatz : CutAdm` (el corte es **admisible** en `LK₀`), y de ahí `cut_elimination`, `herbrand_extraction` y ⭐ **`herbrand`**, el teorema de Herbrand **ya incondicional**. Debajo: `LKh` indexado por altura, las dos conmutaciones De Bruijn que faltaban, `lkh_subst`, `lkh_lift` y ⭐⭐ `LeftPrin`, el dato que desacopla los dos análisis de casos. ⭐ §9, **T4 del cierre** (ADR‑100): `derives0_qf_iff`. Un secuente sin cuantificadores es derivable **sii** su conclusión es consecuencia **proposicional** del contexto más una lista `E` de instancias de la igualdad (`EqPropCert`). ⚠️ **Caracteriza, no decide**, porque `E` no tiene cota. Y esa `E` sin cota **no lo vuelve vacuo**: de `peval_true_eqInstance` sale `Not (EqPropCert [] Formula.bottom E)`, compilado como `example`. El resto, ADR‑050/051/**052** |
 | `PrenexNF0.lean` | `FOL.PrenexNF0` | `FOL.Prenex0`, `FOL.Derives1` | 🏁 **La FORMA NORMAL prenexa y su corrección** — ⭐⭐ `derives0_prenex_iff`. La **terminación no hace falta**: las seis fusiones son **estructurales**, porque se recurre sobre un argumento y se LEVANTA el otro. ADR‑058 |
 | `Prenex0.lean` | `FOL.Prenex0` | `FOL.Herbrand0`, `FOL.Lift0` | 🏁 **La CAPA PRENEXA**: las **ocho** equivalencias de desplazamiento de cuantificador sobre `Derives₀`. ⭐ «La variable no aparece en `B`» se **construye** (`liftFormula 0 B`), no se comprueba; y las tres direcciones clásicas salen de **constructores**, no de `Classical.choice`. ADR‑057 |
@@ -176,11 +178,17 @@ This document complies with all requirements specified in [AI-GUIDE.md](AI-GUIDE
 | `BlockExtraction0.lean` | `FOL.BlockExtraction0` | `FOL.HerbrandBlock0`, `FOL.Hauptsatz0` | 🏁 **La mitad ⟹ de HERBRAND DE BLOQUE** — `herbrand_extraction_block` y `herbrand_block`, ya **incondicional**. ⭐⭐ No hizo falta ninguna función nueva: **`instB` ya era la función de resto parcial** (su caso «basura» devuelve el bloque pendiente). ⚠️ El caso `n = 0` se trata aparte: `exBlock 0 φ = φ` **sí** es sin cuantificadores. ADR‑064 |
 | `SkolemHerbrand0.lean` | `FOL.SkolemHerbrand0` | `FOL.SkolemNF0`, `FOL.BlockExtraction0` | 🏁 **EL ENCHUFE Skolem↔Herbrand** — `herbrand_of_skolemNF`. ⭐ Las dos piezas no componían porque **Herbrand habla de existenciales y Skolem los quita**: el puente es De Morgan **iterada sobre el bloque**, y su mitad cara ya era un **constructor** (`forall_not_ex_not`). 📏 `[propext, Quot.sound]`. ADR‑066. 🏁🏁 §3 (D3, 2026‑09‑26): **Herbrand para `φ` y `Γ` cualesquiera** — `herbrand_validity₀` / `herbrand_validity_ctx₀`: `Γ ⊢₀ φ` sii hay certificado para la forma de Herbrand de `Γ ⇒ φ` (= la de Skolem de su negación). La negación no se mueve: se skolemiza lo que se REFUTA. `[propext, Classical.choice, Quot.sound]` (retirar los axiomas de Skolem pasa por la completitud) |
 | `HerbrandBlock0.lean` | `FOL.HerbrandBlock0` | `FOL.Sequent0` | 🔶 **Herbrand para un BLOQUE de existenciales** — ⭐ la mitad ⟸ PAGADA (`derives0_exBlock_of_cert`, incondicional y sin el Hauptsatz) y la mitad ⟹ **enunciada** como `Prop` con su consumidor. ⭐ La pieza de riesgo es `subst_exBlock`, y el índice va `n + k` **a propósito**. ADR‑055 |
-| `Compacity0.lean` | `FOL.Compacity0` | `FOL.Canonical0`, `FOL.Skolem0` | 🏁 **COMPACIDAD y LÖWENHEIM–SKOLEM DESCENDENTE** — ⭐ `compactness` repara el `compactness_theorem` que `cuarentena/README.md:90` declara **VACUO**; ⭐ `loewenheim_skolem_down`: el modelo canónico **ya era numerable**, faltaba poder decirlo. ⭐ **T1 del cierre**: `model_existence_iff₀ : IsConsistent₀ S ↔ IsSatisfiable S`, la forma de Henkin de la completitud; las dos mitades ya estaban, una en cada módulo. 🏁 §3, **T6 del cierre**: `infinite_model_of_large`. Si para **todo** `n` hay un modelo con al menos `n` elementos, hay uno **numerable e infinito** (`InfiniteDom D`: `Nat` se inyecta en `D`). No pide frescura: se muda la teoría con `shiftTheory` y se vuelve con `pullback`. ⚠️ **No** es LS↑ a cardinal arbitrario (el core no trae Zorn), y la biyección con `Nat` no se construye. Lleva cuatro controles de no vacuidad. T1 y T6 ADR‑100; el resto, ADR‑054 |
+| `Compacity0.lean` | `FOL.Compacity0` | `FOL.Canonical0`, `FOL.Skolem0` | 🏁 **COMPACIDAD y LÖWENHEIM–SKOLEM DESCENDENTE** — ⭐ `compactness` repara el `compactness_theorem` que `cuarentena/README.md` registra como **VACUO** (en el `Compacity.lean` borrado el 2026-09-23); ⭐ `loewenheim_skolem_down`: el modelo canónico **ya era numerable**, faltaba poder decirlo. ⭐ **T1 del cierre**: `model_existence_iff₀ : IsConsistent₀ S ↔ IsSatisfiable S`, la forma de Henkin de la completitud; las dos mitades ya estaban, una en cada módulo. 🏁 §3, **T6 del cierre**: `infinite_model_of_large`. Si para **todo** `n` hay un modelo con al menos `n` elementos, hay uno **numerable e infinito** (`InfiniteDom D`: `Nat` se inyecta en `D`). No pide frescura: se muda la teoría con `shiftTheory` y se vuelve con `pullback`. ⚠️ **No** es LS↑ a cardinal arbitrario (el core no trae Zorn), y la biyección con `Nat` no se construye. Lleva cuatro controles de no vacuidad. T1 y T6 ADR‑100; el resto, ADR‑054 |
 | `Finitary0.lean` | `FOL.Finitary0` | `FOL.NDtoLK0` (⭐ **no** `Hauptsatz0`) | 🏁 **La consistencia de `Derives₀` SIN `Classical.choice`** — ⭐⭐ `derives0_consistent_fin`, el mismo enunciado que `derives0_consistent` (ADR‑034) con footprint **estrictamente menor**. La clave: `tval`, el modelo de un punto **evaluado a `Bool`** ⇒ el caso `implR` se decide por `cases`, no por tercio excluido. ADR‑053 |
+| `TheoryFramework/Logic.lean` | `TheoryFramework` | none | ✅ Completo — `LogicSystem`, `SoundLogic`, `CompleteLogic` (§6.15) |
+| `TheoryFramework/Theory.lean` | `TheoryFramework` | `TheoryFramework.Logic` | ✅ Completo |
+| `TheoryFramework/Properties.lean` | `TheoryFramework` | `TheoryFramework.Theory` | ✅ Completo |
+| `TheoryFramework/Relations.lean` | `TheoryFramework` | `TheoryFramework.Theory` | ✅ Completo |
+| `TheoryFramework/MetaTheorems.lean` | `TheoryFramework` | `TheoryFramework.Properties`, `TheoryFramework.Relations` | ✅ Completo — ⚠️ `proves_iff_models` pide `[SoundLogic F]` y `[CompleteLogic F]`, y no hay ninguna instancia |
+| `TheoryFramework/Instances/FOL.lean` | `TheoryFramework.Instances` | `TheoryFramework.Logic`, `FOL.FOL`, `FOL.Semantics` | ⛔ **Sin declaraciones**: `folSystem` se retiró el 2026-09-23; la vía `TheoryFramework` queda CERRADA (§6.15) |
 
 ⛔ **Y tres módulos que esta tabla listaba como vivos YA NO LO ESTÁN** (corregido el 2026‑09‑14):
-`Soundness.lean`, `Compacity.lean` y `Completeness.lean` están **retirados** a `cuarentena/` desde
+`Soundness.lean`, `Compacity.lean` y `Completeness.lean` se **BORRARON** el 2026-09-23 (`62dc2d5`), tras pasar por `cuarentena/` desde
 el 2026‑09‑11/12 — los dos primeros porque el teorema de solidez para `Derives` es **falso**, el
 tercero por sus `axiom` propios. Ver `cuarentena/README.md`.
 
@@ -192,45 +200,122 @@ tercero por sus `axiom` propios. Ver `cuarentena/README.md`.
 
 ```mermaid
 graph TD
-    IC[Init.Classical] --> P[Prelim.lean]
-    F[FOL.lean]
-    P --> I[Theorems/Impl.lean]
-    F --> I
-    P --> N[Theorems/Neg.lean]
-    F --> N
-    P --> D[Theorems/Derived.lean]
-    F --> D
-    I --> Q[Theorems/Quantifiers.lean]
-    N --> Q
-    D --> Q
-    F --> Q
-    F --> Eq[Theorems/Eq.lean]
-    F --> T[Tactics.lean]
-    F --> Ded[Deduction.lean]
-    T --> Ded
-    F --> Sem[Semantics.lean]
-    Sem --> S[Soundness.lean]
-    F --> S
-    Eq --> C
-    Sem --> C[Completeness.lean]
-    Ded --> C
-    N --> C
-    Q --> C
-    F --> C
-    C --> Comp[Compacity.lean]
-    S --> Comp
-    Sem --> Comp
+    %% núcleo `Derives` (el cálculo con las meta-reglas) y la semántica
+    FOLsyn[FOL.lean]
+    FOLsyn --> MetaRules[MetaRules.lean]
+    FOLsyn --> Tactics[Tactics.lean]
+    LeanExt[Lean] --> Tactics
+    FOLsyn --> Deduction[Deduction.lean]
+    Tactics --> Deduction
+    FOLsyn --> T_Impl[Theorems/Impl.lean]
+    Tactics --> T_Impl
+    FOLsyn --> T_Neg[Theorems/Neg.lean]
+    FOLsyn --> T_Derived[Theorems/Derived.lean]
+    T_Neg --> T_Derived
+    FOLsyn --> T_Quantifiers[Theorems/Quantifiers.lean]
+    T_Impl --> T_Quantifiers
+    T_Neg --> T_Quantifiers
+    T_Derived --> T_Quantifiers
+    FOLsyn --> T_Eq[Theorems/Eq.lean]
+    FOLsyn --> Core[Core.lean]
+    MetaRules --> Core
+    Tactics --> Core
+    Deduction --> Core
+    T_Impl --> Core
+    T_Neg --> Core
+    T_Derived --> Core
+    T_Quantifiers --> Core
+    T_Eq --> Core
+    FOLsyn --> Semantics[Semantics.lean]
+    %% capa ₀, vía W: Derives₀, solidez, Henkin, completitud, compacidad, Skolem
+    FOLsyn --> Derives0[Derives0.lean]
+    Derives0 --> Soundness0[Soundness0.lean]
+    Semantics --> Soundness0
+    FOLsyn --> Inconsistencia[Inconsistencia.lean]
+    MetaRules --> Inconsistencia
+    Semantics --> Inconsistencia
+    Propositional0[Propositional0.lean] --> Inconsistencia
+    Soundness0 --> Inconsistencia
+    Derives0 --> Rename[Rename.lean]
+    Derives0 --> Eigenvariable[Eigenvariable.lean]
+    Eigenvariable --> Lift0[Lift0.lean]
+    Lift0 --> Henkin0[Henkin0.lean]
+    FOLsyn --> SymClasses[SymClasses.lean]
+    SymClasses --> Fresh0[Fresh0.lean]
+    Henkin0 --> Fresh0
+    Rename --> Fresh0
+    FOLsyn --> Enumeration[Enumeration.lean]
+    SymClasses --> Enumeration
+    Fresh0 --> HenkinLimit0[HenkinLimit0.lean]
+    Enumeration --> HenkinLimit0
+    HenkinLimit0 --> Lindenbaum0[Lindenbaum0.lean]
+    Derives0 --> Eq0[Eq0.lean]
+    T_Eq --> Eq0
+    FOLsyn --> Complexity[Complexity.lean]
+    Lindenbaum0 --> Canonical0[Canonical0.lean]
+    Eq0 --> Canonical0
+    Semantics --> Canonical0
+    Soundness0 --> Canonical0
+    Complexity --> Canonical0
+    Canonical0 --> Skolem0[Skolem0.lean]
+    Skolem0 --> SkolemN0[SkolemN0.lean]
+    Canonical0 --> Compacity0[Compacity0.lean]
+    Skolem0 --> Compacity0
+    %% capa ₀, vía H: proposicional, Herbrand, secuentes, Hauptsatz, prenexa, Craig
+    FOLsyn --> DecEq[DecEq.lean]
+    Derives0 --> Propositional0
+    DecEq --> Propositional0
+    Propositional0 --> Herbrand0[Herbrand0.lean]
+    Eq0 --> Herbrand0
+    Lift0 --> Derives1[Derives1.lean]
+    Derives1 --> Derives2[Derives2.lean]
+    T_Eq --> Derives2
+    Derives2 --> Sequent0[Sequent0.lean]
+    Herbrand0 --> Sequent0
+    Sequent0 --> SequentSound0[SequentSound0.lean]
+    Canonical0 --> SequentSound0
+    Sequent0 --> NDtoLK0[NDtoLK0.lean]
+    Sequent0 --> Hauptsatz0[Hauptsatz0.lean]
+    NDtoLK0 --> Hauptsatz0
+    Hauptsatz0 --> Inversion0[Inversion0.lean]
+    NDtoLK0 --> Finitary0[Finitary0.lean]
+    Sequent0 --> HerbrandBlock0[HerbrandBlock0.lean]
+    HerbrandBlock0 --> BlockExtraction0[BlockExtraction0.lean]
+    Hauptsatz0 --> BlockExtraction0
+    Herbrand0 --> Prenex0[Prenex0.lean]
+    Lift0 --> Prenex0
+    Prenex0 --> PrenexNF0[PrenexNF0.lean]
+    Derives1 --> PrenexNF0
+    SkolemN0 --> SkolemNF0[SkolemNF0.lean]
+    PrenexNF0 --> SkolemNF0
+    SkolemNF0 --> SkolemHerbrand0[SkolemHerbrand0.lean]
+    BlockExtraction0 --> SkolemHerbrand0
+    Sequent0 --> Craig0[Craig0.lean]
+    Lift0 --> Craig0
+    Craig0 --> Interpolation0[Interpolation0.lean]
+    Hauptsatz0 --> Interpolation0
+    %% TheoryFramework (segunda lean_lib; sin instancias desde el 2026-09-23)
+    TF_Logic[TheoryFramework/Logic.lean]
+    TF_Logic --> TF_Theory[TheoryFramework/Theory.lean]
+    TF_Theory --> TF_Properties[TheoryFramework/Properties.lean]
+    TF_Theory --> TF_Relations[TheoryFramework/Relations.lean]
+    TF_Properties --> TF_MetaTheorems[TheoryFramework/MetaTheorems.lean]
+    TF_Relations --> TF_MetaTheorems
+    TF_Logic --> TF_InstFOL[TheoryFramework/Instances/FOL.lean]
+    FOLsyn --> TF_InstFOL
+    Semantics --> TF_InstFOL
 ```
 
-*(Update this diagram as modules are added)*
+*(Generado el 2026-09-26 de las líneas `import` reales: los **54** módulos —43 de `FOL/`, 5 de `FOL/Theorems/` y 6 de `TheoryFramework/`— más `Lean`, que importa `Tactics.lean`; 98 aristas. `A --> B` se lee «`B` importa `A`». Quedan fuera los dos barriles de la raíz, que no cuentan como módulos: `FOL.lean` (38 `import`, entre ellos `Core` y `Semantics`) y `TheoryFramework.lean` (5; `Instances/FOL.lean` entra por los `globs` del lakefile). Al añadir un módulo, regenerar.)*
 
 ---
 
 ## 3. Module Descriptions
 
-> ⚠️⚠️ **LAS CUATRO ENTRADAS SIGUIENTES DESCRIBEN MÓDULOS QUE YA NO EXISTEN** (auditado el
-> 2026‑09‑17): `Prelim.lean` se fusionó, y `Soundness.lean`, `Completeness.lean` y
-> `Compacity.lean` están en **`cuarentena/`** desde el 2026‑09‑11/12 (la solidez de `Derives` es
+> ⚠️⚠️ **CUATRO DE LAS ENTRADAS SIGUIENTES —§3.1, §3.10, §3.11 y §3.12— DESCRIBEN MÓDULOS QUE YA NO
+> EXISTEN** (auditado el 2026-09-17; corregido el 2026-09-26): `Prelim.lean` se eliminó el 2026-05-05
+> (`bb37b05`), y `Soundness.lean`, `Completeness.lean` y `Compacity.lean`, apartados a `cuarentena/`
+> el 2026-09-11/12, se **BORRARON** el 2026-09-23 (`62dc2d5`; la solidez de `Derives` es
 > **falsa**). Se conservan porque su texto explica decisiones vivas, pero **no describen el árbol**.
 > ⛔ Y nada las detectaba: el control `[C]` de `check-doc-sync.bash` **sólo miraba los módulos de
 > ROBINSON_PlusPlus**, nunca los de FOL. Arreglado el 2026‑09‑17.
@@ -241,7 +326,7 @@ graph TD
 **Namespace**: top-level (no namespace wrapper)
 **Dependencies**: `Init.Classical`
 **Last updated**: 2026-04-20 00:00
-**Status**: ✅ Completo
+**Status**: 🗑️ **ELIMINADO el 2026-05-05** (`bb37b05`): `ExistsUnique`, `∃!` y `∃¹` no existen hoy en el árbol
 **@axiom_system**: `none`
 **@importance**: `foundational`
 
@@ -293,13 +378,13 @@ Provides the core syntax, substitution operations using De Bruijn indices, AST n
   porque para un inductivo CON parámetro Lean genera el `noConfusion` heterogéneo y no
   genera `.inj`.
 - `Term`: `abbrev Term := TermG String` — terms (variables via `#n` and functions).
-- `Formula`: `abbrev Formula := FormulaG String` — formulas (`⊥`, `atom`, `⇒`, `∀.`).
-- `neg`, `top`, `lor`, `land`, `iff`, `ex`: Derived logical connectives.
+- `Formula`: `abbrev Formula := FormulaG String` — formulas, con **ocho** constructores: `bottom`, `atom`, `eq`, `impl`, `forall`, `and`, `or`, `ex`.
+- `neg`, `top`, `iff`: Derived logical connectives. ⚠️ `∧`, `∨`, `∃` y `≐` **no** son derivados: son constructores de `FormulaG` (no hay `lor` ni `land`).
 - `liftTerm`, `liftTerms`, `liftFormula`: De Bruijn lifting.
 - `substTerm`, `substTerms`, `substFormula`: Substitution of De Bruijn indices.
 - `Pos`: Abstract Syntax Tree position path for subformula targeting.
 - `getAt?`, `replaceAt`: Operations to query and modify formulas at exact positions.
-- `LocalRule`: Allows localized rewrites (e.g., double negation elimination).
+- `LocalRule`: Allows localized rewrites. Hoy tiene **un solo** constructor, `commuteImpl` (`A ⇒ (B ⇒ C)` ↦ `B ⇒ (A ⇒ C)`); la doble negación no es una `LocalRule`.
 - `Derives`: Inductive predicate `Γ ⊢ f` representing natural deduction derivations.
 
 **Notations**:
@@ -307,12 +392,13 @@ Provides the core syntax, substitution operations using De Bruijn indices, AST n
 - `⊥` => `Formula.bottom`
 - `⊤` => `top`
 - `¬` => `neg`
-- ` ∧ ` => `land`
-- ` ∨ ` => `lor`
+- ` ∧ ` => `Formula.and`
+- ` ∨ ` => `Formula.or`
 - ` ⇒ ` => `Formula.impl`
 - ` ⇔ ` => `iff`
 - `∀.` => `Formula.forall`
-- `∃.` => `ex`
+- `∃.` => `Formula.ex`
+- ` ≐ ` => `Formula.eq`
 - `#` => `Term.var`
 - ` ⊢ ` => `Derives`
 
@@ -321,7 +407,7 @@ Provides the core syntax, substitution operations using De Bruijn indices, AST n
 ### 3.3 Theorems/Impl.lean
 
 **Namespace**: `FOL.Theorems.Impl`
-**Dependencies**: `FOL.FOL`, `FOL.Prelim`
+**Dependencies**: `FOL.FOL`, `FOL.Tactics`
 **Last updated**: 2026-04-21
 **Status**: ✅ Completo
 **@axiom_system**: `none`
@@ -345,7 +431,7 @@ Tautologies of implication.
 ### 3.4 Theorems/Neg.lean
 
 **Namespace**: `FOL.Theorems.Neg`
-**Dependencies**: `FOL.FOL`, `FOL.Prelim`
+**Dependencies**: `FOL.FOL`
 **Last updated**: 2026-04-21
 **Status**: ✅ Completo
 **@axiom_system**: `classical`
@@ -359,25 +445,29 @@ Properties of negation, explosion, and contrapositive laws.
   `theorem explosion_impl {Γ A} : Γ ⊢ .impl ⊥ A`
 - `double_neg_intro`: $A \Rightarrow \neg(\neg A)$
   `theorem double_neg_intro {Γ A} : Γ ⊢ .impl A (neg (neg A))`
-- `double_neg_elim`: $\neg(\neg A) \Rightarrow A$
-  `theorem double_neg_elim {Γ A} : Γ ⊢ .impl (neg (neg A)) A`
+- `derived_raa`: reducción al absurdo **condicional** (pide el esquema DNE en `Γ`)
+  `theorem derived_raa {Γ A} (h_dne : .impl (neg (neg A)) A ∈ Γ) (h : neg A :: Γ ⊢ ⊥) : Γ ⊢ A`
+- `double_neg_elim`: $\neg(\neg A) \Rightarrow A$, **condicional** (pide el esquema en `Γ`)
+  `theorem double_neg_elim {Γ A} (h_dne : .impl (neg (neg A)) A ∈ Γ) : Γ ⊢ .impl (neg (neg A)) A`
+- `dne`: $\neg(\neg A) \Rightarrow A$, **incondicional**: es el constructor `Derives.dne_schema`
+  `theorem dne {Γ : List Formula} {A : Formula} : Γ ⊢ .impl (neg (neg A)) A`
 - `contrapositive_1`: $(A \Rightarrow B) \Rightarrow (\neg B \Rightarrow \neg A)$
   `theorem contrapositive_1 {Γ A B} : Γ ⊢ .impl (.impl A B) (.impl (neg B) (neg A))`
 - `contrapositive_2`: $(\neg B \Rightarrow \neg A) \Rightarrow (A \Rightarrow B)$
-  `theorem contrapositive_2 {Γ A B} : Γ ⊢ .impl (.impl (neg B) (neg A)) (.impl A B)`
+  `theorem contrapositive_2 {Γ A B} (h_dne : .impl (neg (neg B)) B ∈ Γ) : Γ ⊢ .impl (.impl (neg B) (neg A)) (.impl A B)`
 
 ---
 
 ### 3.5 Theorems/Derived.lean
 
 **Namespace**: `FOL.Theorems.Derived`
-**Dependencies**: `FOL.FOL`, `FOL.Prelim`
+**Dependencies**: `FOL.FOL`, `FOL.Theorems.Neg`
 **Last updated**: 2026-04-21
 **Status**: ✅ Completo
-**@axiom_system**: `classical`
+**@axiom_system**: `constructive`
 **@importance**: `high`
 
-Properties of derived connectives ($\land$, $\lor$, $\Leftrightarrow$).
+Properties of the connectives $\land$, $\lor$ (constructores primitivos) and $\Leftrightarrow$ (derivado).
 
 **Theorems**:
 
@@ -387,7 +477,6 @@ Properties of derived connectives ($\land$, $\lor$, $\Leftrightarrow$).
 - `or_intro_left`: $A \Rightarrow (A \lor B)$
 - `or_intro_right`: $B \Rightarrow (A \lor B)$
 - `or_elim`: $(A \lor B) \Rightarrow ((A \Rightarrow C) \Rightarrow ((B \Rightarrow C) \Rightarrow C))$
-- `excluded_middle`: $A \lor \neg A$
 - `and_comm`: $(A \land B) \Rightarrow (B \land A)$
 - `or_comm`: $(A \lor B) \Rightarrow (B \lor A)$
 - `and_assoc`: $((A \land B) \land C) \Rightarrow (A \land (B \land C))$
@@ -395,9 +484,7 @@ Properties of derived connectives ($\land$, $\lor$, $\Leftrightarrow$).
 - `de_morgan_1_fwd`: $\neg(A \lor B) \Rightarrow (\neg A \land \neg B)$
 - `de_morgan_1_rev`: $(\neg A \land \neg B) \Rightarrow \neg(A \lor B)$
 - `de_morgan_1`: $\neg(A \lor B) \Leftrightarrow (\neg A \land \neg B)$
-- `de_morgan_2_fwd`: $\neg(A \land B) \Rightarrow (\neg A \lor \neg B)$
 - `de_morgan_2_rev`: $(\neg A \lor \neg B) \Rightarrow \neg(A \land B)$
-- `de_morgan_2`: $\neg(A \land B) \Leftrightarrow (\neg A \lor \neg B)$
 
 ---
 
@@ -412,19 +499,18 @@ Properties of derived connectives ($\land$, $\lor$, $\Leftrightarrow$).
 
 Quantifier interactions and dualities.
 
-**Axioms**:
+**Lemas sintácticos** (⚠️ son `theorem`, no `axiom`; los tres fueron `axiom`, y `subst_lift_cancel_formula` con un enunciado general FALSO, corregido el 2026-06-23):
 
-- `subst_lift_cancel_formula`: `substFormula v t (liftFormula (v + 1) f) = f`
-- `subst_distrib_and`: `substFormula v t (land A B) = land (substFormula v t A) (substFormula v t B)`
-- `lift_distrib_and`: `liftFormula c (land A B) = land (liftFormula c A) (liftFormula c B)`
+- `substTerm_lift_cancel_var`, `substTerms_lift_cancel_var`: sus casos de término
+- `subst_lift_cancel_formula`: `substFormula v (.var v) (liftFormula (v + 1) f) = f`
+- `subst_distrib_and`: `substFormula v t (.and A B) = .and (substFormula v t A) (substFormula v t B)`
+- `lift_distrib_and`: `liftFormula c (.and A B) = .and (liftFormula c A) (liftFormula c B)`
 
 **Theorems**:
 
-- `forall_dne`: $(\forall x. \neg \neg A) \Rightarrow (\forall x. A)$
 - `forall_not_impl_exists_not`: $\neg(\forall x. A) \Rightarrow \exists x. \neg A$
 - `forall_dni`: $(\forall x. A) \Rightarrow (\forall x. \neg \neg A)$
 - `exists_not_impl_forall_not`: $(\exists x. \neg A) \Rightarrow \neg(\forall x. A)$
-- `dual_forall_exists`: $\neg(\forall x. A) \Leftrightarrow \exists x. \neg A$
 - `forall_and_impl_and_forall`: $(\forall x. A \land B) \Rightarrow (\forall x. A) \land (\forall x. B)$
 - `and_forall_impl_forall_and`: $((\forall x. A) \land (\forall x. B)) \Rightarrow (\forall x. A \land B)$
 - `distrib_forall_and`: $(\forall x. A \land B) \Leftrightarrow (\forall x. A) \land (\forall x. B)$
@@ -447,7 +533,7 @@ Metaprogramming and macros to automate repetitive natural deduction tasks.
 - `derive_hyp`: Closes goals of the form `Γ ⊢ f` if `f ∈ Γ` via `Derives.hyp` and `List.Mem` resolution.
 - `derive_rewrite rule at pos`: Automates the application of a local rewrite rule `LocalRule` at a specific AST position using `Derives.rewrite_at`.
 - `derive_weaken thm`: Automatically weakens a theorem `thm`'s context to the current goal's context by resolving `List.Subset` goals automatically.
-- `derive_raa`: Applies the Reductio ad Absurdum (`Derives.raa`) rule to change a goal `Γ ⊢ A` into `Γ, ¬A ⊢ ⊥`.
+- `derive_raa`: expande a `apply Derives.raa`. ⛔ `Derives.raa` **no existe**: `raa` no es constructor de `Derives`, sino el `axiom` `FOL.MetaRules.raa`, de forma `(Γ ⊢ A → Γ ⊢ ⊥) → Γ ⊢ ¬A`. La táctica falla si se usa (no medido: nadie la usa, ni en FOL ni en RPP).
 
 **Definitions**:
 
@@ -489,8 +575,8 @@ Metaprogramming and macros to automate repetitive natural deduction tasks.
   ⭐ Por eso **las nueve consumidoras de `Model` no cambiaron** al generificar (2026‑09‑22):
   misma técnica que `TermG`/`FormulaG` (ADR‑068/069). `evalTerm`, `evalTerms`, `evalFormula`
   y `contextSatisfies` sí son ya genéricas en `{S D}`.
-  ⬜ **Falta la segunda entrega**: `Canonical0` sigue en `String`, y es la que une la rama
-  sintáctica con la semántica.
+  ⛔ **No habrá segunda entrega**: `Canonical0`, y con él toda la cadena de completitud, sigue en
+  `String` y así se queda. La vía de `ModelG` se CERRÓ definitiva el 2026-09-26 (D4; cabecera de `FOL/FOL.lean`).
 - `evalTerm`: Evaluates a `Term` into the model's domain.
 - `evalTerms`: Evaluates a list of terms.
 - `shiftEnv`: Shifts De Bruijn variable environment.
@@ -502,7 +588,7 @@ Metaprogramming and macros to automate repetitive natural deduction tasks.
 **Theorems**:
 
 - Substitution & Lifting generalizations: `eval_liftTerm_ext`, `eval_liftTerms_ext`, `eval_substTerm_ext`, `eval_substTerms_ext`, `eval_liftFormula_ext`, `eval_substFormula_ext`.
-- Base Semantics Lemmas: `updateEnv_zero`, `shiftEnv_updateEnv_comm`, `eval_liftFormula_zero`, `eval_substFormula_zero`, `contextSatisfies_lift_zero`.
+- Base Semantics Lemmas: `updateEnv_zero`, `shift_updateEnv_comm`, `shift_updateEnv_subst_comm`, `eval_liftFormula_zero`, `eval_substFormula_zero`, `contextSatisfies_lift_zero`.
 - Rewrite Correctness: `rule_soundness`, `replaceAt_soundness`.
 
 ---
@@ -512,7 +598,7 @@ Metaprogramming and macros to automate repetitive natural deduction tasks.
 **Namespace**: `FOL.Metamath.Soundness`
 **Dependencies**: `FOL.FOL`, `FOL.Metamath.Semantics`, `FOL.Tactics`
 **Last updated**: 2026-04-25
-**Status**: ✅ Completo
+**Status**: 🗑️ **BORRADO el 2026-09-23** (`62dc2d5`; en `cuarentena/` desde el 2026-09-11). ⛔ `soundness` es **FALSO**: con las meta-reglas de `FOL/MetaRules.lean`, cualquier testigo suyo demuestra `False` (`FOL/Inconsistencia.lean`, `inconsistencia_de_cualquier_solidez`). La solidez vigente es la de `Derives₀`: `Soundness0.derives0_soundness` (§3.13)
 **@axiom_system**: `classical`
 **@importance**: `high`
 
@@ -528,7 +614,7 @@ Metaprogramming and macros to automate repetitive natural deduction tasks.
 **Namespace**: `FOL.Metamath.Completeness`
 **Dependencies**: `FOL.FOL`, `FOL.Semantics`, `FOL.Deduction`, `Theorems/Eq.lean`
 **Last updated**: 2026-05-08 18:25
-**Status**: ✅ Completo
+**Status**: 🗑️ **BORRADO el 2026-09-23** (`62dc2d5`), con su último `axiom` (`henkin_extension_lemma`). Lo supera `Canonical0.completeness₀`, sobre `Derives₀` y con cero axiomas del proyecto (§3.13)
 **@axiom_system**: `classical`
 **@importance**: `foundational`
 
@@ -559,7 +645,7 @@ Demostración del Teorema de Completitud de Gödel para FOL con Igualdad. Constr
 **Namespace**: `FOL.Metamath.Compacity`
 **Dependencies**: `Completeness.lean`, `Soundness.lean`
 **Last updated**: 2026-05-08 18:25
-**Status**: ✅ Completo
+**Status**: 🗑️ **BORRADO el 2026-09-23** (`62dc2d5`): era VACUO, porque pasaba por `soundness`. Lo repara `Compacity0.compactness` (§3.13)
 **@axiom_system**: `classical`
 **@importance**: `high`
 
@@ -581,9 +667,9 @@ Demostración del Teorema de Compacidad Semántica como corolario de los teorema
 
 ---
 
-### 3.13 Los módulos del plan finitista (2026‑09‑13 → 09‑17)
+### 3.13 Los módulos del plan finitista (2026‑09‑13 → 09‑26)
 
-⭐ **Proyección consolidada.** Estos veintiún módulos nacieron con
+⭐ **Proyección consolidada.** Estos treinta y cuatro módulos nacieron con
 `doc/PLAN-COMPLETITUD-FINITISTA.md` (en `../ROBINSON_PlusPlus`) y cada uno lleva su propio
 docstring de cabecera con el detalle. Aquí va lo que §14 de AI‑GUIDE exige: **qué demuestra cada
 uno y qué cuesta**. Los `export` van en §6.13.
@@ -627,8 +713,10 @@ uno y qué cuesta**. Los `export` van en §6.13.
 
 🔑 **La lectura de la tabla en una línea**: `Derives₀` (033) hace que se pueda *hablar* del
 cálculo; `Canonical0` (041) cierra la **vía W** —completitud, con su `Classical.choice`
-explicado—; y de `Propositional0` a `Hauptsatz0` va la **vía H**, que es finitaria y a la que
-sólo le falta el Hauptsatz.
+explicado—; y de `Propositional0` a `Hauptsatz0` va la **vía H**, finitaria y **cerrada**:
+`hauptsatz` (052) da el corte admisible sin `Classical.choice`. Sobre ella se apoyan `Inversion0`,
+`Interpolation0` (Craig con igualdad) y `SkolemHerbrand0` (Herbrand general, que sí lleva
+`Classical.choice`, al retirar los axiomas de Skolem).
 
 ## 4. Theorems
 
@@ -640,30 +728,31 @@ sólo le falta el Hauptsatz.
 
 | Symbol | Expands to | Module | Variants |
 |--------|-----------|--------|---------|
-| `∃! x, p` | `ExistsUnique (fun x => p)` | `Prelim.lean` | untyped only |
-| `∃¹ x, p` | `ExistsUnique (fun x => p)` | `Prelim.lean` | `∃¹ x`, `∃¹ (x)`, `∃¹ (x : T)`, `∃¹ x : T` |
 | `⊥` | `Formula.bottom` | `FOL.lean` | |
 | `⊤` | `top` | `FOL.lean` | |
 | `¬` | `neg` | `FOL.lean` | prefix |
-| ` ∧ ` | `land` | `FOL.lean` | infixr |
-| ` ∨ ` | `lor` | `FOL.lean` | infixr |
+| ` ∧ ` | `Formula.and` | `FOL.lean` | infixr |
+| ` ∨ ` | `Formula.or` | `FOL.lean` | infixr |
+| ` ≐ ` | `Formula.eq` | `FOL.lean` | infix |
 | ` ⇒ ` | `Formula.impl` | `FOL.lean` | infixr |
 | ` ⇔ ` | `iff` | `FOL.lean` | infix |
 | `∀.` | `Formula.forall` | `FOL.lean` | prefix |
-| `∃.` | `ex` | `FOL.lean` | prefix |
+| `∃.` | `Formula.ex` | `FOL.lean` | prefix |
 | `#` | `Term.var` | `FOL.lean` | prefix |
 | ` ⊢ ` | `Derives` | `FOL.lean` | infix |
-| ` ⊨ ` | `satisfies` | `Soundness.lean` | infix |
+| ` ⊢₀ ` | `Derives₀` | `Derives0.lean` | infix |
+| ` ⊨ ` | `FOL.Metamath.Semantics.satisfies` | `local notation` en `Soundness0.lean` y `Canonical0.lean` | infix |
 
-**Note**: `∃!` overrides Lean's built-in notation. Use `∃¹` to avoid any macro conflicts.
+**Note**: `Prelim.lean`, y con él `∃!`/`∃¹`, se eliminó el 2026-05-05 (`bb37b05`).
 
 ---
 
 ## 6. Exports
 
-> ⚠️⚠️ **LAS CUATRO ENTRADAS SIGUIENTES DESCRIBEN MÓDULOS QUE YA NO EXISTEN** (auditado el
-> 2026‑09‑17): `Prelim.lean` se fusionó, y `Soundness.lean`, `Completeness.lean` y
-> `Compacity.lean` están en **`cuarentena/`** desde el 2026‑09‑11/12 (la solidez de `Derives` es
+> ⚠️⚠️ **CUATRO DE LAS ENTRADAS SIGUIENTES —§6.1, §6.10, §6.11 y §6.12— DESCRIBEN MÓDULOS QUE YA NO
+> EXISTEN** (auditado el 2026-09-17; corregido el 2026-09-26): `Prelim.lean` se eliminó el 2026-05-05
+> (`bb37b05`), y `Soundness.lean`, `Completeness.lean` y `Compacity.lean`, apartados a `cuarentena/`
+> el 2026-09-11/12, se **BORRARON** el 2026-09-23 (`62dc2d5`; la solidez de `Derives` es
 > **falsa**). Se conservan porque su texto explica decisiones vivas, pero **no describen el árbol**.
 > ⛔ Y nada las detectaba: el control `[C]` de `check-doc-sync.bash` **sólo miraba los módulos de
 > ROBINSON_PlusPlus**, nunca los de FOL. Arreglado el 2026‑09‑17.
@@ -697,9 +786,9 @@ choose_uniq
 ### 6.2 FOL.lean
 
 Top-level definitions:
-`TermG`, `FormulaG`, `Term`, `Formula`, `Term.noConfusion`, `Formula.noConfusion`, `Formula.ex.inj`, `neg`, `top`, `lor`, `land`, `iff`, `ex`, `liftTerm`, `liftTerms`, `liftFormula`, `substTerm`, `substTerms`, `substFormula`, `Pos`, `getAt?`, `replaceAt`, `LocalRule`, `Derives`.
+`TermG`, `FormulaG`, `Term`, `Formula`, `Term.noConfusion`, `Formula.noConfusion`, `Formula.ex.inj`, `neg`, `top`, `iff`, `liftTerm`, `liftTerms`, `liftFormula`, `substTerm`, `substTerms`, `substFormula`, `Pos`, `getAt?`, `replaceAt`, `LocalRule`, `Derives`; y los ejemplos `formula_ejemplo`, `posicion_Q`, `formula_simplificada`. Los ocho constructores de `FormulaG` (`bottom`, `atom`, `eq`, `impl`, `forall`, `and`, `or`, `ex`) se reexportan con `export FormulaG`.
 
-⭐ **ADR‑069**: de `neg` a `replaceAt`, **todas genéricas en `Sym`**. ⛔ `LocalRule` y `Derives` se quedan en `String` **a propósito**: `Derives` es el cálculo contaminado (M‑11 / ADR‑029), RPP lo cita **192** veces y no cita `Derives₀` ni una, y la metateoría de FOL⁼ va sobre `Derives₀`.
+⭐ **ADR‑069**: de `neg` a `replaceAt`, **todas genéricas en `Sym`**. ⛔ `LocalRule` y `Derives` se quedan en `String` **a propósito**: `Derives` es el cálculo contaminado (M‑11 / ADR‑029), RPP lo citaba **192** veces al decidirlo y no usa `Derives₀` en su código (medido el 2026-09-26: seis menciones, todas en prosa), y la metateoría de FOL⁼ va sobre `Derives₀`.
 
 ### 6.3 Theorems/Impl.lean
 
@@ -709,17 +798,17 @@ Exports from namespace `FOL.Theorems.Impl`:
 ### 6.4 Theorems/Neg.lean
 
 Exports from namespace `FOL.Theorems.Neg`:
-`explosion_impl`, `double_neg_intro`, `double_neg_elim`, `contrapositive_1`, `contrapositive_2`.
+`explosion_impl`, `derived_raa`, `double_neg_intro`, `double_neg_elim`, `dne`, `contrapositive_1`, `contrapositive_2`.
 
 ### 6.5 Theorems/Derived.lean
 
 Exports from namespace `FOL.Theorems.Derived`:
-`and_intro`, `and_elim_left`, `and_elim_right`, `or_intro_left`, `or_intro_right`, `or_elim`, `excluded_middle`, `and_comm`, `or_comm`, `and_assoc`, `or_assoc`, `de_morgan_1_fwd`, `de_morgan_1_rev`, `de_morgan_1`, `de_morgan_2_fwd`, `de_morgan_2_rev`, `de_morgan_2`.
+`and_intro`, `and_elim_left`, `and_elim_right`, `or_intro_left`, `or_intro_right`, `or_elim`, `and_comm`, `or_comm`, `and_assoc`, `or_assoc`, `de_morgan_1_fwd`, `de_morgan_1_rev`, `de_morgan_1`, `de_morgan_2_rev`.
 
 ### 6.6 Theorems/Quantifiers.lean
 
 Exports from namespace `FOL.Theorems.Quantifiers`:
-`subst_lift_cancel_formula`, `subst_distrib_and`, `lift_distrib_and`, `forall_dne`, `forall_not_impl_exists_not`, `forall_dni`, `exists_not_impl_forall_not`, `dual_forall_exists`, `forall_and_impl_and_forall`, `and_forall_impl_forall_and`, `distrib_forall_and`.
+`subst_lift_cancel_formula`, `subst_distrib_and`, `lift_distrib_and`, `forall_not_impl_exists_not`, `forall_dni`, `exists_not_impl_forall_not`, `forall_and_impl_and_forall`, `and_forall_impl_forall_and`, `distrib_forall_and`.
 
 ### 6.7 Tactics.lean
 
@@ -734,7 +823,7 @@ Exports from namespace `FOL.Metamath.Deduction`:
 ### 6.9 Semantics.lean
 
 Exports from namespace `FOL.Metamath.Semantics`:
-`eval_liftFormula_zero`, `eval_substFormula_zero`, `contextSatisfies_lift_zero`, `rule_soundness`, `replaceAt_soundness`, `updateEnv_zero`, `shiftEnv_updateEnv_comm`.
+`eval_liftFormula_zero`, `eval_substFormula_zero`, `contextSatisfies_lift_zero`, `rule_soundness`, `replaceAt_soundness`, `updateEnv_zero`, `shift_updateEnv_comm`.
 
 ### 6.10 Soundness.lean
 
@@ -788,7 +877,7 @@ módulo. Es lo que exige AI‑GUIDE §14.
 
 **`Canonical0.lean`** — `derivesSet0_map`, `derivesSet0_map2`, `max_cons_impl_iff`, `max_cons_and`, `max_cons_neg`, `IsMemComplete`, **`max_cons_complete`**, `max_cons_or`, `termEqv`, `termEqv_refl`, `termEqv_symm`, `termEqv_trans`, `termSetoid`, `PointwiseEqv`, `pointwiseEqv_symm`, `termEqv_func_congr`, `termEqv_rel_congr`, `quotientOut`, `quotientOut_eq`, `QuotientDomain`, `canonicalModel`, `canonicalEnv`, `pointwiseEqv_out_mk`, `evalTerm_canonical`, `evalTerms_canonical`, `max_cons_ex`, `max_cons_forall`, `truth_lemma_lt`, `truth_lemma`, `pullback`, `eval_pullback_term`, `eval_pullback_terms`, `eval_pullback_formula`, `IsSatisfiable`, `satisfiable_of_shift`, `model_existence_lemma₀`, `completeness₀`, `derives0_complete_iff`, `derives0_em`, `derives0_peirce`
 
-**`DecEq.lean`** — `decEqTerm`, `decEqTerms`, `instDecidableEqTerm`
+**`DecEq.lean`** — `decEqTerm`, `decEqTerms`, `instDecidableEqTermG`, `instDecidableEqTerm`, `instDecidableEqFormula` (y la derivada `instDecidableEqFormulaG`, de `deriving instance`)
 
 **`Propositional0.lean`** — `derives0_em_ctx`, `derives0_cases`, `PVal`, `peval`, `PTaut`, `peval_neg`, `patoms`, `lit`, `kalmar`, `upd`, `upd_self`, `upd_other`, `elim_atoms`, `derives0_of_ptaut`, `implChain`, `peval_implChain`, `derives0_of_implChain`, `derives0_of_ptaut_ctx`, `derives0_em_prop`, `derives0_peirce_prop`
 
@@ -832,8 +921,8 @@ módulo. Es lo que exige AI‑GUIDE §14.
 
 ### 6.14 Exports de los módulos ANTIGUOS que nadie había proyectado
 
-⚠️⚠️ De los **34** módulos que el control comprueba (todo `FOL/*.lean` y `FOL/Theorems/*.lean`
-menos el barril), sólo **7** estaban proyectados y **27 no**. Los 21 del plan finitista están en
+⚠️⚠️ De los **34** módulos que el control comprobaba el 2026-09-17 (todo `FOL/*.lean` y `FOL/Theorems/*.lean`
+menos el barril), sólo **7** estaban proyectados y **27 no**. Los 21 del plan finitista de entonces (hoy, 36 entradas) están en
 §6.13; los **seis** de aquí llevaban **meses** en el árbol sin proyectar, y ⛔ el control `[C]` de
 `check-doc-sync.bash` los absolvía: hasta el 2026‑09‑17 **no miraba FOL en absoluto**. Y su
 primera versión, ya mirándolo, seguía absolviendo a tres — casaba por **subcadena**
@@ -909,7 +998,7 @@ absueltos por SUBCADENA** con el control que trajo ROBINSON_PlusPlus — `Logic`
 🔑 *Casar por subcadena no comprueba: absuelve.* El control de FOL casa por **ruta completa con
 frontera de palabra**, igual que para `FOL/`.
 
-**`TheoryFramework/Logic.lean`** — `LogicSystem` (clase: `Derives`, `Entails`), `SoundLogic`,
+**`TheoryFramework/Logic.lean`** — `LogicSystem` (clase: `derives`, `bottom`, `neg`, `semanticEntails`), `SoundLogic`,
 `CompleteLogic`, `LogicSystem.DerivesSet`, `LogicSystem.EntailsSet`
 
 **`TheoryFramework/Theory.lean`** — `Theory` (estructura), `Theory.proves`, `Theory.models`,
@@ -927,19 +1016,18 @@ frontera de palabra**, igual que para `FOL/`.
 `models_monotone`, `inconsistent_upward`, `consistent_of_le`, `equiv_of_conservative`,
 `TheoryEquivalent.symm`, `TheoryEquivalent.trans`, `empty_le`
 
-**`TheoryFramework/Instances/FOL.lean`** — `folSystem` (la `instance : LogicSystem Formula`)
+**`TheoryFramework/Instances/FOL.lean`** — *(ninguna declaración: `folSystem`, la `instance : LogicSystem Formula`, se RETIRÓ el 2026-09-23; queda la cabecera que explica por qué no hay instancia y cómo reabrirlo)*
 
 ⚠️ **Lo que este marco NO da, y conviene decirlo aquí**: `LogicSystem` es una clase **paramétrica**
-sobre `Derives`/`Entails`, y su instancia para FOL (`folSystem`) se cablea sobre el `Derives`
+sobre `derives`/`semanticEntails`, y su instancia para FOL (`folSystem`) se cableaba sobre el `Derives`
 **contaminado** por los cuatro habitantes‑axioma de `FOL/MetaRules.lean`. ⇒ **M‑11 aplica a todo lo
-que se pruebe a través de ella**, y sus «metateoremas» no dicen nada sobre `Derives₀`. Entra en el
+que se probara a través de ella**. ⛔ **Se RETIRÓ el 2026-09-23**, y desde entonces la librería no tiene ninguna instancia ni ningún consumidor: sus «metateoremas» no se aplican a FOL⁼, ni sobre `Derives` ni sobre `Derives₀`. Sigue en el
 build desde el 2026‑09‑12 (A‑5) para que **rompa si rompe**, no porque sea la capa vigente.
 
 ## 7. Documentation Status
 
 ### 7.1 Fully Projected Files
 
-- `Prelim.lean`
 - `FOL.lean`
 - `Theorems/Impl.lean`
 - `Theorems/Neg.lean`
@@ -947,9 +1035,10 @@ build desde el 2026‑09‑12 (A‑5) para que **rompa si rompe**, no porque sea
 - `Theorems/Quantifiers.lean`
 - `Tactics.lean`
 - `Deduction.lean`
-- `Soundness.lean`
-- `Completeness.lean`
-- `Compacity.lean`
+- `Semantics.lean` (§3.9)
+- los 36 de §6.13; `Core.lean`, `MetaRules.lean` y `Theorems/Eq.lean` (§6.14); `SymClasses.lean` (§6.16); y los seis de `TheoryFramework/` (§6.15)
+
+🗑️ Aquí figuraban también `Prelim.lean` (eliminado el 2026-05-05) y `Soundness.lean`, `Completeness.lean` y `Compacity.lean` (borrados el 2026-09-23): ya no existen.
 
 ### 7.2 Partially Projected Files
 

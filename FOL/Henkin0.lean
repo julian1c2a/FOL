@@ -17,7 +17,7 @@ import FOL.Lift0
 /-!
 # `FOL.Henkin0` — **el paso de Henkin**: añadir un testigo preserva la consistencia
 
-⭐⭐ El corazón del ensamblaje de `doc/PLAN-COMPLETITUD-FINITISTA.md` §6.2.
+⭐⭐ El corazón del ensamblaje de `../ROBINSON_PlusPlus/doc/PLAN-COMPLETITUD-FINITISTA.md` §6.2.
 
     henkin_step_consistent :
         IsConsistent₀ S  →  (c fresca en S y en A)  →

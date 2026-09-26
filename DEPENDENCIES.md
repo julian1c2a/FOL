@@ -1,170 +1,199 @@
 # Diagrama de Dependencias — FOL
 
-**Última actualización:** 2026-07-12
+**Last updated:** 2026-09-27 — GENERADO por `py gen-dependencies.py` desde las líneas `import`; no se edita a mano.
 **Autor**: Julián Calderón Almendros
 
-> ## ⛔⛔ DESFASADO — 2026-09-26 · NO USAR COMO MAPA
->
-> Este grafo es del 2026-07-12 y describe un árbol que ya no existe: **cinco `lean_lib`** (hoy son
-> **dos**, `FOL` y `TheoryFramework`; `FOLPure`, `PropLogic` y `FOL_poli` se retiraron el 2026-09-12),
-> y de sus siete nodos de `FOL`, tres son ficheros **borrados** (`Soundness`, `Completeness`,
-> `Compacity`). No tiene **ni uno** de los 27 módulos `FOL/*0.lean`, que son hoy el grueso de la librería.
-> Medido el 2026-09-26 (tras borrar `Tactics2` y crear `Interpolation0`): 54 módulos activos y 97 aristas `import` internas entre módulos (98 líneas `import`; una es `import Lean`), más las del barril.
-> ⚠️ Añadir a mano lo del cierre (T4 y T6 no crean módulos; sólo la arista `Compacity0 → Skolem0`)
-> a un grafo al que le faltan más de cuarenta nodos no lo arregla: hay que **regenerarlo desde las
-> líneas `import`**, o borrarlo. Mientras tanto, la fuente de verdad son esas líneas y el catálogo de
-> `REFERENCE.md` §6.
+> ⚠️ Este fichero se **calcula**. Para actualizarlo: `py gen-dependencies.py`; para comprobar que
+> está al día: `py gen-dependencies.py --check`. El DEPENDENCIES.md escrito a mano (2026-07-12) se
+> sustituyó el 2026-09-26: describía cinco `lean_lib`, tres nodos borrados y ninguno de la capa ₀.
 
-> Este fichero reemplaza la versión anterior, que era la plantilla genérica de
-> `lean4-project-template` sin adaptar (título "ProjectName", ejemplos ficticios
-> `Prelim.lean`/`Core/Basic.lean`) pese a que el proyecto real tiene 5 `lean_lib` y
-> ~70 ficheros `.lean`. Contenido reconstruido a partir de los `import` reales de cada
-> barrel (2026-07-12).
+## Cifras
 
----
+* **54 módulos** (`FOL/` 43 + `FOL/Theorems/` 5 + `TheoryFramework/` 6), **97 aristas** `import` entre ellos, profundidad máxima **12**.
+* 2 `lean_lib`: `FOL` (raíz: el barril `FOL.lean`, sin globs) y `TheoryFramework` (globs `.submodules`).
+* Módulos que NINGÚN build alcanza: ninguno.
+* Imports externos a FOL: `Lean` (FOL no tiene `require`: no depende de nada más allá de sí mismo).
 
-## Vista de Nivel de Subsistema
+## Por niveles (camino de imports más largo hasta una raíz)
 
-Cinco `lean_lib` independientes declaradas en `lakefile.lean`. **No** son una
-jerarquía de extensión — son implementaciones paralelas de lógica de primer orden con
-distinto alcance (ver ADR-010 en `DECISIONS.md`).
+* **0** — `FOL.FOL`, `TF.Logic`
+* **1** — `Complexity`, `DecEq`, `Derives0`, `MetaRules`, `Semantics`, `SymClasses`, `Tactics`, `Thm.Eq`, `Thm.Neg`, `TF.Theory`
+* **2** — `Deduction`, `Eigenvariable`, `Enumeration`, `Eq0`, `Propositional0`, `Rename`, `Soundness0`, `Thm.Derived`, `Thm.Impl`, `TF.Instances.FOL`, `TF.Properties`, `TF.Relations`
+* **3** — `Herbrand0`, `Inconsistencia`, `Lift0`, `Thm.Quantifiers`, `TF.MetaTheorems`
+* **4** — `Core`, `Derives1`, `Henkin0`, `Prenex0`
+* **5** — `Derives2`, `Fresh0`, `PrenexNF0`
+* **6** — `HenkinLimit0`, `Sequent0`
+* **7** — `Craig0`, `HerbrandBlock0`, `Lindenbaum0`, `NDtoLK0`
+* **8** — `Canonical0`, `Finitary0`, `Hauptsatz0`
+* **9** — `BlockExtraction0`, `Interpolation0`, `Inversion0`, `SequentSound0`, `Skolem0`
+* **10** — `Compacity0`, `SkolemN0`
+* **11** — `SkolemNF0`
+* **12** — `SkolemHerbrand0`
 
-```text
-FOL          — lógica de primer orden CON igualdad (De Bruijn), la más completa
-FOLPure      — lógica de primer orden SIN igualdad
-PropLogic    — lógica proposicional (sin cuantificadores ni términos)
-FOL_poli     — variante paralela de FOL (misma estructura, ver nota de barrel abajo)
-TheoryFramework — marco abstracto sobre cualquier LogicSystem; se instancia
-                  por separado sobre FOL / FOLPure / PropLogic vía Instances/*.lean
-                  (nunca sobre dos a la vez en el mismo fichero — colisión de `Formula`)
-```
+## Grafo
 
 ```mermaid
-graph TD
-    subgraph FOL_lib["FOL (con igualdad)"]
-        F1[FOL.FOL]
-        F2[FOL.MetaRules]
-        F3[FOL.Deduction]
-        F4[FOL.Semantics]
-        F5[FOL.Soundness]
-        F6[FOL.Completeness]
-        F7[FOL.Compacity]
-    end
-    subgraph FOLPure_lib["FOLPure (sin igualdad)"]
-        P1[FOLPure.FOL]
-        P2[FOLPure.Deduction]
-        P3[FOLPure.Completeness]
-    end
-    subgraph PropLogic_lib["PropLogic (proposicional)"]
-        L1[PropLogic.PL]
-        L2[PropLogic.Deduction]
-        L3[PropLogic.Completeness]
-    end
-    subgraph TF_lib["TheoryFramework (abstracto)"]
-        T1[TheoryFramework.Logic]
-        T2[TheoryFramework.Theory]
-        T3[TheoryFramework.Properties]
-        T4[TheoryFramework.Relations]
-        T5[TheoryFramework.MetaTheorems]
-        TI_FOL[Instances.FOL]
-        TI_FOLPure[Instances.FOLPure]
-        TI_PL[Instances.PropLogic]
-    end
-    T1 --> T2 --> T3 & T4 --> T5
-    TI_FOL --> T1
-    TI_FOL -.-> F1
-    TI_FOLPure --> T1
-    TI_FOLPure -.-> P1
-    TI_PL --> T1
-    TI_PL -.-> L1
+graph BT
+    BlockExtraction0["BlockExtraction0"] --> Hauptsatz0["Hauptsatz0"]
+    BlockExtraction0["BlockExtraction0"] --> HerbrandBlock0["HerbrandBlock0"]
+    Canonical0["Canonical0"] --> Complexity["Complexity"]
+    Canonical0["Canonical0"] --> Eq0["Eq0"]
+    Canonical0["Canonical0"] --> Lindenbaum0["Lindenbaum0"]
+    Canonical0["Canonical0"] --> Semantics["Semantics"]
+    Canonical0["Canonical0"] --> Soundness0["Soundness0"]
+    Compacity0["Compacity0"] --> Canonical0["Canonical0"]
+    Compacity0["Compacity0"] --> Skolem0["Skolem0"]
+    Complexity["Complexity"] --> FOL_FOL["FOL.FOL"]
+    Core["Core"] --> Deduction["Deduction"]
+    Core["Core"] --> FOL_FOL["FOL.FOL"]
+    Core["Core"] --> MetaRules["MetaRules"]
+    Core["Core"] --> Tactics["Tactics"]
+    Core["Core"] --> Thm_Derived["Thm.Derived"]
+    Core["Core"] --> Thm_Eq["Thm.Eq"]
+    Core["Core"] --> Thm_Impl["Thm.Impl"]
+    Core["Core"] --> Thm_Neg["Thm.Neg"]
+    Core["Core"] --> Thm_Quantifiers["Thm.Quantifiers"]
+    Craig0["Craig0"] --> Lift0["Lift0"]
+    Craig0["Craig0"] --> Sequent0["Sequent0"]
+    DecEq["DecEq"] --> FOL_FOL["FOL.FOL"]
+    Deduction["Deduction"] --> FOL_FOL["FOL.FOL"]
+    Deduction["Deduction"] --> Tactics["Tactics"]
+    Derives0["Derives0"] --> FOL_FOL["FOL.FOL"]
+    Derives1["Derives1"] --> Lift0["Lift0"]
+    Derives2["Derives2"] --> Derives1["Derives1"]
+    Derives2["Derives2"] --> Thm_Eq["Thm.Eq"]
+    Eigenvariable["Eigenvariable"] --> Derives0["Derives0"]
+    Enumeration["Enumeration"] --> FOL_FOL["FOL.FOL"]
+    Enumeration["Enumeration"] --> SymClasses["SymClasses"]
+    Eq0["Eq0"] --> Derives0["Derives0"]
+    Eq0["Eq0"] --> Thm_Eq["Thm.Eq"]
+    Finitary0["Finitary0"] --> NDtoLK0["NDtoLK0"]
+    Fresh0["Fresh0"] --> Henkin0["Henkin0"]
+    Fresh0["Fresh0"] --> Rename["Rename"]
+    Fresh0["Fresh0"] --> SymClasses["SymClasses"]
+    Hauptsatz0["Hauptsatz0"] --> NDtoLK0["NDtoLK0"]
+    Hauptsatz0["Hauptsatz0"] --> Sequent0["Sequent0"]
+    Henkin0["Henkin0"] --> Lift0["Lift0"]
+    HenkinLimit0["HenkinLimit0"] --> Enumeration["Enumeration"]
+    HenkinLimit0["HenkinLimit0"] --> Fresh0["Fresh0"]
+    Herbrand0["Herbrand0"] --> Eq0["Eq0"]
+    Herbrand0["Herbrand0"] --> Propositional0["Propositional0"]
+    HerbrandBlock0["HerbrandBlock0"] --> Sequent0["Sequent0"]
+    Inconsistencia["Inconsistencia"] --> FOL_FOL["FOL.FOL"]
+    Inconsistencia["Inconsistencia"] --> MetaRules["MetaRules"]
+    Inconsistencia["Inconsistencia"] --> Propositional0["Propositional0"]
+    Inconsistencia["Inconsistencia"] --> Semantics["Semantics"]
+    Inconsistencia["Inconsistencia"] --> Soundness0["Soundness0"]
+    Interpolation0["Interpolation0"] --> Craig0["Craig0"]
+    Interpolation0["Interpolation0"] --> Hauptsatz0["Hauptsatz0"]
+    Inversion0["Inversion0"] --> Hauptsatz0["Hauptsatz0"]
+    Lift0["Lift0"] --> Eigenvariable["Eigenvariable"]
+    Lindenbaum0["Lindenbaum0"] --> HenkinLimit0["HenkinLimit0"]
+    MetaRules["MetaRules"] --> FOL_FOL["FOL.FOL"]
+    NDtoLK0["NDtoLK0"] --> Sequent0["Sequent0"]
+    Prenex0["Prenex0"] --> Herbrand0["Herbrand0"]
+    Prenex0["Prenex0"] --> Lift0["Lift0"]
+    PrenexNF0["PrenexNF0"] --> Derives1["Derives1"]
+    PrenexNF0["PrenexNF0"] --> Prenex0["Prenex0"]
+    Propositional0["Propositional0"] --> DecEq["DecEq"]
+    Propositional0["Propositional0"] --> Derives0["Derives0"]
+    Rename["Rename"] --> Derives0["Derives0"]
+    Semantics["Semantics"] --> FOL_FOL["FOL.FOL"]
+    Sequent0["Sequent0"] --> Derives2["Derives2"]
+    Sequent0["Sequent0"] --> Herbrand0["Herbrand0"]
+    SequentSound0["SequentSound0"] --> Canonical0["Canonical0"]
+    SequentSound0["SequentSound0"] --> Sequent0["Sequent0"]
+    Skolem0["Skolem0"] --> Canonical0["Canonical0"]
+    SkolemHerbrand0["SkolemHerbrand0"] --> BlockExtraction0["BlockExtraction0"]
+    SkolemHerbrand0["SkolemHerbrand0"] --> SkolemNF0["SkolemNF0"]
+    SkolemN0["SkolemN0"] --> Skolem0["Skolem0"]
+    SkolemNF0["SkolemNF0"] --> PrenexNF0["PrenexNF0"]
+    SkolemNF0["SkolemNF0"] --> SkolemN0["SkolemN0"]
+    Soundness0["Soundness0"] --> Derives0["Derives0"]
+    Soundness0["Soundness0"] --> Semantics["Semantics"]
+    SymClasses["SymClasses"] --> FOL_FOL["FOL.FOL"]
+    Tactics["Tactics"] --> FOL_FOL["FOL.FOL"]
+    Thm_Derived["Thm.Derived"] --> FOL_FOL["FOL.FOL"]
+    Thm_Derived["Thm.Derived"] --> Thm_Neg["Thm.Neg"]
+    Thm_Eq["Thm.Eq"] --> FOL_FOL["FOL.FOL"]
+    Thm_Impl["Thm.Impl"] --> FOL_FOL["FOL.FOL"]
+    Thm_Impl["Thm.Impl"] --> Tactics["Tactics"]
+    Thm_Neg["Thm.Neg"] --> FOL_FOL["FOL.FOL"]
+    Thm_Quantifiers["Thm.Quantifiers"] --> FOL_FOL["FOL.FOL"]
+    Thm_Quantifiers["Thm.Quantifiers"] --> Thm_Derived["Thm.Derived"]
+    Thm_Quantifiers["Thm.Quantifiers"] --> Thm_Impl["Thm.Impl"]
+    Thm_Quantifiers["Thm.Quantifiers"] --> Thm_Neg["Thm.Neg"]
+    TF_Instances_FOL["TF.Instances.FOL"] --> FOL_FOL["FOL.FOL"]
+    TF_Instances_FOL["TF.Instances.FOL"] --> Semantics["Semantics"]
+    TF_Instances_FOL["TF.Instances.FOL"] --> TF_Logic["TF.Logic"]
+    TF_MetaTheorems["TF.MetaTheorems"] --> TF_Properties["TF.Properties"]
+    TF_MetaTheorems["TF.MetaTheorems"] --> TF_Relations["TF.Relations"]
+    TF_Properties["TF.Properties"] --> TF_Theory["TF.Theory"]
+    TF_Relations["TF.Relations"] --> TF_Theory["TF.Theory"]
+    TF_Theory["TF.Theory"] --> TF_Logic["TF.Logic"]
 ```
 
-*(línea punteada = dependencia de la instancia hacia la sub-librería concreta;
-`TheoryFramework.lean`, el barrel raíz, NO importa ninguna `Instances/*` — se
-importan a demanda, ver ADR-010).*
+## Tabla
 
----
+| módulo | nivel | importa | lo importan |
+|---|---|---|---|
+| `FOL.FOL` | 0 | — | `Complexity`, `Core`, `DecEq`, `Deduction`, `Derives0`, `Enumeration`, `Inconsistencia`, `MetaRules`, `Semantics`, `SymClasses`, `Tactics`, `Thm.Derived`, `Thm.Eq`, `Thm.Impl`, `Thm.Neg`, `Thm.Quantifiers`, `TF.Instances.FOL` |
+| `TheoryFramework.Logic` | 0 | — | `TF.Instances.FOL`, `TF.Theory` |
+| `FOL.Complexity` | 1 | `FOL.FOL` | `Canonical0` |
+| `FOL.DecEq` | 1 | `FOL.FOL` | `Propositional0` |
+| `FOL.Derives0` | 1 | `FOL.FOL` | `Eigenvariable`, `Eq0`, `Propositional0`, `Rename`, `Soundness0` |
+| `FOL.MetaRules` | 1 | `FOL.FOL` | `Core`, `Inconsistencia` |
+| `FOL.Semantics` | 1 | `FOL.FOL` | `Canonical0`, `Inconsistencia`, `Soundness0`, `TF.Instances.FOL` |
+| `FOL.SymClasses` | 1 | `FOL.FOL` | `Enumeration`, `Fresh0` |
+| `FOL.Tactics` | 1 | `FOL.FOL` · externo: `Lean` | `Core`, `Deduction`, `Thm.Impl` |
+| `FOL.Theorems.Eq` | 1 | `FOL.FOL` | `Core`, `Derives2`, `Eq0` |
+| `FOL.Theorems.Neg` | 1 | `FOL.FOL` | `Core`, `Thm.Derived`, `Thm.Quantifiers` |
+| `TheoryFramework.Theory` | 1 | `TF.Logic` | `TF.Properties`, `TF.Relations` |
+| `FOL.Deduction` | 2 | `FOL.FOL`, `Tactics` | `Core` |
+| `FOL.Eigenvariable` | 2 | `Derives0` | `Lift0` |
+| `FOL.Enumeration` | 2 | `FOL.FOL`, `SymClasses` | `HenkinLimit0` |
+| `FOL.Eq0` | 2 | `Derives0`, `Thm.Eq` | `Canonical0`, `Herbrand0` |
+| `FOL.Propositional0` | 2 | `DecEq`, `Derives0` | `Herbrand0`, `Inconsistencia` |
+| `FOL.Rename` | 2 | `Derives0` | `Fresh0` |
+| `FOL.Soundness0` | 2 | `Derives0`, `Semantics` | `Canonical0`, `Inconsistencia` |
+| `FOL.Theorems.Derived` | 2 | `FOL.FOL`, `Thm.Neg` | `Core`, `Thm.Quantifiers` |
+| `FOL.Theorems.Impl` | 2 | `FOL.FOL`, `Tactics` | `Core`, `Thm.Quantifiers` |
+| `TheoryFramework.Instances.FOL` | 2 | `FOL.FOL`, `Semantics`, `TF.Logic` | — |
+| `TheoryFramework.Properties` | 2 | `TF.Theory` | `TF.MetaTheorems` |
+| `TheoryFramework.Relations` | 2 | `TF.Theory` | `TF.MetaTheorems` |
+| `FOL.Herbrand0` | 3 | `Eq0`, `Propositional0` | `Prenex0`, `Sequent0` |
+| `FOL.Inconsistencia` | 3 | `FOL.FOL`, `MetaRules`, `Propositional0`, `Semantics`, `Soundness0` | — |
+| `FOL.Lift0` | 3 | `Eigenvariable` | `Craig0`, `Derives1`, `Henkin0`, `Prenex0` |
+| `FOL.Theorems.Quantifiers` | 3 | `FOL.FOL`, `Thm.Derived`, `Thm.Impl`, `Thm.Neg` | `Core` |
+| `TheoryFramework.MetaTheorems` | 3 | `TF.Properties`, `TF.Relations` | — |
+| `FOL.Core` | 4 | `Deduction`, `FOL.FOL`, `MetaRules`, `Tactics`, `Thm.Derived`, `Thm.Eq`, `Thm.Impl`, `Thm.Neg`, `Thm.Quantifiers` | — |
+| `FOL.Derives1` | 4 | `Lift0` | `Derives2`, `PrenexNF0` |
+| `FOL.Henkin0` | 4 | `Lift0` | `Fresh0` |
+| `FOL.Prenex0` | 4 | `Herbrand0`, `Lift0` | `PrenexNF0` |
+| `FOL.Derives2` | 5 | `Derives1`, `Thm.Eq` | `Sequent0` |
+| `FOL.Fresh0` | 5 | `Henkin0`, `Rename`, `SymClasses` | `HenkinLimit0` |
+| `FOL.PrenexNF0` | 5 | `Derives1`, `Prenex0` | `SkolemNF0` |
+| `FOL.HenkinLimit0` | 6 | `Enumeration`, `Fresh0` | `Lindenbaum0` |
+| `FOL.Sequent0` | 6 | `Derives2`, `Herbrand0` | `Craig0`, `Hauptsatz0`, `HerbrandBlock0`, `NDtoLK0`, `SequentSound0` |
+| `FOL.Craig0` | 7 | `Lift0`, `Sequent0` | `Interpolation0` |
+| `FOL.HerbrandBlock0` | 7 | `Sequent0` | `BlockExtraction0` |
+| `FOL.Lindenbaum0` | 7 | `HenkinLimit0` | `Canonical0` |
+| `FOL.NDtoLK0` | 7 | `Sequent0` | `Finitary0`, `Hauptsatz0` |
+| `FOL.Canonical0` | 8 | `Complexity`, `Eq0`, `Lindenbaum0`, `Semantics`, `Soundness0` | `Compacity0`, `SequentSound0`, `Skolem0` |
+| `FOL.Finitary0` | 8 | `NDtoLK0` | — |
+| `FOL.Hauptsatz0` | 8 | `NDtoLK0`, `Sequent0` | `BlockExtraction0`, `Interpolation0`, `Inversion0` |
+| `FOL.BlockExtraction0` | 9 | `Hauptsatz0`, `HerbrandBlock0` | `SkolemHerbrand0` |
+| `FOL.Interpolation0` | 9 | `Craig0`, `Hauptsatz0` | — |
+| `FOL.Inversion0` | 9 | `Hauptsatz0` | — |
+| `FOL.SequentSound0` | 9 | `Canonical0`, `Sequent0` | — |
+| `FOL.Skolem0` | 9 | `Canonical0` | `Compacity0`, `SkolemN0` |
+| `FOL.Compacity0` | 10 | `Canonical0`, `Skolem0` | — |
+| `FOL.SkolemN0` | 10 | `Skolem0` | `SkolemNF0` |
+| `FOL.SkolemNF0` | 11 | `PrenexNF0`, `SkolemN0` | `SkolemHerbrand0` |
+| `FOL.SkolemHerbrand0` | 12 | `BlockExtraction0`, `SkolemNF0` | — |
 
-## Estructura del Proyecto
+## Barriles
 
-```text
-FOL/
-├── FOL/
-│   ├── FOL.lean, MetaRules.lean, Tactics.lean, Tactics2.lean
-│   ├── Classical.lean, Deduction.lean, Semantics.lean, Soundness.lean
-│   ├── Completeness.lean, Compacity.lean
-│   └── Theorems/{Deduction,Derived,Eq,Impl,Neg,Quantifiers,Soundness}.lean
-├── FOLPure/          — misma forma que FOL/, sin igualdad, sin Theorems/{Eq,Deduction,Soundness}
-├── PropLogic/        — misma forma, sin cuantificadores/términos, sin Theorems/Quantifiers
-├── FOL_poli/         — espejo de FOL/ (mismos ficheros, mismo barrel incompleto — ver nota)
-├── TheoryFramework/
-│   ├── Logic.lean, Theory.lean, Properties.lean, Relations.lean, MetaTheorems.lean
-│   └── Instances/{FOL,FOLPure,PropLogic}.lean   (NO importadas por TheoryFramework.lean)
-├── FOL.lean / FOLPure.lean / PropLogic.lean / FOL_poli.lean / TheoryFramework.lean  (barrels raíz)
-└── lakefile.lean
-```
+* `FOL.lean` importa 38 módulos.
+* `TheoryFramework.lean` importa 5 módulos.
 
-## Dependencias por Sub-librería
-
-### FOL (con igualdad) — barrel `FOL.lean`
-
-Importa: `FOL.FOL`, `MetaRules`, `Tactics`, `Theorems.{Derived,Impl,Neg,Quantifiers}`,
-`Deduction`, `Semantics`, `Soundness`, `Completeness`, `Compacity`.
-
-**⚠️ No importados por el barrel** (existen en disco, no wireados — ver ADR-010):
-`FOL.Classical`, `FOL.Tactics2`, `FOL.Theorems.{Deduction,Eq,Soundness}`. ⚠️ **2026‑09‑23**: `Classical` y `Theorems.Deduction` **se borraron** (duplicados literales); `Theorems.Soundness` se había borrado con la cuarentena; `Tactics2` se **borró** el 2026-09-26 (idéntico a la copia de `FOL_poli`).
-
-### FOLPure (sin igualdad) — barrel `FOLPure.lean`
-
-Importa: `FOLPure.FOL`, `Tactics`, `Classical`, `Theorems.{Impl,Neg,Derived,Quantifiers}`,
-`Deduction`, `Semantics`, `Soundness`, `Completeness`, `Compacity`. **Completo** — todos
-los ficheros de `FOLPure/` están wireados.
-
-### PropLogic (proposicional) — barrel `PropLogic.lean`
-
-Importa: `PropLogic.PL`, `Tactics`, `Classical`, `Theorems.{Impl,Neg,Derived}`,
-`Deduction`, `Semantics`, `Soundness`, `Completeness`, `Compacity`. **Completo**.
-
-### FOL_poli (variante paralela de FOL) — barrel `FOL_poli.lean`
-
-Importa: `FOL_poli.FOL`, `Tactics`, `Theorems.{Derived,Impl,Neg,Quantifiers}`,
-`Deduction`, `Semantics`, `Soundness`, `Completeness`, `Compacity`.
-
-**⚠️ No importados por el barrel** (idéntico patrón que `FOL/`):
-`FOL_poli.Classical`, `FOL_poli.Tactics2`, `FOL_poli.Theorems.{Deduction,Eq,Soundness}`.
-
-### TheoryFramework (marco abstracto) — barrel `TheoryFramework.lean`
-
-Importa solo el núcleo: `Logic`, `Theory`, `Properties`, `Relations`, `MetaTheorems`.
-`Instances/{FOL,FOLPure,PropLogic}.lean` se importan por separado, cada una depende de
-`TheoryFramework.Logic` + su sub-librería concreta (`import FOL`, `import FOLPure`,
-`import PropLogic` respectivamente). No hay una instancia para `FOL_poli`.
-
-## Exportaciones por Sub-librería (recuento aproximado de ficheros)
-
-| Sub-librería | # ficheros `.lean` | Barrel completo |
-|---|---:|---|
-| `FOL` | 17 | ❌ (5 huérfanos) |
-| `FOLPure` | 12 | ✅ |
-| `PropLogic` | 11 | ✅ |
-| `FOL_poli` | 16 | ❌ (5 huérfanos, mismo patrón que `FOL`) |
-| `TheoryFramework` | 8 | ✅ (por diseño — `Instances/` es opt-in) |
-
-## Notas de Diseño
-
-1. **Sin Mathlib** (ADR-001).
-2. **Un namespace por módulo**, refleja la ruta del fichero (ADR-005).
-3. **`TheoryFramework` es agnóstico a la lógica concreta** — ver ADR-010 sobre por qué
-   sus instancias no se importan todas a la vez.
-4. **`FOL_poli` es un espejo de `FOL`**, no una extensión — comparten hasta el patrón
-   de módulos huérfanos en el barrel, indicio de que `FOL_poli` se creó copiando la
-   estructura de `FOL` en un momento dado y no se ha vuelto a sincronizar desde
-   entonces.
-
-## Comandos de Verificación
-
-```bash
-# ⛔ NO: FOL no se construye desde FOL (M-3). Build: lake build "@FOL/FOL" "@FOL/TheoryFramework" desde ../ROBINSON_PlusPlus
-lake graph              # grafo de dependencias real y completo (Lake nativo)
-bash check-sorry.bash   # comprobar sorry restantes
-```

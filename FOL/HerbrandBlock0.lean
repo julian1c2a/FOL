@@ -18,11 +18,12 @@ import FOL.Sequent0
 # `FOL.HerbrandBlock0` — Herbrand para un BLOQUE de existenciales
 
 El enunciado‑titular de la vía H, tal como el plan lo promete
-(`doc/PLAN-COMPLETITUD-FINITISTA.md` §5.1), lleva **barras de tupla**:
+(`../ROBINSON_PlusPlus/doc/PLAN-COMPLETITUD-FINITISTA.md` §5.1), lleva **barras de tupla**:
 
     ⊢₀ ∃x̄ φ(x̄)  ⟺  ∃ t̄₁…t̄ₙ : ⊢ᵖʳᵒᵖ φ(t̄₁) ∨ … ∨ φ(t̄ₙ)      (φ sin cuantificadores)
 
-⚠️ Y lo que hay hoy (`FOL.Hauptsatz0.herbrand`, ADR‑052) es el caso **n = 1**: un solo `∃`.
+⚠️ Y lo que había cuando se escribió esto (`FOL.Hauptsatz0.herbrand`, ADR‑052) era el caso **n = 1**:
+un solo `∃`. El bicondicional para bloques es hoy `FOL.BlockExtraction0.herbrand_block`.
 Este módulo pone las tuplas.
 
 ## ⭐ La mitad que se paga aquí: ⟸, la que CONSUME el certificado
@@ -42,7 +43,7 @@ Todo depende de poder sustituir **a través** del bloque:
 ⚠️ Escrito `k + n`, el caso `k = 0` obliga a reescribir con `Nat.zero_add` en cada uso, porque
 `0 + n` **no** es `n` por definición (`Nat.add` recurre en el segundo argumento). Escrito `n + k`,
 `n + 0` **sí** reduce y el consumidor no paga nada. *El orden de una suma en un enunciado no es
-cosmético: decide si el consumidor reescribe o no.* Es el primo del §14 de las trampas de notación.
+cosmético: decide si el consumidor reescribe o no.* Es otra trampa de notación del mismo tipo.
 
 ## 🏁 La mitad ⟹ — **PAGADA el 2026‑09‑18** en `FOL.BlockExtraction0` (ADR‑064)
 
@@ -65,7 +66,7 @@ altura ≥ 2 **no es** una fórmula sin cuantificadores, luego `herbrand` no apl
 
 ⚠️ Lo que haría falta, medido leyendo `FOL.Sequent0.lk0_herbrand`: **rehacer su inducción de 14
 casos con un invariante más rico**. Hoy el invariante es «todo `d ∈ Δ` es sin cuantificadores **o**
-es exactamente `Formula.ex φ`» (`Sequent0.lean:203`), y la salida lleva `ts : List Term`. Para
+es exactamente `Formula.ex φ`» (su hipótesis sobre `Δ`), y la salida lleva `ts : List Term`. Para
 bloques, el caso `exR` baja de `exBlock (m+1) ψ` a `exBlock m ψ'` —con `ψ'` sin cuantificadores por
 `quantFree_instB`, luego **el invariante SÍ se cierra**—, pero hay que llevar además la **tupla
 parcial** acumulada, y la salida pasa a `List (List Term)`. ⇒ es un rediseño del enunciado, no una
@@ -175,7 +176,7 @@ theorem derives0_exBlock_of_cert {n : Nat} {φ : Formula} {tss : List (List Term
   exact fun g hg => derives0_of_eqInstance (h.2.1 g hg)
 
 -- ============================================================
--- §4 · La mitad ⟹, ENUNCIADA como deuda y con su consumidor delante
+-- §4 · La mitad ⟹, ENUNCIADA como `Prop` y con su consumidor delante (PAGADA: `FOL.BlockExtraction0`)
 -- ============================================================
 
 /-- 🏁 La extracción para bloques. **PAGADA el 2026-09-18** (ADR-064). Testigo incondicional:

@@ -37,7 +37,7 @@ inversión es **un solo corte**: la premisa dada, un secuente auxiliar que la re
 deriva en un paso, y el corte sobre la fórmula principal.
 
 🔑 *El Hauptsatz no sólo elimina el corte de las derivaciones: lo convierte en una herramienta
-para PROBAR cosas sobre ellas.* Hasta hoy el único consumidor de `hauptsatz` era la extracción de
+para PROBAR cosas sobre ellas.* Hasta el 2026‑09‑23 el único consumidor de `hauptsatz` era la extracción de
 Herbrand.
 
 ## La plantilla — las nueve son la misma
@@ -59,7 +59,8 @@ olvida. `allR` y `exL` **sí** lo son, y con la misma plantilla de un corte: se 
 `substFormula 0 (var 0) (liftFormula 1 A) = A`, **ya existía**: `Lift0.substFormula_lift_var`.
 ⚠️ Hasta el 2026‑09‑26 esta cabecera decía que la identidad «no se ha medido» y dejaba fuera las
 dos inversiones (DIFERIDA en `[G.2]`); estaba escrita, y el diseño de las dos también (journal del
-workflow `wf_1c371ba8-efb`). 🔑 *Antes de construir, buscar* — y antes de diferir, también.
+workflow `wf_1c371ba8-efb`, fuera de todo repositorio; lo registra ADR‑100). 🔑 *Antes de
+construir, buscar* — y antes de diferir, también.
 
 ## 📏 Footprint
 

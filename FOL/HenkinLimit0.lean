@@ -18,7 +18,8 @@ import FOL.Enumeration
 /-!
 # `FOL.HenkinLimit0` — **la iteración ω**: la extensión de Henkin, entera
 
-Pieza (2) del ensamblaje de `doc/PLAN-COMPLETITUD-FINITISTA.md` §6.4, y con ella la extensión de
+Pieza (2) del ensamblaje de
+`../ROBINSON_PlusPlus/doc/PLAN-COMPLETITUD-FINITISTA.md` §6.4, y con ella la extensión de
 Henkin queda **construida y consistente**:
 
     henLimit_consistent : IsConsistent₀ S → IsConsistent₀ (henLimit S)

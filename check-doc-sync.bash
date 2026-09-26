@@ -251,7 +251,6 @@ echo "════ [E] FRESCURA DEL TITULAR — ROJO (objetivo: lo decide git) �
 # SENTIDOS**: si un doc NO declarado falla, rojo; y si un doc declarado ya está bien, también
 # rojo — *la deuda se saldó, quítala de la tabla*. Así la cifra sólo puede BAJAR.
 read -r -d '' E_DEUDA <<'EOF'
-DEPENDENCIES.md
 DECISIONS.md
 AXIOMS.md
 AI-GUIDE.md

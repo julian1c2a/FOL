@@ -8,7 +8,7 @@ License: MIT
 -- See AI-GUIDE.md §12 for the "proyectar" protocol.
 -- See NAMING-CONVENTIONS.md for naming rules.
 --
--- Dependencies: FOL.Henkin0, FOL.Rename
+-- Dependencies: FOL.SymClasses, FOL.Henkin0, FOL.Rename
 -- @axiom_system: classical
 -- @importance: high
 
@@ -19,7 +19,8 @@ import FOL.Rename
 /-!
 # `FOL.Fresh0` — **el suministro de constantes frescas**
 
-Pieza (1) del ensamblaje de `doc/PLAN-COMPLETITUD-FINITISTA.md` §6.4. `henkin_step_consistent`
+Pieza (1) del ensamblaje de
+`../ROBINSON_PlusPlus/doc/PLAN-COMPLETITUD-FINITISTA.md` §6.4. `henkin_step_consistent`
 (ADR‑037) pide una constante `c` fresca **en la teoría y en la fórmula**; para una teoría
 `S : Formula → Prop` **arbitraria** no tiene por qué haber ninguna: `S` puede usar todas las
 cadenas. Este módulo fabrica el suministro por el camino clásico.
@@ -56,8 +57,11 @@ El único punto clásico está en el **símbolo**: `∃ N, ∀ m ≥ N, cst m �
 `Classical.choice` entra, y **por dos vías distintas que conviene no confundir**:
 
 * la **matemática**: `cst_bound_sym` usa el tercio excluso sobre `∃ k, cst k = s` (§4);
-* la **implementación**: en Lean v4.31 comparar dos `String` con `≠` ya arrastra choice — el muro
-  de `doc/PLAN-COMPLETITUD-FINITISTA.md` §7, que es deuda del núcleo y no de la lógica.
+* la **implementación** de `String` en el núcleo (v4.31): DESCOMPONER un `String` arrastra choice;
+  compararlo con `decEq`, no (`Skolem0.evalTerm_updateFunc` hace `if f = c` y no lleva ningún
+  axioma). Es el muro
+  de `../ROBINSON_PlusPlus/doc/PLAN-COMPLETITUD-FINITISTA.md` §7, que es deuda del núcleo y no de la
+  lógica.
 
 ⚠️ Nada de esto es el `Classical.choice` de la completitud: ése es el `if IsConsistent …` de
 Lindenbaum (§6.3), que entra más arriba en la cadena (`FOL.Lindenbaum0`).

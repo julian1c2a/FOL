@@ -22,7 +22,7 @@ import FOL.PrenexNF0
     skolemAxioms k f  : List Formula     -- los axiomas de Skolem que consume
 
     skolemize_shape       : Prenex f → ∃ m ψ, skolemize k f = allBlock m ψ ∧ QuantFree ψ
-    skolemizeF_impAll     : la forma normal IMPLICA el original — ⭐ **net‑0**, sin axiomas
+    skolemizeF_impAll     : la forma normal IMPLICA el original — ⭐ **net‑0**, sin axiomas de Skolem
     skolem_conservative_nf: el BLOQUE ENTERO de axiomas de Skolem no inventa teoremas
     derives0_of_skolemNF  : 🏁 lo que se demuestra desde la forma normal se demuestra sin ella
 
@@ -47,7 +47,8 @@ mirar si el argumento que decrece se puede PASAR, en vez de MEDIR.*
 
 ## ⚠️ Lo que este módulo entrega y lo que NO
 
-Entrega **una** de las dos direcciones, y es la que vale para la conservatividad:
+Entrega **las dos** direcciones (la segunda, en §8); la primera en escribirse es la que vale para la
+conservatividad:
 
 * ⭐ `skolemizeF_impAll` — la forma normal **implica** el original, **sin ningún axioma de
   Skolem** y net‑0: es `intro_ex` bajo el prefijo.
@@ -61,7 +62,7 @@ prefijo `∀ⁿ` — la regla K iterada — y resultó ser **un solo lema**, por
 ## ⚠️ Y un puente que faltaba en el árbol
 
 `occursFormula_lift` **no existía**: había `occursTerm_lift`/`occursTerms_lift`
-(`FOL/HenkinLimit0.lean:92,101`) y nada para fórmulas. Sin él no se puede transportar la
+(`FOL/HenkinLimit0.lean`) y nada para fórmulas. Sin él no se puede transportar la
 frescura a través de `prenex`, y sin eso el teorema final **no es aplicable** por ningún
 consumidor. *Una conservatividad cuyas hipótesis nadie puede descargar no es un teorema
 utilizable.*
@@ -234,13 +235,14 @@ theorem skolemizeF_shape : ∀ (fuel k n : Nat) (f : Formula), Prenex f → qdep
       exact skolemizeF_shape fuel (k + 1) n _ (prenex_subst A 0 _ h) hA
 
 /-- 🏁 **La salida es `∀ᵐ ψ` con `ψ` sin cuantificadores** — que es exactamente la hipótesis
-que el teorema de Herbrand pide (`FOL.Herbrand0.QuantFree`). -/
+que el teorema de Herbrand pide DE LA MATRIZ (`FOL.Herbrand0.QuantFree`); del prefijo `∀ᵐ`, no:
+ver `FOL.SkolemHerbrand0`. -/
 theorem skolemize_shape (k : Nat) (f : Formula) (h : Prenex f) :
     ∃ (m : Nat) (ψ : Formula), And (skolemize k f = allBlock m ψ) (QuantFree ψ) :=
   skolemizeF_shape (qdepth f) k 0 f h (Nat.le_refl _)
 
 -- ═══════════════════════════════════════════════════════════════════════════
--- §4 · ⭐ la forma normal IMPLICA el original — net‑0, sin un solo axioma
+-- §4 · ⭐ la forma normal IMPLICA el original — net‑0, sin un solo axioma de Skolem
 -- ═══════════════════════════════════════════════════════════════════════════
 
 /-- La introducción del existencial, en forma esquemática: es **un constructor**. -/
@@ -518,8 +520,10 @@ theorem derives0_of_skolemNF (k : Nat) (φ : Formula) (Γ : List Formula)
   exact skolem_conservative_nf k (prenex φ) Γ φ hΓ
     (fun m hm => not_occurs_prenex (hφ m hm)) hφ h2
 
-/-- 🏁 Y la salida de todo el proceso **es universal con matriz sin cuantificadores**, que es
-lo que `FOL.Hauptsatz0.herbrand` pide. -/
+/-- 🏁 Y la salida de todo el proceso **es universal con matriz sin cuantificadores**. ⚠️ NO es
+lo que `FOL.Hauptsatz0.herbrand` pide (un `∃` con matriz sin cuantificadores): Herbrand habla de
+existenciales y Skolem los quita; el enchufe va al otro lado de una negación
+(`FOL.SkolemHerbrand0.herbrand_of_skolemNF`). -/
 theorem skolemNF_shape (k : Nat) (φ : Formula) :
     ∃ (m : Nat) (ψ : Formula),
       And (skolemize k (prenex φ) = allBlock m ψ) (QuantFree ψ) :=

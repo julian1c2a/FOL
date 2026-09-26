@@ -18,7 +18,7 @@ import FOL.NDtoLK0
 /-!
 # `FOL.Hauptsatz0` — 🏁🏁🏁 **EL HAUPTSATZ**, y con él **H3**
 
-Sexta y última pieza de **H3** (`doc/PLAN-COMPLETITUD-FINITISTA.md` §5.9‑§5.11).
+Sexta y última pieza de **H3** (`../ROBINSON_PlusPlus/doc/PLAN-COMPLETITUD-FINITISTA.md` §5.9‑§5.11).
 ⭐ **El corte es ADMISIBLE en `LK₀`**, y de ahí `CutElim`, la extracción de Herbrand y el
 **teorema de Herbrand incondicional**.
 
@@ -303,8 +303,8 @@ theorem lk0_to_lkh : ∀ {Γ Δ : List Formula}, LK₀ Γ Δ → ∃ n, LKh n Γ
 -- §4 · La conmutacion De Bruijn que faltaba
 -- ============================================================
 
--- ⛔ MEDIDO: `FOL/Theorems/Eq.lean` tiene la mitad `v ≤ k` (`liftFormula_subst`) y el caso
--- `k = v` (`substFormula_lift_comm`), pero NO la mitad `k ≤ v`, que es la que el Hauptsatz
+-- ⛔ MEDIDO: el árbol tiene la mitad `v ≤ k` (`liftFormula_subst`, en `FOL/Lift0.lean`) y el caso
+-- `k = v` (`substFormula_lift_comm`, en `Theorems/Eq.lean`), pero NO la mitad `k ≤ v`, que es la que el Hauptsatz
 -- necesita: el caso `allR` del lema de sustitución recurre con `k+1 ≤ v+1` desde `k = 0`.
 mutual
 theorem liftTerm_subst_le : ∀ (u : Term) (k v : Nat), k ≤ v → ∀ (s : Term),

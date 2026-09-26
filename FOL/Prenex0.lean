@@ -45,7 +45,8 @@ Bajo un binder, `intro_forall` **levanta el contexto**, así que la hipótesis `
 
     inst_var0 : substFormula 0 (Term.var 0) (liftFormula 1 A) = A
 
-Esa línea aparece en siete de las ocho. La otra usa `substFormula_liftFormula`, para el caso en que
+Esa línea aparece en las ocho. Cuatro de ellas (`and_forall`, `or_ex`, `impl_forall_left`,
+`impl_ex_right`) usan además `substFormula_liftFormula`, para el caso en que
 lo que hay que devolver es el `B` de fuera.
 
 ## ⚠️ Y la lógica clásica NO entra por Lean
