@@ -19,6 +19,19 @@ All notable changes to this project will be documented in this file.
 Format based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## 2026-09-26 (tarde) — Las decisiones D1-D7 del propietario, y `Tactics2.lean` borrado
+
+* 🗑️ **D1 · `FOL/Tactics2.lean` BORRADO**: era idéntico, salvo la línea del `import`, a
+  `cuarentena/librerias-retiradas/FOL_poli/Tactics2.lean`, no lo importaba nadie y ningún build lo
+  compilaba. El 2026-09-23 se había comparado sólo con `Tactics.lean` y se concluyó «no es duplicado»:
+  el término de comparación era el equivocado. Cifra canónica: **53 módulos activos** (`FOL/` 42).
+* 📝 **Decididas y en curso** (`NEXT-STEPS.md`): D2 renombrar `IsSyntacticallyComplete₀` antes de
+  congelar `Canonical0`; D4 cerrar la vía de `ModelG` si está terminada; D5 hacer el refactor de
+  `Lift0`; D6 averiguar qué marca `₀`, con el cálculo intuicionista a la vista. D3, aplazada al final.
+* ⛔ **D7**: la migración `String`→`List Char` **no está terminada** (el `abbrev` sigue en `String`) ⇒
+  no se cierra.
+* ⛔ **Condición para la entrega de PeanoRF**: FOL no puede depender de nada más allá de sí mismo.
+
 ## 2026-09-26 — Los seis, completos: el fragmento sin cuantificadores (T4), el modelo infinito (T6) y las dos inversiones que faltaban
 
 Cierran el catálogo de seis teoremas decidido el 2026-09-23 (T1-T3 y T5, en la entrada de abajo).

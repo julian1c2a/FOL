@@ -28,7 +28,7 @@
 > **Fuentes:** `cuarentena/README.md` · `AXIOMS.md` ·
 > `../ROBINSON_PlusPlus/doc/AUDITORIA-FOL-2026-09-12.md`
 
-**Last updated:** 2026-09-26 — 🏁 proyectados los **seis teoremas del cierre de FOL** (T1-T6) en §1, §3.13 y §6.13:
+**Last updated:** 2026-09-26 — 🗑️ `Tactics2.lean` borrado (D1): fuera de §6 y la tabla de huérfanos dice por qué. Antes, el mismo día: 🏁 proyectados los **seis teoremas del cierre de FOL** (T1-T6) en §1, §3.13 y §6.13:
 T1 `model_existence_iff` y T6 el modelo infinito (`Compacity0` §3, que ahora importa `FOL.Skolem0`),
 T2 `max_cons_complete` (`Canonical0`), T3 `instDecidablePTaut` (`Herbrand0`), T4 `derives0_qf_iff`
 (`Hauptsatz0` §9) y T5 `Inversion0`, al que le faltaba la fila de §3.13. Su ADR es **RPP‑100**. Y `Inversion0` gana `inv_allR`/`inv_exL`.
@@ -853,8 +853,6 @@ constructor. ⚠️ Y de ahí sale la otra mitad de la patología: como `raa` to
 Lean**, `axioms ⊢` **refuta** lo que no prueba ⇒ es **sintácticamente completo** ⇒ ningún
 resultado de incompletitud puede enunciarse sobre `⊢` (`Meta/OmegaStrength.lean`, medido).
 
-**`Tactics2.lean`** — las tres macros `prove_mem`, `derive_hyp`, `derive_weaken`
-
 **`Theorems/Eq.lean`** — `substTerm_liftTerm`, `substTerms_liftTerms`, `substTerm_lift_comm`,
 `substTerms_lift_comm`, `derive_eq_symm`, `derive_eq_trans`, `substTerm_liftLift`,
 `substTerms_liftLift`, `liftTerm_comm_zero`, `liftTerms_comm_zero`, `substFormula_lift_comm`,
@@ -874,12 +872,13 @@ cuáles había. *Un módulo sin proyectar se vuelve a construir.*
 |---|---|---|
 | `Theorems/Deduction.lean` | ✅ mismo teorema, nombre y prueba que `FOL/Deduction.lean`; sólo cambiaban el `namespace` y un comentario | **BORRADO** |
 | `Classical.lean` | ✅ sus dos `def` eran **byte a byte** las de `cuarentena/librerias-retiradas/{FOLPure,FOL_poli,PropLogic}/Classical.lean` | **BORRADO** |
-| `Tactics2.lean` | ⛔ **no**: comparte `tryMem`/`derive_hyp` con `Tactics.lean`, pero trae un `prove_mem` propio y un `derive_weaken` a medio escribir | ⬜ **sin decidir** |
+| `Tactics2.lean` | ✅ **idéntico, salvo la línea del `import`, a `cuarentena/librerias-retiradas/FOL_poli/Tactics2.lean`** (diff medido el 2026‑09‑26; el 2026‑09‑23 se había comparado sólo con `Tactics.lean`) | **BORRADO** el 2026‑09‑26 (D1) |
 
 ⚠️ El registro previo decía que `Theorems/Deduction.lean` era *«letra por letra»* el mismo; **byte a byte
 no lo era** (cabecera y `namespace`). Lo era en lo que importa: el teorema. Se midió antes de borrar.
-⚠️ Y `Tactics2.lean` **no se puede compilar tal cual**: declara `tryMem` y `derive_hyp` en la raíz, igual
-que `Tactics.lean` ⇒ importar los dos juntos es una **declaración duplicada**.
+⚠️ Y `Tactics2.lean` **no lo compilaba ningún build** (nadie lo importaba), y declaraba `tryMem` y
+`derive_hyp` en la raíz, igual que `Tactics.lean` ⇒ importar los dos juntos habría sido una
+**declaración duplicada**.
 
 ### 6.16 · `SymClasses.lean` — lo que la metateoría le pide al tipo de SÍMBOLOS
 

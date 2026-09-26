@@ -29,22 +29,23 @@
 RPP-100). El estado vigente, en `CURRENT-STATUS-PROJECT.md`. Lo abierto, medido el 2026-09-26 por la
 auditoría de cierre (8 agentes con refutación):
 
-### Decisiones del propietario
+### Decisiones del propietario — contestadas el 2026-09-26 (salvo D3)
 
-| # | qué | recomendación |
-|---|---|---|
-| D1 | `FOL/Tactics2.lean`: **idéntico**, salvo la línea del `import`, a `cuarentena/librerias-retiradas/FOL_poli/Tactics2.lean` (diff medido); no lo importa nadie y **ningún build lo compila** (es el único de los 54). Redeclara `tryMem`/`derive_hyp` de `Tactics` | borrarlo: es la regla con la que se borró `Classical.lean` |
-| D2 | T2: `IsSyntacticallyComplete₀` está definida por **pertenencia** (`∀ f, S f ∨ S (¬f)`). La «teoría completa» de la teoría de modelos va sobre **sentencias** y por **derivabilidad**, y el árbol no tiene noción de sentencia | renombrarla o redefinirla ANTES de congelar `Canonical0`: congelarla ocupa el nombre canónico |
-| D3 | Las dos **ABIERTA** de `[G.2]`: el puente `LK₀`→`LKp` (`Craig0`) y volver a φ y Γ con `skolem_conservative_nf` (`SkolemHerbrand0`). Ninguna entró en el catálogo | pasarlas a DIFERIDA con su razón |
-| D4 | La DIFERIDA de `ModelG` (`FOL/FOL.lean`, «Para reabrirla»): congelar `Fresh0`, `Henkin0`, `HenkinLimit0`, `Lindenbaum0` y `Canonical0` la vuelve irreversible en sitio | declararla CERRADA definitiva, o reescribir la receta vía `*Ext` |
-| D5 | La DIFERIDA de `Lift0` (refactor `absTerm'`, ~150 l. de enunciados): su disparador, «después del ensamblaje», ya se cumplió | hacerla o descartarla con razón nueva |
-| D6 | Nombre de T1: `model_existence_iff` o `model_existence_iff₀`. No hay regla escrita del sufijo `₀` y los vecinos la usan de forma inconsistente | escribir la regla en `NAMING-CONVENTIONS.md` §9, o dejarlo |
-| D7 | Migración `String`→`List Char` de `../ROBINSON_PlusPlus/doc/PLAN-COMPLETITUD-FINITISTA.md` §7.3, declarada «PROYECTADA» | cerrarla con la vía de `ModelG` (pide el mismo trabajo) |
+| # | qué | decisión | estado |
+|---|---|---|---|
+| D1 | `FOL/Tactics2.lean`: **idéntico**, salvo la línea del `import`, a `cuarentena/librerias-retiradas/FOL_poli/Tactics2.lean` (diff medido); no lo importaba nadie y ningún build lo compilaba | «de acuerdo, bórralo» | ✅ **BORRADO** (53 módulos activos) |
+| D2 | T2: `IsSyntacticallyComplete₀` está definida por **pertenencia** (`∀ f, S f ∨ S (¬f)`), no como la «teoría completa» de la teoría de modelos (sobre **sentencias**, por **derivabilidad**; el árbol no tiene noción de sentencia) | **renombrarla** antes de congelar `Canonical0` | ⬜ nombre medido y propuesto: **`IsMemComplete₀`** (0 colisiones en FOL/RPP/PeanoRF); dos líneas de código (la `def` y el tipo de `max_cons_complete`), ninguna fila de footprint cambia |
+| D3 | Las dos **ABIERTA** de `[G.2]`: el puente `LK₀`→`LKp` (`Craig0`) y volver a φ y Γ con `skolem_conservative_nf` (`SkolemHerbrand0`) | «lo hablamos al final» | ⏸ aplazada a la conversación final |
+| D4 | La DIFERIDA de `ModelG` (`FOL/FOL.lean`, «Para reabrirla») | declararla **CERRADA** «si efectivamente está terminada» | ✅ **verificado: TERMINADA** — todo lo decidido (ADR‑068/069/071/083) está en el árbol; `FreshSym`/`EnumSym` no tienen consumidores; RPP y PeanoRF sólo instancian `String` ⇒ ⬜ se cierra en el próximo paso (quitar el marcador y su fila: `[G.2]` 19→18; tocar `FOL/FOL.lean` recompila todo) |
+| D5 | La DIFERIDA de `Lift0` (refactor `absTerm'`, ~150 l. de enunciados; su disparador ya se cumplió) | «**hacemos el refactor**» | ⬜ los DOS diseñadores convergen en el **genérico**: núcleo `absTermP` en `Eigenvariable` con el predicado de símbolos como parámetro, `absTerm` como caso `(· = c)` y `liftTerm` enlazado por lema (sin tocar `FOL/FOL.lean`); el puente por constante fresca se descarta con números. Juez adversarial en curso. PeanoRF sólo usa `posDepth` de `Eigenvariable` |
+| D6 | Nombre de T1 (`model_existence_iff` o `…₀`) | *«Tendremos modelo para el FOL fundamental, que es intuicionista; ₀ no sé qué es lo que realmente marcaba»* ⇒ **pregunta**: qué marca `₀` | ⬜ **medido**: `₀` no sigue ninguna regla formulable. Nació como ordinal de plan («PASO 0», ADR‑033); lo llevan 12 de 817 declaraciones, 3 sin mencionar ningún cálculo (`IsHenkin₀`, `IsSyntacticallyComplete₀`, `compactness₀`), y 89 de las 177 que dependen de `Derives₀` no lo llevan (la marca dominante es el prefijo `derives0_`/`lk0_`). ⚠️ En RPP, `Prf₀` es la capa INTUICIONISTA. Propuesta: el subíndice nombra un cálculo (₀ clásico, ᵢ intuicionista), nada sin cálculo lleva subíndice ⇒ T1 = `model_existence_iff₀` y 3 renombres. ⬜ decisión |
+| D7 | Migración `String`→`List Char` (`../ROBINSON_PlusPlus/doc/PLAN-COMPLETITUD-FINITISTA.md` §7.3) | cerrarla «si está terminada» | ⛔ **NO lo está** (medido: `abbrev Term := TermG String`, `abbrev Formula := FormulaG String`; sólo existen el parámetro, las clases y `FreshSym (List Char)`) ⇒ **no se cierra por terminada**. Medido: terminarla no cambia ningún footprint de T1‑T6 (su `Classical.choice` es el WKL) y, en FOL, como mucho 5 de las 51 filas con choice lo deben sólo a `String`; lo que se ganaría está en RPP. Recomendación: **cerrarla como ABANDONADA en FOL**. ⬜ decisión |
 
 ### Externo
 
 | # | qué |
 |---|---|
+| X0 | ⛔ **Condición del propietario (2026-09-26), no negociable: FOL no puede depender de nada más allá de sí mismo.** Los siete módulos tienen que llegar sin ningún `import`, `open` ni identificador de PeanoRF, RPP o Peano. Medido: **los siete la incumplen hoy** (todos importan `PeanoRF.Prelim` de forma transitiva, que trae RPP y Peano; `Collapse` y `Eq` usan `zero`/`zero_sym`/`succ` de RPP; y `Eq` usa `FOL.substTerm_liftTerm`, que hoy le llega **a través de RPP**). ⬜ Carta a PeanoRF, redactada, sin enviar |
 | X1 | **PeanoRF**, propuesta (C) aceptada: `Subst`, `DerivesI`, `SubstDerives`, `Consistency`, `Eq`, `Collapse` y `Slash` (éste con `lock`). Sin entregar (su último commit, 55288bb, 2026-09-23). Falta: parametrizar `collapseT` (`Collapse.lean:61`), sacar `eqI_congr_succ` de `Eq`, y ⚠️ **re-apuntar el `import PeanoRF.Prelim` de `Subst`/`DerivesI`**: la tanda 1 tampoco compila en FOL sin eso, y nuestra respuesta (2) decía «condición: ninguna». Su cierre transitivo toca 14 módulos de FOL |
 
 ### Trabajo
@@ -53,7 +54,7 @@ auditoría de cierre (8 agentes con refutación):
 |---|---|
 | W1 | **Pasada de higiene de docstrings** antes de cualquier `freeze`: citas a ficheros borrados (`cuarentena/…`) y prosa en futuro caducada en `Canonical0`, `Inconsistencia` (dice estar en `cuarentena/`), `Soundness0`, `Lindenbaum0`, `Fresh0`, `HenkinLimit0`, `Henkin0`, `Rename`, `SequentSound0`, `Skolem0`; `Complexity` dice «cero axiomas» y mide `[propext]`; la cabecera de `Finitary0` (l. 20/26) contradice su §«Dónde NO paga el Hauptsatz»; y `FOL/FOL.lean` llama «LS↑ hasta ℵ₀» a lo que no es LS↑ (tocarlo recompila todo) |
 | W2 | `REFERENCE.md`: §3.13 dice «veintiún módulos», §2 no tiene la capa `₀`, §7.1 lista módulos retirados, §3.10 presenta `soundness` como «✅ Completo» |
-| W3 | `DEPENDENCIES.md`: regenerarlo desde las líneas `import` (54 módulos, 96 aristas) o borrarlo |
+| W3 | `DEPENDENCIES.md`: regenerarlo desde las líneas `import` (53 módulos, 95 aristas, medido tras borrar `Tactics2`) o borrarlo |
 | W4 | `../ROBINSON_PlusPlus/doc/PLAN-COMPLETITUD-FINITISTA.md`: tres filas obsoletas (l. 569, 1404-1405, 1421-1425) |
 
 ### ❄️ Congelación

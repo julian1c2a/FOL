@@ -19,11 +19,11 @@
 > **Fuentes:** `cuarentena/README.md` · `AXIOMS.md` ·
 > `../ROBINSON_PlusPlus/doc/AUDITORIA-FOL-2026-09-12.md`
 
-**Last updated:** 2026-09-26 — ⭐ entran T4 (`Hauptsatz0` §9) y T6 (`Compacity0` §3): **los seis teoremas del cierre están en el árbol**; aviso de cabecera reescrito (el del 2026-09-12 negaba Corrección, Completitud y Compacidad) y sección «Estado vigente» nueva. Antes (2026-09-23): entra `FOL/Complexity.lean` (encargo PeanoRF §3) y la cifra canónica pasa a **54 módulos**. ⚠️ La marca decía **2026-09-18 15:40** y `[E]` la cazó el mismo día que se movió el cuerpo — que es para lo que está el control.
+**Last updated:** 2026-09-26 — 🗑️ D1: `Tactics2.lean` borrado ⇒ **53 módulos activos**. Antes, el mismo día: ⭐ entran T4 (`Hauptsatz0` §9) y T6 (`Compacity0` §3): **los seis teoremas del cierre están en el árbol**; aviso de cabecera reescrito (el del 2026-09-12 negaba Corrección, Completitud y Compacidad) y sección «Estado vigente» nueva. Antes (2026-09-23): entra `FOL/Complexity.lean` (encargo PeanoRF §3) y la cifra canónica pasa a **54 módulos**. ⚠️ La marca decía **2026-09-18 15:40** y `[E]` la cazó el mismo día que se movió el cuerpo — que es para lo que está el control.
 **Author**: Julián Calderón Almendros
 
 > 📐 **CIFRAS CANÓNICAS — medidas, no copiadas** (`bash check-doc-sync.bash`, 2026-09-26):
-> **54 módulos activos** (`FOL/` 43 + `FOL/Theorems/` 5 + `TheoryFramework/` 6) ·
+> **53 módulos activos** (`FOL/` 42 + `FOL/Theorems/` 5 + `TheoryFramework/` 6) ·
 > **0 módulos en `cuarentena/`** · **4 `axiom` de Lean** en el build ·
 > **0 sorry**.
 >
