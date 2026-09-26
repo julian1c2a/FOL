@@ -3,6 +3,18 @@
 **Última actualización:** 2026-07-12
 **Autor**: Julián Calderón Almendros
 
+> ## ⛔⛔ DESFASADO — 2026-09-26 · NO USAR COMO MAPA
+>
+> Este grafo es del 2026-07-12 y describe un árbol que ya no existe: **cinco `lean_lib`** (hoy son
+> **dos**, `FOL` y `TheoryFramework`; `FOLPure`, `PropLogic` y `FOL_poli` se retiraron el 2026-09-12),
+> y de sus siete nodos de `FOL`, tres son ficheros **borrados** (`Soundness`, `Completeness`,
+> `Compacity`). No tiene **ni uno** de los 27 módulos `FOL/*0.lean`, que son hoy el grueso de la librería.
+> Medido el 2026-09-26: 54 módulos activos y 96 aristas `import` internas (98 líneas `import`; dos son `import Lean`).
+> ⚠️ Añadir a mano lo del cierre (T4 y T6 no crean módulos; sólo la arista `Compacity0 → Skolem0`)
+> a un grafo al que le faltan más de cuarenta nodos no lo arregla: hay que **regenerarlo desde las
+> líneas `import`**, o borrarlo. Mientras tanto, la fuente de verdad son esas líneas y el catálogo de
+> `REFERENCE.md` §6.
+
 > Este fichero reemplaza la versión anterior, que era la plantilla genérica de
 > `lean4-project-template` sin adaptar (título "ProjectName", ejemplos ficticios
 > `Prelim.lean`/`Core/Basic.lean`) pese a que el proyecto real tiene 5 `lean_lib` y
@@ -152,7 +164,7 @@ Importa solo el núcleo: `Logic`, `Theory`, `Properties`, `Relations`, `MetaTheo
 ## Comandos de Verificación
 
 ```bash
-lake build              # build completo (las 5 lean_lib)
+# ⛔ NO: FOL no se construye desde FOL (M-3). Build: lake build "@FOL/FOL" "@FOL/TheoryFramework" desde ../ROBINSON_PlusPlus
 lake graph              # grafo de dependencias real y completo (Lake nativo)
 bash check-sorry.bash   # comprobar sorry restantes
 ```

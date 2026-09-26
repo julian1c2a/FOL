@@ -47,7 +47,13 @@ La auditoría del 2026‑09‑12 midió que **ningún control de este repo cuent
 
 ⛔ **Un `sorry` es visible y un `axiom` no.** Ésa es toda la razón.
 
-> ### ⚠️ LA NOTA QUE HAY QUE LEER ANTES QUE NADA
+> ### ⚠️ LA NOTA QUE HABÍA QUE LEER ANTES QUE NADA — ⛔ HISTÓRICA, superada el 2026-09-16
+>
+> 🏁 **Hay Teorema de Completitud demostrado, y sobre un cálculo SÓLIDO**:
+> `Canonical0.completeness₀ : Γ ⊨ f → Γ ⊢₀ f`, footprint `[propext, Classical.choice, Quot.sound]`,
+> **cero axiomas del proyecto**: ni `henkin_extension_lemma` ni `raa`. El `FOL/Completeness.lean` de
+> abajo, sobre `Derives`, **se borró** el 2026-09-23. Lo que sigue es el registro de por qué aquello no
+> bastaba.
 >
 > **`FOL/Completeness.lean` sustituyó un `sorry` por CINCO `axiom`** (commit `e9580a4`, titulado
 > *«100 % sorry‑free»*). ⇒ **El Teorema de Completitud NO está demostrado** en el sentido en que
@@ -280,7 +286,7 @@ después ve un axioma, ve que es demostrable, y lo «arregla». Tres guardas:
 | dónde | qué |
 |---|---|
 | `cuarentena/Completeness.lean`, junto al `axiom` | el aviso **en el punto de uso**, con los dos footprints y la orden de **reabrir ADR‑032** antes de tocarlo. ⚠️ Sustituye al comentario que decía «requiere expandir el lenguaje con constantes», **medido FALSO** |
-| `check-axioms.bash` | `ESPERADO_CUAR=1` **rompe también si baja a 0** |
+| `check-axioms.bash` | ~~`ESPERADO_CUAR=1` **rompe también si baja a 0**~~ — ⛔ hoy `ESPERADO_CUAR=0`: el 2026-09-23 se borró el módulo, y el axioma con él (ver el banner de cabecera) |
 | aquí (§2.6) y `cuarentena/README.md` §9.2 | la medición, con el precio |
 
 ⭐ **El control no hubo que cambiarlo**: compara con una cifra **exacta**, no con una cota. Un

@@ -1,6 +1,14 @@
-# Technical Reference — ProjectName
+# Technical Reference — FOL
 
-> # ⛔⛔ AVISO DE ESTADO — 2026‑09‑12. LEER ANTES QUE NADA
+> # ⛔⛔ AVISO DE ESTADO — 2026‑09‑12 · ⛔ SUPERADO el 2026-09-26
+>
+> **La tabla de este aviso es HISTÓRICA**: niega Corrección y Compacidad, que hoy están demostradas
+> sobre `Derives₀` (`derives0_soundness`, `compactness₀`), da la completitud por no demostrada
+> (`completeness₀` lo está desde el 2026‑09‑16) y cita una `cuarentena/` que se vació de código el
+> 2026‑09‑23. Estado vigente: `CURRENT-STATUS-PROJECT.md`; lo que falta: `NEXT-STEPS.md`.
+>
+> ---
+>
 >
 > **Este documento estaba fechado en mayo de 2026 y publicaba como hitos demostrados cosas que
 > hoy están medidas FALSAS.** Se corrigen abajo las afirmaciones concretas; el resto del texto
@@ -20,7 +28,15 @@
 > **Fuentes:** `cuarentena/README.md` · `AXIOMS.md` ·
 > `../ROBINSON_PlusPlus/doc/AUDITORIA-FOL-2026-09-12.md`
 
-**Last updated:** 2026-09-23 — ⭐ el 2026‑09‑22 entró **ADR‑083** (`ModelG (S D)`, el símbolo
+**Last updated:** 2026-09-26 — 🏁 proyectados los **seis teoremas del cierre de FOL** (T1-T6) en §1, §3.13 y §6.13:
+T1 `model_existence_iff` y T6 el modelo infinito (`Compacity0` §3, que ahora importa `FOL.Skolem0`),
+T2 `max_cons_complete` (`Canonical0`), T3 `instDecidablePTaut` (`Herbrand0`), T4 `derives0_qf_iff`
+(`Hauptsatz0` §9) y T5 `Inversion0`, al que le faltaba la fila de §3.13. Su ADR es **RPP‑100**. Y `Inversion0` gana `inv_allR`/`inv_exL`.
+⚠️ T1-T3 estaban en el árbol desde el 2026-09-23 (`f9efd94`) **sin proyectar**, y `[C]` no podía
+verlo: casa por MÓDULO en §6, no por declaración, y los tres módulos ya estaban. De paso, la lista
+de `Canonical0` en §6.13 seguía citando `formulaComplexity`/`complexity_substFormula`, que bajaron a
+`Complexity` ese mismo día, y su fila de §1 no nombraba ese import.
+Antes decía **2026-09-23** — ⭐ el 2026‑09‑22 entró **ADR‑083** (`ModelG (S D)`, el símbolo
 parámetro también en la semántica; la fila de `Semantics.lean` lo dice) y **la marca no se
 movió**: lo cazó `[E]` el 2026‑09‑23. ⚠️ Antes decía **2026-09-18**, y antes **2026-05-08** con la versión de Lean
 **v4.28.0**, las dos falsas; lo destapó el control `[E]` al rearmarse (ADR-072). Cambios reales
@@ -137,19 +153,19 @@ This document complies with all requirements specified in [AI-GUIDE.md](AI-GUIDE
 | `HenkinLimit0.lean` | `FOL.HenkinLimit0` | `FOL.Fresh0`, `FOL.Enumeration` | ✅ Completo — ⭐⭐ la **iteración ω**: `henLimit_consistent` y `henLimit_witness`. **La extensión de Henkin, construida.** Pieza (2) del §6.4 (ADR‑039) |
 | `Lindenbaum0.lean` | `FOL.Lindenbaum0` | `FOL.HenkinLimit0` | ✅ Completo — **Lindenbaum sobre `Derives₀`** y ⭐⭐⭐ **`henkin_completion`**: el **ensamblaje de Henkin, cerrado**. ⛔ Aquí vive la no‑finitud del teorema (`if IsConsistent₀ …`, Π⁰₁). Pieza (3) del §6.4 (ADR‑040) |
 | `Eq0.lean` | `FOL.Eq0` | `FOL.Derives0`, `FOL.Theorems.Eq` | ✅ Completo — simetría, transitividad y las dos **congruencias** de la igualdad sobre `Derives₀`. ⭐ Traslado **literal** de `Theorems/Eq.lean`; footprint `[propext, Quot.sound]` (ADR‑041) |
-| `Inversion0.lean` | `FOL.Inversion0` | `FOL.Hauptsatz0` | ✅ Completo — ⭐ las **nueve reglas proposicionales de `LK₀` son INVERTIBLES**, cada una con **un solo corte**: el primer consumidor de `hauptsatz` fuera de Herbrand. `[propext, Quot.sound]` |
+| `Inversion0.lean` | `FOL.Inversion0` | `FOL.Hauptsatz0` | ✅ Completo — ⭐ las **nueve reglas proposicionales de `LK₀` son INVERTIBLES**, cada una con **un solo corte**: el primer consumidor de `hauptsatz` fuera de Herbrand (**T5 del cierre**, ADR‑100). ⭐ Desde el 2026‑09‑26, también `inv_allR` e `inv_exL`: la identidad De Bruijn que su DIFERIDA daba por «no medida» existía (`Lift0.substFormula_lift_var`). `[propext, Quot.sound]` |
 | `Complexity.lean` | `FOL.Complexity` | `FOL.FOL` | ✅ Completo — `formulaComplexity` y `complexity_substFormula`, **puramente sintácticos**. ⭐ Bajados de `Canonical0` el 2026‑09‑23 (**encargo de PeanoRF §3**): estaban detrás de toda la cadena clásica de completitud sin necesitarla. Footprint **`[propext]`** |
-| `Canonical0.lean` | `FOL.Canonical0` | `FOL.Lindenbaum0`, `FOL.Eq0`, `FOL.Semantics`, `FOL.Soundness0` | ✅ Completo — 🏁🏁🏁 **`completeness₀ : Γ ⊨ f → Γ ⊢₀ f`** y **`derives0_complete_iff`**. Modelo canónico, `truth_lemma`, y ⭐ `eval_pullback_formula` (**net‑0 puro**). Con controles de **no vacuidad** (ADR‑041) |
+| `Canonical0.lean` | `FOL.Canonical0` | `FOL.Lindenbaum0`, `FOL.Eq0`, `FOL.Semantics`, `FOL.Soundness0`, `FOL.Complexity` | ✅ Completo — 🏁🏁🏁 **`completeness₀ : Γ ⊨ f → Γ ⊢₀ f`** y **`derives0_complete_iff`**. Modelo canónico, `truth_lemma`, y ⭐ `eval_pullback_formula` (**net‑0 puro**). Con controles de **no vacuidad**. ⭐ **T2 del cierre** (ADR‑100): `max_cons_neg`, `IsSyntacticallyComplete₀` y `max_cons_complete`. Todo maximal consistente **decide** cada fórmula; `IsMaximalConsistent₀` no se definía así, sino por no‑ampliabilidad (el resto, ADR‑041) |
 | `SymClasses.lean` | `FOL` | `FOL.FOL` | ✅ Completo — las **dos** clases que la metateoría le pide al tipo de símbolos: `FreshSym` (tres propiedades, medidas contra `cst_bound_sym`) y `EnumSym` (una sobreyección `Nat → Sym`, nada más). ⭐ Con la instancia `FreshSym (List Char)` **sin pasar por `String`** (ADR‑069) |
 | `DecEq.lean` | `FOL.DecEq` | `FOL.FOL` | ✅ Completo — `DecidableEq` **de verdad** para `TermG S` y `FormulaG S` (con `[DecidableEq S]`), **net‑0 pura**. ⛔ `deriving` NO aplica a `TermG` (inductivo anidado): la recursión mutua va a mano (ADR‑042); la de `FormulaG` sí se deriva. ADR‑068: `instDecidableEqTerm`/`instDecidableEqFormula` siguen ahí como `abbrev` |
 | `Propositional0.lean` | `FOL.Propositional0` | `FOL.Derives0`, `FOL.DecEq` | ✅ Completo — 🏁 **H1 y H2** de la vía H: `peval`, Kalmár y ⭐⭐ **`derives0_of_ptaut_ctx`**, la completitud proposicional para `Γ` FINITO. `[propext, Quot.sound]`: **ni un `Classical.choice`** (ADR‑042) |
-| `Herbrand0.lean` | `FOL.Herbrand0` | `FOL.Propositional0`, `FOL.Eq0` | ✅ Completo — 🏁 **H4** (mitad ⟸): ⭐⭐ **`derives0_ex_of_cert`**, el certificado de Herbrand, **dato sintáctico y verificable por cómputo** (`ptautCheck` reduce ⇒ `by rfl`). ⬜ H3 **enunciada** como `HerbrandExtraction` con su consumidor `herbrand_iff` (ADR‑043) |
+| `Herbrand0.lean` | `FOL.Herbrand0` | `FOL.Propositional0`, `FOL.Eq0` | ✅ Completo — 🏁 **H4** (mitad ⟸): ⭐⭐ **`derives0_ex_of_cert`**, el certificado de Herbrand, **dato sintáctico y verificable por cómputo** (`ptautCheck` reduce ⇒ `by rfl`). ⭐ **T3 del cierre** (ADR‑100): `pcheck_complete`, `ptautCheck_iff` e `instDecidablePTaut`. El verificador también **refuta**, así que `PTaut` es **decidible por cómputo**, y `ptautCheck_iff` cuesta sólo `[propext]`. ⛔ Decide la tautología **proposicional**, no la validez: `c ≐ c` es derivable y no es `PTaut`. H3 se **enuncia** aquí como `HerbrandExtraction` con su consumidor `herbrand_iff`, y 🏁 la paga `Hauptsatz0.herbrand_extraction` (el resto, ADR‑043) |
 | `Derives1.lean` | *(raíz, como `Derives₀`)* · `FOL.Derives1` | `FOL.Lift0` | ✅ Completo — 🏁 **primera pieza de H3**: ⭐⭐ **`rewrite_at` es ADMISIBLE**. `Derives₁` = los 20 ctors de `Derives₀` **menos `rewrite_at`**, y `derives0_iff_derives1`. ⭐ `Derives₁.rec` **sin ningún axioma** (ADR‑044) |
 | `Derives2.lean` | *(raíz)* · `FOL.Derives2` | `FOL.Derives1`, `FOL.Theorems.Eq` | ✅ Completo — 🏁 **segunda pieza de H3**: ⭐⭐ **`subst` es ADMISIBLE** desde tres congruencias primitivas (`eq_substFormula`), más `derives2_lift` y `derives0_iff_derives2`. ⭐ `Derives₂.rec` **sin ningún axioma** (ADR‑045) |
 | `Sequent0.lean` | *(raíz)* · `FOL.Sequent0` | `FOL.Derives2`, `FOL.Herbrand0` | ✅ Completo — `LK₀` (14 ctors, sin corte) y `LKc` (15, con corte), **con `eqAx`** —el *theory‑cut*—; ⭐⭐ **`lk0_herbrand`**, la EXTRACCIÓN, que devuelve los términos **y** las instancias de igualdad. ⬜ Queda **`CutElim`** (ADR‑046, revisado en ADR‑049) |
 | `SequentSound0.lean` | `FOL.SequentSound0` | `FOL.Sequent0`, `FOL.Canonical0` | ✅ Completo — ⭐ **el molde no prueba de más**: `lkc_sound`/`lk0_sound`, el corolario sintáctico `lk0_to_derives0` **por la semántica** y `lk0_not_empty`. ⚠️ Clásico **por la matemática** (secuentes multiconclusión) (ADR‑048) |
 | `NDtoLK0.lean` | `FOL.NDtoLK0` | `FOL.Sequent0` | ✅ Completo — ⭐⭐⭐ **`ndToLK` DEMOSTRADA** (los 22 casos) y **`herbrandExtraction_of_cutElim : CutElim → HerbrandExtraction`**: H3 se queda con **una sola** deuda (ADR‑049) |
-| `Hauptsatz0.lean` | *(raíz `LKh`)* · `FOL.Hauptsatz0` | `FOL.Sequent0`, `FOL.NDtoLK0` | 🏁🏁🏁 **EL HAUPTSATZ** — ⭐⭐⭐ `hauptsatz : CutAdm` (el corte es **admisible** en `LK₀`), y de ahí `cut_elimination`, `herbrand_extraction` y ⭐ **`herbrand`**, el teorema de Herbrand **ya incondicional**. Debajo: `LKh` indexado por altura, las dos conmutaciones De Bruijn que faltaban, `lkh_subst`, `lkh_lift` y ⭐⭐ `LeftPrin`, el dato que desacopla los dos análisis de casos. ADR‑050/051/**052** |
+| `Hauptsatz0.lean` | *(raíz `LKh`)* · `FOL.Hauptsatz0` | `FOL.Sequent0`, `FOL.NDtoLK0` | 🏁🏁🏁 **EL HAUPTSATZ** — ⭐⭐⭐ `hauptsatz : CutAdm` (el corte es **admisible** en `LK₀`), y de ahí `cut_elimination`, `herbrand_extraction` y ⭐ **`herbrand`**, el teorema de Herbrand **ya incondicional**. Debajo: `LKh` indexado por altura, las dos conmutaciones De Bruijn que faltaban, `lkh_subst`, `lkh_lift` y ⭐⭐ `LeftPrin`, el dato que desacopla los dos análisis de casos. ⭐ §9, **T4 del cierre** (ADR‑100): `derives0_qf_iff`. Un secuente sin cuantificadores es derivable **sii** su conclusión es consecuencia **proposicional** del contexto más una lista `E` de instancias de la igualdad (`EqPropCert`). ⚠️ **Caracteriza, no decide**, porque `E` no tiene cota. Y esa `E` sin cota **no lo vuelve vacuo**: de `peval_true_eqInstance` sale `Not (EqPropCert [] Formula.bottom E)`, compilado como `example`. El resto, ADR‑050/051/**052** |
 | `PrenexNF0.lean` | `FOL.PrenexNF0` | `FOL.Prenex0`, `FOL.Derives1` | 🏁 **La FORMA NORMAL prenexa y su corrección** — ⭐⭐ `derives0_prenex_iff`. La **terminación no hace falta**: las seis fusiones son **estructurales**, porque se recurre sobre un argumento y se LEVANTA el otro. ADR‑058 |
 | `Prenex0.lean` | `FOL.Prenex0` | `FOL.Herbrand0`, `FOL.Lift0` | 🏁 **La CAPA PRENEXA**: las **ocho** equivalencias de desplazamiento de cuantificador sobre `Derives₀`. ⭐ «La variable no aparece en `B`» se **construye** (`liftFormula 0 B`), no se comprueba; y las tres direcciones clásicas salen de **constructores**, no de `Classical.choice`. ADR‑057 |
 | `Skolem0.lean` | `FOL.Skolem0` | `FOL.Canonical0` | 🏁 **El axioma de Skolem/Henkin es CONSERVATIVO** — ⭐⭐ `evalFormula_updateFunc`, el **lema de coincidencia** que faltaba entre `occursFormula` y `evalFormula` (net‑0, y es el bloqueo que una medición externa señaló); ⭐ el axioma de Skolem **ya estaba escrito**: es `henkinAx`. ADR‑056 |
@@ -159,7 +175,7 @@ This document complies with all requirements specified in [AI-GUIDE.md](AI-GUIDE
 | `BlockExtraction0.lean` | `FOL.BlockExtraction0` | `FOL.HerbrandBlock0`, `FOL.Hauptsatz0` | 🏁 **La mitad ⟹ de HERBRAND DE BLOQUE** — `herbrand_extraction_block` y `herbrand_block`, ya **incondicional**. ⭐⭐ No hizo falta ninguna función nueva: **`instB` ya era la función de resto parcial** (su caso «basura» devuelve el bloque pendiente). ⚠️ El caso `n = 0` se trata aparte: `exBlock 0 φ = φ` **sí** es sin cuantificadores. ADR‑064 |
 | `SkolemHerbrand0.lean` | `FOL.SkolemHerbrand0` | `FOL.SkolemNF0`, `FOL.BlockExtraction0` | 🏁 **EL ENCHUFE Skolem↔Herbrand** — `herbrand_of_skolemNF`. ⭐ Las dos piezas no componían porque **Herbrand habla de existenciales y Skolem los quita**: el puente es De Morgan **iterada sobre el bloque**, y su mitad cara ya era un **constructor** (`forall_not_ex_not`). 📏 `[propext, Quot.sound]`. ADR‑066 |
 | `HerbrandBlock0.lean` | `FOL.HerbrandBlock0` | `FOL.Sequent0` | 🔶 **Herbrand para un BLOQUE de existenciales** — ⭐ la mitad ⟸ PAGADA (`derives0_exBlock_of_cert`, incondicional y sin el Hauptsatz) y la mitad ⟹ **enunciada** como `Prop` con su consumidor. ⭐ La pieza de riesgo es `subst_exBlock`, y el índice va `n + k` **a propósito**. ADR‑055 |
-| `Compacity0.lean` | `FOL.Compacity0` | `FOL.Canonical0` | 🏁 **COMPACIDAD y LÖWENHEIM–SKOLEM DESCENDENTE** — ⭐ `compactness₀` repara el `compactness_theorem` que `cuarentena/README.md:90` declara **VACUO**; ⭐ `loewenheim_skolem_down`: el modelo canónico **ya era numerable**, faltaba poder decirlo. ADR‑054 |
+| `Compacity0.lean` | `FOL.Compacity0` | `FOL.Canonical0`, `FOL.Skolem0` | 🏁 **COMPACIDAD y LÖWENHEIM–SKOLEM DESCENDENTE** — ⭐ `compactness₀` repara el `compactness_theorem` que `cuarentena/README.md:90` declara **VACUO**; ⭐ `loewenheim_skolem_down`: el modelo canónico **ya era numerable**, faltaba poder decirlo. ⭐ **T1 del cierre**: `model_existence_iff : IsConsistent₀ S ↔ IsSatisfiable S`, la forma de Henkin de la completitud; las dos mitades ya estaban, una en cada módulo. 🏁 §3, **T6 del cierre**: `infinite_model_of_large`. Si para **todo** `n` hay un modelo con al menos `n` elementos, hay uno **numerable e infinito** (`InfiniteDom D`: `Nat` se inyecta en `D`). No pide frescura: se muda la teoría con `shiftTheory` y se vuelve con `pullback`. ⚠️ **No** es LS↑ a cardinal arbitrario (el core no trae Zorn), y la biyección con `Nat` no se construye. Lleva cuatro controles de no vacuidad. T1 y T6 ADR‑100; el resto, ADR‑054 |
 | `Finitary0.lean` | `FOL.Finitary0` | `FOL.NDtoLK0` (⭐ **no** `Hauptsatz0`) | 🏁 **La consistencia de `Derives₀` SIN `Classical.choice`** — ⭐⭐ `derives0_consistent_fin`, el mismo enunciado que `derives0_consistent` (ADR‑034) con footprint **estrictamente menor**. La clave: `tval`, el modelo de un punto **evaluado a `Bool`** ⇒ el caso `implR` se decide por `cases`, no por tercio excluido. ADR‑053 |
 
 ⛔ **Y tres módulos que esta tabla listaba como vivos YA NO LO ESTÁN** (corregido el 2026‑09‑14):
@@ -584,18 +600,19 @@ uno y qué cuesta**. Los `export` van en §6.13.
 | `HenkinLimit0.lean` | ⭐⭐ la **iteración ω**: `henLimit_consistent` y `henLimit_witness` | ``propext, Classical.choice, Quot.sound`` | 039 |
 | `Lindenbaum0.lean` | **Lindenbaum** y ⭐⭐⭐ **`henkin_completion`**. ⛔ Aquí vive la no‑finitud (Π⁰₁) | ``propext, Classical.choice, Quot.sound`` | 040 |
 | `Eq0.lean` | las cuatro piezas de la **igualdad** sobre `Derives₀` | ``propext, Quot.sound`` | 041 |
-| `Canonical0.lean` | ⭐⭐⭐ **`completeness₀`** y **`derives0_complete_iff`**; modelo canónico y `truth_lemma` | ``propext, Classical.choice, Quot.sound`` | 041 |
+| `Canonical0.lean` | ⭐⭐⭐ **`completeness₀`** y **`derives0_complete_iff`**; modelo canónico y `truth_lemma`; ⭐ T2: `max_cons_neg`, `max_cons_complete` (la teoría **completa**) | ``propext, Classical.choice, Quot.sound`` | 041 · T2 ADR‑100 |
 | `DecEq.lean` | `DecidableEq` **de verdad** para `Term` y `Formula` | `**ninguno**` | 042 |
 | `Propositional0.lean` | **H1/H2**: `peval`, Kalmár y ⭐⭐ `derives0_of_ptaut_ctx` | ``propext, Quot.sound`` | 042 |
-| `Herbrand0.lean` | **H4**: ⭐⭐ `derives0_ex_of_cert`, el certificado, **verificable por cómputo** | ``propext, Quot.sound`` | 043 |
+| `Herbrand0.lean` | **H4**: ⭐⭐ `derives0_ex_of_cert`, el certificado, **verificable por cómputo**; 🏁 T3: `ptautCheck_iff` e `instDecidablePTaut`, el verificador **decide** `PTaut`; `pcheck_complete`/`ptautCheck_iff` cuestan sólo ``propext`` | ``propext, Quot.sound`` | 043 · T3 ADR‑100 |
 | `Derives1.lean` | ⭐⭐ **`rewrite_at` es ADMISIBLE**; `derives0_iff_derives1` | ``propext, Quot.sound`` | 044 |
 | `Derives2.lean` | ⭐⭐ **`subst` es ADMISIBLE** desde tres congruencias; `derives0_iff_derives2` | ``propext, Quot.sound`` | 045 |
 | `Sequent0.lean` | `LK₀`/`LKc` y ⭐⭐ **`lk0_herbrand`**, la extracción sin corte | ``propext`` | 046/049 |
 | `SequentSound0.lean` | ⭐ **el molde no prueba de más**: `lkc_sound`, `lk0_to_derives0`, `lk0_not_empty` | ``propext, Classical.choice, Quot.sound`` | 048 |
 | `NDtoLK0.lean` | ⭐⭐⭐ **`ndToLK`** y `herbrandExtraction_of_cutElim` | ``propext, Quot.sound`` | 049 |
-| `Hauptsatz0.lean` | 🏁🏁🏁 **EL HAUPTSATZ**: ⭐⭐⭐ `hauptsatz`, `cut_elimination`, `herbrand_extraction`, `herbrand` | ``propext, Quot.sound`` | 050/051/**052** |
+| `Hauptsatz0.lean` | 🏁🏁🏁 **EL HAUPTSATZ**: ⭐⭐⭐ `hauptsatz`, `cut_elimination`, `herbrand_extraction`, `herbrand`; ⭐ §9, T4: `derives0_qf_iff` (el fragmento sin cuantificadores, caracterizado), y `peval_true_eqInstance` **sin ningún axioma** | ``propext, Quot.sound`` | 050/051/**052** · T4 ADR‑100 |
+| `Inversion0.lean` | ⭐ T5: las **once inversiones** de `LK₀` (las nueve proposicionales, `inv_allR` e `inv_exL`), un corte cada una | ``propext, Quot.sound`` | — (T5 ADR‑100) |
 | `Finitary0.lean` | 🏁 **consistencia SIN `Classical.choice`**: ⭐⭐ `derives0_consistent_fin`; ⭐ `lk0_not_empty_fin` sustituye al de `SequentSound0` (que arrastra el WKL), y `lk0_empty_of_no_bot` es **net‑0 puro** | ``propext, Quot.sound`` | **053**/**061** |
-| `Compacity0.lean` | 🏁 **compacidad + LS descendente**: `compactness₀`, `loewenheim_skolem_down` | ``propext, Classical.choice, Quot.sound`` (el WKL) | **054** |
+| `Compacity0.lean` | 🏁 **compacidad + LS descendente + modelo infinito**: `compactness₀`, `loewenheim_skolem_down`; T1 `model_existence_iff`; 🏁 §3, T6: **`infinite_model_of_large`** (modelo numerable e infinito). ⭐ En §3, `evalFormula_updateCsts` cuesta sólo ``propext``, y los controles `hasLargeModels_empty`/`not_hasLargeModels_one` **ningún axioma** | ``propext, Classical.choice, Quot.sound`` (§1‑§2: el WKL; en §3 también el de `Fresh0` y el de `Rename.invOf`) | **054** · T1/T6 ADR‑100 |
 | `HerbrandBlock0.lean` | 🔶 **Herbrand de bloque**: ⭐ `derives0_exBlock_of_cert` (⟸ pagada) | ``propext, Quot.sound`` | **055** |
 | `Skolem0.lean` | 🏁 **Skolem CONSERVATIVO**: `henkin_conservative`; ⭐ el lema de coincidencia, **sin axiomas** | ``propext, Classical.choice, Quot.sound`` | **056** |
 | `SkolemN0.lean` | 🏁 **Skolem con prefijo `∀ⁿ`**: `skolem_conservative_n`; ⭐ `evalTerms_vars` y `eval_allBlock_envPush`, **sin `choice`** | ``propext, Classical.choice, Quot.sound`` | **060** |
@@ -743,9 +760,9 @@ módulo. Es lo que exige AI‑GUIDE §14.
 
 **`Complexity.lean`** — `formulaComplexity`, `complexity_substFormula`
 
-**`Inversion0.lean`** — `inv_implR`, `inv_implL_l`, `inv_implL_r`, `inv_andR_l`, `inv_andR_r`, `inv_andL`, `inv_orR`, `inv_orL_l`, `inv_orL_r`
+**`Inversion0.lean`** — `inv_implR`, `inv_implL_l`, `inv_implL_r`, `inv_andR_l`, `inv_andR_r`, `inv_andL`, `inv_orR`, `inv_orL_l`, `inv_orL_r`, `inv_allR`, `inv_exL`
 
-**`Inconsistencia.lean`** — `Mfalse`, `Mtrue`, `P`, `ctx_nil`, `inconsistencia_de_cualquier_solidez`
+**`Inconsistencia.lean`** — `Mfalse`, `Mtrue`, `P`, `ctx_nil`, `inconsistencia_de_cualquier_solidez`, `DisjunctionProperty`, **`derives0_no_disjunction_property`**
 
 **`Derives0.lean`** — `Derives₀`, `derives0_to_derives`, `derives0_raa`
 
@@ -767,13 +784,13 @@ módulo. Es lo que exige AI‑GUIDE §14.
 
 **`Eq0.lean`** — `derives0_eq_symm`, `derives0_eq_trans`, `derives0_eq_func_congr`, `derives0_atom_congr`
 
-**`Canonical0.lean`** — `derivesSet0_map`, `derivesSet0_map2`, `max_cons_impl_iff`, `max_cons_and`, `max_cons_or`, `termEqv`, `termEqv_refl`, `termEqv_symm`, `termEqv_trans`, `termSetoid`, `PointwiseEqv`, `pointwiseEqv_symm`, `termEqv_func_congr`, `termEqv_rel_congr`, `quotientOut`, `quotientOut_eq`, `QuotientDomain`, `canonicalModel`, `canonicalEnv`, `pointwiseEqv_out_mk`, `evalTerm_canonical`, `evalTerms_canonical`, `formulaComplexity`, `complexity_substFormula`, `max_cons_ex`, `max_cons_forall`, `truth_lemma_lt`, `truth_lemma`, `pullback`, `eval_pullback_term`, `eval_pullback_terms`, `eval_pullback_formula`, `IsSatisfiable`, `satisfiable_of_shift`, `model_existence_lemma₀`, `completeness₀`, `derives0_complete_iff`, `derives0_em`, `derives0_peirce`
+**`Canonical0.lean`** — `derivesSet0_map`, `derivesSet0_map2`, `max_cons_impl_iff`, `max_cons_and`, `max_cons_neg`, `IsSyntacticallyComplete₀`, **`max_cons_complete`**, `max_cons_or`, `termEqv`, `termEqv_refl`, `termEqv_symm`, `termEqv_trans`, `termSetoid`, `PointwiseEqv`, `pointwiseEqv_symm`, `termEqv_func_congr`, `termEqv_rel_congr`, `quotientOut`, `quotientOut_eq`, `QuotientDomain`, `canonicalModel`, `canonicalEnv`, `pointwiseEqv_out_mk`, `evalTerm_canonical`, `evalTerms_canonical`, `max_cons_ex`, `max_cons_forall`, `truth_lemma_lt`, `truth_lemma`, `pullback`, `eval_pullback_term`, `eval_pullback_terms`, `eval_pullback_formula`, `IsSatisfiable`, `satisfiable_of_shift`, `model_existence_lemma₀`, `completeness₀`, `derives0_complete_iff`, `derives0_em`, `derives0_peirce`
 
 **`DecEq.lean`** — `decEqTerm`, `decEqTerms`, `instDecidableEqTerm`
 
 **`Propositional0.lean`** — `derives0_em_ctx`, `derives0_cases`, `PVal`, `peval`, `PTaut`, `peval_neg`, `patoms`, `lit`, `kalmar`, `upd`, `upd_self`, `upd_other`, `elim_atoms`, `derives0_of_ptaut`, `implChain`, `peval_implChain`, `derives0_of_implChain`, `derives0_of_ptaut_ctx`, `derives0_em_prop`, `derives0_peirce_prop`
 
-**`Herbrand0.lean`** — `peval_congr`, `pcheck`, `pcheck_sound`, `ptautCheck`, `ptaut_of_check`, `derives0_discharge`, `disjOf`, `herbrandDisj`, `derives0_ex_of_disj`, `eqReflAx`, `eqSymmAx`, `eqTransAx`, `eqFuncAx`, `eqAtomAx`, `EqInstance`, `derives0_of_eqInstance`, `HerbrandCert`, `derives0_ex_of_cert`, `QuantFree`, `HerbrandExtraction`, `herbrand_iff`, `ex_tercio`, `ex_igualdad`
+**`Herbrand0.lean`** — `peval_congr`, `pcheck`, `pcheck_sound`, `ptautCheck`, `ptaut_of_check`, `pcheck_complete`, **`ptautCheck_iff`**, **`instDecidablePTaut`** (`instance : Decidable (PTaut φ)`), `derives0_discharge`, `disjOf`, `herbrandDisj`, `derives0_ex_of_disj`, `eqReflAx`, `eqSymmAx`, `eqTransAx`, `eqFuncAx`, `eqAtomAx`, `EqInstance`, `derives0_of_eqInstance`, `HerbrandCert`, `derives0_ex_of_cert`, `QuantFree`, `HerbrandExtraction`, `herbrand_iff`, `ex_tercio`, `ex_igualdad`
 
 **`Derives1.lean`** — `Derives₁`, `commute_impl_fwd`, `impl_congr_l`, `impl_congr_r`, `and_congr_l`, `and_congr_r`, `or_congr_l`, `or_congr_r`, `forall_congr`, `ex_congr`, `rewrite_equiv`, `rewrite_at_admissible`, `derives1_to_derives0`, `derives0_to_derives1`, `derives0_iff_derives1`
 
@@ -803,11 +820,11 @@ módulo. Es lo que exige AI‑GUIDE §14.
 
 **`HerbrandBlock0.lean`** — `exBlock`, `liftN`, **`subst_exBlock`**, `instB`, `quantFree_instB`, **`derives0_exBlock_of_inst`**, `herbrandDisjBlock`, `derives0_exBlock_of_disj`, `HerbrandCertBlock`, **`derives0_exBlock_of_cert`**, `HerbrandExtractionBlock`, `herbrand_block_iff`, `ex_bloque_igualdad`
 
-**`Compacity0.lean`** — `consistency_of_satisfiable₀`, **`compactness₀`**, `CountableDom`, `IsSatisfiableCountable`, `countable_of_shift`, `model_existence_countable₀`, **`loewenheim_skolem_down`**
+**`Compacity0.lean`** — `consistency_of_satisfiable₀`, **`model_existence_iff`**, **`compactness₀`**, `CountableDom`, `IsSatisfiableCountable`, `countable_of_shift`, `model_existence_countable₀`, **`loewenheim_skolem_down`**, `InfiniteDom`, `HasLargeModels`, `neqAx`, `infTheory`, `updateCsts`, `evalFormula_updateCsts`, `evalTerm_updateCsts`, `infTheory_finSat`, `infinite_model_of_large_fresh`, `hasLargeModels_shift`, **`infinite_model_of_large`**, `countable_infinite_of_infinite`, `infiniteDom_nat`, `not_infiniteDom_unit`, `hasLargeModels_empty`, `not_hasLargeModels_one`
 
 **`Finitary0.lean`** — `tval`, `allTrue`, `someTrue`, `tval_lift`, `tval_subst`, `tval_eqInstance`, `allTrue_cons`, `allTrue_tl`, `allTrue_hd`, `allTrue_sub`, `allTrue_lift`, `someTrue_sub`, `someTrue_unlift`, `someTrue_nil`, **`lk0_tval`**, `lk0_empty`, `lk0_no_bot`, **`lkc_tval`**, `lkc_empty`, `lkc_no_bot`, `lk0_empty_of_no_bot`, `lkc_empty_of_no_bot`, **`lk0_not_empty_fin`**, `lkc_not_empty_fin`, **`derives0_consistent_fin`**, `derives0_not_P_fin`
 
-**`Hauptsatz0.lean`** — `CutAdm`, `cutElim_of`, `LKh`, `lkh_mono`, `lkh_to_lk0`, `lk0_to_lkh`, `liftTerm_subst_le`, `liftTerms_subst_le`, `liftFormula_subst_le`, `substTerm_subst_le`, `substTerms_subst_le`, `substFormula_subst_le`, `eqInstance_subst`, `map_lift_subst`, `map_sub`, `lkh_subst`, `deg`, `deg_subst`, `deg_lift`, `eqInstance_lift`, `lkh_lift`, `sub_cons`, `sub_wk`, `sub_drop`, `swap_cons`, `sub_refl`, `subA_cons`, `subA_wk`, `mem_tl`, `mapA_sub`, `lk0_lift`, `lk0_subst`, `map_subst_lift`, `LeftPrin`, `leftPrin_close`, `leftPrin_mono`, `leftPrin_lift`, `CutAt`, `CutBelow`, `cutOf`, `cutPrinAux`, `cutLeftAux`, `cutAll`, **`hauptsatz`**, **`cut_elimination`**, **`herbrand_extraction`**, **`herbrand`**
+**`Hauptsatz0.lean`** — `CutAdm`, `cutElim_of`, `LKh`, `lkh_mono`, `lkh_to_lk0`, `lk0_to_lkh`, `liftTerm_subst_le`, `liftTerms_subst_le`, `liftFormula_subst_le`, `substTerm_subst_le`, `substTerms_subst_le`, `substFormula_subst_le`, `eqInstance_subst`, `map_lift_subst`, `map_sub`, `lkh_subst`, `deg`, `deg_subst`, `deg_lift`, `eqInstance_lift`, `lkh_lift`, `sub_cons`, `sub_wk`, `sub_drop`, `swap_cons`, `sub_refl`, `subA_cons`, `subA_wk`, `mem_tl`, `mapA_sub`, `lk0_lift`, `lk0_subst`, `map_subst_lift`, `LeftPrin`, `leftPrin_close`, `leftPrin_mono`, `leftPrin_lift`, `CutAt`, `CutBelow`, `cutOf`, `cutPrinAux`, `cutLeftAux`, `cutAll`, **`hauptsatz`**, **`cut_elimination`**, **`herbrand_extraction`**, **`herbrand`**, `EqPropCert`, `derives0_of_eqPropCert`, `eqPropCert_of_derives0`, **`derives0_qf_iff`**, `peval_true_eqInstance`
 
 ### 6.14 Exports de los módulos ANTIGUOS que nadie había proyectado
 

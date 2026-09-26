@@ -253,9 +253,7 @@ echo "════ [E] FRESCURA DEL TITULAR — ROJO (objetivo: lo decide git) �
 read -r -d '' E_DEUDA <<'EOF'
 DEPENDENCIES.md
 DECISIONS.md
-README.md
 AXIOMS.md
-NEXT-STEPS.md
 AI-GUIDE.md
 cuarentena/README.md
 EOF
@@ -570,7 +568,9 @@ fi
 echo ""
 echo "════ [G.2] CENSO DE MARCADORES DE DEUDA — ROJO ════"
 G2SRC="FOL TheoryFramework"
-G2PAT="⬜|DEUDA|[Nn]o está hecha|[Nn]o está hecho|NO se paga aquí|[Nn]o existe nada|ÚNICA DEUDA|[Nn]o medido"
+# ⚠️ 2026-09-26: + «no está(n) medido/a(s)». La forma larga se le escapaba a «[Nn]o medido» y la
+# revisión adversarial de T4/T6 encontró dos casos NUEVOS, míos, que ningún control veía.
+G2PAT="⬜|DEUDA|[Nn]o está hecha|[Nn]o está hecho|NO se paga aquí|[Nn]o existe nada|ÚNICA DEUDA|[Nn]o medido|[Nn]o está medid[oa]|[Nn]o están medid[oa]s"
 G2_FAIL=0
 G2TAB=$(mktemp); G2CUR=$(mktemp)
 
@@ -579,7 +579,7 @@ cat > "$G2TAB" <<'G2EOF'
 FOL/Craig0.lean§derivación de `LKp` a mano§ABIERTA§no hay puente LK₀→LKp; ⬜ sin medir
 FOL/SkolemHerbrand0.lean§⬜ **no medido**§ABIERTA§componer con `skolem_conservative_nf` para volver a φ y Γ; ⬜ sin medir
 TheoryFramework/Instances/FOL.lean§`CompleteLogic Formula` tampoco se declara§DIFERIDA§`folSystem` RETIRADA el 2026-09-23; la salida (declararla sobre `Derives₀`) esta escrita
-FOL/Inversion0.lean§**no se incluyen**§DIFERIDA§inversion de allR/exL: pasa por el levantamiento De Bruijn, identidad sin medir
+FOL/Hauptsatz0.lean§coste no está medido§OFERTA§la version ACOTADA (decisor) de `derives0_qf_iff`: un lema sobre `EqPropCert`, fuera del catalogo del cierre
 FOL/FOL.lean§**Para reabrirla**§DIFERIDA§la via de ModelG en la cadena de completitud, CERRADA el 2026-09-23; enhebrar FreshSym/EnumSym
 TheoryFramework/Instances/FOL.lean§**Para reabrirlo**§DIFERIDA§la via para volver a tener instancia: `LogicSystem Formula` sobre `Derives₀`
 FOL/Lift0.lean§la razón es de riesgo, no de gusto§DIFERIDA§refactor de ~150 l. de enunciados; se hace DESPUÉS del ensamblaje

@@ -1,6 +1,6 @@
 # Changelog
 
-**Last updated:** 2026-09-23
+**Last updated:** 2026-09-26
 **Author**: Julián Calderón Almendros
 
 > ⛔⛔ **ESTE FICHERO ESTUVO CONGELADO EN 2026-05-16 CON 115 COMMITS DETRÁS**, y no fue un
@@ -18,6 +18,55 @@ All notable changes to this project will be documented in this file.
 
 Format based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+
+## 2026-09-26 — Los seis, completos: el fragmento sin cuantificadores (T4), el modelo infinito (T6) y las dos inversiones que faltaban
+
+Cierran el catálogo de seis teoremas decidido el 2026-09-23 (T1-T3 y T5, en la entrada de abajo).
+Ningún módulo nuevo. Detalle en `../ROBINSON_PlusPlus/DECISIONS.md`, **RPP-100**.
+
+* 🏁 **T4 · `FOL/Hauptsatz0.lean` §9 — el fragmento sin cuantificadores, CARACTERIZADO.**
+  `derives0_qf_iff : (Γ ⊢₀ φ) ↔ ∃ E, EqPropCert Γ φ E` para `Γ` y `φ` sin cuantificadores: derivable
+  **sii** la conclusión es consecuencia PROPOSICIONAL del contexto más una lista finita `E` de
+  instancias de la igualdad. La ⟹ es `lk0_herbrand` con `φ := ⊥` sobre la derivación sin corte; la ⟸
+  no necesita la hipótesis `QuantFree`. `[propext, Quot.sound]`; `peval_true_eqInstance`, ningún axioma.
+* ⛔ **Lo que T4 NO es.** «Decidible por tabla de verdad» es FALSO (`[] ⊢₀ c ≐ c` por `refl`, y `peval`
+  trata `≐` como un átomo). Y **caracteriza, no decide**: `E` no tiene cota. La versión ACOTADA no está
+  probada y su coste no se ha medido (OFERTA en `[G.2]`).
+* ⚠️ **La duda de vacuidad del catálogo, resuelta**: la `E` sin cota no vuelve vacuo el enunciado (el
+  precedente vacuo era el Maehara relativizado de RPP-067). La valuación constante `true` satisface toda
+  `EqInstance`, luego `EqPropCert [] ⊥ E` es falso para toda `E`; dos `example` lo compilan. ⚠️ Esos
+  controles no separan la ⟹ de `Finitary0.tval`, y el propio comentario lo dice.
+* 🏁 **T6 · `FOL/Compacity0.lean` §3 — el modelo infinito numerable.** `infinite_model_of_large`: si para
+  todo `n` hay un modelo de `S` con `n` elementos distintos (`HasLargeModels S`), hay uno **numerable e
+  infinito**. Sin hipótesis de frescura: la teoría se muda a `shiftTheory` y vuelve por `pullback`.
+  Piezas: `InfiniteDom` (`Nat` se inyecta en `D`), `infTheory` (`S` más `cᵢ ≠ cⱼ`, vía `neqAx`) con
+  `infTheory_finSat`, y `updateCsts`, el `updateFunc` de `Skolem0` iterado. Corolario:
+  `countable_infinite_of_infinite`. Cuatro controles de no vacuidad. `Compacity0` importa `FOL.Skolem0`.
+* ⛔ **Lo que T6 NO es**: LS↑ (nada sube de un modelo infinito a uno de cardinal mayor: con `String` sólo
+  hay ℵ₀ constantes y la 2ª entrega de `ModelG` está cerrada). La biyección con `Nat` no se construye.
+* 📏 **Footprints de T6**: los titulares, `infTheory_finSat` y `evalTerm_updateCsts`,
+  `[propext, Classical.choice, Quot.sound]` — ⚠️ con procedencias distintas: el WKL de la completitud,
+  el `Classical.choice` de `Fresh0` (`cst_bound_list`, `cst_inj`) y el de `Rename.invOf`.
+  `evalFormula_updateCsts`, sólo `[propext]`; `hasLargeModels_empty` y `not_hasLargeModels_one`, ninguno.
+* 🏁 **T5, completo: `inv_allR` e `inv_exL`** (`FOL/Inversion0.lean`). Su DIFERIDA decía que la identidad
+  `substFormula 0 (var 0) (liftFormula 1 A) = A` «no se ha medido», y **existía**
+  (`Lift0.substFormula_lift_var`); el diseño de las dos estaba en el journal del 2026-09-23. Compilaron a
+  la primera, `[propext, Quot.sound]`. Sale una fila DIFERIDA de `[G.2]`.
+* 📝 **Correcciones de la revisión adversarial**: la cabecera de footprint de `Hauptsatz0` (atribuía
+  `[propext, Quot.sound]` a `lk0_to_lkh`, que mide `[propext]`); el docstring de
+  `Herbrand0.instDecidablePTaut` (se leía como «la versión relativa DECIDE»); citas a ficheros borrados
+  y el «(hasta ℵ₀)» de `Compacity0`.
+* 🔧 **Controles**: `git-lock.bash` borraba por SUBCADENA (`grep -Fv` sin `-x`) en `unlock` y `thaw`: al
+  desbloquear `FOL.lean` se llevó también `FOL/FOL.lean` de `locked_files.txt` (d961bb2). Arreglado aquí
+  y en RPP, y `FOL/FOL.lean` vuelve a la lista. `[G.2]` reconoce ahora «no está medido/a».
+  `criba-congelacion.py` entra en el repo (vivía en un scratchpad).
+* 📏 **14 filas nuevas** en `../ROBINSON_PlusPlus/check-footprints.bash` (4 de T4, 8 de T6, 2 de las
+  inversiones). FOL **57 jobs** en verde.
+* 📝 **Documentación**: los avisos de cabecera del 2026-09-12 (negaban Corrección, Completitud y
+  Compacidad) reescritos en `CURRENT-STATUS-PROJECT.md`, `NEXT-STEPS.md`, `README.md`, `REFERENCE.md` y
+  `PLANNING.md`; `REFERENCE.md` proyecta T1-T6 (T1-T3 no se habían proyectado); `DEPENDENCIES.md`,
+  marcado DESFASADO; `NEXT-STEPS.md`, con lo que queda. `README.md` y `NEXT-STEPS.md` salen de la deuda
+  de `[E]`.
 
 ## 2026-09-23 — El CIERRE de FOL: lo que los cálculos NO son, y un censo que mira lo que se dice
 
@@ -52,6 +101,20 @@ cierre** —la misma forma que dejó congelado el control `[E]` (ADR‑072)—. 
   `freeze`.
 * ❄️ **Política de congelación** (propietario): FOL no se congela hasta estar terminado; se trabaja
   con `lock` por fichero, y se congela **fichero a fichero lo que se MIDA como intocable**.
+* 🏁 **Y por la tarde, cuatro de los seis teoremas del catálogo del cierre** (`f9efd94`, `d961bb2`;
+  esta entrada se escribió antes y no los recogía):
+  * **T1** — `Compacity0.model_existence_iff : IsConsistent₀ S ↔ IsSatisfiable S`, la forma de Henkin
+    de la completitud. Las dos mitades ya estaban, una en cada módulo.
+  * **T2** — `Canonical0.max_cons_neg`, `IsSyntacticallyComplete₀` y `max_cons_complete`: todo maximal
+    consistente decide cada fórmula por PERTENENCIA. ⚠️ No es todavía la «teoría completa» de la
+    teoría de modelos (sobre sentencias, por derivabilidad): decisión pendiente.
+  * **T3** — `Herbrand0.pcheck_complete`, `ptautCheck_iff` e `instDecidablePTaut : Decidable (PTaut φ)`:
+    el certificado proposicional ya se REFUTA, no sólo se confirma. `pcheck_complete` y
+    `ptautCheck_iff`, **`[propext]`**; la instancia no lleva `#print axioms`, pero los `decide` compilan. ⛔ Con
+    control por `decide`: `c ≐ c` NO es `PTaut` aunque sea derivable.
+  * **T5** — `FOL/Inversion0.lean`: las nueve reglas proposicionales de `LK₀` son invertibles, un corte
+    cada una; `[propext, Quot.sound]`. `allR`/`exL` fuera (entraron el 2026-09-26).
+  * Footprints de T1 y T2: `[propext, Classical.choice, Quot.sound]`.
 
 ## 2026-09-22 — `ModelG`: el símbolo, parámetro también en la SEMÁNTICA
 

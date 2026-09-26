@@ -49,7 +49,7 @@ import FOL.SkolemHerbrand0
 
 * **`FOL.Core`** — sintaxis, derivación, tácticas y teoremas lógicos. Es **exactamente** lo que
   ROBINSON_PlusPlus importa (medido: nueve módulos; nunca importa este barrel).
-* **`FOL`** (este fichero) — `FOL.Core` **más** `Semantics`, `Enumeration` y `Derives0`.
+* **`FOL`** (este fichero) — `FOL.Core` **más** `Semantics`, `Enumeration` y **toda la capa `₀`** (`Derives0` … `SkolemHerbrand0`: la lista son los `import` de arriba).
 
 ⭐⭐ **`FOL.Derives0` entró el 2026‑09‑14** — es el **Paso 0** de
 `../ROBINSON_PlusPlus/doc/PLAN-COMPLETITUD-FINITISTA.md`: `Derives₀`, los 21 constructores de
@@ -64,7 +64,7 @@ este barrel RPP no lo importa.
 **`derives0_consistent : ¬ ([] ⊢₀ ⊥)`** —la primera consistencia de un cálculo de FOL⁼ aquí— y
 ⭐⭐ **`derives0_not_complete`**: `Derives₀` **no decide toda fórmula**, que es exactamente la
 patología de la que `Derives` sí padece. ⛔ Recuérdese que **la solidez de `Derives` es FALSA**
-(`cuarentena/Inconsistencia.lean`).
+(`FOL/Inconsistencia.lean`, en el build desde el 2026-09-23).
 
 ⭐ **`FOL.Rename`, también el 2026‑09‑14**: `derives0_rename` — `Derives₀` respeta el renombrado
 de símbolos de función, footprint **`[propext, Quot.sound]`** (ni `Classical.choice`). Es la pieza
@@ -82,12 +82,12 @@ cálculo finitario esa contradicción pasa por `elim_ex`, cuya premisa vive en e
 
 ⭐⭐ **`FOL.Henkin0`** — **`henkin_step_consistent`**: añadir el testigo de Henkin con una constante
 fresca **preserva la consistencia**. Es donde paga `derives0_gen_fresh`, y es la parte
-**matemática** del ensamblaje. ⬜ Falta la iteración ω y el **suministro de constantes frescas**,
-que es combinatoria de nombres y pasa por `String`.
+**matemática** del ensamblaje. 🏁 La iteración ω y el **suministro de constantes frescas** los
+pagan `FOL.HenkinLimit0` (`henLimit_consistent`, `henLimit_witness`) y `FOL.Fresh0` (`exists_fresh`).
 
 ⭐ **`FOL.Enumeration` entró el 2026‑09‑13**: construye `natToFormula : Nat → Formula` y su
 sobreyectividad, **cero axiomas**. Es lo que retira `formula_enum` y `formula_enum_surj` de
-`cuarentena/Completeness.lean` (5 → 3 axiomas). Está aquí, y no en `FOL.Core`, porque
+`cuarentena/Completeness.lean` (5 → 3 axiomas; ese fichero se **borró** el 2026-09-23). Está aquí, y no en `FOL.Core`, porque
 ROBINSON_PlusPlus no lo necesita; pero sí **dentro de un `@[default_target]`**, que es la
 diferencia entre código verificado y código huérfano.
 
@@ -100,9 +100,9 @@ consumidor no usaba.
 |---|---|---|
 | `FOL.Soundness` | 2026‑09‑11 | ⛔ **su teorema es FALSO**: con `raa` demuestra `False` sin hipótesis |
 | `FOL.Compacity` | 2026‑09‑11 | su prueba pasaba por `soundness` ⇒ **vacua** |
-| `FOL.Completeness` | 2026‑09‑12 | 702 líneas y **5 axiomas**, con **cero consumidores reales**. ⭐⭐ **Desde el 2026‑09‑13 es UNO**: la enumerabilidad la construye `FOL.Enumeration` y las dos congruencias de la igualdad son teoremas (`FOL/Theorems/Eq.lean`). ⛔ Sigue en cuarentena: `henkin_extension_lemma` no está pagado, y con él `completeness` no está demostrado |
+| `FOL.Completeness` | 2026‑09‑12 | 702 líneas y **5 axiomas**, con **cero consumidores reales**. ⭐⭐ **Desde el 2026‑09‑13 es UNO**: la enumerabilidad la construye `FOL.Enumeration` y las dos congruencias de la igualdad son teoremas (`FOL/Theorems/Eq.lean`). ⛔ **Borrado el 2026-09-23**: lo supera `FOL.Canonical0.completeness₀`, con cero axiomas del proyecto |
 
-Los tres están en `cuarentena/`, con su explicación en `cuarentena/README.md`.
+Los tres se **borraron** el 2026-09-23 (la cuarentena se vació de código); el porqué sigue en `cuarentena/README.md`. Sus sujetos, reparados sobre `Derives₀`: `FOL.Soundness0`, `FOL.Compacity0` y `FOL.Canonical0`.
 -/
 
 -- ⛔⛔ NO REGENERAR CON `gen-root.bash`: está PROHIBIDO (A-7). Sobrescribiría este

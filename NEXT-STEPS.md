@@ -1,6 +1,6 @@
 # Próximos Pasos — FOL
 
-> # ⛔⛔ AVISO DE ESTADO — 2026‑09‑12. LEER ANTES QUE NADA
+> # ⛔⛔ AVISO DE ESTADO — 2026-09-26 (reescrito: el del 2026-09-12 había quedado FALSO). LEER ANTES QUE NADA
 >
 > **Este documento estaba fechado en mayo de 2026 y publicaba como hitos demostrados cosas que
 > hoy están medidas FALSAS.** Se corrigen abajo las afirmaciones concretas; el resto del texto
@@ -8,19 +8,68 @@
 >
 > | lo que decía | lo medido |
 > |---|---|
-> | «Teorema de Corrección (Soundness): `Γ ⊢ A → Γ ⊨ A`» ✅ | ⛔ **NO HAY teorema de Corrección.** `soundness` es **FALSO** en presencia de `FOL/MetaRules.lean`: cualquier testigo suyo demuestra `False` sin hipótesis (`cuarentena/Inconsistencia.lean`, compilado). Está en **`cuarentena/`** |
-> | «Compacidad» ✅ | ⛔ Su prueba pasaba por `soundness` ⇒ **vacua**. En `cuarentena/` |
-> | «Completitud» ✅ / «1 sorry» | ⚠️ **0 `sorry`, pero UN SOLO `axiom`**: el `sorry` se sustituyó por CINCO postulados en un commit titulado «100 % sorry‑free»; el 2026‑09‑13 cayeron CUATRO (la enumeración de fórmulas y las dos congruencias de la igualdad) y queda **UNO**: `henkin_extension_lemma`. ⭐ `truth_lemma` y el modelo canónico son ya **net‑0 puros**; ⚠️ pero la completitud **sigue sin estar demostrada** en el sentido que aquí se publica. Ver **`AXIOMS.md`** |
-> | «4 `lean_lib`, ~43 módulos, 1 sorry, v4.28.0» | **2 `lean_lib`** (`FOL`, `TheoryFramework`) · **4 `axiom`** en el build (+1 en `cuarentena/Completeness.lean`) · **0 sorry** · **v4.31.0**. `FOLPure`, `PropLogic` y `FOL_poli` **retiradas** el 2026‑09‑12 a `cuarentena/librerias-retiradas/` |
+> | «Teorema de Corrección (Soundness): `Γ ⊢ A → Γ ⊨ A`» ✅ | 🏁 **Sí, sobre `Derives₀`** (2026-09-14): `derives0_soundness : Γ ⊢₀ f → Γ ⊨ f` (`FOL/Soundness0.lean`), y con ella `derives0_consistent`. ⛔ La de **`Derives`** sigue siendo **FALSA** en presencia de `FOL/MetaRules.lean`: `FOL/Inconsistencia.lean`, hoy **en el build** |
+> | «Compacidad» ✅ | 🏁 `compactness₀`, `loewenheim_skolem_down` y el modelo infinito `infinite_model_of_large`, en `FOL/Compacity0.lean`. El `Compacity.lean` vacuo **se borró** el 2026-09-23 |
+> | «Completitud» ✅ / «1 sorry» | 🏁 `completeness₀ : Γ ⊨ f → Γ ⊢₀ f` (`FOL/Canonical0.lean`, 2026-09-16), con **cero axiomas del proyecto**: `[propext, Classical.choice, Quot.sound]`, y ese `Classical.choice` es el WKL de `Lindenbaum0` (ADR-041). `Completeness.lean` y su último postulado, `henkin_extension_lemma`, **se borraron** el 2026-09-23. Ver **`AXIOMS.md`** |
+> | «4 `lean_lib`, ~43 módulos, 1 sorry, v4.28.0» | **2 `lean_lib`** (`FOL`, `TheoryFramework`) · **4 `axiom`**, los de `MetaRules` que el kernel obliga, y ninguno más fuera de las librerías retiradas · **0 sorry** · **v4.31.0**. `FOLPure`, `PropLogic` y `FOL_poli` **retiradas** el 2026-09-12 a `cuarentena/librerias-retiradas/` |
 >
-> ⭐ **Lo único sólido MEDIDO del ecosistema** es `prf0_soundness` sobre `Prf₀`
-> (`../ROBINSON_PlusPlus/sondeos/AnclaSoundness.lean`), net‑0 puro.
+> ⭐ **Los seis teoremas del cierre (T1 a T6, 2026-09-23 y 2026-09-26) están en el árbol**, sobre `Derives₀`; el catálogo, en `CURRENT-STATUS-PROJECT.md` («Estado vigente») y `REFERENCE.md` §6. ⛔ Y lo que NO hay: la propiedad de disyunción para `Derives₀` es **FALSA** (`derives0_no_disjunction_property`).
+> (Este aviso decía que «lo único sólido MEDIDO» era `prf0_soundness`, en RPP: dejó de serlo el 2026-09-14.)
 >
 > **Fuentes:** `cuarentena/README.md` · `AXIOMS.md` ·
 > `../ROBINSON_PlusPlus/doc/AUDITORIA-FOL-2026-09-12.md`
 
-**Última actualización:** 2026-05-16
+**Last updated:** 2026-09-26 — aviso reescrito y sección «Lo que queda» nueva; el plan de fases de abajo es HISTÓRICO (2026-05-16).
 **Autor**: Julián Calderón Almendros
+
+## ⬜ Lo que queda para CERRAR FOL — 2026-09-26
+
+**Hecho**: los seis teoremas del catálogo del cierre (T1-T6) más `inv_allR`/`inv_exL`
+(`CHANGELOG.md`, entradas del 2026-09-23 y del 2026-09-26; `../ROBINSON_PlusPlus/DECISIONS.md`,
+RPP-100). El estado vigente, en `CURRENT-STATUS-PROJECT.md`. Lo abierto, medido el 2026-09-26 por la
+auditoría de cierre (8 agentes con refutación):
+
+### Decisiones del propietario
+
+| # | qué | recomendación |
+|---|---|---|
+| D1 | `FOL/Tactics2.lean`: **idéntico**, salvo la línea del `import`, a `cuarentena/librerias-retiradas/FOL_poli/Tactics2.lean` (diff medido); no lo importa nadie y **ningún build lo compila** (es el único de los 54). Redeclara `tryMem`/`derive_hyp` de `Tactics` | borrarlo: es la regla con la que se borró `Classical.lean` |
+| D2 | T2: `IsSyntacticallyComplete₀` está definida por **pertenencia** (`∀ f, S f ∨ S (¬f)`). La «teoría completa» de la teoría de modelos va sobre **sentencias** y por **derivabilidad**, y el árbol no tiene noción de sentencia | renombrarla o redefinirla ANTES de congelar `Canonical0`: congelarla ocupa el nombre canónico |
+| D3 | Las dos **ABIERTA** de `[G.2]`: el puente `LK₀`→`LKp` (`Craig0`) y volver a φ y Γ con `skolem_conservative_nf` (`SkolemHerbrand0`). Ninguna entró en el catálogo | pasarlas a DIFERIDA con su razón |
+| D4 | La DIFERIDA de `ModelG` (`FOL/FOL.lean`, «Para reabrirla»): congelar `Fresh0`, `Henkin0`, `HenkinLimit0`, `Lindenbaum0` y `Canonical0` la vuelve irreversible en sitio | declararla CERRADA definitiva, o reescribir la receta vía `*Ext` |
+| D5 | La DIFERIDA de `Lift0` (refactor `absTerm'`, ~150 l. de enunciados): su disparador, «después del ensamblaje», ya se cumplió | hacerla o descartarla con razón nueva |
+| D6 | Nombre de T1: `model_existence_iff` o `model_existence_iff₀`. No hay regla escrita del sufijo `₀` y los vecinos la usan de forma inconsistente | escribir la regla en `NAMING-CONVENTIONS.md` §9, o dejarlo |
+| D7 | Migración `String`→`List Char` de `../ROBINSON_PlusPlus/doc/PLAN-COMPLETITUD-FINITISTA.md` §7.3, declarada «PROYECTADA» | cerrarla con la vía de `ModelG` (pide el mismo trabajo) |
+
+### Externo
+
+| # | qué |
+|---|---|
+| X1 | **PeanoRF**, propuesta (C) aceptada: `Subst`, `DerivesI`, `SubstDerives`, `Consistency`, `Eq`, `Collapse` y `Slash` (éste con `lock`). Sin entregar (su último commit, 55288bb, 2026-09-23). Falta: parametrizar `collapseT` (`Collapse.lean:61`), sacar `eqI_congr_succ` de `Eq`, y ⚠️ **re-apuntar el `import PeanoRF.Prelim` de `Subst`/`DerivesI`**: la tanda 1 tampoco compila en FOL sin eso, y nuestra respuesta (2) decía «condición: ninguna». Su cierre transitivo toca 14 módulos de FOL |
+
+### Trabajo
+
+| # | qué |
+|---|---|
+| W1 | **Pasada de higiene de docstrings** antes de cualquier `freeze`: citas a ficheros borrados (`cuarentena/…`) y prosa en futuro caducada en `Canonical0`, `Inconsistencia` (dice estar en `cuarentena/`), `Soundness0`, `Lindenbaum0`, `Fresh0`, `HenkinLimit0`, `Henkin0`, `Rename`, `SequentSound0`, `Skolem0`; `Complexity` dice «cero axiomas» y mide `[propext]`; la cabecera de `Finitary0` (l. 20/26) contradice su §«Dónde NO paga el Hauptsatz»; y `FOL/FOL.lean` llama «LS↑ hasta ℵ₀» a lo que no es LS↑ (tocarlo recompila todo) |
+| W2 | `REFERENCE.md`: §3.13 dice «veintiún módulos», §2 no tiene la capa `₀`, §7.1 lista módulos retirados, §3.10 presenta `soundness` como «✅ Completo» |
+| W3 | `DEPENDENCIES.md`: regenerarlo desde las líneas `import` (54 módulos, 96 aristas) o borrarlo |
+| W4 | `../ROBINSON_PlusPlus/doc/PLAN-COMPLETITUD-FINITISTA.md`: tres filas obsoletas (l. 569, 1404-1405, 1421-1425) |
+
+### ❄️ Congelación
+
+`py criba-congelacion.py` (criterios medibles 1, 3 y 4): **16** módulos pasan. La refutación
+adversarial objeta **13**; sólo resisten `Prenex0`, `PrenexNF0` y `SkolemN0`. ⇒ **no congelar nada**
+hasta W1, D2-D5 y la entrega de PeanoRF (cuyo cierre transitivo no debe congelarse antes de que
+compile aquí).
+
+⛔ **Fuera de alcance, con su motivo**: LS↑ (ver `Compacity0` §3); la versión ACOTADA de
+`derives0_qf_iff` (OFERTA en `[G.2]`, coste no medido); Beth y Robinson (piden el puente `LK₀`→`LKp`
+y renombrar símbolos de relación); la noción de **sentencia** (bloqueo transversal: sin ella no se
+enuncian bien la equivalencia elemental ni la categoricidad); y la propiedad de disyunción para
+`Derives₀`, que es **FALSA**.
+
+## Plan de fases — ⚠️ HISTÓRICO (2026-05-16)
 
 > Este archivo hace un seguimiento de las fases de desarrollo planificadas para el proyecto de Lógica de Primer Orden (FOL).
 > **Nota:** Para el detalle exhaustivo de reglas lógicas y teoremas a demostrar, consulta [STARTING_FOL.md](STARTING_FOL.md).

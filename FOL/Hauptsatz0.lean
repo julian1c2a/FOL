@@ -30,6 +30,20 @@ Sexta y última pieza de **H3** (`doc/PLAN-COMPLETITUD-FINITISTA.md` §5.9‑§5
     §6  lkh_subst              -- cerrado por SUSTITUCIÓN, preservando altura
     §7  deg · lkh_lift         -- el GRADO, y cerrado por LEVANTAMIENTO
     §8  ⭐⭐⭐ hauptsatz · cut_elimination · herbrand_extraction · herbrand
+    §9  ⭐ EqPropCert · derives0_qf_iff  -- el fragmento SIN CUANTIFICADORES, caracterizado
+
+## ⭐ §9: lo que el fragmento sin cuantificadores ES (y lo que no)
+
+Es FALSO que el fragmento sin cuantificadores de `Derives₀` sea «decidible por tabla de verdad»:
+`[] ⊢₀ c ≐ c` por `refl`, y `peval` trata `≐` como un átomo. Lo CIERTO es `derives0_qf_iff`:
+un secuente sin cuantificadores es derivable **sii** su conclusión es consecuencia proposicional
+del contexto más una lista finita `E` de instancias de la igualdad. La ⟹ es `lk0_herbrand` con
+`φ := ⊥` sobre la derivación SIN CORTE; la ⟸ no necesita ni la hipótesis `QuantFree`.
+⚠️ **Caracteriza, NO decide**: `E` no tiene cota. Y la `E` sin cota **no vuelve vacuo** el
+enunciado (el precedente es el Maehara relativizado a `E` de RPP‑067, que NO está en ningún árbol;
+su contraejemplo es `../ROBINSON_PlusPlus/sondeos/CraigEqVacuo.lean`): la valuación constante `true` satisface toda
+`EqInstance` (`peval_true_eqInstance`), luego `EqPropCert [] ⊥ E` es falso para toda `E` — hay un
+`example` que lo compila, y otro que saca de ahí `Not ([] ⊢₀ ⊥)`.
 
 ## ⛔⛔ La corrección de diseño: `struct` TIENE que subir la altura
 
@@ -88,9 +102,11 @@ fórmula de corte.
 
 ## 📏 Footprint
 
-`cutElim_of`, `lkh_mono`, `lkh_to_lk0`, `eqInstance_subst` y `eqInstance_lift` **sin ningún
-axioma**; todo lo demás —incluidos **`hauptsatz`**, `cut_elimination`, `herbrand_extraction` y
-**`herbrand`**— `[propext, Quot.sound]`. **Ni un `Classical.choice`, ni un axioma del proyecto.**
+De lo que este módulo imprime: `cutElim_of`, `LKh.rec`, `lkh_mono`, `lkh_to_lk0`,
+`eqInstance_subst`, `eqInstance_lift` y `peval_true_eqInstance` **sin ningún axioma**; `lk0_to_lkh`
+sólo `[propext]`; el resto —incluidos **`hauptsatz`**, `cut_elimination`, `herbrand_extraction`,
+**`herbrand`** y **`derives0_qf_iff`**— `[propext, Quot.sound]`. **Ni un `Classical.choice`, ni un
+axioma del proyecto.** (Lo que no lleva `#print axioms` no tiene footprint afirmado aquí.)
 -/
 
 namespace FOL.Hauptsatz0
@@ -1234,6 +1250,90 @@ theorem herbrand {φ : Formula} (hqf : QuantFree φ) :
     ([] ⊢₀ Formula.ex φ) ↔ ∃ ts E, HerbrandCert φ ts E :=
   herbrand_iff herbrand_extraction hqf
 
+-- ============================================================
+-- §9 · ⭐ El fragmento SIN CUANTIFICADORES: derivable ⟺ consecuencia PROPOSICIONAL módulo `E`
+-- ============================================================
+
+open FOL.Propositional0
+
+/-- El certificado del secuente `Γ ⟹ φ`: una lista `E` de instancias de la igualdad, y la
+constancia de que `φ` se sigue PROPOSICIONALMENTE de `Γ` y `E`.
+⚠️ `E` NO tiene cota: esto CARACTERIZA el fragmento sin cuantificadores, pero NO lo DECIDE. -/
+def EqPropCert (Γ : List Formula) (φ : Formula) (E : List Formula) : Prop :=
+  And (∀ g, g ∈ E → EqInstance g)
+    (∀ v : PVal, (∀ g, g ∈ Γ → peval v g = true) →
+      (∀ g, g ∈ E → peval v g = true) → peval v φ = true)
+
+/-- ⟸, incondicional y SIN hipótesis `QuantFree` (`peval` trata los cuantificadores como átomos).
+Calco de `derives0_of_ptaut_ctx` + `derives0_ex_of_cert`: la cadena `implChain` evita un
+`derives0_discharge` con contexto. -/
+theorem derives0_of_eqPropCert {Γ : List Formula} {φ : Formula} {E : List Formula}
+    (h : EqPropCert Γ φ E) : Γ ⊢₀ φ := by
+  refine derives0_of_implChain Γ Γ φ ?_ (fun _ hx => hx)
+  refine Derives₀.weakening [] Γ _ ?_ (fun _ hx => absurd hx List.not_mem_nil)
+  refine derives0_discharge E _ ?_ (fun g hg => derives0_of_eqInstance (h.1 g hg))
+  exact derives0_of_ptaut_ctx (fun v hEv => peval_implChain v Γ φ (fun hΓv => h.2 v hΓv hEv))
+
+/-- ⟹: `lk0_herbrand` con `φ := ⊥`. La tercera premisa de `HerbrandOut` se descarga por `rfl`
+(`substFormula 0 t ⊥ = ⊥`, `peval v ⊥ = false`).
+⭐ En ESTA ruta paga el Hauptsatz: `lk0_herbrand` exige `LK₀`, porque un corte con fórmula
+cuantificada rompería su invariante `QuantFree`. ⚠️ Esto NO afirma que el Hauptsatz sea NECESARIO
+para este teorema: cf. `Finitary0` §«Dónde NO paga el Hauptsatz». -/
+theorem eqPropCert_of_derives0 {Γ : List Formula} {φ : Formula}
+    (hΓ : ∀ g, g ∈ Γ → QuantFree g) (hφ : QuantFree φ) (h : Γ ⊢₀ φ) :
+    ∃ E, EqPropCert Γ φ E := by
+  obtain ⟨_, E, hE, hout⟩ := lk0_herbrand (φ := Formula.bottom) trivial
+    (cut_elimination _ _ (FOL.NDtoLK0.ndToLK (FOL.Derives2.derives0_iff_derives2.mp h))) hΓ
+    (fun d hd => by
+      cases hd with
+      | head => exact Or.inl hφ
+      | tail _ h2 => exact absurd h2 List.not_mem_nil)
+  refine ⟨E, hE, fun v hv hEv => ?_⟩
+  obtain ⟨d, hd, _, hval⟩ := hout v hv hEv (fun _ _ => rfl)
+  cases hd with
+  | head => exact hval
+  | tail _ h2 => exact absurd h2 List.not_mem_nil
+
+/-- 🏁 **El fragmento sin cuantificadores, CARACTERIZADO**: un secuente sin cuantificadores es
+derivable sii su conclusión es consecuencia PROPOSICIONAL del contexto más una lista finita de
+instancias de la igualdad. Es la versión CIERTA de lo que es FALSO decir «decidible por tabla de
+verdad» (`c ≐ c` es derivable y no es `PTaut`).
+⚠️ Caracteriza, NO decide: el lado derecho es un `∃ E` sin cota (Σ₁ sólo informalmente: en el
+árbol no hay instancia `Decidable` ni de `EqInstance` ni de `EqPropCert Γ φ E`). La versión ACOTADA
+(Ackermann / cierre de congruencia sobre los subtérminos) NO está probada: la `E` que devuelve
+`lk0_herbrand` no sale acotada porque `eqAx` admite instancias con términos ajenos; con este
+teorema en la mano, acotarla sería un lema sobre `EqPropCert` (podar `E`), no sobre `LK₀`, y su
+coste no está medido. -/
+theorem derives0_qf_iff {Γ : List Formula} {φ : Formula}
+    (hΓ : ∀ g, g ∈ Γ → QuantFree g) (hφ : QuantFree φ) :
+    (Γ ⊢₀ φ) ↔ ∃ E, EqPropCert Γ φ E :=
+  ⟨eqPropCert_of_derives0 hΓ hφ, fun ⟨_, hc⟩ => derives0_of_eqPropCert hc⟩
+
+/-- La valuación constante `true` hace verdaderas las CINCO formas de `EqInstance`
+(el gemelo `peval` de `FOL.Finitary0.tval_eqInstance`). -/
+theorem peval_true_eqInstance {g : Formula} (hg : EqInstance g) :
+    peval (fun _ => true) g = true := by
+  cases hg <;> rfl
+
+-- ⚠️ CONTROL DE VACUIDAD: la `E` sin cota NO trivializa el lado derecho.
+example (E : List Formula) : Not (EqPropCert [] Formula.bottom E) := by
+  intro h
+  have hf : peval (fun _ => true) Formula.bottom = true :=
+    h.2 (fun _ => true) (fun _ hx => absurd hx List.not_mem_nil)
+      (fun g hg => peval_true_eqInstance (h.1 g hg))
+  exact absurd hf (by simp [peval])
+
+-- ⚠️ CONTROL: la ⟹ no es trivial — junto con el anterior da la consistencia. Ojo: la valuación
+-- constante `true` es la de `Finitary0.tval true`, así que esta consistencia ya la da
+-- `Finitary0.derives0_consistent_fin` SIN el Hauptsatz; ningún control de aquí separa esta ⟹ de
+-- `tval` (haría falta una valuación que distinga igualdades, p. ej. la identidad sintáctica).
+example : Not (([] : List Formula) ⊢₀ Formula.bottom) := fun h => by
+  obtain ⟨E, hc⟩ := eqPropCert_of_derives0 (Γ := []) (φ := Formula.bottom)
+    (fun _ hx => absurd hx List.not_mem_nil) trivial h
+  have hf : peval (fun _ => true) Formula.bottom = true :=
+    hc.2 (fun _ => true) (fun _ hx => absurd hx List.not_mem_nil)
+      (fun g hg => peval_true_eqInstance (hc.1 g hg))
+  exact absurd hf (by simp [peval])
 
 end FOL.Hauptsatz0
 
@@ -1254,3 +1354,7 @@ end FOL.Hauptsatz0
 #print axioms FOL.Hauptsatz0.cut_elimination
 #print axioms FOL.Hauptsatz0.herbrand_extraction
 #print axioms FOL.Hauptsatz0.herbrand
+#print axioms FOL.Hauptsatz0.derives0_of_eqPropCert
+#print axioms FOL.Hauptsatz0.eqPropCert_of_derives0
+#print axioms FOL.Hauptsatz0.derives0_qf_iff
+#print axioms FOL.Hauptsatz0.peval_true_eqInstance

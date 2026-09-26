@@ -1,6 +1,10 @@
 # Hoja de Ruta Fundacional — Plan Estratégico
 
-> # ⛔⛔ AVISO DE ESTADO — 2026‑09‑12. LEER ANTES QUE NADA
+> # ⛔⛔ AVISO DE ESTADO — 2026-09-12 · ⛔ SUPERADO el 2026-09-26
+>
+> **La tabla de este aviso es HISTÓRICA**: niega Corrección, Completitud y Compacidad, que hoy están
+> demostradas sobre `Derives₀`, y cita una `cuarentena/` ya vaciada. Estado vigente:
+> `CURRENT-STATUS-PROJECT.md`; lo que falta: `NEXT-STEPS.md`.
 >
 > **Este documento estaba fechado en mayo de 2026 y publicaba como hitos demostrados cosas que
 > hoy están medidas FALSAS.** Se corrigen abajo las afirmaciones concretas; el resto del texto
@@ -22,7 +26,7 @@
 **Última actualización:** 2026-05-16
 **Autor**: Julián Calderón Almendros
 
-> Este documento describe la visión estratégica y la planificación a largo plazo. La arquitectura ha crecido: ahora hay **4 lean_libs** en el mismo repositorio.
+> Este documento describe la visión estratégica y la planificación a largo plazo **de mayo de 2026**, y es HISTÓRICO: la arquitectura de §2 (cuatro `lean_lib`) ya no existe. Hoy hay **2 `lean_lib`** (`FOL`, `TheoryFramework`); el estado vigente, en `CURRENT-STATUS-PROJECT.md`.
 
 ---
 
@@ -42,7 +46,7 @@ El objetivo es trascender la lógica pura para abordar la **fundamentación de l
 ### Librería 1: `FOL` — FOL con Igualdad (FOL^=)
 
 - **Rol**: Fundamento Lógico con igualdad.
-- **Estado**: Estable. 1 sorry en `Completeness.lean` (caso eq/Henkin, documentado).
+- **Estado** (2026-09-26): 0 `sorry` y 4 `axiom` (los de `MetaRules`). `Completeness.lean` se borró el 2026-09-23; la completitud demostrada es `Canonical0.completeness₀`, sobre `Derives₀`.
 
 ### Librería 2: `FOLPure` — FOL sin Igualdad
 

@@ -6,7 +6,6 @@ FOL/HenkinLimit0.lean
 FOL/Henkin0.lean
 FOL/Eq0.lean
 FOL/NDtoLK0.lean
-FOL/Hauptsatz0.lean
 FOL/PrenexNF0.lean
 FOL/SkolemN0.lean
 FOL/Finitary0.lean
@@ -30,13 +29,8 @@ FOL/Rename.lean
 FOL/Sequent0.lean
 FOL/Skolem0.lean
 FOL/Complexity.lean
-AXIOMS.md
 cuarentena/README.md
 FOL/Inconsistencia.lean
 FOL/Enumeration.lean
 FOL/SymClasses.lean
 FOL/Canonical0.lean
-FOL/Compacity0.lean
-FOL/Herbrand0.lean
-FOL.lean
-FOL/Inversion0.lean
