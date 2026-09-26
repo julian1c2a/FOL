@@ -577,7 +577,6 @@ G2TAB=$(mktemp); G2CUR=$(mktemp)
 # ── LA TABLA ──  fichero § ancla (subcadena ÚNICA en ese fichero) § clase § nota
 cat > "$G2TAB" <<'G2EOF'
 FOL/Craig0.lean§derivación de `LKp` a mano§ABIERTA§no hay puente LK₀→LKp; ⬜ sin medir
-FOL/SkolemHerbrand0.lean§⬜ **no medido**§ABIERTA§componer con `skolem_conservative_nf` para volver a φ y Γ; ⬜ sin medir
 TheoryFramework/Instances/FOL.lean§`CompleteLogic Formula` tampoco se declara§DIFERIDA§`folSystem` RETIRADA el 2026-09-23; la salida (declararla sobre `Derives₀`) esta escrita
 FOL/Hauptsatz0.lean§coste no está medido§OFERTA§la version ACOTADA (decisor) de `derives0_qf_iff`: un lema sobre `EqPropCert`, fuera del catalogo del cierre
 TheoryFramework/Instances/FOL.lean§**Para reabrirlo**§DIFERIDA§la via para volver a tener instancia: `LogicSystem Formula` sobre `Derives₀`

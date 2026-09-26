@@ -19,6 +19,18 @@ All notable changes to this project will be documented in this file.
 Format based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## 2026-09-26 (madrugada) — D3b: el teorema de Herbrand para `φ` y `Γ` cualesquiera
+
+* 🏁🏁 **`SkolemHerbrand0` §3**: `herbrand_validity_ctx₀` — `Γ ⊢₀ φ` si y sólo si hay un certificado
+  de Herbrand de bloque para la matriz de `skolemize k (prenex ¬(Γ ⇒ φ))`, que es la **forma de
+  Herbrand** de `Γ ⇒ φ`. Con `herbrand_refutation₀` (`⊢₀ ¬φ` sii certificado para la de Skolem de `φ`)
+  y `herbrand_validity₀` (contexto vacío). La cabecera declaraba la deuda como «mover la negación a
+  través de la skolemización, ⬜ no medido»: no hace falta moverla, se skolemiza lo que se **refuta**
+  (`derives0_neg_iff_neg_skolemNF`). Sale la ABIERTA de `SkolemHerbrand0` de `[G.2]`.
+* ⚠️ La ecuación `skolemize … = allBlock m ψ` va dentro de los enunciados: sin ella `ψ` quedaría
+  suelta. Footprint `[propext, Classical.choice, Quot.sound]`: retirar los axiomas de Skolem pasa por
+  la completitud (el WKL); `herbrand_of_skolemNF` sigue sin `Classical.choice`.
+
 ## 2026-09-26 (noche) — D2, D4, D5, D6 y D7 ejecutadas; la regla de subíndices, también en RPP
 
 * 🔧 **D5 · el refactor de `Lift0`, HECHO.** El núcleo es `absTerm' P` (`FOL/Eigenvariable.lean`),

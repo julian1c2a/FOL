@@ -22,8 +22,15 @@ import FOL.BlockExtraction0
     herbrand_of_skolemNF      : ∃ m ψ, QuantFree ψ ∧
                                  ( [] ⊢₀ ¬(skolemize k (prenex φ))
                                    ↔ ∃ tss E, HerbrandCertBlock m (¬ψ) tss E )
+    herbrand_validity₀        : ([] ⊢₀ φ) ↔ ∃ tss E, HerbrandCertBlock m (¬ψ) tss E,
+                                 con skolemize k (prenex ¬φ) = ∀ᵐ ψ          (§3, D3)
+    herbrand_validity_ctx₀    : (Γ ⊢₀ φ)  ↔ … la misma, para Γ ⇒ φ            (§3, D3)
 
-📏 `[propext, Quot.sound]` en todo el módulo: **ni un `Classical.choice`**.
+📏 §1‑§2: `[propext, Quot.sound]`, **ni un `Classical.choice`**. §3 (volver a `φ`): los titulares
+llevan `[propext, Classical.choice, Quot.sound]` — medido —, porque retirar los axiomas de Skolem
+(`skolem_conservative_nf`) pasa por la completitud (el WKL). Por la estructura de la prueba entra
+sólo en la dirección «certificado ⇒ derivación de `φ`» (la que retira los axiomas de Skolem); la otra
+no pasa por la conservatividad. (Las dos mitades no se imprimen por separado.)
 
 ## ⭐ Por qué hacía falta un puente, y no una composición
 
@@ -49,12 +56,21 @@ DUAL del otro.*
 * Y ese paso hay que **generalizarlo en el contexto** (`∀ Γ'`): un `have` con `_` no lo infiere
   — es la trampa de siempre.
 
-## ⚠️ Lo que este módulo NO cierra
+## 🏁 §3 · Volver a `φ` y a `Γ` (D3, 2026‑09‑26)
 
-El enunciado es sobre **`[]`** y sobre la **forma normal ya calculada**. Componerlo con la
-conservatividad (`skolem_conservative_nf`) para volver a `φ` y a un `Γ` cualquiera exige mover la
-negación a través de la skolemización, y eso **no es lo mismo** que skolemizar la negación:
-⬜ **no medido**.
+Esta cabecera decía que componer con la conservatividad para volver a `φ` y a un `Γ` cualquiera
+«exige mover la negación a través de la skolemización», y lo dejaba como deuda sin medir. **No
+hace falta moverla**: se skolemiza la fórmula que se quiere **refutar**.
+
+* `derives0_neg_iff_neg_skolemNF`: `⊢₀ ¬φ ⟺ ⊢₀ ¬Sk(prenex φ)`, con las constantes de Skolem
+  frescas en `φ`. ⟹ porque la forma normal implica el prenexo; ⟸ porque los axiomas de Skolem dan
+  la forma normal desde `φ` y se retiran por conservatividad (`⊥` no los menciona).
+* Para la **validez** de `φ` se refuta `¬φ`: la forma de Skolem de `¬φ` **es** la forma de Herbrand
+  de `φ`. No hay una `herbrandize` aparte porque no hace falta.
+* El contexto entra por la cadena de implicaciones: `Γ ⊢₀ φ ⟺ ⊢₀ Γ ⇒ φ`.
+
+⚠️ La ecuación `skolemize k (prenex …) = allBlock m ψ` va DENTRO de los enunciados: sin ella `ψ`
+quedaría suelta y el `↔` no diría nada de `φ`.
 -/
 
 namespace FOL.SkolemHerbrand0
@@ -130,9 +146,136 @@ theorem herbrand_of_skolemNF (k : Nat) (φ : Formula) :
   rw [heq]
   exact Iff.trans (derives0_neg_allBlock_iff m ψ []) (herbrand_block (quantFree_neg hq))
 
+-- ══════════════════════════════════════════════════════════════════════════
+-- §3 · 🏁 HERBRAND PARA `φ` Y `Γ` CUALESQUIERA (D3, 2026-09-26)
+-- La negación NO hay que moverla a través de la skolemización: basta skolemizar la fórmula
+-- que se quiere REFUTAR. Para la validez de `φ` se refuta `¬φ`, y la forma de Skolem de `¬φ`
+-- ES la forma de Herbrand de `φ` (salvo la negación exterior).
+-- ══════════════════════════════════════════════════════════════════════════
+
+open FOL.Eigenvariable (occursFormula)
+open FOL.Fresh0 (cst)
+
+/-- ⭐ **Refutar `φ` es refutar su forma normal de Skolem.** ⟹ sin hipótesis: la forma normal
+IMPLICA el prenexo (`derives0_of_skolemizeF`), y éste equivale a `φ`. ⟸ con las constantes de
+Skolem FRESCAS en `φ`: los axiomas de Skolem dan la forma normal desde `φ`, y se retiran por
+conservatividad (`skolem_conservative_nf`) porque `⊥` no los menciona. -/
+theorem derives0_neg_iff_neg_skolemNF (k : Nat) (φ : Formula)
+    (hφ : ∀ m, k ≤ m → Not (occursFormula (cst m) φ)) :
+    Iff ([] ⊢₀ neg φ) ([] ⊢₀ neg (skolemize k (prenex φ))) := by
+  constructor
+  · intro h
+    refine Derives₀.intro_impl _ _ _ ?_
+    have hS : [skolemize k (prenex φ)] ⊢₀ skolemize k (prenex φ) :=
+      Derives₀.hyp _ _ (List.Mem.head _)
+    have hP : [skolemize k (prenex φ)] ⊢₀ φ :=
+      (derives0_prenex_iff _ φ).mpr (derives0_of_skolemizeF _ _ _ _ _ hS)
+    exact Derives₀.elim_impl _ _ _
+      (Derives₀.weakening _ _ _ h (fun _ hx => absurd hx List.not_mem_nil)) hP
+  · intro h
+    refine Derives₀.intro_impl _ _ _ ?_
+    refine skolem_conservative_nf k (prenex φ) [φ] Formula.bottom
+      (fun m hm g hg => by
+        cases hg with
+        | head => exact hφ m hm
+        | tail _ h2 => exact absurd h2 List.not_mem_nil)
+      (fun m hm => not_occurs_prenex (hφ m hm)) (fun _ _ hc => hc) ?_
+    have hφ' : (skolemAxioms k (prenex φ) ++ [φ]) ⊢₀ φ :=
+      Derives₀.hyp _ _ (List.mem_append_right _ (List.Mem.head _))
+    have hSk : (skolemAxioms k (prenex φ) ++ [φ]) ⊢₀ skolemize k (prenex φ) :=
+      derives0_skolemize k (prenex φ) _ (fun g hg => List.mem_append_left _ hg)
+        ((derives0_prenex_iff _ φ).mp hφ')
+    exact Derives₀.elim_impl _ _ _
+      (Derives₀.weakening _ _ _ h (fun _ hx => absurd hx List.not_mem_nil)) hSk
+
+/-- 🏁🏁 **HERBRAND, FORMA DE REFUTACIÓN, para `φ` cualquiera**: `φ` es refutable si y sólo si hay
+un certificado de Herbrand de bloque para la negación de la matriz de su forma normal de Skolem.
+⭐ La ecuación `skolemize k (prenex φ) = allBlock m ψ` va en el enunciado: sin ella, `ψ` quedaría
+suelta y el `↔` no diría nada de `φ`. -/
+theorem herbrand_refutation₀ (k : Nat) (φ : Formula)
+    (hφ : ∀ m, k ≤ m → Not (occursFormula (cst m) φ)) :
+    ∃ (m : Nat) (ψ : Formula), And (skolemize k (prenex φ) = allBlock m ψ)
+      (And (QuantFree ψ)
+        (Iff ([] ⊢₀ neg φ) (∃ tss E, HerbrandCertBlock m (neg ψ) tss E))) := by
+  obtain ⟨m, ψ, heq, hq⟩ := skolemNF_shape k φ
+  refine ⟨m, ψ, heq, hq, ?_⟩
+  refine Iff.trans (derives0_neg_iff_neg_skolemNF k φ hφ) ?_
+  rw [heq]
+  exact Iff.trans (derives0_neg_allBlock_iff m ψ []) (herbrand_block (quantFree_neg hq))
+
+/-- La doble negación, en las dos direcciones (`dne_rule` es un constructor). -/
+theorem derives0_iff_neg_neg (Γ : List Formula) (φ : Formula) :
+    Iff (Γ ⊢₀ φ) (Γ ⊢₀ neg (neg φ)) :=
+  ⟨fun h => Derives₀.intro_impl _ _ _ (Derives₀.elim_impl _ _ _
+      (Derives₀.hyp _ _ (List.Mem.head _))
+      (Derives₀.weakening _ _ _ h (fun _ hx => List.Mem.tail _ hx))),
+   fun h => Derives₀.dne_rule _ _ h⟩
+
+/-- 🏁🏁🏁 **EL TEOREMA DE HERBRAND, FORMA DE VALIDEZ, para `φ` cualquiera**: `φ` es derivable si
+y sólo si hay un certificado de Herbrand de bloque para la matriz de la forma normal de Skolem de
+`¬φ` — que es la **forma de Herbrand** de `φ`. No hace falta una `herbrandize` aparte: skolemizar
+la negación ES herbrandizar. -/
+theorem herbrand_validity₀ (k : Nat) (φ : Formula)
+    (hφ : ∀ m, k ≤ m → Not (occursFormula (cst m) φ)) :
+    ∃ (m : Nat) (ψ : Formula), And (skolemize k (prenex (neg φ)) = allBlock m ψ)
+      (And (QuantFree ψ)
+        (Iff ([] ⊢₀ φ) (∃ tss E, HerbrandCertBlock m (neg ψ) tss E))) := by
+  obtain ⟨m, ψ, heq, hq, hiff⟩ := herbrand_refutation₀ k (neg φ)
+    (fun m hm hc => hc.elim (hφ m hm) (fun hb => hb))
+  exact ⟨m, ψ, heq, hq, Iff.trans (derives0_iff_neg_neg [] φ) hiff⟩
+
+/-- La cadena de implicaciones recoge el contexto: `Γ ⊢₀ φ` da `⊢₀ Γ ⇒ φ`. -/
+theorem implChain_of_derives0 : ∀ (Γ Δ : List Formula) (φ : Formula),
+    ((Γ ++ Δ) ⊢₀ φ) → Δ ⊢₀ FOL.Propositional0.implChain Γ φ
+  | [], _, _, h => h
+  | g :: Γ', Δ, φ, h => by
+      refine Derives₀.intro_impl _ _ _ ?_
+      refine implChain_of_derives0 Γ' (g :: Δ) φ ?_
+      refine Derives₀.weakening _ _ _ h (fun x hx => ?_)
+      cases hx with
+      | head => exact List.mem_append_right _ (List.Mem.head _)
+      | tail _ h2 =>
+          rcases List.mem_append.mp h2 with h3 | h3
+          · exact List.mem_append_left _ h3
+          · exact List.mem_append_right _ (List.Mem.tail _ h3)
+
+/-- Y la vuelta: `⊢₀ Γ ⇒ φ` da `Γ ⊢₀ φ`. -/
+theorem derives0_iff_implChain (Γ : List Formula) (φ : Formula) :
+    Iff (Γ ⊢₀ φ) ([] ⊢₀ FOL.Propositional0.implChain Γ φ) :=
+  ⟨fun h => implChain_of_derives0 Γ [] φ (by rw [List.append_nil]; exact h),
+   fun h => FOL.Propositional0.derives0_of_implChain Γ Γ φ
+     (Derives₀.weakening _ _ _ h (fun _ hx => absurd hx List.not_mem_nil)) (fun _ hx => hx)⟩
+
+theorem not_occurs_implChain {c : String} :
+    ∀ (Γ : List Formula) (φ : Formula), (∀ g, g ∈ Γ → Not (occursFormula c g)) →
+      Not (occursFormula c φ) → Not (occursFormula c (FOL.Propositional0.implChain Γ φ))
+  | [], _, _, hφ => hφ
+  | g :: Γ', φ, hΓ, hφ => fun hc => hc.elim (hΓ g (List.Mem.head _))
+      (not_occurs_implChain Γ' φ (fun x hx => hΓ x (List.Mem.tail _ hx)) hφ)
+
+/-- 🏁🏁🏁 **HERBRAND CON CONTEXTO**: `Γ ⊢₀ φ` si y sólo si hay un certificado de Herbrand para la
+forma de Herbrand de `Γ ⇒ φ`. Con esto cae la deuda que esta cabecera declaraba ABIERTA. -/
+theorem herbrand_validity_ctx₀ (k : Nat) (Γ : List Formula) (φ : Formula)
+    (hΓ : ∀ m, k ≤ m → ∀ g, g ∈ Γ → Not (occursFormula (cst m) g))
+    (hφ : ∀ m, k ≤ m → Not (occursFormula (cst m) φ)) :
+    ∃ (m : Nat) (ψ : Formula),
+      And (skolemize k (prenex (neg (FOL.Propositional0.implChain Γ φ))) = allBlock m ψ)
+        (And (QuantFree ψ)
+          (Iff (Γ ⊢₀ φ) (∃ tss E, HerbrandCertBlock m (neg ψ) tss E))) := by
+  obtain ⟨m, ψ, heq, hq, hiff⟩ := herbrand_validity₀ k (FOL.Propositional0.implChain Γ φ)
+    (fun m hm => not_occurs_implChain Γ φ (hΓ m hm) (hφ m hm))
+  exact ⟨m, ψ, heq, hq, Iff.trans (derives0_iff_implChain Γ φ) hiff⟩
+
 end FOL.SkolemHerbrand0
 
 #print axioms FOL.SkolemHerbrand0.impAll_neg_allBlock
 #print axioms FOL.SkolemHerbrand0.impAll_ex_neg_not_forall
 #print axioms FOL.SkolemHerbrand0.derives0_neg_allBlock_iff
 #print axioms FOL.SkolemHerbrand0.herbrand_of_skolemNF
+#print axioms FOL.SkolemHerbrand0.derives0_neg_iff_neg_skolemNF
+#print axioms FOL.SkolemHerbrand0.herbrand_refutation₀
+#print axioms FOL.SkolemHerbrand0.derives0_iff_neg_neg
+#print axioms FOL.SkolemHerbrand0.herbrand_validity₀
+#print axioms FOL.SkolemHerbrand0.implChain_of_derives0
+#print axioms FOL.SkolemHerbrand0.derives0_iff_implChain
+#print axioms FOL.SkolemHerbrand0.herbrand_validity_ctx₀

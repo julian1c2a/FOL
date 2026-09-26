@@ -7,7 +7,6 @@ FOL/SkolemN0.lean
 FOL/Craig0.lean
 FOL/BlockExtraction0.lean
 FOL/SkolemNF0.lean
-FOL/SkolemHerbrand0.lean
 FOL/DecEq.lean
 FOL/HerbrandBlock0.lean
 FOL/Derives1.lean

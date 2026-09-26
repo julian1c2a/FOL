@@ -19,7 +19,7 @@
 > **Fuentes:** `cuarentena/README.md` · `AXIOMS.md` ·
 > `../ROBINSON_PlusPlus/doc/AUDITORIA-FOL-2026-09-12.md`
 
-**Last updated:** 2026-09-26 — D2/D4/D5/D6/D7 ejecutadas: refactor `absTerm'` (D5), regla de subíndices y sus renombres (T1 = `model_existence_iff₀`, T2 = `IsMemComplete`, `compactness`), vía de `ModelG` y migración a `List Char` CERRADAS, higiene de docstrings. Antes, 🗑️ D1: `Tactics2.lean` borrado ⇒ **53 módulos activos**. Antes, el mismo día: ⭐ entran T4 (`Hauptsatz0` §9) y T6 (`Compacity0` §3): **los seis teoremas del cierre están en el árbol**; aviso de cabecera reescrito (el del 2026-09-12 negaba Corrección, Completitud y Compacidad) y sección «Estado vigente» nueva. Antes (2026-09-23): entra `FOL/Complexity.lean` (encargo PeanoRF §3) y la cifra canónica pasa a **54 módulos**. ⚠️ La marca decía **2026-09-18 15:40** y `[E]` la cazó el mismo día que se movió el cuerpo — que es para lo que está el control.
+**Last updated:** 2026-09-26 — D3b: Herbrand para `φ` y `Γ` cualesquiera. Antes, D2/D4/D5/D6/D7 ejecutadas: refactor `absTerm'` (D5), regla de subíndices y sus renombres (T1 = `model_existence_iff₀`, T2 = `IsMemComplete`, `compactness`), vía de `ModelG` y migración a `List Char` CERRADAS, higiene de docstrings. Antes, 🗑️ D1: `Tactics2.lean` borrado ⇒ **53 módulos activos**. Antes, el mismo día: ⭐ entran T4 (`Hauptsatz0` §9) y T6 (`Compacity0` §3): **los seis teoremas del cierre están en el árbol**; aviso de cabecera reescrito (el del 2026-09-12 negaba Corrección, Completitud y Compacidad) y sección «Estado vigente» nueva. Antes (2026-09-23): entra `FOL/Complexity.lean` (encargo PeanoRF §3) y la cifra canónica pasa a **54 módulos**. ⚠️ La marca decía **2026-09-18 15:40** y `[E]` la cazó el mismo día que se movió el cuerpo — que es para lo que está el control.
 **Author**: Julián Calderón Almendros
 
 > 📐 **CIFRAS CANÓNICAS — medidas, no copiadas** (`bash check-doc-sync.bash`, 2026-09-26):
@@ -54,6 +54,7 @@ de esta tabla compila sin `sorry` y **sin axiomas del proyecto**; los footprints
 | Compacidad, LS↓ | `compactness`, `loewenheim_skolem_down` | `Compacity0` | ídem |
 | **T6** · modelo numerable e infinito | `infinite_model_of_large` | `Compacity0` §3 | ídem |
 | Hauptsatz, Herbrand | `hauptsatz`, `cut_elimination`, `herbrand` | `Hauptsatz0` | `[propext, Quot.sound]` |
+| **Herbrand para `φ` y `Γ` cualesquiera** (D3) | `herbrand_validity₀`, `herbrand_validity_ctx₀` | `SkolemHerbrand0` §3 | `[propext, Classical.choice, Quot.sound]` |
 | **T4** · fragmento sin cuantificadores | `derives0_qf_iff` (caracteriza, NO decide) | `Hauptsatz0` §9 | `[propext, Quot.sound]` |
 | **T3** · decisor proposicional | `ptautCheck_iff`, `instDecidablePTaut` | `Herbrand0` | `[propext]` (`ptautCheck_iff`) |
 | **T5** · inversión de `LK₀` | las nueve proposicionales, `inv_allR` e `inv_exL` | `Inversion0` | `[propext, Quot.sound]` |
