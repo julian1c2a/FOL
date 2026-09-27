@@ -236,7 +236,7 @@ enunciado tiene que decirlo. -/
 theorem henkin_completion₀ {S : Formula → Prop} (hCons : IsConsistent₀ S) :
     ∃ T : Formula → Prop, And (IsMaximalConsistent₀ T)
       (And (IsHenkin T) (∀ f, shiftTheory S f → T f)) := by
-  obtain ⟨T, hMax, hSub⟩ := lindenbaum_lemma₀ (henLimit_consistent hCons)
+  obtain ⟨T, hMax, hSub⟩ := lindenbaum_lemma₀ (henLimit_consistent₀ hCons)
   refine ⟨T, hMax, ?_, fun f hf => hSub f (shiftTheory_sub_henLimit S f hf)⟩
   intro A hEx
   obtain ⟨c, hc⟩ := henLimit_witness S A

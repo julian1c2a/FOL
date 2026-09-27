@@ -9,7 +9,7 @@
 
 ## Cifras
 
-* **55 módulos** (`FOL/` 44 + `FOL/Theorems/` 5 + `TheoryFramework/` 6), **98 aristas** `import` entre ellos, profundidad máxima **12**.
+* **55 módulos** (`FOL/` 44 + `FOL/Theorems/` 5 + `TheoryFramework/` 6), **99 aristas** `import` entre ellos, profundidad máxima **12**.
 * 2 `lean_lib`: `FOL` (raíz: el barril `FOL.lean`, sin globs) y `TheoryFramework` (globs `.submodules`).
 * Módulos que NINGÚN build alcanza: ninguno.
 * Imports externos a FOL: `Lean` (FOL no tiene `require`: no depende de nada más allá de sí mismo).
@@ -109,6 +109,7 @@ graph BT
     SkolemHerbrand0["SkolemHerbrand0"] --> SkolemNF0["SkolemNF0"]
     SkolemN0["SkolemN0"] --> Skolem0["Skolem0"]
     SkolemNF0["SkolemNF0"] --> PrenexNF0["PrenexNF0"]
+    SkolemNF0["SkolemNF0"] --> Sequent0["Sequent0"]
     SkolemNF0["SkolemNF0"] --> SkolemN0["SkolemN0"]
     Soundness0["Soundness0"] --> Derives0["Derives0"]
     Soundness0["Soundness0"] --> Semantics["Semantics"]
@@ -175,7 +176,7 @@ graph BT
 | `FOL.Fresh0` | 5 | `Henkin0`, `Rename`, `SymClasses` | `HenkinLimit0` |
 | `FOL.PrenexNF0` | 5 | `Derives1`, `Prenex0` | `SkolemNF0` |
 | `FOL.HenkinLimit0` | 6 | `Enumeration`, `Fresh0` | `Lindenbaum0` |
-| `FOL.Sequent0` | 6 | `Derives2`, `Herbrand0` | `Craig0`, `Hauptsatz0`, `HerbrandBlock0`, `NDtoLK0`, `SequentSound0` |
+| `FOL.Sequent0` | 6 | `Derives2`, `Herbrand0` | `Craig0`, `Hauptsatz0`, `HerbrandBlock0`, `NDtoLK0`, `SequentSound0`, `SkolemNF0` |
 | `FOL.Craig0` | 7 | `Lift0`, `Sequent0` | `Interpolation0` |
 | `FOL.HerbrandBlock0` | 7 | `Sequent0` | `BlockExtraction0` |
 | `FOL.Lindenbaum0` | 7 | `HenkinLimit0` | `Canonical0` |
@@ -191,7 +192,7 @@ graph BT
 | `FOL.Skolem0` | 9 | `Canonical0` | `Compacity0`, `SkolemN0` |
 | `FOL.Compacity0` | 10 | `Canonical0`, `Skolem0` | — |
 | `FOL.SkolemN0` | 10 | `Skolem0` | `SkolemNF0` |
-| `FOL.SkolemNF0` | 11 | `PrenexNF0`, `SkolemN0` | `SkolemHerbrand0` |
+| `FOL.SkolemNF0` | 11 | `PrenexNF0`, `Sequent0`, `SkolemN0` | `SkolemHerbrand0` |
 | `FOL.SkolemHerbrand0` | 12 | `BlockExtraction0`, `SkolemNF0` | — |
 
 ## Barriles

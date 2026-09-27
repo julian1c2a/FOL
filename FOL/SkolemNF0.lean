@@ -14,6 +14,7 @@ License: MIT
 
 import FOL.SkolemN0
 import FOL.PrenexNF0
+import FOL.Sequent0
 
 /-!
 # `FOL.SkolemNF0` — 🏁 la FORMA NORMAL DE SKOLEM
@@ -77,6 +78,7 @@ open FOL.Herbrand0
 open FOL.Prenex0
 open FOL.PrenexNF0
 open FOL.Fresh0
+open FOL.Sequent0 (quantFree_subst)
 open FOL.HenkinLimit0
 
 -- ═══════════════════════════════════════════════════════════════════════════
@@ -119,17 +121,8 @@ theorem quantFree_of_qdepth_zero : ∀ (f : Formula), Prenex f → qdepth f = 0 
   | .forall _, _, hz => absurd hz (by intro hc; exact Nat.succ_ne_zero _ hc)
   | .ex _, _, hz => absurd hz (by intro hc; exact Nat.succ_ne_zero _ hc)
 
-/-- Sustituir tampoco crea cuantificadores. -/
-theorem quantFree_subst : ∀ (f : Formula) (k : Nat) (t : Term),
-    QuantFree f → QuantFree (substFormula k t f)
-  | .bottom, _, _, h => h
-  | .atom _ _, _, _, h => h
-  | .eq _ _, _, _, h => h
-  | .impl a b, k, t, h => ⟨quantFree_subst a k t h.1, quantFree_subst b k t h.2⟩
-  | .and a b, k, t, h => ⟨quantFree_subst a k t h.1, quantFree_subst b k t h.2⟩
-  | .or a b, k, t, h => ⟨quantFree_subst a k t h.1, quantFree_subst b k t h.2⟩
-  | .forall _, _, _, h => h.elim
-  | .ex _, _, _, h => h.elim
+-- Sustituir tampoco crea cuantificadores: `FOL.Sequent0.quantFree_subst`. Aquí había una copia
+-- literal (mismo nombre y enunciado), retirada el 2026‑09‑27 (N3, RPP‑109).
 
 /-- ⭐ Y la forma prenexa se conserva al sustituir: es lo que permite volver a entrar
 en el paso `∃`. -/
@@ -246,13 +239,13 @@ theorem skolemize_shape (k : Nat) (f : Formula) (h : Prenex f) :
 -- ═══════════════════════════════════════════════════════════════════════════
 
 /-- La introducción del existencial, en forma esquemática: es **un constructor**. -/
-theorem impAll_intro_ex (t : Term) (A : Formula) : ImpAll (substFormula 0 t A) (Formula.ex A) :=
+theorem impAll_intro_ex (t : Term) (A : Formula) : ImpAll₀ (substFormula 0 t A) (Formula.ex A) :=
   fun _ => Derives₀.intro_impl _ _ _
     (Derives₀.intro_ex _ A t (Derives₀.hyp _ _ (List.Mem.head _)))
 
 /-- 🏁 **La forma normal de Skolem implica el original**, y **sin ningún axioma de Skolem**.
 ⭐ Es `intro_ex` bajo el prefijo: la dirección barata, y la que la conservatividad consume. -/
-theorem skolemizeF_impAll : ∀ (fuel k n : Nat) (f : Formula), ImpAll (skolemizeF fuel k n f) f
+theorem skolemizeF_impAll : ∀ (fuel k n : Nat) (f : Formula), ImpAll₀ (skolemizeF fuel k n f) f
   | 0, _, _, f => impAll_refl f
   | _ + 1, _, _, .bottom => impAll_refl _
   | _ + 1, _, _, .atom _ _ => impAll_refl _

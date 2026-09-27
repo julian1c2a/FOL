@@ -30,7 +30,7 @@ cadenas. Este módulo fabrica el suministro por el camino clásico.
 1. **Meter la teoría en un sublenguaje.** `shift s := "f" ++ s` renombra *todos* los símbolos de
    función. `shiftTheory S` es la imagen de `S`, y es **conservativa** en los dos sentidos
    (`derivesSet0_shift` / `derivesSet0_shift_inv`) y **equiconsistente**
-   (`shiftTheory_consistent`).
+   (`shiftTheory_consistent₀`).
 2. **Las constantes nuevas.** `cst 0 = "g"`, `cst (n+1) = "a" ++ cst n` — infinitas, inyectiva, y
    **ninguna está en la imagen de `shift`** ⇒ `cst n` no aparece en ninguna fórmula desplazada.
 
@@ -285,7 +285,7 @@ theorem derivesSet0_shift_inv {S : Formula → Prop} {f : Formula}
 
 /-- ⭐⭐ **Equiconsistencia**, en la dirección que la iteración ω necesita para arrancar (la otra
 sale de `derivesSet0_shift` con `f := ⊥` y no se enuncia). -/
-theorem shiftTheory_consistent {S : Formula → Prop} (hCons : IsConsistent₀ S) :
+theorem shiftTheory_consistent₀ {S : Formula → Prop} (hCons : IsConsistent₀ S) :
     IsConsistent₀ (shiftTheory S) := fun hbot => hCons (derivesSet0_shift_inv hbot)
 
 -- ============================================================
@@ -310,5 +310,5 @@ end FOL.Fresh0
 
 #print axioms FOL.Fresh0.cst_bound_formula
 #print axioms FOL.Fresh0.derivesSet0_shift_inv
-#print axioms FOL.Fresh0.shiftTheory_consistent
+#print axioms FOL.Fresh0.shiftTheory_consistent₀
 #print axioms FOL.Fresh0.exists_fresh

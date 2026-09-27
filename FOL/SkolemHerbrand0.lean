@@ -95,7 +95,7 @@ open FOL.Prenex0
 -- ══════════════════════════════════════════════════════════════════════════
 
 theorem impAll_neg_allBlock : ∀ (m : Nat) (ψ : Formula),
-    ImpAll (neg (allBlock m ψ)) (exBlock m (neg ψ))
+    ImpAll₀ (neg (allBlock m ψ)) (exBlock m (neg ψ))
   | 0, ψ => impAll_refl (neg ψ)
   | m + 1, ψ =>
       impAll_trans (fun Δ => Derives₀.forall_not_ex_not Δ (allBlock m ψ))
@@ -103,7 +103,7 @@ theorem impAll_neg_allBlock : ∀ (m : Nat) (ψ : Formula),
 
 /-- `∃(¬A) ⇒ ¬(∀A)`, la mitad intuicionista. -/
 theorem impAll_ex_neg_not_forall (A : Formula) :
-    ImpAll (Formula.ex (neg A)) (neg (Formula.forall A)) := by
+    ImpAll₀ (Formula.ex (neg A)) (neg (Formula.forall A)) := by
   intro Δ
   refine Derives₀.intro_impl _ _ _ ?_
   refine Derives₀.intro_impl _ _ _ ?_
@@ -121,7 +121,7 @@ theorem impAll_ex_neg_not_forall (A : Formula) :
   exact key _ (List.Mem.tail _ (List.Mem.head _))
 
 theorem impAll_exBlock_neg : ∀ (m : Nat) (ψ : Formula),
-    ImpAll (exBlock m (neg ψ)) (neg (allBlock m ψ))
+    ImpAll₀ (exBlock m (neg ψ)) (neg (allBlock m ψ))
   | 0, ψ => impAll_refl (neg ψ)
   | m + 1, ψ =>
       impAll_trans (impAll_ex (impAll_exBlock_neg m ψ))

@@ -22,7 +22,7 @@ Pieza (2) del ensamblaje de
 `../ROBINSON_PlusPlus/doc/PLAN-COMPLETITUD-FINITISTA.md` §6.4, y con ella la extensión de
 Henkin queda **construida y consistente**:
 
-    henLimit_consistent : IsConsistent₀ S → IsConsistent₀ (henLimit S)
+    henLimit_consistent₀ : IsConsistent₀ S → IsConsistent₀ (henLimit S)
     henLimit_witness    : ∀ A, ∃ c, henLimit S (henkinAx c A)
 
 Es decir: toda teoría consistente se extiende a una consistente **con testigo para cada fórmula**.
@@ -72,7 +72,7 @@ valen». El primero obliga a leer los nombres; el segundo, no.*
 
 `[propext, Classical.choice, Quot.sound]` y **cero axiomas del proyecto**. El `Classical.choice`
 entra por `Exists.choose` en `bnd` (§2), por `String` (§7 del plan) y por lo que ya traen
-`shiftTheory_consistent` (`Rename.invOf`) y `henkin_step_consistent₀`; ⚠️ **no** es el de la
+`shiftTheory_consistent₀` (`Rename.invOf`) y `henkin_step_consistent₀`; ⚠️ **no** es el de la
 completitud — ése es el `if IsConsistent …` de Lindenbaum (§6.3), que entra después, en `FOL.Lindenbaum0`.
 -/
 
@@ -261,7 +261,7 @@ theorem hen_fresh_at (S : Formula → Prop) (n : Nat) :
 /-- ⭐⭐ **Cada etapa es consistente** — `henkin_step_consistent₀` (ADR‑037) aplicado `n` veces. -/
 theorem hen_consistent {S : Formula → Prop} (hCons : IsConsistent₀ S) :
     ∀ n, IsConsistent₀ (hen S n)
-  | 0 => shiftTheory_consistent hCons
+  | 0 => shiftTheory_consistent₀ hCons
   | n + 1 =>
       henkin_step_consistent₀ (hen_consistent hCons n) (cst (hidx n)) (natToFormula n)
         (hen_fresh_at S n) (bnd_spec (natToFormula n) (hidx n) (hidx_ge n))
@@ -293,7 +293,7 @@ theorem henLimit_finite (S : Formula → Prop) : ∀ Γ : List Formula,
 
 🔑 La prueba es de tres líneas **porque `DerivesSet₀` lleva la compacidad sintáctica dentro**: una
 derivación desde el límite usa un contexto finito, luego ya derivaba desde una etapa. -/
-theorem henLimit_consistent {S : Formula → Prop} (hCons : IsConsistent₀ S) :
+theorem henLimit_consistent₀ {S : Formula → Prop} (hCons : IsConsistent₀ S) :
     IsConsistent₀ (henLimit S) := by
   intro hbot
   obtain ⟨Γ, hΓ, hD⟩ := hbot
@@ -311,5 +311,5 @@ end FOL.HenkinLimit0
 
 #print axioms FOL.HenkinLimit0.not_occurs_henkinAx
 #print axioms FOL.HenkinLimit0.hen_consistent
-#print axioms FOL.HenkinLimit0.henLimit_consistent
+#print axioms FOL.HenkinLimit0.henLimit_consistent₀
 #print axioms FOL.HenkinLimit0.henLimit_witness

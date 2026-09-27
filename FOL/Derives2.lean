@@ -224,13 +224,13 @@ theorem derives2_lift {Γ : List Formula} {φ : Formula} (h : Γ ⊢₂ φ) :
 
 
 -- ── §3 · Leibniz a nivel de TERMINO ─────────────────────────────────────────
-inductive PwEq (G : List Formula) : List Term → List Term → Prop where
-  | nil : PwEq G [] []
-  | cons : ∀ {a b l1 l2}, Derives₂ G (Formula.eq a b) → PwEq G l1 l2 ->
-      PwEq G (a :: l1) (b :: l2)
+inductive PwEq₂ (G : List Formula) : List Term → List Term → Prop where
+  | nil : PwEq₂ G [] []
+  | cons : ∀ {a b l1 l2}, Derives₂ G (Formula.eq a b) → PwEq₂ G l1 l2 ->
+      PwEq₂ G (a :: l1) (b :: l2)
 
 theorem eq_func_pw {G : List Formula} (p : String) : ∀ {l1 l2 : List Term},
-    PwEq G l1 l2 → ∀ pre : List Term,
+    PwEq₂ G l1 l2 → ∀ pre : List Term,
     G ⊢₂ Formula.eq (Term.func p (pre ++ l1)) (Term.func p (pre ++ l2)) := by
   intro l1 l2 hpw
   induction hpw with
@@ -243,7 +243,7 @@ theorem eq_func_pw {G : List Formula} (p : String) : ∀ {l1 l2 : List Term},
       exact eq_trans step1 step2
 
 theorem eq_atom_pw {G : List Formula} (p : String) : ∀ {l1 l2 : List Term},
-    PwEq G l1 l2 → ∀ pre : List Term,
+    PwEq₂ G l1 l2 → ∀ pre : List Term,
     (G ⊢₂ Formula.atom p (pre ++ l1)) → G ⊢₂ Formula.atom p (pre ++ l2) := by
   intro l1 l2 hpw
   induction hpw with
@@ -273,9 +273,9 @@ theorem eq_substTerm {G : List Formula} {t1 t2 : Term} (h : G ⊢₂ Formula.eq 
       simpa using hx
 
 theorem eq_substTerms {G : List Formula} {t1 t2 : Term} (h : G ⊢₂ Formula.eq t1 t2) (v : Nat) :
-    ∀ us : List Term, PwEq G (substTerms v t1 us) (substTerms v t2 us)
-  | [] => PwEq.nil
-  | u :: us => PwEq.cons (eq_substTerm h v u) (eq_substTerms h v us)
+    ∀ us : List Term, PwEq₂ G (substTerms v t1 us) (substTerms v t2 us)
+  | [] => PwEq₂.nil
+  | u :: us => PwEq₂.cons (eq_substTerm h v u) (eq_substTerms h v us)
 end
 
 -- ── §4 · Leibniz a nivel de FORMULA: `subst` es ADMISIBLE ───────────────────

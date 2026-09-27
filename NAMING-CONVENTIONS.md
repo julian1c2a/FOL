@@ -9,7 +9,7 @@
 > La prosa de este documento (explicaciones, motivación) va en español para que quede
 > clara sin ambigüedad.
 
-**Última actualización:** 2026-09-26 — §9: subíndices de cálculo (D6, decidida) y entrada de axiomas corregida
+**Última actualización:** 2026-09-27 — §9: N1 (las definiciones por derivabilidad, sin excepción) y N2 (qué es titular). Antes (2026-09-26): subíndices de cálculo (D6, decidida) y entrada de axiomas corregida
 **Autor**: Julián Calderón Almendros
 
 ---
@@ -363,6 +363,12 @@ ordinal de plan: `Derives₀` es el «PASO 0» de
    `TheoryFramework.IsConsistent`, `TheoryFramework.IsMaximalConsistent`) con OTRA definición.
    Las construcciones que sólo reciben una prueba de esas nociones (`canonicalModel`,
    `QuotientDomain`, `LindenbaumStep`…) no la llevan.
+   **Sin excepción para las definiciones auxiliares** (N1, propietario, 2026‑09‑27: renombrar, no
+   escribir una excepción): los `Prop` que empaquetan una obligación por derivabilidad también la
+   llevan — `CutAdm₀`, `CutAt₀`, `CutBelow₀`, `LeftPrin₀` (las de `LKh`, variante de `LK₀` con
+   altura, llevan `₀`), `CutElim₀`, `NDtoLK₀` (de `⊢₂` a `LKc`: la familia clásica, como su módulo
+   `NDtoLK0`), `HerbrandExtraction₀`, `HerbrandExtractionBlock₀`, `ImpAll₀`, `IffAll₀`, y `PwEq₂`
+   (su único cálculo es `⊢₂`).
 2. **Nada que no dependa de un cálculo lleva subíndice**: ni los predicados por pertenencia
    (`IsHenkin`) ni los enunciados puramente semánticos (`compactness`,
    `loewenheim_skolem_down`, `infinite_model_of_large`).
@@ -373,6 +379,9 @@ ordinal de plan: `Derives₀` es el «PASO 0» de
    Los TITULARES llevan siempre la marca (P2, 2026‑09‑27); los lemas AUXILIARES pueden ir sin ella:
    los desambigua el namespace del módulo
    (`FOL.Canonical0.max_cons_neg`, `FOL.Inversion0.inv_allR`).
+   Las PIEZAS con nombre de un ensamblaje, en la cabecera de su módulo, son titulares aunque sólo
+   las consuma el propio repositorio (N2, propietario, 2026‑09‑27): `henLimit_consistent₀`,
+   `shiftTheory_consistent₀`, como su gemelo `henkin_step_consistent₀`.
    - **Coherencia de familia**: un teorema que empaqueta teoremas marcados (el `iff` de dos
      mitades) lleva la misma marca que ellas.
    - `derives_…` sin dígito ni letra queda reservado a `Derives` (`⊢`).
@@ -406,6 +415,9 @@ ordinal de plan: `Derives₀` es el «PASO 0» de
 | `Lindenbaum0.lindenbaum_lemma`, `henkin_completion`; `Henkin0.henkin_step_consistent`; `Canonical0.truth_lemma` | `…₀` (P2) | 3 |
 | `Skolem0.skolem_conservative`, `henkin_conservative`; `SkolemN0.skolem_conservative_n`; `SkolemNF0.skolem_conservative_nf` | `…₀` (P2) | 3 |
 | `Craig0.maehara`, `craig`, `craig_impl` | `maeharaₚ`, `craigₚ`, `craig_implₚ` (P2) | 3: son de `LKp`, no de `⊢₀` (el de `⊢₀` es `Interpolation0.craig₀`) |
+| `Hauptsatz0.CutAdm`, `CutAt`, `CutBelow`, `LeftPrin`; `Sequent0.CutElim`, `NDtoLK`; `Herbrand0.HerbrandExtraction`; `HerbrandBlock0.HerbrandExtractionBlock`; `PrenexNF0.ImpAll`, `IffAll` | `…₀` (N1, 2026‑09‑27; `PrenexNF0` y `SequentSound0` descongelados y vueltos a congelar para ello) | 1 |
+| `Derives2.PwEq` | `PwEq₂` (N1) | 1: su cálculo es `⊢₂` |
+| `HenkinLimit0.henLimit_consistent`; `Fresh0.shiftTheory_consistent` | `…₀` (N2, 2026‑09‑27) | 3: titulares |
 
 Al entregar PeanoRF (propuesta C), la regla 3 pide además `derivesI_` en
 `Slash.derives_empty_of_slashed`, `derives_rewrite_subst` y `derives_rewrite_back`, y marca en

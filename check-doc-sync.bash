@@ -584,7 +584,7 @@ FOL/HerbrandBlock0.lean§ya decía «PAGADA» mientras esta línea§HISTORIAL§l
 FOL/Prenex0.lean§~~Lo que falta para la forma normal~~§HISTORIAL§la paga `FOL.PrenexNF0` (y refuta su estimación)
 FOL/Prenex0.lean§Estimado ~200 l., riesgo medio§HISTORIAL§la estimación que `PrenexNF0` refutó
 FOL/Rename.lean§~~Lo que esto NO es todavía~~§HISTORIAL§la paga `Eigenvariable.derives0_gen_fresh`
-FOL/Sequent0.lean§LA ÚNICA DEUDA QUE QUEDA§HISTORIAL§`CutElim` la paga `Hauptsatz0.cut_elimination₀`
+FOL/Sequent0.lean§LA ÚNICA DEUDA QUE QUEDA§HISTORIAL§`CutElim₀` la paga `Hauptsatz0.cut_elimination₀`
 FOL/Skolem0.lean§la falsedad iba etiquetada§HISTORIAL§la paga `SkolemN0.skolem_conservative_n₀`
 FOL/Skolem0.lean§~~Lo que falta: el axioma bajo un PREFIJO§HISTORIAL§la paga `SkolemN0`
 FOL/Skolem0.lean§**MEDIDO que no existe nada de eso**§HISTORIAL§`envPush` resultó no hacer falta

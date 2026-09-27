@@ -26,8 +26,8 @@ demuestra lo único que valida esa forma: **que de una prueba sin corte salen lo
     LKc                    -- lo mismo MÁS la regla de corte (15)
     lk0_herbrand           -- ⭐⭐ la EXTRACCIÓN: de `LK₀ ⟹ ∃xφ` salen los términos Y las
                            --    instancias de igualdad que la derivación usa
-    CutElim                -- 🏁 PAGADA (ADR-050/052): `Hauptsatz0.cut_elimination₀`
-    herbrandExtraction_of  -- ⭐⭐⭐ CutElim + NDtoLK ⇒ H3
+    CutElim₀                -- 🏁 PAGADA (ADR-050/052): `Hauptsatz0.cut_elimination₀`
+    herbrandExtraction_of  -- ⭐⭐⭐ CutElim₀ + NDtoLK₀ ⇒ H3
 
 ## ⭐ Por qué el orden es éste, y no al revés
 
@@ -40,8 +40,8 @@ diseñado y no lo sabríamos hasta el Hauptsatz.
 ## ⭐⭐ `eqAx`: la regla que faltaba, y por qué
 
 ⚠️ **Revisión de diseño (ADR‑049).** La primera versión de este módulo no tenía `eqAx` y dejaba la
-lista `E` de instancias de igualdad **en el antecedente**, recogida por la traducción `NDtoLK`.
-**Medido: eso BLOQUEA `NDtoLK`** — el caso `intro_forall` **levanta el contexto**, así que la `E`
+lista `E` de instancias de igualdad **en el antecedente**, recogida por la traducción `NDtoLK₀`.
+**Medido: eso BLOQUEA `NDtoLK₀`** — el caso `intro_forall` **levanta el contexto**, así que la `E`
 que devuelve la hipótesis de inducción vive arriba y hay que producirla abajo; y una instancia con
 `Term.var 0` **no es el levantamiento de ninguna**. No hay manera.
 
@@ -53,9 +53,9 @@ Es el *theory‑cut* estándar, y con él:
 
 | | antes | ahora |
 |---|---|---|
-| `NDtoLK` | ⛔ bloqueado por el levantamiento | ✅ **demostrado** (`FOL.NDtoLK0`), traducción estructural sin `E` |
+| `NDtoLK₀` | ⛔ bloqueado por el levantamiento | ✅ **demostrado** (`FOL.NDtoLK0`), traducción estructural sin `E` |
 | `lk0_herbrand` | devolvía sólo `ts` | ⭐ devuelve `ts` **y** la `E` que la derivación usó |
-| `CutElim` | estándar | estándar: los axiomas son **sin cuantificadores**, así que permutan como cualquier regla izquierda |
+| `CutElim₀` | estándar | estándar: los axiomas son **sin cuantificadores**, así que permutan como cualquier regla izquierda |
 
 🔑 *Cuando una obligación se bloquea por bookkeeping, a veces lo que falta no es esfuerzo sino una
 regla.*
@@ -94,9 +94,9 @@ verdad y carísimo para la demostración.*
 
 ## 🏁 La obligación que quedaba — **PAGADA**
 
-    CutElim : ∀ Γ Δ, LKc Γ Δ → LK₀ Γ Δ                       -- el HAUPTSATZ
+    CutElim₀ : ∀ Γ Δ, LKc Γ Δ → LK₀ Γ Δ                       -- el HAUPTSATZ
 
-🏁 **`FOL.Hauptsatz0.cut_elimination₀ : CutElim`** (ADR‑050/052), incondicional. Y el consumidor
+🏁 **`FOL.Hauptsatz0.cut_elimination₀ : CutElim₀`** (ADR‑050/052), incondicional. Y el consumidor
 ya estaba escrito: `herbrandExtraction_of (hcut) (htr)`, con `htr` demostrado en `FOL.NDtoLK0`.
 ⇒ **H3 y la vía H están cerradas.**
 
@@ -502,18 +502,18 @@ theorem lk0_to_lkc {G D : List Formula} (h : LK₀ G D) : LKc G D := by
 
 
 /-- 🏁 **El HAUPTSATZ — PAGADO el 2026-09-17** (ADR-050/051/052). Testigo incondicional:
-**`FOL.Hauptsatz0.cut_elimination₀`**, vía `hauptsatz₀ : CutAdm`, `[propext, Quot.sound]`.
+**`FOL.Hauptsatz0.cut_elimination₀`**, vía `hauptsatz₀ : CutAdm₀`, `[propext, Quot.sound]`.
 
 Se sigue enunciando como `Prop` porque `herbrandExtraction_of` lo toma como hipótesis.
 ⚠️ Esta línea decía «LA ÚNICA DEUDA QUE QUEDA» —y otras dos veces más en este fichero— con
 `hauptsatz₀` ya probado. Lo cazó [G.1] (ADR-072). -/
-def CutElim : Prop := ∀ Γ Δ, LKc Γ Δ → LK₀ Γ Δ
+def CutElim₀ : Prop := ∀ Γ Δ, LKc Γ Δ → LK₀ Γ Δ
 
 /-- La traducción ND → secuentes con corte. ⭐ Ya NO lleva `E`: las instancias de igualdad
 las mete `eqAx` dentro de la derivación, y la extracción las recoge. -/
-def NDtoLK : Prop := ∀ (Γ : List Formula) (f : Formula), Derives₂ Γ f → LKc Γ [f]
+def NDtoLK₀ : Prop := ∀ (Γ : List Formula) (f : Formula), Derives₂ Γ f → LKc Γ [f]
 
-theorem herbrandExtraction_of (hcut : CutElim) (htr : NDtoLK) : HerbrandExtraction := by
+theorem herbrandExtraction_of (hcut : CutElim₀) (htr : NDtoLK₀) : HerbrandExtraction₀ := by
   intro φ hqf hd
   have hlk : LKc [] [Formula.ex φ] :=
     htr [] (Formula.ex φ) (FOL.Derives2.derives0_iff_derives2.mp hd)

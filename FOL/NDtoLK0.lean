@@ -15,12 +15,12 @@ License: MIT
 import FOL.Sequent0
 
 /-!
-# `FOL.NDtoLK0` — **`NDtoLK` DEMOSTRADA**: H3 se queda con una sola deuda
+# `FOL.NDtoLK0` — **`NDtoLK₀` DEMOSTRADA**: H3 se queda con una sola deuda
 
 Cuarta pieza de **H3** (`doc/PLAN-COMPLETITUD-FINITISTA.md` §5.8).
 
     ndToLK : Derives₂ Γ f → LKc Γ [f]
-    herbrandExtraction_of_cutElim : CutElim → HerbrandExtraction
+    herbrandExtraction_of_cutElim : CutElim₀ → HerbrandExtraction₀
 
 ⇒ **De las dos obligaciones que ADR‑046 dejó, queda UNA**: el Hauptsatz.
 
@@ -194,11 +194,11 @@ theorem ndToLK {G : List Formula} {f : Formula} (h : G ⊢₂ f) : LKc G [f] := 
       exact mpLK _ _ (viaEqImpl (Formula.eq b a) _ (EqInstance.trans b a c) hba) ih2
 
 
-/-- ⭐⭐⭐ `NDtoLK`, la obligación de ADR‑046, **demostrada**. -/
-theorem ndToLK_prop : NDtoLK := fun _ _ h => ndToLK h
+/-- ⭐⭐⭐ `NDtoLK₀`, la obligación de ADR‑046, **demostrada**. -/
+theorem ndToLK_prop : NDtoLK₀ := fun _ _ h => ndToLK h
 
 /-- ⭐⭐⭐⭐ **Y con ella, H3 se queda con UNA sola deuda: el Hauptsatz.** -/
-theorem herbrandExtraction_of_cutElim (hcut : CutElim) : HerbrandExtraction :=
+theorem herbrandExtraction_of_cutElim (hcut : CutElim₀) : HerbrandExtraction₀ :=
   herbrandExtraction_of hcut ndToLK_prop
 
 end FOL.NDtoLK0

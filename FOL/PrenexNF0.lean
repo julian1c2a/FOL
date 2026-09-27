@@ -115,110 +115,110 @@ def prenex : Formula → Formula
 -- ⚠️ Esquemática (`∀ Δ`) a propósito: es lo que permite meterla bajo un binder,
 -- donde el contexto llega LEVANTADO. Es la forma que ya usan las congruencias
 -- de `Derives₁`, y por eso encajan sin adaptador.
-def ImpAll (X Y : Formula) : Prop := ∀ Δ : List Formula, Δ ⊢₀ Formula.impl X Y
-def IffAll (X Y : Formula) : Prop := ∀ Δ : List Formula, Δ ⊢₀ iff X Y
+def ImpAll₀ (X Y : Formula) : Prop := ∀ Δ : List Formula, Δ ⊢₀ Formula.impl X Y
+def IffAll₀ (X Y : Formula) : Prop := ∀ Δ : List Formula, Δ ⊢₀ iff X Y
 
-theorem iffL {X Y : Formula} (h : IffAll X Y) : ImpAll X Y :=
+theorem iffL {X Y : Formula} (h : IffAll₀ X Y) : ImpAll₀ X Y :=
   fun Δ => Derives₀.elim_and_l _ _ _ (h Δ)
-theorem iffR {X Y : Formula} (h : IffAll X Y) : ImpAll Y X :=
+theorem iffR {X Y : Formula} (h : IffAll₀ X Y) : ImpAll₀ Y X :=
   fun Δ => Derives₀.elim_and_r _ _ _ (h Δ)
-theorem mkIff {X Y : Formula} (h1 : ImpAll X Y) (h2 : ImpAll Y X) : IffAll X Y :=
+theorem mkIff {X Y : Formula} (h1 : ImpAll₀ X Y) (h2 : ImpAll₀ Y X) : IffAll₀ X Y :=
   fun Δ => Derives₀.intro_and _ _ _ (h1 Δ) (h2 Δ)
 
-theorem impAll_refl (X : Formula) : ImpAll X X :=
+theorem impAll_refl (X : Formula) : ImpAll₀ X X :=
   fun _ => Derives₀.intro_impl _ _ _ (Derives₀.hyp _ _ (List.Mem.head _))
-theorem iffAll_refl (X : Formula) : IffAll X X := mkIff (impAll_refl X) (impAll_refl X)
+theorem iffAll_refl (X : Formula) : IffAll₀ X X := mkIff (impAll_refl X) (impAll_refl X)
 
-theorem impAll_trans {X Y Z : Formula} (h1 : ImpAll X Y) (h2 : ImpAll Y Z) : ImpAll X Z :=
+theorem impAll_trans {X Y Z : Formula} (h1 : ImpAll₀ X Y) (h2 : ImpAll₀ Y Z) : ImpAll₀ X Z :=
   fun _ => Derives₀.intro_impl _ _ _
     (Derives₀.elim_impl _ Y Z (h2 _)
       (Derives₀.elim_impl _ X Y (h1 _) (Derives₀.hyp _ _ (List.Mem.head _))))
 
-theorem iffAll_trans {X Y Z : Formula} (h1 : IffAll X Y) (h2 : IffAll Y Z) : IffAll X Z :=
+theorem iffAll_trans {X Y Z : Formula} (h1 : IffAll₀ X Y) (h2 : IffAll₀ Y Z) : IffAll₀ X Z :=
   mkIff (impAll_trans (iffL h1) (iffL h2)) (impAll_trans (iffR h2) (iffR h1))
 
-theorem iffAll_symm {X Y : Formula} (h : IffAll X Y) : IffAll Y X := mkIff (iffR h) (iffL h)
+theorem iffAll_symm {X Y : Formula} (h : IffAll₀ X Y) : IffAll₀ Y X := mkIff (iffR h) (iffL h)
 
 -- ── §2 · las CONGRUENCIAS, envueltas desde `Derives₁` en dos líneas ─────────
-private theorem up {X Y : Formula} (h : ImpAll X Y) : ∀ Δ : List Formula, Δ ⊢₁ Formula.impl X Y :=
+private theorem up {X Y : Formula} (h : ImpAll₀ X Y) : ∀ Δ : List Formula, Δ ⊢₁ Formula.impl X Y :=
   fun Δ => FOL.Derives1.derives0_iff_derives1.mp (h Δ)
 private theorem down {X Y : Formula} (h : ∀ Δ : List Formula, Δ ⊢₁ Formula.impl X Y) :
-    ImpAll X Y := fun Δ => FOL.Derives1.derives0_iff_derives1.mpr (h Δ)
+    ImpAll₀ X Y := fun Δ => FOL.Derives1.derives0_iff_derives1.mpr (h Δ)
 
-theorem impAll_forall {X Y : Formula} (h : ImpAll X Y) :
-    ImpAll (Formula.forall X) (Formula.forall Y) := down (fun Δ => forall_congr (up h) Δ)
-theorem impAll_ex {X Y : Formula} (h : ImpAll X Y) :
-    ImpAll (Formula.ex X) (Formula.ex Y) := down (fun Δ => ex_congr (up h) Δ)
-theorem impAll_and_l {X Y : Formula} (Z : Formula) (h : ImpAll X Y) :
-    ImpAll (Formula.and X Z) (Formula.and Y Z) := down (fun Δ => and_congr_l Z (up h) Δ)
-theorem impAll_and_r {X Y : Formula} (Z : Formula) (h : ImpAll X Y) :
-    ImpAll (Formula.and Z X) (Formula.and Z Y) := down (fun Δ => and_congr_r Z (up h) Δ)
-theorem impAll_or_l {X Y : Formula} (Z : Formula) (h : ImpAll X Y) :
-    ImpAll (Formula.or X Z) (Formula.or Y Z) := down (fun Δ => or_congr_l Z (up h) Δ)
-theorem impAll_or_r {X Y : Formula} (Z : Formula) (h : ImpAll X Y) :
-    ImpAll (Formula.or Z X) (Formula.or Z Y) := down (fun Δ => or_congr_r Z (up h) Δ)
-theorem impAll_impl_l {X Y : Formula} (Z : Formula) (h : ImpAll Y X) :
-    ImpAll (Formula.impl X Z) (Formula.impl Y Z) := down (fun Δ => impl_congr_l Z (up h) Δ)
-theorem impAll_impl_r {X Y : Formula} (Z : Formula) (h : ImpAll X Y) :
-    ImpAll (Formula.impl Z X) (Formula.impl Z Y) := down (fun Δ => impl_congr_r Z (up h) Δ)
+theorem impAll_forall {X Y : Formula} (h : ImpAll₀ X Y) :
+    ImpAll₀ (Formula.forall X) (Formula.forall Y) := down (fun Δ => forall_congr (up h) Δ)
+theorem impAll_ex {X Y : Formula} (h : ImpAll₀ X Y) :
+    ImpAll₀ (Formula.ex X) (Formula.ex Y) := down (fun Δ => ex_congr (up h) Δ)
+theorem impAll_and_l {X Y : Formula} (Z : Formula) (h : ImpAll₀ X Y) :
+    ImpAll₀ (Formula.and X Z) (Formula.and Y Z) := down (fun Δ => and_congr_l Z (up h) Δ)
+theorem impAll_and_r {X Y : Formula} (Z : Formula) (h : ImpAll₀ X Y) :
+    ImpAll₀ (Formula.and Z X) (Formula.and Z Y) := down (fun Δ => and_congr_r Z (up h) Δ)
+theorem impAll_or_l {X Y : Formula} (Z : Formula) (h : ImpAll₀ X Y) :
+    ImpAll₀ (Formula.or X Z) (Formula.or Y Z) := down (fun Δ => or_congr_l Z (up h) Δ)
+theorem impAll_or_r {X Y : Formula} (Z : Formula) (h : ImpAll₀ X Y) :
+    ImpAll₀ (Formula.or Z X) (Formula.or Z Y) := down (fun Δ => or_congr_r Z (up h) Δ)
+theorem impAll_impl_l {X Y : Formula} (Z : Formula) (h : ImpAll₀ Y X) :
+    ImpAll₀ (Formula.impl X Z) (Formula.impl Y Z) := down (fun Δ => impl_congr_l Z (up h) Δ)
+theorem impAll_impl_r {X Y : Formula} (Z : Formula) (h : ImpAll₀ X Y) :
+    ImpAll₀ (Formula.impl Z X) (Formula.impl Z Y) := down (fun Δ => impl_congr_r Z (up h) Δ)
 
-theorem iffAll_forall {X Y : Formula} (h : IffAll X Y) :
-    IffAll (Formula.forall X) (Formula.forall Y) :=
+theorem iffAll_forall {X Y : Formula} (h : IffAll₀ X Y) :
+    IffAll₀ (Formula.forall X) (Formula.forall Y) :=
   mkIff (impAll_forall (iffL h)) (impAll_forall (iffR h))
-theorem iffAll_ex {X Y : Formula} (h : IffAll X Y) : IffAll (Formula.ex X) (Formula.ex Y) :=
+theorem iffAll_ex {X Y : Formula} (h : IffAll₀ X Y) : IffAll₀ (Formula.ex X) (Formula.ex Y) :=
   mkIff (impAll_ex (iffL h)) (impAll_ex (iffR h))
-theorem iffAll_and {X Y Z W : Formula} (h1 : IffAll X Y) (h2 : IffAll Z W) :
-    IffAll (Formula.and X Z) (Formula.and Y W) :=
+theorem iffAll_and {X Y Z W : Formula} (h1 : IffAll₀ X Y) (h2 : IffAll₀ Z W) :
+    IffAll₀ (Formula.and X Z) (Formula.and Y W) :=
   mkIff (impAll_trans (impAll_and_l Z (iffL h1)) (impAll_and_r Y (iffL h2)))
         (impAll_trans (impAll_and_l W (iffR h1)) (impAll_and_r X (iffR h2)))
-theorem iffAll_or {X Y Z W : Formula} (h1 : IffAll X Y) (h2 : IffAll Z W) :
-    IffAll (Formula.or X Z) (Formula.or Y W) :=
+theorem iffAll_or {X Y Z W : Formula} (h1 : IffAll₀ X Y) (h2 : IffAll₀ Z W) :
+    IffAll₀ (Formula.or X Z) (Formula.or Y W) :=
   mkIff (impAll_trans (impAll_or_l Z (iffL h1)) (impAll_or_r Y (iffL h2)))
         (impAll_trans (impAll_or_l W (iffR h1)) (impAll_or_r X (iffR h2)))
-theorem iffAll_impl {X Y Z W : Formula} (h1 : IffAll X Y) (h2 : IffAll Z W) :
-    IffAll (Formula.impl X Z) (Formula.impl Y W) :=
+theorem iffAll_impl {X Y Z W : Formula} (h1 : IffAll₀ X Y) (h2 : IffAll₀ Z W) :
+    IffAll₀ (Formula.impl X Z) (Formula.impl Y W) :=
   mkIff (impAll_trans (impAll_impl_l Z (iffR h1)) (impAll_impl_r Y (iffL h2)))
         (impAll_trans (impAll_impl_l W (iffL h1)) (impAll_impl_r X (iffR h2)))
 
 -- ── §3 · conmutatividad, y las cuatro versiones POR LA DERECHA ─────────────
-theorem and_commA (X Y : Formula) : IffAll (Formula.and X Y) (Formula.and Y X) := by
+theorem and_commA (X Y : Formula) : IffAll₀ (Formula.and X Y) (Formula.and Y X) := by
   refine mkIff (fun _ => Derives₀.intro_impl _ _ _ ?_) (fun _ => Derives₀.intro_impl _ _ _ ?_) <;>
     exact Derives₀.intro_and _ _ _
       (Derives₀.elim_and_r _ _ _ (Derives₀.hyp _ _ (List.Mem.head _)))
       (Derives₀.elim_and_l _ _ _ (Derives₀.hyp _ _ (List.Mem.head _)))
 
-theorem or_commA (X Y : Formula) : IffAll (Formula.or X Y) (Formula.or Y X) := by
+theorem or_commA (X Y : Formula) : IffAll₀ (Formula.or X Y) (Formula.or Y X) := by
   refine mkIff (fun _ => Derives₀.intro_impl _ _ _ ?_) (fun _ => Derives₀.intro_impl _ _ _ ?_) <;>
     exact Derives₀.elim_or _ _ _ _ (Derives₀.hyp _ _ (List.Mem.head _))
       (Derives₀.intro_or_r _ _ _ (Derives₀.hyp _ _ (List.Mem.head _)))
       (Derives₀.intro_or_l _ _ _ (Derives₀.hyp _ _ (List.Mem.head _)))
 
 theorem and_forall_r (B A : Formula) :
-    IffAll (Formula.and B (Formula.forall A)) (Formula.forall (Formula.and (liftFormula 0 B) A)) :=
+    IffAll₀ (Formula.and B (Formula.forall A)) (Formula.forall (Formula.and (liftFormula 0 B) A)) :=
   iffAll_trans (and_commA B (Formula.forall A))
     (iffAll_trans (fun Δ => and_forall Δ A B)
       (iffAll_forall (and_commA A (liftFormula 0 B))))
 
 theorem and_ex_r (B A : Formula) :
-    IffAll (Formula.and B (Formula.ex A)) (Formula.ex (Formula.and (liftFormula 0 B) A)) :=
+    IffAll₀ (Formula.and B (Formula.ex A)) (Formula.ex (Formula.and (liftFormula 0 B) A)) :=
   iffAll_trans (and_commA B (Formula.ex A))
     (iffAll_trans (fun Δ => and_ex Δ A B)
       (iffAll_ex (and_commA A (liftFormula 0 B))))
 
 theorem or_forall_r (B A : Formula) :
-    IffAll (Formula.or B (Formula.forall A)) (Formula.forall (Formula.or (liftFormula 0 B) A)) :=
+    IffAll₀ (Formula.or B (Formula.forall A)) (Formula.forall (Formula.or (liftFormula 0 B) A)) :=
   iffAll_trans (or_commA B (Formula.forall A))
     (iffAll_trans (fun Δ => or_forall Δ A B)
       (iffAll_forall (or_commA A (liftFormula 0 B))))
 
 theorem or_ex_r (B A : Formula) :
-    IffAll (Formula.or B (Formula.ex A)) (Formula.ex (Formula.or (liftFormula 0 B) A)) :=
+    IffAll₀ (Formula.or B (Formula.ex A)) (Formula.ex (Formula.or (liftFormula 0 B) A)) :=
   iffAll_trans (or_commA B (Formula.ex A))
     (iffAll_trans (fun Δ => or_ex Δ A B)
       (iffAll_ex (or_commA A (liftFormula 0 B))))
 
 -- ── §4 · las FUSIONES son correctas ────────────────────────────────────────
-theorem mergeAndR_iff : ∀ (A B : Formula), IffAll (Formula.and A B) (mergeAndR A B)
+theorem mergeAndR_iff : ∀ (A B : Formula), IffAll₀ (Formula.and A B) (mergeAndR A B)
   | A, .forall B' =>
       iffAll_trans (and_forall_r A B') (iffAll_forall (mergeAndR_iff (liftFormula 0 A) B'))
   | A, .ex B' =>
@@ -230,7 +230,7 @@ theorem mergeAndR_iff : ∀ (A B : Formula), IffAll (Formula.and A B) (mergeAndR
   | _, .and _ _ => iffAll_refl _
   | _, .or _ _ => iffAll_refl _
 
-theorem mergeAnd_iff : ∀ (A B : Formula), IffAll (Formula.and A B) (mergeAnd A B)
+theorem mergeAnd_iff : ∀ (A B : Formula), IffAll₀ (Formula.and A B) (mergeAnd A B)
   | .forall A', B =>
       iffAll_trans (fun Δ => and_forall Δ A' B) (iffAll_forall (mergeAnd_iff A' (liftFormula 0 B)))
   | .ex A', B =>
@@ -242,7 +242,7 @@ theorem mergeAnd_iff : ∀ (A B : Formula), IffAll (Formula.and A B) (mergeAnd A
   | .and _ _, B => mergeAndR_iff _ B
   | .or _ _, B => mergeAndR_iff _ B
 
-theorem mergeOrR_iff : ∀ (A B : Formula), IffAll (Formula.or A B) (mergeOrR A B)
+theorem mergeOrR_iff : ∀ (A B : Formula), IffAll₀ (Formula.or A B) (mergeOrR A B)
   | A, .forall B' =>
       iffAll_trans (or_forall_r A B') (iffAll_forall (mergeOrR_iff (liftFormula 0 A) B'))
   | A, .ex B' =>
@@ -254,7 +254,7 @@ theorem mergeOrR_iff : ∀ (A B : Formula), IffAll (Formula.or A B) (mergeOrR A 
   | _, .and _ _ => iffAll_refl _
   | _, .or _ _ => iffAll_refl _
 
-theorem mergeOr_iff : ∀ (A B : Formula), IffAll (Formula.or A B) (mergeOr A B)
+theorem mergeOr_iff : ∀ (A B : Formula), IffAll₀ (Formula.or A B) (mergeOr A B)
   | .forall A', B =>
       iffAll_trans (fun Δ => or_forall Δ A' B) (iffAll_forall (mergeOr_iff A' (liftFormula 0 B)))
   | .ex A', B =>
@@ -266,7 +266,7 @@ theorem mergeOr_iff : ∀ (A B : Formula), IffAll (Formula.or A B) (mergeOr A B)
   | .and _ _, B => mergeOrR_iff _ B
   | .or _ _, B => mergeOrR_iff _ B
 
-theorem mergeImplR_iff : ∀ (A B : Formula), IffAll (Formula.impl A B) (mergeImplR A B)
+theorem mergeImplR_iff : ∀ (A B : Formula), IffAll₀ (Formula.impl A B) (mergeImplR A B)
   | A, .forall B' =>
       iffAll_trans (fun Δ => impl_forall_right Δ B' A)
         (iffAll_forall (mergeImplR_iff (liftFormula 0 A) B'))
@@ -281,7 +281,7 @@ theorem mergeImplR_iff : ∀ (A B : Formula), IffAll (Formula.impl A B) (mergeIm
   | _, .or _ _ => iffAll_refl _
 
 -- ⚠️ A la izquierda de `→` el cuantificador SE DA LA VUELTA.
-theorem mergeImpl_iff : ∀ (A B : Formula), IffAll (Formula.impl A B) (mergeImpl A B)
+theorem mergeImpl_iff : ∀ (A B : Formula), IffAll₀ (Formula.impl A B) (mergeImpl A B)
   | .forall A', B =>
       iffAll_trans (fun Δ => impl_forall_left Δ A' B)
         (iffAll_ex (mergeImpl_iff A' (liftFormula 0 B)))
@@ -296,7 +296,7 @@ theorem mergeImpl_iff : ∀ (A B : Formula), IffAll (Formula.impl A B) (mergeImp
   | .or _ _, B => mergeImplR_iff _ B
 
 -- ── §5 · 🏁 LA CORRECCIÓN DE LA FORMA NORMAL ───────────────────────────────
-theorem prenex_iff : ∀ (f : Formula), IffAll f (prenex f)
+theorem prenex_iff : ∀ (f : Formula), IffAll₀ f (prenex f)
   | .bottom => iffAll_refl _
   | .atom _ _ => iffAll_refl _
   | .eq _ _ => iffAll_refl _

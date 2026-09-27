@@ -85,7 +85,7 @@ cálculo finitario esa contradicción pasa por `elim_ex`, cuya premisa vive en e
 ⭐⭐ **`FOL.Henkin0`** — **`henkin_step_consistent₀`**: añadir el testigo de Henkin con una constante
 fresca **preserva la consistencia**. Es donde paga `derives0_gen_fresh`, y es la parte
 **matemática** del ensamblaje. 🏁 La iteración ω y el **suministro de constantes frescas** los
-pagan `FOL.HenkinLimit0` (`henLimit_consistent`, `henLimit_witness`) y `FOL.Fresh0` (`exists_fresh`).
+pagan `FOL.HenkinLimit0` (`henLimit_consistent₀`, `henLimit_witness`) y `FOL.Fresh0` (`exists_fresh`).
 
 ⭐ **`FOL.Enumeration` entró el 2026‑09‑13**: construye `natToFormula : Nat → Formula` y su
 sobreyectividad, **cero axiomas**. Es lo que retira `formula_enum` y `formula_enum_surj` de

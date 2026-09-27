@@ -82,14 +82,10 @@ open FOL.Metamath.Semantics
 
 namespace FOL.Inconsistencia
 
-/-- Modelo trivial sobre `Unit` con TODAS las relaciones falsas. -/
-def Mfalse : Model Unit := { func := fun _ _ => (), rel := fun _ _ => False }
-
-/-- Modelo trivial sobre `Unit` con TODAS las relaciones verdaderas. -/
-def Mtrue : Model Unit := { func := fun _ _ => (), rel := fun _ _ => True }
-
-/-- Un átomo cualquiera. -/
-def P : Formula := Formula.atom "P" []
+-- Los dos modelos triviales sobre `Unit` (`Mfalse`: toda relación falsa; `Mtrue`: toda verdadera) y
+-- el átomo `P` son los de `FOL.Soundness0`. Aquí había copias literales, retiradas el 2026‑09‑27
+-- (N4, RPP‑109).
+open FOL.Metamath.Soundness0 (Mfalse Mtrue P)
 
 /-- Con contexto vacío, `contextSatisfies` es trivial. -/
 theorem ctx_nil {D : Type} (M : Model D) (v : Nat → D) : contextSatisfies M v [] := by

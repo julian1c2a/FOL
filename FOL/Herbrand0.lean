@@ -38,7 +38,7 @@ Footprint: `[propext, Quot.sound]`. **Ni un `Classical.choice`**, en todo el mó
 | ⟹ | **demostración ⇒ certificado** (H3) | 🏁 **PAGADA** (ADR‑050/052) — `FOL.Hauptsatz0.herbrand_extraction₀`, **incondicional**, `[propext, Quot.sound]` |
 
 🏁 **La ⟹ es H3 —la eliminación de cortes— y está PAGADA** (ADR-050/052, `Hauptsatz0`). Aquí se **enuncia** como
-`HerbrandExtraction`, y se escribe **el consumidor**: `herbrand_iff`, que con ella convierte
+`HerbrandExtraction₀`, y se escribe **el consumidor**: `herbrand_iff`, que con ella convierte
 Herbrand en un `↔`. *Una deuda se enuncia como `Prop`, nunca se postula* — y el consumidor va
 antes, para que la guarda salga de él y no del molde.
 
@@ -314,7 +314,7 @@ Se sigue **enunciando** como `Prop` a propósito —es el idioma del proyecto, y
 control: [E] mira la FECHA del titular, no lo que AFIRMA. De ahí sale [G.1] (ADR-072).
 
 ⚠️ `QuantFree φ` **no es decoración**: para `φ` con cuantificadores el enunciado es **falso**. -/
-def HerbrandExtraction : Prop :=
+def HerbrandExtraction₀ : Prop :=
   ∀ φ : Formula, QuantFree φ → ([] ⊢₀ Formula.ex φ) → ∃ ts E, HerbrandCert φ ts E
 
 /-- ⭐ **El CONSUMIDOR, escrito antes que nada**: con H3, Herbrand es un **si y sólo si**.
@@ -322,7 +322,7 @@ def HerbrandExtraction : Prop :=
 🔑 La mitad `←` es incondicional (`derives0_ex_of_cert`); la hipótesis `h3` sólo paga la `→`.
 *Una deuda se enuncia con su consumidor delante, para que la guarda salga del consumidor y no del
 molde.* -/
-theorem herbrand_iff (h3 : HerbrandExtraction) {φ : Formula} (hqf : QuantFree φ) :
+theorem herbrand_iff (h3 : HerbrandExtraction₀) {φ : Formula} (hqf : QuantFree φ) :
     ([] ⊢₀ Formula.ex φ) ↔ ∃ ts E, HerbrandCert φ ts E :=
   ⟨fun h => h3 φ hqf h, fun ⟨_, _, hc⟩ => derives0_ex_of_cert hc⟩
 

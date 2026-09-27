@@ -61,7 +61,7 @@ hubo `peelB` que escribir), no el total.
 
 ### Lo que se midió en su momento, y se conserva porque acertó en la forma
 
-`HerbrandExtractionBlock` se **enuncia** como `Prop` con su consumidor (`herbrand_block_iff`), y
+`HerbrandExtractionBlock₀` se **enuncia** como `Prop` con su consumidor (`herbrand_block_iff`), y
 **no se postula**. ⛔ No sale de `herbrand₀` (n = 1) por composición: el cuerpo de un bloque de
 altura ≥ 2 **no es** una fórmula sin cuantificadores, luego `herbrand₀` no aplica a él.
 
@@ -187,13 +187,13 @@ theorem derives0_exBlock_of_cert {n : Nat} {φ : Formula} {tss : List (List Term
 Se sigue **enunciando** como `Prop` porque su consumidor (`herbrand_block_iff`) la toma como
 hipótesis. ⚠️ La cabecera del módulo ya decía «PAGADA» mientras esta línea seguía diciendo ⬜:
 **el mismo fichero se contradecía a sí mismo**, y lo cazó [G.1] (ADR-072). -/
-def HerbrandExtractionBlock : Prop :=
+def HerbrandExtractionBlock₀ : Prop :=
   ∀ (n : Nat) (φ : Formula), QuantFree φ → ([] ⊢₀ exBlock n φ) →
     ∃ tss E, HerbrandCertBlock n φ tss E
 
 /-- ⭐ **El CONSUMIDOR, escrito antes que el molde**: con la extracción, Herbrand de bloque es un
 **si y sólo si**. 🔑 La mitad `←` es incondicional; la hipótesis sólo paga la `→`. -/
-theorem herbrand_block_iff (h : HerbrandExtractionBlock) {n : Nat} {φ : Formula}
+theorem herbrand_block_iff (h : HerbrandExtractionBlock₀) {n : Nat} {φ : Formula}
     (hqf : QuantFree φ) :
     Iff ([] ⊢₀ exBlock n φ) (∃ tss E, HerbrandCertBlock n φ tss E) :=
   ⟨fun hd => h n φ hqf hd, fun ⟨_, _, hc⟩ => derives0_exBlock_of_cert hc⟩

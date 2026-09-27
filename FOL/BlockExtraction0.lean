@@ -18,7 +18,7 @@ import FOL.Hauptsatz0
 /-!
 # `FOL.BlockExtraction0` — 🏁 la mitad ⟹ de HERBRAND DE BLOQUE, pagada
 
-    herbrand_extraction_block₀ : HerbrandExtractionBlock
+    herbrand_extraction_block₀ : HerbrandExtractionBlock₀
     herbrand_block₀ : QuantFree φ → (([] ⊢₀ exBlock n φ) ↔ ∃ tss E, HerbrandCertBlock n φ tss E)
 
 📏 `[propext, Quot.sound]` en todo el módulo (`instB_nil`, ninguno): **ni un `Classical.choice`** — como toda la vía H.
@@ -456,8 +456,8 @@ theorem disjB_or_allFalse (v : PVal) (n : Nat) (φ : Formula) : ∀ tss : List (
 /-- ⚠️ El bloque de altura 0 ES su cuerpo, y por tanto SIN cuantificadores. Por eso el
 ensamblaje tiene que distinguir `n = 0`: ahí el testigo del lema de inducción es legítimo y
 hay que excluirlo metiendo la tupla vacía en el certificado. -/
-theorem herbrandExtractionBlock_of (hcut : CutElim) (htr : NDtoLK) :
-    HerbrandExtractionBlock := by
+theorem herbrandExtractionBlock_of (hcut : CutElim₀) (htr : NDtoLK₀) :
+    HerbrandExtractionBlock₀ := by
   intro n φ hqf hd
   have hlk : LKc [] [exBlock n φ] :=
     htr [] (exBlock n φ) (FOL.Derives2.derives0_iff_derives2.mp hd)
@@ -500,7 +500,7 @@ theorem herbrandExtractionBlock_of (hcut : CutElim) (htr : NDtoLK) :
             | tail _ h2 => exact absurd h2 List.not_mem_nil
 
 /-- 🏁🏁 **LA MITAD ⟹ DE HERBRAND DE BLOQUE («E» del catálogo de RPP‑064), PAGADA.** -/
-theorem herbrand_extraction_block₀ : HerbrandExtractionBlock :=
+theorem herbrand_extraction_block₀ : HerbrandExtractionBlock₀ :=
   herbrandExtractionBlock_of FOL.Hauptsatz0.cut_elimination₀ FOL.NDtoLK0.ndToLK_prop
 
 /-- 🏁🏁🏁 **HERBRAND DE BLOQUE, YA INCONDICIONAL.** -/

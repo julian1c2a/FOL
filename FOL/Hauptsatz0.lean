@@ -19,10 +19,10 @@ import FOL.NDtoLK0
 # `FOL.Hauptsatz0` — 🏁🏁🏁 **EL HAUPTSATZ**, y con él **H3**
 
 Sexta y última pieza de **H3** (`../ROBINSON_PlusPlus/doc/PLAN-COMPLETITUD-FINITISTA.md` §5.9‑§5.11).
-⭐ **El corte es ADMISIBLE en `LK₀`**, y de ahí `CutElim`, la extracción de Herbrand y el
+⭐ **El corte es ADMISIBLE en `LK₀`**, y de ahí `CutElim₀`, la extracción de Herbrand y el
 **teorema de Herbrand incondicional**.
 
-    §1  CutAdm · cutElim_of    -- el corte ÚNICO, y CutAdm ⇒ CutElim
+    §1  CutAdm₀ · cutElim_of    -- el corte ÚNICO, y CutAdm₀ ⇒ CutElim₀
     §2  LKh                    -- el cálculo INDEXADO POR ALTURA (14 ctors)
     §3  lkh_mono · lkh_to_lk0 · lk0_to_lkh
     §4  liftFormula_subst_le   -- conmutación De Bruijn `k ≤ v`
@@ -59,7 +59,7 @@ sobre el lado **derecho**, que no es subderivación del izquierdo.
 (`Or (x = A) (x ∈ Δ)`) en vez de la forma `A :: Δ`. 🔑 *Lo que mata a MIX es el enunciado, no el
 constructor.* El cambio costó **tres ediciones** y `lkh_subst` no se movió.
 
-## ⭐⭐⭐ La arquitectura: `LeftPrin`, y por qué NO hace falta la inducción doble
+## ⭐⭐⭐ La arquitectura: `LeftPrin₀`, y por qué NO hace falta la inducción doble
 
 La presentación clásica es una inducción doble —grado × **suma** de alturas— con un análisis de
 casos sobre las dos últimas reglas: 5 conectivas × 14 casos de la otra derivación.
@@ -67,7 +67,7 @@ casos sobre las dos últimas reglas: 5 conectivas × 14 casos de la otra derivac
 Aquí se hace en **dos pasadas independientes de 14 casos**:
 
 * **`cutPrinAux` (§8.5)** analiza `D2` **una sola vez**, induciendo sobre `n`. Lo que necesita del
-  lado izquierdo es un dato **uniforme**, `LeftPrin A Γ Δ`: las premisas de la regla derecha
+  lado izquierdo es un dato **uniforme**, `LeftPrin₀ A Γ Δ`: las premisas de la regla derecha
   principal de `A`, empaquetadas por conectiva. Con `leftPrin_mono` y `leftPrin_lift` ese dato
   viaja a los contextos nuevos que cada permutación de `D2` crea.
 * **`cutLeftAux` (§8.6)** analiza `D1`, induciendo sobre `m`. Sus únicos casos que tocan el lado
@@ -78,9 +78,9 @@ Aquí se hace en **dos pasadas independientes de 14 casos**:
 pasa al otro.*
 
 ⭐ Y hay un dividendo: en cada regla derecha de `D1` **la misma llamada recursiva sirve para las dos
-ramas** — es `LeftPrin A Γ Δ` si la fórmula principal es `A`, y la premisa de la regla si no lo es.
+ramas** — es `LeftPrin₀ A Γ Δ` si la fórmula principal es `A`, y la premisa de la regla si no lo es.
 
-⛔ `LeftPrin` es `False` para `⊥`, átomos e igualdades — no hay regla derecha que las introduzca —,
+⛔ `LeftPrin₀` es `False` para `⊥`, átomos e igualdades — no hay regla derecha que las introduzca —,
 y eso **cierra gratis** el caso `botL` de `D2` con `A = ⊥`, que en otras presentaciones hay que
 argumentar aparte.
 
@@ -117,10 +117,10 @@ open FOL.Herbrand0
 open FOL.Sequent0
 
 -- ── §1 · El corte ÚNICO, y su clausura ──────────────────────────────────────
-def CutAdm : Prop := ∀ (Γ Δ : List Formula) (A : Formula),
+def CutAdm₀ : Prop := ∀ (Γ Δ : List Formula) (A : Formula),
   LK₀ Γ (A :: Δ) → LK₀ (A :: Γ) Δ → LK₀ Γ Δ
 
-theorem cutElim_of (h : CutAdm) : CutElim := by
+theorem cutElim_of (h : CutAdm₀) : CutElim₀ := by
   intro Γ Δ hd
   induction hd with
   | ax Γ Δ A h1 h2 => exact LK₀.ax Γ Δ A h1 h2
@@ -152,7 +152,7 @@ end FOL.Hauptsatz0
 -- ⇒ `m + n` no decrece y la inducción NO está bien fundada.
 -- ⭐ Y no se pierde nada: el debilitamiento/contracción/intercambio «gratis» que
 -- evita la regla MIX no venía de la altura de `struct`, sino de que el enunciado
--- del corte pide PERTENENCIA (`x = A ∨ x ∈ Δ`) y no la forma `A :: Δ`: `CutAt`, §8.4.
+-- del corte pide PERTENENCIA (`x = A ∨ x ∈ Δ`) y no la forma `A :: Δ`: `CutAt₀`, §8.4.
 inductive LKh : Nat → List Formula → List Formula → Prop where
   | ax : ∀ n Γ Δ A, A ∈ Γ → A ∈ Δ → LKh n Γ Δ
   | botL : ∀ n Γ Δ, Formula.bottom ∈ Γ → LKh n Γ Δ
@@ -752,12 +752,12 @@ theorem map_subst_lift (t : Term) : ∀ Γ : List Formula,
            = g :: Γ
       rw [FOL.substFormula_liftFormula g 0 t, map_subst_lift t Γ]
 
--- ── §8.3 · ⭐⭐ `LeftPrin` ────────────────────────────────────────────────────
+-- ── §8.3 · ⭐⭐ `LeftPrin₀` ────────────────────────────────────────────────────
 -- Lo que aporta el lado IZQUIERDO cuando su última regla es la regla DERECHA
 -- principal de `A`. ⭐ Empaquetarlo en UN dato uniforme es lo que permite
 -- analizar `D2` UNA sola vez en vez de una por conectiva (1 pasada de 14 casos
 -- en lugar de 5).
-def LeftPrin : Formula → List Formula → List Formula → Prop
+def LeftPrin₀ : Formula → List Formula → List Formula → Prop
   | Formula.impl b c, Γ, Δ => LK₀ (b :: Γ) (c :: Δ)
   | Formula.and b c, Γ, Δ => And (LK₀ Γ (b :: Δ)) (LK₀ Γ (c :: Δ))
   | Formula.or b c, Γ, Δ => LK₀ Γ (b :: c :: Δ)
@@ -766,7 +766,7 @@ def LeftPrin : Formula → List Formula → List Formula → Prop
   | _, _, _ => False
 
 theorem leftPrin_close : ∀ (A : Formula) (Γ Δ : List Formula),
-    LeftPrin A Γ Δ → LK₀ Γ (A :: Δ)
+    LeftPrin₀ A Γ Δ → LK₀ Γ (A :: Δ)
   | Formula.bottom, _, _, h => h.elim
   | Formula.atom _ _, _, _, h => h.elim
   | Formula.eq _ _, _, _, h => h.elim
@@ -777,7 +777,7 @@ theorem leftPrin_close : ∀ (A : Formula) (Γ Δ : List Formula),
   | Formula.ex b, Γ, Δ, h => h.elim (fun t ht => LK₀.exR Γ Δ b t ht)
 
 theorem leftPrin_mono : ∀ (A : Formula) {Γ Γ' Δ Δ' : List Formula},
-    LeftPrin A Γ Δ → (∀ x, x ∈ Γ → x ∈ Γ') → (∀ x, x ∈ Δ → x ∈ Δ') → LeftPrin A Γ' Δ'
+    LeftPrin₀ A Γ Δ → (∀ x, x ∈ Γ → x ∈ Γ') → (∀ x, x ∈ Δ → x ∈ Δ') → LeftPrin₀ A Γ' Δ'
   | Formula.bottom, _, _, _, _, h, _, _ => h.elim
   | Formula.atom _ _, _, _, _, _, h, _, _ => h.elim
   | Formula.eq _ _, _, _, _, _, h, _, _ => h.elim
@@ -793,8 +793,8 @@ theorem leftPrin_mono : ∀ (A : Formula) {Γ Γ' Δ Δ' : List Formula},
   | Formula.ex _, Γ, Γ', _, _, h, s1, s2 =>
       h.elim (fun t ht => ⟨t, LK₀.struct Γ Γ' _ _ ht s1 (sub_cons _ s2)⟩)
 
-theorem leftPrin_lift : ∀ (A : Formula) {Γ Δ : List Formula}, LeftPrin A Γ Δ → ∀ (k : Nat),
-    LeftPrin (liftFormula k A) (Γ.map (liftFormula k)) (Δ.map (liftFormula k))
+theorem leftPrin_lift : ∀ (A : Formula) {Γ Δ : List Formula}, LeftPrin₀ A Γ Δ → ∀ (k : Nat),
+    LeftPrin₀ (liftFormula k A) (Γ.map (liftFormula k)) (Δ.map (liftFormula k))
   | Formula.bottom, _, _, h, _ => h.elim
   | Formula.atom _ _, _, _, h, _ => h.elim
   | Formula.eq _ _, _, _, h, _ => h.elim
@@ -825,7 +825,7 @@ theorem leftPrin_lift : ∀ (A : Formula) {Γ Δ : List Formula}, LeftPrin A Γ 
 -- ⭐ La fórmula de corte se pide por PERTENENCIA (`Or (x = A) (x ∈ Δ)`) y no en
 -- la cabeza. Eso absorbe la contracción — que es lo que en la presentación
 -- clásica de Gentzen obliga a pasar por la regla MIX.
-def CutAt (A : Formula) (m n : Nat) : Prop :=
+def CutAt₀ (A : Formula) (m n : Nat) : Prop :=
   ∀ (Γ₁ Δ₁ Γ₂ Δ₂ Γ Δ : List Formula),
     LKh m Γ₁ Δ₁ → LKh n Γ₂ Δ₂ →
     (∀ x, x ∈ Γ₁ → x ∈ Γ) → (∀ x, x ∈ Δ₁ → Or (x = A) (x ∈ Δ)) →
@@ -833,10 +833,10 @@ def CutAt (A : Formula) (m n : Nat) : Prop :=
     LK₀ Γ Δ
 
 /-- Todos los cortes de grado ESTRICTAMENTE menor que `d`. -/
-def CutBelow (d : Nat) : Prop := ∀ A, deg A < d → ∀ m n, CutAt A m n
+def CutBelow₀ (d : Nat) : Prop := ∀ A, deg A < d → ∀ m n, CutAt₀ A m n
 
 /-- El corte en su forma cómoda: dos `LK₀` y una cota de grado. -/
-theorem cutOf {d : Nat} (IHd : CutBelow d) (A : Formula) (hA : deg A < d)
+theorem cutOf {d : Nat} (IHd : CutBelow₀ d) (A : Formula) (hA : deg A < d)
     {Γ Δ : List Formula} (P : LK₀ Γ (A :: Δ)) (Q : LK₀ (A :: Γ) Δ) : LK₀ Γ Δ := by
   obtain ⟨m, hm⟩ := lk0_to_lkh P
   obtain ⟨n, hn⟩ := lk0_to_lkh Q
@@ -854,11 +854,11 @@ theorem cutOf {d : Nat} (IHd : CutBelow d) (A : Formula) (hA : deg A < d)
 -- Inducción FUERTE sobre la altura `n` del lado derecho, no estructural: los
 -- casos `exL` principales recurren sobre `lkh_subst F 0 t` (los de levantamiento, sobre `F`);
 -- `lkh_subst` devuelve otra derivación de la MISMA altura, no una subderivación.
-theorem cutPrinAux {d : Nat} (IHd : CutBelow d) :
+theorem cutPrinAux {d : Nat} (IHd : CutBelow₀ d) :
     ∀ (k n : Nat), n < k → ∀ (Γ₂ Δ₂ : List Formula), LKh n Γ₂ Δ₂ →
       ∀ (A : Formula), deg A = d → ∀ (Γ Δ : List Formula),
         (∀ x, x ∈ Γ₂ → Or (x = A) (x ∈ Γ)) → (∀ x, x ∈ Δ₂ → x ∈ Δ) →
-        LeftPrin A Γ Δ → LK₀ Γ Δ := by
+        LeftPrin₀ A Γ Δ → LK₀ Γ Δ := by
   intro k
   induction k with
   | zero => intro n hn; exact absurd hn (Nat.not_lt_zero n)
@@ -1025,7 +1025,7 @@ theorem cutPrinAux {d : Nat} (IHd : CutBelow d) :
             IH n₀ (by omega) (substFormula 0 t b :: Ga) Δ₂ Fs (Formula.ex b) hdA
               (substFormula 0 t b :: Γ) Δ
               (subA_cons _ (mem_tl h3)) h4
-              (leftPrin_mono (Formula.ex b) (⟨t, Pt⟩ : LeftPrin (Formula.ex b) Γ Δ)
+              (leftPrin_mono (Formula.ex b) (⟨t, Pt⟩ : LeftPrin₀ (Formula.ex b) Γ Δ)
                 (sub_wk _ (sub_refl Γ)) (sub_refl Δ))
           exact cutOf IHd _ hb Pt H
         · have H : LK₀ (b :: Γ.map (liftFormula 0)) (Δ.map (liftFormula 0)) :=
@@ -1048,8 +1048,8 @@ theorem cutPrinAux {d : Nat} (IHd : CutBelow d) :
 -- sobre `m + n` NO hace falta. Basta inducir sobre `m` — porque los únicos casos
 -- que consumen el lado derecho son los PRINCIPALES, y ésos los absorbe
 -- `cutPrinAux`, que induce sobre `n` por su cuenta.
-theorem cutLeftAux {d : Nat} (IHd : CutBelow d) :
-    ∀ (k m : Nat), m < k → ∀ (A : Formula), deg A = d → ∀ (n : Nat), CutAt A m n := by
+theorem cutLeftAux {d : Nat} (IHd : CutBelow₀ d) :
+    ∀ (k m : Nat), m < k → ∀ (A : Formula), deg A = d → ∀ (n : Nat), CutAt₀ A m n := by
   intro k
   induction k with
   | zero => intro m hm; exact absurd hm (Nat.not_lt_zero m)
@@ -1123,14 +1123,14 @@ theorem cutLeftAux {d : Nat} (IHd : CutBelow d) :
             (sub_cons g h1) h2 (subA_wk g h3) h4
         exact LK₀.eqAx Γ Δ g hg G
     -- ── reglas DERECHAS de D1: la MISMA llamada sirve para las dos ramas ──────
-    -- ⭐ El resultado de la recursión ES `LeftPrin A Γ Δ` cuando la principal es
+    -- ⭐ El resultado de la recursión ES `LeftPrin₀ A Γ Δ` cuando la principal es
     -- `A`, y la premisa de la regla cuando no lo es. Una sola llamada, dos usos.
     | implR m₀ Ga Da b c F =>
         have G : LK₀ (b :: Γ) (c :: Δ) :=
           IH m₀ (by omega) A hdA n (b :: Γ₁) (c :: Da) Γ₂ Δ₂ (b :: Γ) (c :: Δ) F D2
             (sub_cons b h1) (subA_cons c (mem_tl h2)) (subA_wk b h3) (sub_wk c h4)
         by_cases hA : Formula.impl b c = A
-        · have hLP : LeftPrin A Γ Δ := by rw [← hA]; exact G
+        · have hLP : LeftPrin₀ A Γ Δ := by rw [← hA]; exact G
           exact cutPrinAux IHd (n + 1) n (Nat.lt_succ_self n) Γ₂ Δ₂ D2 A hdA Γ Δ h3 h4 hLP
         · have hmem : Formula.impl b c ∈ Δ := (h2 _ (List.Mem.head _)).resolve_left hA
           exact LK₀.struct Γ Γ (Formula.impl b c :: Δ) Δ (LK₀.implR Γ Δ b c G)
@@ -1143,7 +1143,7 @@ theorem cutLeftAux {d : Nat} (IHd : CutBelow d) :
           IH m₀ (by omega) A hdA n Γ₁ (c :: Da) Γ₂ Δ₂ Γ (c :: Δ) F2 D2
             h1 (subA_cons c (mem_tl h2)) h3 (sub_wk c h4)
         by_cases hA : Formula.and b c = A
-        · have hLP : LeftPrin A Γ Δ := by rw [← hA]; exact ⟨G1, G2⟩
+        · have hLP : LeftPrin₀ A Γ Δ := by rw [← hA]; exact ⟨G1, G2⟩
           exact cutPrinAux IHd (n + 1) n (Nat.lt_succ_self n) Γ₂ Δ₂ D2 A hdA Γ Δ h3 h4 hLP
         · have hmem : Formula.and b c ∈ Δ := (h2 _ (List.Mem.head _)).resolve_left hA
           exact LK₀.struct Γ Γ (Formula.and b c :: Δ) Δ (LK₀.andR Γ Δ b c G1 G2)
@@ -1153,7 +1153,7 @@ theorem cutLeftAux {d : Nat} (IHd : CutBelow d) :
           IH m₀ (by omega) A hdA n Γ₁ (b :: c :: Da) Γ₂ Δ₂ Γ (b :: c :: Δ) F D2
             h1 (subA_cons b (subA_cons c (mem_tl h2))) h3 (sub_wk b (sub_wk c h4))
         by_cases hA : Formula.or b c = A
-        · have hLP : LeftPrin A Γ Δ := by rw [← hA]; exact G
+        · have hLP : LeftPrin₀ A Γ Δ := by rw [← hA]; exact G
           exact cutPrinAux IHd (n + 1) n (Nat.lt_succ_self n) Γ₂ Δ₂ D2 A hdA Γ Δ h3 h4 hLP
         · have hmem : Formula.or b c ∈ Δ := (h2 _ (List.Mem.head _)).resolve_left hA
           exact LK₀.struct Γ Γ (Formula.or b c :: Δ) Δ (LK₀.orR Γ Δ b c G)
@@ -1164,7 +1164,7 @@ theorem cutLeftAux {d : Nat} (IHd : CutBelow d) :
             Γ (substFormula 0 t b :: Δ) F D2
             h1 (subA_cons _ (mem_tl h2)) h3 (sub_wk _ h4)
         by_cases hA : Formula.ex b = A
-        · have hLP : LeftPrin A Γ Δ := by rw [← hA]; exact ⟨t, G⟩
+        · have hLP : LeftPrin₀ A Γ Δ := by rw [← hA]; exact ⟨t, G⟩
           exact cutPrinAux IHd (n + 1) n (Nat.lt_succ_self n) Γ₂ Δ₂ D2 A hdA Γ Δ h3 h4 hLP
         · have hmem : Formula.ex b ∈ Δ := (h2 _ (List.Mem.head _)).resolve_left hA
           exact LK₀.struct Γ Γ (Formula.ex b :: Δ) Δ (LK₀.exR Γ Δ b t G)
@@ -1179,14 +1179,14 @@ theorem cutLeftAux {d : Nat} (IHd : CutBelow d) :
             (map_sub _ h1) (subA_cons b (mapA_sub 0 (mem_tl h2)))
             (mapA_sub 0 h3) (sub_wk b (map_sub _ h4))
         by_cases hA : Formula.forall b = A
-        · have hLP : LeftPrin A Γ Δ := by rw [← hA]; exact G
+        · have hLP : LeftPrin₀ A Γ Δ := by rw [← hA]; exact G
           exact cutPrinAux IHd (n + 1) n (Nat.lt_succ_self n) Γ₂ Δ₂ D2 A hdA Γ Δ h3 h4 hLP
         · have hmem : Formula.forall b ∈ Δ := (h2 _ (List.Mem.head _)).resolve_left hA
           exact LK₀.struct Γ Γ (Formula.forall b :: Δ) Δ (LK₀.allR Γ Δ b G)
             (sub_refl Γ) (sub_drop hmem)
 
 -- ── §8.7 · la inducción EXTERNA: sobre el GRADO ─────────────────────────────
-theorem cutAll : ∀ (d : Nat), CutBelow d := by
+theorem cutAll : ∀ (d : Nat), CutBelow₀ d := by
   intro d
   induction d with
   | zero => intro A hA; exact absurd hA (Nat.not_lt_zero _)
@@ -1199,7 +1199,7 @@ theorem cutAll : ∀ (d : Nat), CutBelow d := by
 
 -- ── §8.8 · 🏁🏁🏁 EL HAUPTSATZ ──────────────────────────────────────────────
 /-- 🏁🏁🏁 **EL HAUPTSATZ**: el corte ÚNICO es ADMISIBLE en `LK₀`. -/
-theorem hauptsatz₀ : CutAdm := by
+theorem hauptsatz₀ : CutAdm₀ := by
   intro Γ Δ A P Q
   obtain ⟨m, hm⟩ := lk0_to_lkh P
   obtain ⟨n, hn⟩ := lk0_to_lkh Q
@@ -1215,10 +1215,10 @@ theorem hauptsatz₀ : CutAdm := by
     | tail _ h => exact Or.inr h
 
 /-- 🏁 Y con él, la ELIMINACIÓN DE CORTES. -/
-theorem cut_elimination₀ : CutElim := cutElim_of hauptsatz₀
+theorem cut_elimination₀ : CutElim₀ := cutElim_of hauptsatz₀
 
 /-- 🏁🏁 Y con ella, **H3**: la EXTRACCIÓN DE HERBRAND deja de ser una deuda. -/
-theorem herbrand_extraction₀ : HerbrandExtraction :=
+theorem herbrand_extraction₀ : HerbrandExtraction₀ :=
   FOL.NDtoLK0.herbrandExtraction_of_cutElim cut_elimination₀
 
 /-- 🏁🏁🏁 **EL TEOREMA DE HERBRAND, YA INCONDICIONAL.** Era un `↔` con hipótesis (`herbrand_iff`,

@@ -19,6 +19,22 @@ All notable changes to this project will be documented in this file.
 Format based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## 2026-09-27 (5) — N1‑N4 resueltas: 13 renombres y dos duplicados retirados
+
+* 🏷️ **N1** (propietario: renombrar): las once definiciones POR DERIVABILIDAD que no llevaban marca
+  la llevan ya — `CutAdm₀`, `CutAt₀`, `CutBelow₀`, `LeftPrin₀`, `CutElim₀`, `NDtoLK₀`,
+  `HerbrandExtraction₀`, `HerbrandExtractionBlock₀`, `ImpAll₀`, `IffAll₀`, `PwEq₂`. La regla 1 de
+  `NAMING-CONVENTIONS.md` §9 vuelve a ser verdad en el árbol, sin excepción.
+* 🧊↩️ Para ello se **descongelaron** `PrenexNF0` (define `ImpAll₀`/`IffAll₀`) y `SequentSound0`
+  (cita `CutElim₀` en su prosa), con `thaw --confirm` autorizado por el propietario, y se volvieron
+  a congelar en el mismo ciclo. Sólo cambian esos nombres.
+* 🏷️ **N2** (propietario: son titulares): `henLimit_consistent₀`, `shiftTheory_consistent₀`, con sus
+  filas de footprint en RPP.
+* ✂️ **N3**: `SkolemNF0` deja su copia de `quantFree_subst` y usa la de `FOL.Sequent0` (importa
+  `FOL.Sequent0`: una arista más en `DEPENDENCIES.md`). **N4**: `Inconsistencia` deja sus copias de
+  `Mfalse`/`Mtrue`/`P` y usa las de `FOL.Soundness0`.
+* 🔒 Los 10 congelables de la segunda criba quedan **bloqueados, no congelados** (propietario).
+
 ## 2026-09-27 (4) — La segunda criba de congelación, con refutación
 
 * 🔎 Sobre los **18** que deja pasar `criba-congelacion.py` (liberados por P2, P3 y P4): cuatro lentes

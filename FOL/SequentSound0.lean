@@ -36,7 +36,7 @@ se sustituye (ADR‑061).
 motivo (ADR‑061): el footprint de un corolario dice la verdad del módulo en que vive.
 
 ⚠️ **Por qué importa y no es adorno**: `LK₀` es el cálculo sobre el que se enuncia y
-demuestra el Hauptsatz (`FOL.Hauptsatz0`). Si fuera **demasiado fuerte**, `CutElim` podría ser cierto y no servir —o
+demuestra el Hauptsatz (`FOL.Hauptsatz0`). Si fuera **demasiado fuerte**, `CutElim₀` podría ser cierto y no servir —o
 peor, se perseguiría un teorema falso durante las mil líneas del Hauptsatz—. Esto lo cerró
 **antes** de pagar esa pieza.
 
