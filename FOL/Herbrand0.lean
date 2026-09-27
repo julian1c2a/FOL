@@ -172,8 +172,9 @@ theorem ptautCheck_iff {φ : Formula} : ptautCheck φ = true ↔ PTaut φ :=
 `peval` trata `∀`, `∃` **y la igualdad** como átomos, así que `t ≐ t` —derivable por `refl`— **no**
 es `PTaut`. Que el fragmento sin cuantificadores sea decidible *por tabla de verdad* es **falso** en
 este marco; lo cierto es su CARACTERIZACIÓN relativa a la teoría de la igualdad
-(`FOL.Hauptsatz0.derives0_qf_iff`), que **no** es un decisor: la lista `E` de instancias no tiene
-cota. -/
+(`FOL.Hauptsatz0.derives0_qf_iff`), que por sí sola no es un decisor: la lista `E` de instancias no
+tiene cota. Con la cota correcta sí lo hay: `FOL.QFDecide0.decideDerives0QF` (y usa `pcheck` con los
+átomos SIN REPETIR, porque este `ptautCheck` los repite y la tabla explota). -/
 instance instDecidablePTaut (φ : Formula) : Decidable (PTaut φ) :=
   if h : ptautCheck φ = true then isTrue (ptautCheck_iff.mp h)
   else isFalse (fun hp => h (ptautCheck_iff.mpr hp))

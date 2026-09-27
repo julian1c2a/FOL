@@ -19,6 +19,22 @@ All notable changes to this project will be documented in this file.
 Format based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## 2026-09-27 (3) — P4: el fragmento sin cuantificadores, ACOTADO y DECIDIDO
+
+* 🏁🏁 **`FOL/QFDecide0.lean`** (módulo nuevo ⇒ **55 módulos**): `derives0_qf_iff_bounded` —
+  `Γ ⊢₀ φ` sii `EqPropCert Γ φ (qfInst Γ φ)` para `Γ`, `φ` sin cuantificadores, con UNA lista finita
+  FIJA de instancias— y `decideDerives0QF : Decidable (Γ ⊢₀ φ)`. El primer resultado de
+  DECIDIBILIDAD del proyecto. **`[propext, Quot.sound]`**, calculable en el kernel. Compiló a la
+  primera en el árbol (portado del borrador «semántico» de RPP‑106).
+* ⛔ **La cota ingenua (subtérminos) es FALSA** y el módulo lo compila como control: `EqInstance.func`
+  cambia un argumento, y `[a≐b, c≐d] ⟹ g(a,c) ≐ g(b,d)` pasa por `g(b,c)`. La correcta cierra por las
+  **mezclas de prefijo** y SUSTITUYE `E`.
+* ⭐ **La poda** (`eqPropCert_prune`) extiende la valuación con un núcleo de congruencia composicional:
+  no usa el Hauptsatz ni `QuantFree`.
+* ⚠️ **El decisor es de juguete**: tabla de verdad de `2^(átomos distintos)`.
+* Sale la OFERTA de `Hauptsatz0` de `[G.2]` (14 marcadores); sus docstrings y la de
+  `Herbrand0.instDecidablePTaut` remiten a `QFDecide0`.
+
 ## 2026-09-27 (2) — 🧊 Los cinco primeros módulos CONGELADOS; P2 y P3 resueltas
 
 * 🧊 **FREEZE** (permanente; extensión sólo vía `*Ext.lean`) de `PrenexNF0`, `Prenex0`, `SequentSound0`,

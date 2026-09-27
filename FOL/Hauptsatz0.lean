@@ -39,7 +39,8 @@ Es FALSO que el fragmento sin cuantificadores de `Derives₀` sea «decidible po
 un secuente sin cuantificadores es derivable **sii** su conclusión es consecuencia proposicional
 del contexto más una lista finita `E` de instancias de la igualdad. La ⟹ es `lk0_herbrand` con
 `φ := ⊥` sobre la derivación SIN CORTE; la ⟸ no necesita ni la hipótesis `QuantFree`.
-⚠️ **Caracteriza, NO decide**: `E` no tiene cota. Y la `E` sin cota **no vuelve vacuo** el
+⚠️ **Por sí solo caracteriza, no decide**: `E` no tiene cota (la cota y el decisor están en
+`FOL.QFDecide0`, desde el 2026‑09‑27). Y la `E` sin cota **no vuelve vacuo** el
 enunciado (el precedente es el Maehara relativizado a `E` de RPP‑067, que NO está en ningún árbol;
 su contraejemplo es `../ROBINSON_PlusPlus/sondeos/CraigEqVacuo.lean`): la valuación constante `true` satisface toda
 `EqInstance` (`peval_true_eqInstance`), luego `EqPropCert [] ⊥ E` es falso para toda `E` — hay un
@@ -1233,7 +1234,8 @@ open FOL.Propositional0
 
 /-- El certificado del secuente `Γ ⟹ φ`: una lista `E` de instancias de la igualdad, y la
 constancia de que `φ` se sigue PROPOSICIONALMENTE de `Γ` y `E`.
-⚠️ `E` NO tiene cota: esto CARACTERIZA el fragmento sin cuantificadores, pero NO lo DECIDE. -/
+⚠️ `E` NO tiene cota: esto CARACTERIZA el fragmento sin cuantificadores; por sí solo no lo decide
+(la versión acotada y el decisor: `FOL.QFDecide0`). -/
 def EqPropCert (Γ : List Formula) (φ : Formula) (E : List Formula) : Prop :=
   And (∀ g, g ∈ E → EqInstance g)
     (∀ v : PVal, (∀ g, g ∈ Γ → peval v g = true) →
@@ -1277,9 +1279,9 @@ verdad» (`c ≐ c` es derivable y no es `PTaut`).
 los subtérminos del secuente es FALSA con este `EqInstance` (`func` cambia UN argumento:
 `[a≐b, c≐d] ⟹ g(a,c) ≐ g(b,d)` es derivable y necesita `g(b,c)`, que no es subtérmino). La cota
 correcta cierra `S` por las «mezclas de prefijo» y SUSTITUYE `E` por todas las instancias sobre ese
-cierre, en vez de filtrarla. Esa versión —y con ella un decisor, de coste 2^(átomos)— no está en
-este módulo: ⬜ OFERTA al propietario, cotizada el 2026‑09‑27 en ~1000 líneas, con borradores
-compilados en aislado (RPP‑106). -/
+cierre, en vez de filtrarla. Esa versión —y con ella un decisor, de coste 2^(átomos)— está en
+`FOL.QFDecide0` (`derives0_qf_iff_bounded`, `decideDerives0QF`; RPP‑107), que importa este módulo
+sin tocarlo. -/
 theorem derives0_qf_iff {Γ : List Formula} {φ : Formula}
     (hΓ : ∀ g, g ∈ Γ → QuantFree g) (hφ : QuantFree φ) :
     (Γ ⊢₀ φ) ↔ ∃ E, EqPropCert Γ φ E :=

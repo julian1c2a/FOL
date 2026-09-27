@@ -40,6 +40,7 @@ import FOL.SkolemN0
 import FOL.SkolemNF0
 import FOL.Craig0
 import FOL.Interpolation0
+import FOL.QFDecide0
 import FOL.BlockExtraction0
 import FOL.SkolemHerbrand0
 

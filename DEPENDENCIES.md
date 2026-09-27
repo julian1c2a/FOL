@@ -9,7 +9,7 @@
 
 ## Cifras
 
-* **54 módulos** (`FOL/` 43 + `FOL/Theorems/` 5 + `TheoryFramework/` 6), **97 aristas** `import` entre ellos, profundidad máxima **12**.
+* **55 módulos** (`FOL/` 44 + `FOL/Theorems/` 5 + `TheoryFramework/` 6), **98 aristas** `import` entre ellos, profundidad máxima **12**.
 * 2 `lean_lib`: `FOL` (raíz: el barril `FOL.lean`, sin globs) y `TheoryFramework` (globs `.submodules`).
 * Módulos que NINGÚN build alcanza: ninguno.
 * Imports externos a FOL: `Lean` (FOL no tiene `require`: no depende de nada más allá de sí mismo).
@@ -25,7 +25,7 @@
 * **6** — `HenkinLimit0`, `Sequent0`
 * **7** — `Craig0`, `HerbrandBlock0`, `Lindenbaum0`, `NDtoLK0`
 * **8** — `Canonical0`, `Finitary0`, `Hauptsatz0`
-* **9** — `BlockExtraction0`, `Interpolation0`, `Inversion0`, `SequentSound0`, `Skolem0`
+* **9** — `BlockExtraction0`, `Interpolation0`, `Inversion0`, `QFDecide0`, `SequentSound0`, `Skolem0`
 * **10** — `Compacity0`, `SkolemN0`
 * **11** — `SkolemNF0`
 * **12** — `SkolemHerbrand0`
@@ -97,6 +97,7 @@ graph BT
     PrenexNF0["PrenexNF0"] --> Prenex0["Prenex0"]
     Propositional0["Propositional0"] --> DecEq["DecEq"]
     Propositional0["Propositional0"] --> Derives0["Derives0"]
+    QFDecide0["QFDecide0"] --> Hauptsatz0["Hauptsatz0"]
     Rename["Rename"] --> Derives0["Derives0"]
     Semantics["Semantics"] --> FOL_FOL["FOL.FOL"]
     Sequent0["Sequent0"] --> Derives2["Derives2"]
@@ -181,10 +182,11 @@ graph BT
 | `FOL.NDtoLK0` | 7 | `Sequent0` | `Finitary0`, `Hauptsatz0` |
 | `FOL.Canonical0` | 8 | `Complexity`, `Eq0`, `Lindenbaum0`, `Semantics`, `Soundness0` | `Compacity0`, `SequentSound0`, `Skolem0` |
 | `FOL.Finitary0` | 8 | `NDtoLK0` | — |
-| `FOL.Hauptsatz0` | 8 | `NDtoLK0`, `Sequent0` | `BlockExtraction0`, `Interpolation0`, `Inversion0` |
+| `FOL.Hauptsatz0` | 8 | `NDtoLK0`, `Sequent0` | `BlockExtraction0`, `Interpolation0`, `Inversion0`, `QFDecide0` |
 | `FOL.BlockExtraction0` | 9 | `Hauptsatz0`, `HerbrandBlock0` | `SkolemHerbrand0` |
 | `FOL.Interpolation0` | 9 | `Craig0`, `Hauptsatz0` | — |
 | `FOL.Inversion0` | 9 | `Hauptsatz0` | — |
+| `FOL.QFDecide0` | 9 | `Hauptsatz0` | — |
 | `FOL.SequentSound0` | 9 | `Canonical0`, `Sequent0` | — |
 | `FOL.Skolem0` | 9 | `Canonical0` | `Compacity0`, `SkolemN0` |
 | `FOL.Compacity0` | 10 | `Canonical0`, `Skolem0` | — |
@@ -194,6 +196,6 @@ graph BT
 
 ## Barriles
 
-* `FOL.lean` importa 38 módulos.
+* `FOL.lean` importa 39 módulos.
 * `TheoryFramework.lean` importa 5 módulos.
 

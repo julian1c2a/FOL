@@ -19,7 +19,7 @@
 > **Fuentes:** `cuarentena/README.md` · `AXIOMS.md` ·
 > `../ROBINSON_PlusPlus/doc/AUDITORIA-FOL-2026-09-12.md`
 
-**Last updated:** 2026-09-27 — 🧊 cinco módulos congelados; P2 (18 renombres) y P3 (`sub_*` en `Sequent0`) hechas. Antes, el mismo día: W2, W3 y W4 hechas; la criba de congelación, pasada con refutación (1 congelable ya, 4 tras arreglos —aplicados—, 18 todavía no). Antes (2026-09-26): aviso reescrito y sección «Lo que queda» nueva; el plan de fases de abajo es HISTÓRICO (2026-05-16).
+**Last updated:** 2026-09-27 — P4 hecha (`QFDecide0`). Antes, el mismo día: 🧊 cinco módulos congelados; P2 (18 renombres) y P3 (`sub_*` en `Sequent0`) hechas. Antes, el mismo día: W2, W3 y W4 hechas; la criba de congelación, pasada con refutación (1 congelable ya, 4 tras arreglos —aplicados—, 18 todavía no). Antes (2026-09-26): aviso reescrito y sección «Lo que queda» nueva; el plan de fases de abajo es HISTÓRICO (2026-05-16).
 **Autor**: Julián Calderón Almendros
 
 ## ⬜ Lo que queda para CERRAR FOL — 2026-09-26 (noche)
@@ -65,19 +65,18 @@ Decisiones de la criba, resueltas el mismo día: **P2** ✅ los 18 titulares ren
 subíndices (`hauptsatz₀`, `cut_elimination₀`, `herbrand₀`, `herbrand_block₀`, `truth_lemma₀`,
 `lindenbaum_lemma₀`, `skolem_conservative*₀`…; y `maeharaₚ`/`craigₚ` para `LKp`); **P3** ✅ los cinco
 `sub_*` deduplicados en `Sequent0`; **P4** ⬜ la OFERTA de `Hauptsatz0` (versión acotada de
-`derives0_qf_iff`): **cotizada** (RPP‑106) — ~1000 líneas en un módulo hoja nuevo, sin reabrir nada;
-la cota ingenua por subtérminos es FALSA y la correcta usa «mezclas de prefijo»; decisor de juguete
-(2^átomos). ⬜ Decisión del propietario.
+`derives0_qf_iff`): ✅ **HECHA** (propietario: «hacemos la versión acotada»; RPP‑107): `FOL/QFDecide0.lean`,
+`derives0_qf_iff_bounded` y `decideDerives0QF`, `[propext, Quot.sound]`; la cota ingenua por subtérminos
+es FALSA y la correcta usa «mezclas de prefijo»; decisor de juguete (2^átomos).
 
 ⬜ Siguiente: re‑correr la criba con refutación sobre los demás (P2 y P3 liberan su cono). Seguirán
 bloqueados hasta que la entrega de PeanoRF compile aquí los 15 de su cadena (`Complexity` incluido,
-que `Slash` importará al retirar `fdepth`), `Inconsistencia` (su §2 cambia con la entrega) y
-`Hauptsatz0` mientras la OFERTA siga abierta.
+que `Slash` importará al retirar `fdepth`), `Inconsistencia` (su §2 cambia con la entrega). La OFERTA de `Hauptsatz0` ya no retiene
+nada: se pagó en `QFDecide0`.
 
-⛔ **Fuera de alcance, con su motivo**: LS↑ (ver `Compacity0` §3); la versión ACOTADA de
-`derives0_qf_iff` (OFERTA en `[G.2]`, coste no medido); Beth y Robinson (el puente `LK₀`→`LKp`
-ya existe, `Interpolation0.lk0_to_lkp`; piden además
-y renombrar símbolos de relación); la noción de **sentencia** (bloqueo transversal: sin ella no se
+⛔ **Fuera de alcance, con su motivo**: LS↑ (ver `Compacity0` §3); un decisor PRÁCTICO del fragmento sin cuantificadores
+(cierre de congruencia con certificado: el de `QFDecide0` es de juguete); Beth y Robinson (el puente `LK₀`→`LKp`
+ya existe, `Interpolation0.lk0_to_lkp`; piden además renombrar símbolos de relación); la noción de **sentencia** (bloqueo transversal: sin ella no se
 enuncian bien la equivalencia elemental ni la categoricidad); y la propiedad de disyunción para
 `Derives₀`, que es **FALSA**.
 
