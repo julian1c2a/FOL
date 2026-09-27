@@ -19,6 +19,23 @@ All notable changes to this project will be documented in this file.
 Format based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## 2026-09-27 (9) — N5 y N7 resueltas; 🧊 tercer lote CONGELADO: ocho módulos
+
+* 🏷️ **N5** (propietario: auxiliares): los nombres técnicos que dependen de un cálculo y que la
+  cabecera de su módulo nombra —`henkin_step_derives`; `lindenbaum_limit_consistent`/`_max`/`_closed`;
+  `skolemizeF_impAll`; `cutElim_of`, `cutPrinAux`, `cutLeftAux`, `leftPrin_mono`, `leftPrin_lift`;
+  `herbrand_block_iff` y `Herbrand0.herbrand_iff`— son AUXILIARES: no llevan marca, ningún renombre.
+  La regla, en `NAMING-CONVENTIONS.md` §9, regla 3 («Qué es TITULAR»): titular es el resultado que la
+  cabecera presenta como entrega; «titular = lo que tiene fila de footprint» no sirve (217 de las 256
+  filas de FOL no llevan marca ni prefijo de cálculo).
+* ✏️ **N7** (propietario: reforzar el enunciado): `SkolemHerbrand0.herbrand_of_skolemNF₀` lleva la
+  ecuación `skolemize k (prenex φ) = allBlock m ψ`, como los de §3. Sin ella `ψ` no quedaba atada a la
+  matriz y el `↔` lo cumplía cualquier `P : Prop`. Misma prueba, mismo footprint
+  (`[propext, Quot.sound]`); sin consumidores.
+* 🧊 **FREEZE** (tercer lote; RPP‑112) de `Henkin0`, `Skolem0`, `Lindenbaum0`, `SkolemNF0`,
+  `SkolemHerbrand0`, `Hauptsatz0`, `HerbrandBlock0` y `BlockExtraction0`. Con los dos primeros lotes,
+  **23 congelados**; de los 19 de la tercera criba sólo queda fuera `Inconsistencia`, por X1.
+
 ## 2026-09-27 (8) — 🧊 Segundo lote CONGELADO: diez módulos
 
 * 🧊 **FREEZE** (propietario: «congela lo congelable», tras la tercera criba; RPP‑112) de `Compacity0`,

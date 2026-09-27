@@ -19,7 +19,7 @@ import FOL.BlockExtraction0
 # `FOL.SkolemHerbrand0` — 🏁 EL ENCHUFE: de la forma normal de Skolem al certificado de Herbrand
 
     derives0_neg_allBlock_iff : (Γ ⊢₀ ¬∀ᵐψ)  ↔  (Γ ⊢₀ ∃ᵐ¬ψ)
-    herbrand_of_skolemNF₀      : ∃ m ψ, QuantFree ψ ∧
+    herbrand_of_skolemNF₀      : ∃ m ψ, skolemize k (prenex φ) = ∀ᵐ ψ ∧ QuantFree ψ ∧
                                  ( [] ⊢₀ ¬(skolemize k (prenex φ))
                                    ↔ ∃ tss E, HerbrandCertBlock m (¬ψ) tss E )
     herbrand_validity₀        : cst k, cst (k+1), … frescas en φ →
@@ -147,13 +147,18 @@ theorem quantFree_neg {ψ : Formula} (h : QuantFree ψ) : QuantFree (neg ψ) := 
 certificado de Herbrand **de bloque** para la negación de su matriz.
 
 ⭐ Las tres piezas encajan porque `skolemNF_shape` entrega exactamente `∀ᵐ ψ` con `QuantFree ψ`,
-que es la hipótesis de `herbrand_block₀`, y el puente convierte `¬∀ᵐψ` en `∃ᵐ¬ψ`. -/
+que es la hipótesis de `herbrand_block₀`, y el puente convierte `¬∀ᵐψ` en `∃ᵐ¬ψ`.
+
+⚠️ **Enunciado reforzado el 2026‑09‑27** (N7, decisión del propietario tras la tercera criba): lleva
+la ecuación `skolemize k (prenex φ) = allBlock m ψ`, como los de §3. Sin ella, `ψ` no quedaba atada a
+la matriz y el `↔` lo cumplía cualquier `P : Prop` en lugar de la refutabilidad (medido): el tipo no
+decía lo que esta docstring promete. Misma prueba, mismo footprint. -/
 theorem herbrand_of_skolemNF₀ (k : Nat) (φ : Formula) :
-    ∃ (m : Nat) (ψ : Formula), And (QuantFree ψ)
+    ∃ (m : Nat) (ψ : Formula), And (skolemize k (prenex φ) = allBlock m ψ) (And (QuantFree ψ)
       (Iff ([] ⊢₀ neg (skolemize k (prenex φ)))
-           (∃ tss E, HerbrandCertBlock m (neg ψ) tss E)) := by
+           (∃ tss E, HerbrandCertBlock m (neg ψ) tss E))) := by
   obtain ⟨m, ψ, heq, hq⟩ := skolemNF_shape k φ
-  refine ⟨m, ψ, hq, ?_⟩
+  refine ⟨m, ψ, heq, hq, ?_⟩
   rw [heq]
   exact Iff.trans (derives0_neg_allBlock_iff m ψ []) (herbrand_block₀ (quantFree_neg hq))
 

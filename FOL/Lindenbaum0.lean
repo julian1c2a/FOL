@@ -33,7 +33,7 @@ cada existencial**.* Es exactamente la hipótesis que el modelo canónico consum
    **el teorema de deducción**, y sobre `Derives₀` **no hay que demostrarlo**: `intro_impl` es un
    **constructor**. La versión de `cuarentena/Completeness.lean` (borrado el 2026‑09‑23)
    invocaba `FOL.Metamath.Deduction.deduction_theorem`.
-2. **§2** — Lindenbaum: la etapa `LindenbaumStep` (⭐ impredicativa desde el 2026‑09‑27: no decide
+2. **§2** — Lindenbaum: la etapa `LindenbaumStep` (⭐ desde el 2026‑09‑27, un predicado en `Prop` que no decide
    nada), el límite, su consistencia, su maximalidad y su **cierre por derivación**
    (`lindenbaum_limit_consistent`, `lindenbaum_limit_max`, `lindenbaum_limit_closed`), y
    `lindenbaum_lemma₀`.
@@ -56,7 +56,7 @@ cada existencial**.* Es exactamente la hipótesis que el modelo canónico consum
 
 (Es la tesis de ADR‑040 §2 y ADR‑041 §4, en `../ROBINSON_PlusPlus/DECISIONS.md`.)
 ⛔ **En Lean es FALSA** (auditoría de
-constructividad, 2026‑09‑27, medido). `Prop` es impredicativo: la etapa se define con la condición
+constructividad, 2026‑09‑27, medido). Un predicado en `Prop` no tiene que ser decidible: la etapa se define con la condición
 DENTRO, como conjunción, y no hay que decidirla:
 
     LindenbaumStep S (n+1) x := LindenbaumStep S n x ∨ (x = φₙ ∧ IsConsistent₀ (Sₙ ∪ {φₙ}))
@@ -82,7 +82,7 @@ enunciados, miden `[propext, Quot.sound]`. El `if` era cosa de la PRESENTACIÓN,
 🔑 **El WKL sigue nombrando la FUERZA lógica de la completitud, no un sitio del código.** Sobre
 RCA₀, completitud ⇔ WKL₀ (Simpson IV.3.3), y WKL₀ es Π⁰₂‑conservativo sobre PRA; pero ahí la
 teoría maximal tiene que EXISTIR como conjunto definible, y en Lean existe gratis como predicado
-impredicativo. ⇒ Ningún `Classical.choice` de este árbol «es el WKL».
+en `Prop`, sin decidirlo. ⇒ Ningún `Classical.choice` de este árbol «es el WKL».
 
 ⚠️ Los demás `Classical.choice` que llegaban aquí, desde abajo o de este mismo módulo
 (`Exists.choose` en `HenkinLimit0.bnd`, el tercio excluso de `Fresh0.cst_bound_sym`,
@@ -162,9 +162,9 @@ theorem derivesSet0_elim_impl {S : Formula → Prop} {A B : Formula}
 def IsMaximalConsistent₀ (S : Formula → Prop) : Prop :=
   And (IsConsistent₀ S) (∀ f, Not (S f) → Not (IsConsistent₀ (fun x => Or (S x) (x = f))))
 
-/-- ⭐⭐ **La etapa de Lindenbaum, IMPREDICATIVA**: `φₙ` entra en la etapa `n+1` si **es consistente**
-añadirla, y esa condición va DENTRO del predicado, como conjunción — no se DECIDE. `Prop` es
-impredicativo, así que la etapa es un predicado legítimo sin saber si la condición se cumple.
+/-- ⭐⭐ **La etapa de Lindenbaum, SIN DECIDIR**: `φₙ` entra en la etapa `n+1` si **es consistente**
+añadirla, y esa condición va DENTRO del predicado, como conjunción — no se DECIDE. Un predicado en
+`Prop` no tiene que ser decidible, así que la etapa es legítima sin saber si la condición se cumple.
 (Hasta el 2026‑09‑27 era un `if IsConsistent₀ … then … else …` decidido con
 `Classical.propDecidable`: la «no‑finitud» que la cabecera atribuía aquí era de la PRESENTACIÓN.) -/
 def LindenbaumStep (S : Formula → Prop) : Nat → (Formula → Prop)
@@ -257,7 +257,7 @@ theorem lindenbaum_limit_closed {S : Formula → Prop} (hCons : IsConsistent₀ 
   exact ⟨n + 1, Or.inr ⟨hn.symm, hConsN⟩⟩
 
 /-- ⭐⭐ **Toda teoría consistente se extiende a una maximal consistente.** Sin `Classical.choice`
-desde el 2026‑09‑27 (etapa impredicativa). -/
+desde el 2026‑09‑27 (etapa sin decidir). -/
 theorem lindenbaum_lemma₀ {S : Formula → Prop} (hCons : IsConsistent₀ S) :
     ∃ T : Formula → Prop, And (IsMaximalConsistent₀ T) (∀ f, S f → T f) :=
   ⟨LindenbaumLimit S, lindenbaum_limit_max hCons, fun _ hf => ⟨0, hf⟩⟩

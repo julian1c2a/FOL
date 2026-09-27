@@ -51,7 +51,7 @@ mirar si el argumento que decrece se puede PASAR, en vez de MEDIR.*
 Entrega **las dos** direcciones (la segunda, en §8); la primera en escribirse es la que vale para la
 conservatividad:
 
-* ⭐ `skolemizeF_impAll` — la forma normal **implica** el original, **sin ningún axioma de
+* ⭐ `skolemizeF_impAll` (pieza técnica, auxiliar: N5) — la forma normal **implica** el original, **sin ningún axioma de
   Skolem** y net‑0: es `intro_ex` bajo el prefijo.
 * 🏁 `skolem_conservative_nf₀` — los axiomas de Skolem **se retiran todos**, iterando
   `FOL.SkolemN0.skolem_conservative_n₀` sobre la lista con la frescura correcta.

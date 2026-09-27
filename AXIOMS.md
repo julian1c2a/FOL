@@ -409,7 +409,7 @@ no hacía falta. Lo que trae `Classical.choice` en v4.31 es **decodificar UTF‑
 
 ADR‑040 §2 y ADR‑041 §4 (RPP) y muchas docstrings decían que el `Classical.choice` de la completitud
 «es el WKL del `if IsConsistent₀` de Lindenbaum», y que ahí cabía «toda la no‑finitud». **En Lean es
-FALSO, y está medido**: `Prop` es impredicativo, la etapa de Lindenbaum se define con la condición
+FALSO, y está medido**: un predicado en `Prop` no tiene que ser decidible, y la etapa de Lindenbaum se define con la condición
 DENTRO, sin decidirla, y `lindenbaum_lemma₀` y `henkin_completion₀` son hoy `[propext, Quot.sound]`.
 
 * El WKL es necesario en aritmética de segundo orden —completitud ⇔ WKL₀ sobre RCA₀ (Simpson,
@@ -425,7 +425,7 @@ DENTRO, sin decidirla, y `lindenbaum_lemma₀` y `henkin_completion₀` son hoy 
   `[propext, Quot.sound]` «en vez del **WKL**», y el docstring de `lk0_not_empty`, que arrastra «el
   `Classical.choice` que ADR‑041 identificó como el **WKL**». Son localizaciones que D2 corrige, pero
   un fichero congelado no se toca sin `thaw` autorizado: se rectifican en su próximo deshielo. Los
-  otros tres congelados (`Prenex0`, `PrenexNF0`, `Soundness0`) no dicen nada del WKL.
+  otros 22 congelados (23 con el tercer lote) no lo LOCALIZAN: o no lo nombran, o lo citan para rectificarlo o como apodo de la FUERZA (medido con `grep WKL`, 2026‑09‑27).
 
 ### 4.6 · Lo que esta sección NO dice
 

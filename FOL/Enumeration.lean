@@ -74,7 +74,7 @@ más. `String.ofList_toList` y `String.toList` decodifican UTF‑8, y en v4.31 e
 `natToFormula_surj` y la instancia `EnumSym String`. Ahora la prueba elimina el testigo de validez
 con `String.exists_eq_ofList` (`[propext]`) y no decodifica nada (auditoría de constructividad,
 `auditoria/constructividad-2026-09-27/`). ⭐ Eso limpia también `Lindenbaum0.lindenbaum_lemma₀`,
-que consume `natToFormula_surj`: con la etapa ya impredicativa, era la única elección que le
+que consume `natToFormula_surj`: con la etapa ya sin decidir, era la única elección que le
 quedaba (medido: `…/experimentos/exp-esencial/E4_Lindenbaum.lean`).
 
 ## ⚠️ Hay una SEGUNDA ruta, también compilada, y más corta

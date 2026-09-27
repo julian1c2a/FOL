@@ -9,7 +9,7 @@
 > La prosa de este documento (explicaciones, motivación) va en español para que quede
 > clara sin ambigüedad.
 
-**Última actualización:** 2026-09-27 — §9: N1 (las definiciones por derivabilidad, sin excepción) y N2 (qué es titular). Antes (2026-09-26): subíndices de cálculo (D6, decidida) y entrada de axiomas corregida
+**Última actualización:** 2026-09-27 — §9: N5 (qué es titular: el resultado que la cabecera entrega; las piezas técnicas son auxiliares). Antes, el mismo día: §9: N1 (las definiciones por derivabilidad, sin excepción) y N2 (qué es titular). Antes (2026-09-26): subíndices de cálculo (D6, decidida) y entrada de axiomas corregida
 **Autor**: Julián Calderón Almendros
 
 ---
@@ -379,9 +379,16 @@ ordinal de plan: `Derives₀` es el «PASO 0» de
    Los TITULARES llevan siempre la marca (P2, 2026‑09‑27); los lemas AUXILIARES pueden ir sin ella:
    los desambigua el namespace del módulo
    (`FOL.Canonical0.max_cons_neg`, `FOL.Inversion0.inv_allR`).
-   Las PIEZAS con nombre de un ensamblaje, en la cabecera de su módulo, son titulares aunque sólo
-   las consuma el propio repositorio (N2, propietario, 2026‑09‑27): `henLimit_consistent₀`,
-   `shiftTheory_consistent₀`, como su gemelo `henkin_step_consistent₀`.
+   **Qué es TITULAR** (N2 y N5, propietario, 2026‑09‑27): el RESULTADO que la cabecera de su módulo
+   presenta como entrega, aunque sólo lo consuma el propio repositorio — `henLimit_consistent₀` y
+   `shiftTheory_consistent₀` (N2), como su gemelo `henkin_step_consistent₀`. Las piezas TÉCNICAS son
+   auxiliares aunque la cabecera las nombre o tengan fila de footprint (N5): los pasos de una prueba
+   (`Henkin0.henkin_step_derives`, el paso en positivo), los lemas de un límite
+   (`Lindenbaum0.lindenbaum_limit_consistent`/`_max`/`_closed`), las formas intermedias
+   (`SkolemNF0.skolemizeF_impAll`), las pasadas de una inducción (`Hauptsatz0.cutPrinAux`, `cutLeftAux`,
+   y el transporte de su dato, `leftPrin_mono`, `leftPrin_lift`) y los consumidores condicionales (`Hauptsatz0.cutElim_of`,
+   `HerbrandBlock0.herbrand_block_iff`, `Herbrand0.herbrand_iff`). ⚠️ «Titular = lo que tiene fila de
+   footprint» no sirve como regla: 220 de las 256 filas de FOL no llevan marca, y más de la mitad tampoco prefijo de cálculo.
    - **Coherencia de familia**: un teorema que empaqueta teoremas marcados (el `iff` de dos
      mitades) lleva la misma marca que ellas.
    - `derives_…` sin dígito ni letra queda reservado a `Derives` (`⊢`).

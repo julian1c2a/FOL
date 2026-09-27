@@ -19,7 +19,7 @@
 > **Fuentes:** `cuarentena/README.md` · `AXIOMS.md` ·
 > `../ROBINSON_PlusPlus/doc/AUDITORIA-FOL-2026-09-12.md`
 
-**Last updated:** 2026-09-27 — 🧊 segundo lote congelado (10 módulos: 15 en total); quedan N5, N7 y X1. Antes, el mismo día: la tercera criba con refutación: 10 congelables (4 ya, 6 con sus correcciones aplicadas), decisiones N5 y N7; N6 aplicada. Antes, el mismo día: la auditoría de constructividad y las decisiones D1‑D8 del propietario, ejecutadas (`Classical.choice` 157 → 84 constantes; Lindenbaum y Henkin sin él; la tesis del WKL, rectificada; la instancia de `TheoryFramework`, declarada; `Rename` descongelado para retirar `invOf`); los 17 candidatos, sólo bloqueados. Antes, el mismo día: N1‑N4 resueltas y aplicadas (13 renombres, dos duplicados retirados; `PrenexNF0`/`SequentSound0` descongelados y re‑congelados); los 10 congelables, sólo bloqueados. Antes, el mismo día: la segunda criba con refutación (71 correcciones). Antes, el mismo día: P4 hecha (`QFDecide0`). Antes, el mismo día: 🧊 cinco módulos congelados; P2 (18 renombres) y P3 (`sub_*` en `Sequent0`) hechas. Antes, el mismo día: W2, W3 y W4 hechas; la criba de congelación, pasada con refutación (1 congelable ya, 4 tras arreglos —aplicados—, 18 todavía no). Antes (2026-09-26): aviso reescrito y sección «Lo que queda» nueva; el plan de fases de abajo es HISTÓRICO (2026-05-16).
+**Last updated:** 2026-09-27 — N5 y N7, resueltas por el propietario (N5: los nombres técnicos son auxiliares, regla escrita en `NAMING-CONVENTIONS.md` §9; N7: `herbrand_of_skolemNF₀` reforzado con la ecuación); 🧊 tercer lote congelado (8 módulos: 23 en total; de los 19 de la tercera criba sólo queda fuera `Inconsistencia`, por X1). Antes, el mismo día: 🧊 segundo lote congelado (10 módulos: 15 en total); quedan N5, N7 y X1. Antes, el mismo día: la tercera criba con refutación: 10 congelables (4 ya, 6 con sus correcciones aplicadas), decisiones N5 y N7; N6 aplicada. Antes, el mismo día: la auditoría de constructividad y las decisiones D1‑D8 del propietario, ejecutadas (`Classical.choice` 157 → 84 constantes; Lindenbaum y Henkin sin él; la tesis del WKL, rectificada; la instancia de `TheoryFramework`, declarada; `Rename` descongelado para retirar `invOf`); los 17 candidatos, sólo bloqueados. Antes, el mismo día: N1‑N4 resueltas y aplicadas (13 renombres, dos duplicados retirados; `PrenexNF0`/`SequentSound0` descongelados y re‑congelados); los 10 congelables, sólo bloqueados. Antes, el mismo día: la segunda criba con refutación (71 correcciones). Antes, el mismo día: P4 hecha (`QFDecide0`). Antes, el mismo día: 🧊 cinco módulos congelados; P2 (18 renombres) y P3 (`sub_*` en `Sequent0`) hechas. Antes, el mismo día: W2, W3 y W4 hechas; la criba de congelación, pasada con refutación (1 congelable ya, 4 tras arreglos —aplicados—, 18 todavía no). Antes (2026-09-26): aviso reescrito y sección «Lo que queda» nueva; el plan de fases de abajo es HISTÓRICO (2026-05-16).
 **Autor**: Julián Calderón Almendros
 
 ## ⬜ Lo que queda para CERRAR FOL — 2026-09-26 (noche)
@@ -63,8 +63,8 @@ El estado vigente, en `CURRENT-STATUS-PROJECT.md`. Lo que queda:
 `PrenexNF0`, `Prenex0`, `SequentSound0`, `Soundness0`, `Rename`.
 🧊 **Segundo lote, el mismo día** (propietario: «congela lo congelable», tras la tercera criba; RPP‑112):
 `Compacity0`, `Inversion0`, `QFDecide0`, `SkolemN0`, `Craig0`, `Interpolation0`, `Canonical0`, `Fresh0`,
-`HenkinLimit0` y `TheoryFramework/Instances/FOL`. ⇒ **15 congelados**. ⚠️ `Fresh0` 🧊 cita por su título
-la sección «Dónde está, y dónde NO está, lo clásico de la completitud» de `Lindenbaum0` (no congelado):
+`HenkinLimit0` y `TheoryFramework/Instances/FOL`. ⇒ **15 congelados**. 🧊 **Tercer lote, el mismo día** (N5 y N7 resueltas, abajo; RPP‑112): `Henkin0`, `Skolem0`, `Lindenbaum0`, `SkolemNF0`, `SkolemHerbrand0`, `Hauptsatz0`, `HerbrandBlock0` y `BlockExtraction0` ⇒ **23 congelados**. ⚠️ `Fresh0` 🧊 cita por su título
+la sección «Dónde está, y dónde NO está, lo clásico de la completitud» de `Lindenbaum0` (🧊 también, desde el tercer lote):
 ese título no debe cambiar.
 
 Decisiones de la criba, resueltas el mismo día: **P2** ✅ los 18 titulares renombrados por la regla de
@@ -105,7 +105,7 @@ arriba):
 
 | # | pregunta | decisión | hecho |
 |---|---|---|---|
-| D1 | ¿se elimina lo eliminable MEDIDO antes de congelar? | «elimina lo eliminable antes de congelar» | ✅ con los mismos enunciados: `Fresh0` (`of_decide_eq_false`, la cota `utf8ByteSize`, `unshift` sobre bytes), `Enumeration` (`String.exists_eq_ofList`), `Henkin0` (`ctx_split`, `henkin_step_derives`), `Lindenbaum0` (etapa impredicativa, `lindenbaum_limit_closed`), `HenkinLimit0` (`bnd` calculada), `Canonical0` (modelo canónico por `Quot.lift` sobre listas; fuera `quotientOut`), `Compacity0` (`unshift`), `Theorems/Eq` (tres `simp`) y `Rename` 🧊↩️ (descongelado con `thaw --confirm` para retirar `invOf`; `locInv`, inversa local) |
+| D1 | ¿se elimina lo eliminable MEDIDO antes de congelar? | «elimina lo eliminable antes de congelar» | ✅ con los mismos enunciados: `Fresh0` (`of_decide_eq_false`, la cota `utf8ByteSize`, `unshift` sobre bytes), `Enumeration` (`String.exists_eq_ofList`), `Henkin0` (`ctx_split`, `henkin_step_derives`), `Lindenbaum0` (etapa sin decidir, `lindenbaum_limit_closed`), `HenkinLimit0` (`bnd` calculada), `Canonical0` (modelo canónico por `Quot.lift` sobre listas; fuera `quotientOut`), `Compacity0` (`unshift`), `Theorems/Eq` (tres `simp`) y `Rename` 🧊↩️ (descongelado con `thaw --confirm` para retirar `invOf`; `locInv`, inversa local) |
 | D2 | la tesis «el choice de la completitud es el WKL del `if` de Lindenbaum», refutada: ¿cómo se reescribe? | «Ok» a la opción (b) | ✅ se corrige toda afirmación de LOCALIZACIÓN (docstrings, `AXIOMS.md` §4.5, ADR‑110 en RPP, notas en el PLAN de RPP); «el WKL» queda sólo como apodo de la FUERZA de la completitud sobre RCA₀ |
 | D3 | `henkin_conservative₀` y `derives0_no_disjunction_property`: ¿se reprueban sin elección? | «se reprueban sin elección» | ✅ los dos en `[propext, Quot.sound]`. Los corolarios de ruta de `Soundness0`/`SequentSound0` 🧊 y los controles `derives0_em`/`derives0_peirce` se quedan como están (ADR‑061) |
 | D4 | variantes constructivas de lo irreducible | no se preguntó: fuera de alcance, como recomendó la auditoría | ⛔ abajo, en «Fuera de alcance» |
@@ -119,7 +119,7 @@ meta de `FOL.Tactics`); `noncomputable`, **8 → 1** (`SkolemN0.skF`); titulares
 **55 → 34** de 252; `check-footprints`, 513 → 517 filas (4 de la instancia). Los 34 que quedan son los
 27 irreducibles de la auditoría y 7 corolarios de ruta conservados a propósito.
 
-* 🔒 Los **17 candidatos** (los 10 de la segunda criba y los 7 que liberaron N1‑N3) siguen **sólo
+* 🔒 (Hoy los 17 están 🧊: nueve en el segundo lote y ocho en el tercero; ver abajo.) Los **17 candidatos** (los 10 de la segunda criba y los 7 que liberaron N1‑N3) siguen **sólo
   BLOQUEADOS**, no congelados: congelar cualquiera pide confirmación explícita del propietario. D1 y
   D2, que retenían a 11 de ellos, están ejecutadas. ⚠️ Pero los veredictos de las cribas son de ANTES
   de esta tanda: `Henkin0`, `HenkinLimit0`, `Lindenbaum0`, `Fresh0`, `Canonical0`, `Compacity0` y
@@ -143,9 +143,17 @@ núcleo y se retiró. Veredicto:
 
 | # | pregunta | retiene |
 |---|---|---|
-| N5 | Los nombres nuevos o técnicos que dependen de un cálculo y no llevan marca, pero la cabecera de su módulo los nombra como piezas: ¿titulares (→ marca) o auxiliares? (a) `henkin_step_derives`; (b) `lindenbaum_limit_consistent/_max/_closed`; (c) `skolemizeF_impAll` (con fila); (d) `cutElim_of`, `cutPrinAux`, `cutLeftAux` (con fila), `leftPrin_mono`, `leftPrin_lift`, `herbrand_block_iff`. ⚠️ «Titular = lo que tiene fila» no sirve como regla: 217 de las 256 filas no llevan marca ni prefijo (`inv_allR`, `max_cons_neg`, las de `Prenex0` 🧊…) | `Henkin0`, `Skolem0` (a); `Lindenbaum0` (b); `SkolemNF0` (c); `Hauptsatz0`, `HerbrandBlock0`, `BlockExtraction0` (d) |
+| N5 | Los nombres nuevos o técnicos que dependen de un cálculo y no llevan marca, pero la cabecera de su módulo los nombra como piezas: ¿titulares (→ marca) o auxiliares? (a) `henkin_step_derives`; (b) `lindenbaum_limit_consistent/_max/_closed`; (c) `skolemizeF_impAll` (con fila); (d) `cutElim_of`, `cutPrinAux`, `cutLeftAux` (con fila), `leftPrin_mono`, `leftPrin_lift`, `herbrand_block_iff`. ⚠️ «Titular = lo que tiene fila» no sirve como regla: 220 de las 256 filas no llevan marca, y 138 tampoco prefijo de cálculo (`inv_allR`, `max_cons_neg`, las de `Prenex0` 🧊…) | `Henkin0`, `Skolem0` (a); `Lindenbaum0` (b); `SkolemNF0` (c); `Hauptsatz0`, `HerbrandBlock0`, `BlockExtraction0` (d) |
 | N7 | `herbrand_of_skolemNF₀` no ata `ψ` a la matriz: su `↔` lo cumple cualquier `P : Prop` (medido). ¿(A) se dice en la docstring, o (B) se refuerza el enunciado con `skolemize k (prenex φ) = allBlock m ψ`, como los de §3 (medido: misma prueba, `[propext, Quot.sound]`, sin consumidores)? | `SkolemHerbrand0` |
 
+**N5 y N7, resueltas por el propietario el mismo día (RPP‑112):**
+
+| # | decisión | hecho |
+|---|---|---|
+| N5 | **auxiliares**, los cuatro grupos (a)‑(d) (las letras de la pregunta son grupos de nombres, no opciones), y la regla, escrita | ✅ `NAMING-CONVENTIONS.md` §9, regla 3, «Qué es TITULAR»: titular es el RESULTADO que la cabecera de su módulo presenta como entrega; los pasos de una prueba, los lemas de un límite, las formas intermedias, las pasadas de una inducción y los consumidores condicionales son auxiliares aunque la cabecera los nombre o tengan fila de footprint. Ningún renombre. La regla alcanza también a `Herbrand0.herbrand_iff`, gemelo de `herbrand_block_iff` |
+| N7 | **(B)**, reforzar el enunciado | ✅ `herbrand_of_skolemNF₀ : ∃ m ψ, skolemize k (prenex φ) = allBlock m ψ ∧ QuantFree ψ ∧ ([] ⊢₀ ¬(skolemize k (prenex φ)) ↔ ∃ tss E, HerbrandCertBlock m (¬ψ) tss E)`. Misma prueba, mismo footprint (`[propext, Quot.sound]`); sin consumidores |
+
+* 🧊 **CONGELADOS** (tercer lote, RPP‑112): los siete que retenía N5 —`Henkin0`, `Skolem0`, `Lindenbaum0`, `SkolemNF0`, `Hauptsatz0`, `HerbrandBlock0`, `BlockExtraction0`— y `SkolemHerbrand0`, que retenía N7. ⇒ **23 congelados**: los 17 candidatos, `TheoryFramework/Instances/FOL` y los cinco del primer lote.
 * Sigue retenida por X1 `Inconsistencia` (su §2 cambia con la entrega de PeanoRF).
 
 ⛔ **Fuera de alcance, con su motivo**: LS↑ (ver `Compacity0` §3); un decisor PRÁCTICO del fragmento sin cuantificadores

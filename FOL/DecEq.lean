@@ -71,7 +71,7 @@ ganaría nada y se perdería la trazabilidad.
   ni `FOL.Lindenbaum0` usan `Classical.propDecidable`; `max_cons_contains` usa
   `Classical.byContradiction` directamente.
 * «el `Classical.choice` de `FOL.Lindenbaum0` tiene que seguir ahí por el `if IsConsistent₀ …`»:
-  **FALSO**. La etapa de Lindenbaum es ahora impredicativa: la condición va DENTRO del predicado y
+  **FALSO**. La etapa de Lindenbaum ya no decide nada: la condición va DENTRO del predicado y
   no se decide. `lindenbaum_lemma₀` y `henkin_completion₀` miden `[propext, Quot.sound]`. Lo único
   clásico que queda en `FOL.Lindenbaum0` es `max_cons_contains` (y `max_cons_impl`, que lo usa), y
   no por decidir igualdades: es el `¬¬P → P` de un maximal arbitrario.
