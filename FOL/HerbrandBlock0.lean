@@ -76,7 +76,8 @@ envoltura: **~350–450 l.**, riesgo alto. No es F ni H; es de su tamaño.
 
 ## 📏 Footprint
 
-`[propext, Quot.sound]` en todo. **Ni un `Classical.choice`** — como toda la vía H.
+`[propext, Quot.sound]` en lo que imprime, y a lo sumo eso en todo el módulo. **Ni un
+`Classical.choice`** — como toda la vía H.
 -/
 
 namespace FOL.HerbrandBlock0

@@ -305,7 +305,8 @@ theorem lk0_to_lkh : ∀ {Γ Δ : List Formula}, LK₀ Γ Δ → ∃ n, LKh n Γ
 -- §4 · La conmutacion De Bruijn que faltaba
 -- ============================================================
 
--- ⛔ MEDIDO: el árbol tiene la mitad `v ≤ k` (`liftFormula_subst`, en `FOL/Lift0.lean`) y el caso
+-- ⛔ MEDIDO en ADR-050: el árbol tenía la mitad `v ≤ k` (`liftFormula_subst`, en `FOL/Lift0.lean`) y
+-- el caso
 -- `k = v` (`substFormula_lift_comm`, en `Theorems/Eq.lean`), pero NO la mitad `k ≤ v`, que es la que el Hauptsatz
 -- necesita: el caso `allR` del lema de sustitución recurre con `k+1 ≤ v+1` desde `k = 0`.
 mutual
@@ -1306,7 +1307,8 @@ example (E : List Formula) : Not (EqPropCert [] Formula.bottom E) := by
   exact absurd hf (by simp [peval])
 
 -- ⚠️ CONTROL: la ⟹ no es trivial — junto con el anterior da la consistencia. Ojo: la valuación
--- constante `true` es la de `Finitary0.tval true`, así que esta consistencia ya la da
+-- constante `true` coincide, sin cuantificadores, con `Finitary0.tval true`, así que esta
+-- consistencia ya la da
 -- `Finitary0.derives0_consistent_fin` SIN el Hauptsatz; ningún control de aquí separa esta ⟹ de
 -- `tval` (haría falta una valuación que distinga igualdades, p. ej. la identidad sintáctica).
 example : Not (([] : List Formula) ⊢₀ Formula.bottom) := fun h => by

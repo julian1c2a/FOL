@@ -19,7 +19,7 @@
 > **Fuentes:** `cuarentena/README.md` · `AXIOMS.md` ·
 > `../ROBINSON_PlusPlus/doc/AUDITORIA-FOL-2026-09-12.md`
 
-**Last updated:** 2026-09-27 — la auditoría de constructividad y las decisiones D1‑D8 del propietario, ejecutadas (`Classical.choice` 157 → 84 constantes; Lindenbaum y Henkin sin él; la tesis del WKL, rectificada; la instancia de `TheoryFramework`, declarada; `Rename` descongelado para retirar `invOf`); los 17 candidatos, sólo bloqueados. Antes, el mismo día: N1‑N4 resueltas y aplicadas (13 renombres, dos duplicados retirados; `PrenexNF0`/`SequentSound0` descongelados y re‑congelados); los 10 congelables, sólo bloqueados. Antes, el mismo día: la segunda criba con refutación (71 correcciones). Antes, el mismo día: P4 hecha (`QFDecide0`). Antes, el mismo día: 🧊 cinco módulos congelados; P2 (18 renombres) y P3 (`sub_*` en `Sequent0`) hechas. Antes, el mismo día: W2, W3 y W4 hechas; la criba de congelación, pasada con refutación (1 congelable ya, 4 tras arreglos —aplicados—, 18 todavía no). Antes (2026-09-26): aviso reescrito y sección «Lo que queda» nueva; el plan de fases de abajo es HISTÓRICO (2026-05-16).
+**Last updated:** 2026-09-27 — la tercera criba con refutación: 10 congelables (4 ya, 6 con sus correcciones aplicadas), decisiones N5 y N7; N6 aplicada. Antes, el mismo día: la auditoría de constructividad y las decisiones D1‑D8 del propietario, ejecutadas (`Classical.choice` 157 → 84 constantes; Lindenbaum y Henkin sin él; la tesis del WKL, rectificada; la instancia de `TheoryFramework`, declarada; `Rename` descongelado para retirar `invOf`); los 17 candidatos, sólo bloqueados. Antes, el mismo día: N1‑N4 resueltas y aplicadas (13 renombres, dos duplicados retirados; `PrenexNF0`/`SequentSound0` descongelados y re‑congelados); los 10 congelables, sólo bloqueados. Antes, el mismo día: la segunda criba con refutación (71 correcciones). Antes, el mismo día: P4 hecha (`QFDecide0`). Antes, el mismo día: 🧊 cinco módulos congelados; P2 (18 renombres) y P3 (`sub_*` en `Sequent0`) hechas. Antes, el mismo día: W2, W3 y W4 hechas; la criba de congelación, pasada con refutación (1 congelable ya, 4 tras arreglos —aplicados—, 18 todavía no). Antes (2026-09-26): aviso reescrito y sección «Lo que queda» nueva; el plan de fases de abajo es HISTÓRICO (2026-05-16).
 **Autor**: Julián Calderón Almendros
 
 ## ⬜ Lo que queda para CERRAR FOL — 2026-09-26 (noche)
@@ -124,6 +124,24 @@ meta de `FOL.Tactics`); `noncomputable`, **8 → 1** (`SkolemN0.skF`); titulares
 * 🧊 ⚠️ D2 no ha llegado a `SequentSound0`, CONGELADO: su cabecera y el docstring de `lk0_not_empty`
   conservan tres localizaciones del WKL («en vez del **WKL**», dos veces; «el `Classical.choice` que
   ADR‑041 identificó como el **WKL**»). Se rectifican en su próximo `thaw` autorizado (`AXIOMS.md` §4.5).
+
+**Tercera criba con refutación (2026‑09‑27, tras D1‑D8; RPP‑111)**, sobre los 19 que deja pasar la
+parte medible (los 17 más `Inconsistencia` y `TheoryFramework/Instances/FOL.lean`): 31 correcciones de
+comentarios y docstrings aplicadas (código idéntico), y **N6** aplicada por la política de P3/N3/N4 («si
+está duplicado, se retira»): `Lindenbaum0.not_not_em` repetía nombre y enunciado de `not_not_em` del
+núcleo y se retiró. Veredicto:
+
+* ❄️ **Congelables ya** (4): `Compacity0`, `Inversion0`, `QFDecide0`, `SkolemN0`.
+* ❄️ **Congelables con sus correcciones, ya aplicadas** (6): `Craig0` e `Interpolation0` (juntos),
+  `Canonical0`, `Fresh0`, `HenkinLimit0`, `TheoryFramework/Instances/FOL`.
+* ⬜ **Retenidos por decisiones nuevas del propietario**:
+
+| # | pregunta | retiene |
+|---|---|---|
+| N5 | Los nombres nuevos o técnicos que dependen de un cálculo y no llevan marca, pero la cabecera de su módulo los nombra como piezas: ¿titulares (→ marca) o auxiliares? (a) `henkin_step_derives`; (b) `lindenbaum_limit_consistent/_max/_closed`; (c) `skolemizeF_impAll` (con fila); (d) `cutElim_of`, `cutPrinAux`, `cutLeftAux` (con fila), `leftPrin_mono`, `leftPrin_lift`, `herbrand_block_iff`. ⚠️ «Titular = lo que tiene fila» no sirve como regla: 217 de las 256 filas no llevan marca ni prefijo (`inv_allR`, `max_cons_neg`, las de `Prenex0` 🧊…) | `Henkin0`, `Skolem0` (a); `Lindenbaum0` (b); `SkolemNF0` (c); `Hauptsatz0`, `HerbrandBlock0`, `BlockExtraction0` (d) |
+| N7 | `herbrand_of_skolemNF₀` no ata `ψ` a la matriz: su `↔` lo cumple cualquier `P : Prop` (medido). ¿(A) se dice en la docstring, o (B) se refuerza el enunciado con `skolemize k (prenex φ) = allBlock m ψ`, como los de §3 (medido: misma prueba, `[propext, Quot.sound]`, sin consumidores)? | `SkolemHerbrand0` |
+
+* Sigue retenida por X1 `Inconsistencia` (su §2 cambia con la entrega de PeanoRF).
 
 ⛔ **Fuera de alcance, con su motivo**: LS↑ (ver `Compacity0` §3); un decisor PRÁCTICO del fragmento sin cuantificadores
 (cierre de congruencia con certificado: el de `QFDecide0` es de juguete); Beth y Robinson (el puente `LK₀`→`LKp`

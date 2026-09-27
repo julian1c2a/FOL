@@ -62,7 +62,7 @@ DENTRO, como conjunción, y no hay que decidirla:
     LindenbaumStep S (n+1) x := LindenbaumStep S n x ∨ (x = φₙ ∧ IsConsistent₀ (Sₙ ∪ {φₙ}))
 
 Todo lo demás sale sin tercio excluso: la consistencia de cada etapa (la meta es una NEGACIÓN, y
-basta `¬¬(C ∨ ¬C)`, `not_not_em`), la maximalidad del límite y su cierre por derivación
+basta `¬¬(C ∨ ¬C)`, `not_not_em` del núcleo), la maximalidad del límite y su cierre por derivación
 (`lindenbaum_limit_closed`). ⇒ `lindenbaum_lemma₀` y `henkin_completion₀`, con los mismos
 enunciados, miden `[propext, Quot.sound]`. El `if` era cosa de la PRESENTACIÓN, no del teorema.
 
@@ -97,7 +97,7 @@ sobreyectividad de `FOL.Enumeration`) **tampoco eran necesarios**, y se retiraro
 Medido el 2026‑09‑27 sobre el entorno compilado (`auditoria/constructividad-2026-09-27/despues/`):
 
 * **ningún axioma**: `derivesSet0_hyp`, `derivesSet0_weakening`, `derivesSet0_intro_impl`,
-  `not_not_em`, `max_cons_bot` (y las definiciones `IsMaximalConsistent₀`, `IsHenkin`);
+  `max_cons_bot` (y las definiciones `IsMaximalConsistent₀`, `IsHenkin`);
 * `[propext]`: `derivesSet0_elim_impl`;
 * `[propext, Quot.sound]`: `LindenbaumStep`, `LindenbaumLimit`, los `lindenbaum_step_*` y
   `lindenbaum_limit_*`, ⭐ `lindenbaum_lemma₀` y ⭐⭐ `henkin_completion₀`;
@@ -175,9 +175,8 @@ def LindenbaumStep (S : Formula → Prop) : Nat → (Formula → Prop)
 
 def LindenbaumLimit (S : Formula → Prop) (f : Formula) : Prop := ∃ n, LindenbaumStep S n f
 
-/-- El tercio excluso, DOBLEMENTE NEGADO, es intuicionista. -/
-theorem not_not_em (C : Prop) : Not (Not (Or C (Not C))) :=
-  fun h => h (Or.inr (fun c => h (Or.inl c)))
+-- El tercio excluso DOBLEMENTE NEGADO es intuicionista: `not_not_em` del núcleo (`Init.PropLemmas`,
+-- sin axiomas). Aquí hubo una copia literal, con el mismo nombre, retirada el 2026‑09‑27 (N6).
 
 /-- ⭐ Cada etapa es consistente. La meta es una NEGACIÓN (`IsConsistent₀ X` es `X ⊬ ⊥`), así que
 basta el tercio excluso doblemente negado para distinguir si `φₙ` entró: **sin tercio excluso**.

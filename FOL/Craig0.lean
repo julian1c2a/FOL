@@ -22,7 +22,7 @@ import FOL.Lift0
     maeharaₚ : LKp Γ Δ → ∀ particiones, ∃ C interpolante con su condición de lenguaje
     craigₚ   : LKp [A] [B] → ∃ C, LKp [A] [C] ∧ LKp [C] [B] ∧ PredSub C [A] ∧ PredSub C [B]
 
-📏 **`[propext, Quot.sound]` en todo el módulo: ni un `Classical.choice`, ni un axioma del
+📏 **A lo sumo `[propext, Quot.sound]` en todo el módulo: ni un `Classical.choice`, ni un axioma del
 proyecto.** `lkp_to_lk0`, `predF_lift`, `predF_subst` y el control `lkp_example`, **sin ningún axioma**.
 
 ## ⛔ Por qué `LKp` y no `LK₀` — la obstrucción del paso INGENUO (rectificada: ADR‑103)

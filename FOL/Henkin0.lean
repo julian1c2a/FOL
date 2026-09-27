@@ -80,7 +80,8 @@ vienen encima:
 > 🔑 La parte **matemática** está aquí y es finitaria; lo que falta es **combinatoria de nombres**.
 
 Lo del sublenguaje era correcto. Lo de **descomponer cadenas, a medias**: la construcción no descompone
-ninguna — la conservatividad del renombrado se obtiene **mapeando con la inversa** (`invOf`), y el
+ninguna — la conservatividad del renombrado se obtiene **mapeando con la inversa** (`invOf`,
+retirada: ver abajo), y el
 `Classical.choice` que aparece viene de ahí, de `Exists.choose`, del tercio excluso de
 `cst_bound_sym` y de los lemas de `String` del núcleo tras `shift_inj`/`cst_inj`
 (`String.append_right_inj`; `FOL.Fresh0` §Footprint, ADR‑069 §4). Y no era
@@ -101,7 +102,8 @@ le faltaban dos.
 * Faltaba una **aquí mismo**: el `filter` del paso 1, bajo `open Classical`. Hoy lo hace
   `ctx_split`, sin ningún axioma.
 * Y faltaba la sobreyectividad de `FOL.Enumeration` (la usa `HenkinLimit0.henLimit_witness`), que
-  decodificaba con `String.toList`. Hoy va por `String.exists_eq_ofList`: `[propext, Quot.sound]`.
+  decodificaba con `String.toList`. Hoy va por `String.exists_eq_ofList` (`[propext]`) y mide
+  `[propext, Quot.sound]`.
 
 ⚠️ Y «la construcción no descompone ninguna [cadena]» ya no es cierto: `unshift` descompone
 `shift s` para devolver `s`. Pero lo hace por **bytes**, y la capa de bytes no lleva

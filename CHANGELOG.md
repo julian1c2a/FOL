@@ -19,6 +19,19 @@ All notable changes to this project will be documented in this file.
 Format based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## 2026-09-27 (7) — La tercera criba de congelación, tras D1‑D8
+
+* 🔎 Sobre los 19 que deja pasar `criba-congelacion.py` (los 17, `Inconsistencia` y la instancia de
+  `TheoryFramework`): cuatro lentes de verdad, nomenclatura, consumidores, un juez y dos escépticos.
+* ✏️ **31 correcciones** de comentarios y docstrings (código idéntico; `[G.2]` intacto): resúmenes de
+  footprint que decían «en todo» donde había constantes con menos axiomas; `Fresh0.exists_fresh`, que
+  la iteración de `HenkinLimit0` nunca usó; el presente de `Hauptsatz0` §4 sobre una mitad que el propio
+  módulo demuestra; `TheoryFramework/Logic` y `MetaTheorems`, que D7 había dejado desfasados.
+* ✂️ **N6**: `Lindenbaum0.not_not_em` repetía nombre y enunciado del `not_not_em` del núcleo: retirado.
+* ❄️ **10 congelables** (4 ya, 6 con sus correcciones), ⬜ pendientes de confirmación; retenidos por
+  **N5** (¿titulares o auxiliares los nombres técnicos que la cabecera nombra?) y **N7**
+  (`herbrand_of_skolemNF₀`), e `Inconsistencia` por X1. Ver `NEXT-STEPS.md`.
+
 ## 2026-09-27 (6) — La auditoría de constructividad, y D1‑D8 ejecutadas: `Classical.choice` 157 → 84
 
 * 🔎 **Auditoría de constructividad** (`auditoria/constructividad-2026-09-27/`, guardada en el repo por

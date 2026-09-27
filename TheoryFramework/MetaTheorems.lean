@@ -6,7 +6,9 @@ License: MIT
 
 -- TheoryFramework/MetaTheorems.lean
 -- Generic meta-theorems valid for any LogicSystem instance.
--- These are provable once and apply to PropLogic, FOLPure, and FOL^= automatically.
+-- proves_iff_models and models_monotone also need SoundLogic/CompleteLogic; live instance since
+-- 2026-09-27: FOL^= over Derives₀ (TheoryFramework/Instances/FOL.lean). PropLogic and FOLPure were
+-- retired on 2026-09-12.
 
 import TheoryFramework.Properties
 import TheoryFramework.Relations
@@ -26,7 +28,8 @@ variable {F : Type} [LogicSystem F]
 ⚠️ **CONDICIONAL desde 2026‑09‑12 (A‑6)**: pide `[SoundLogic F]` y `[CompleteLogic F]`
 **explícitamente**. Antes las obtenía «gratis» porque eran campos de `LogicSystem` — es
 decir, el marco las **postulaba** para toda instancia. ⛔ Para `FOL` la primera es
-indemostrable. -/
+indemostrable sobre `Derives`; sobre `Derives₀` las dos están y el teorema se aplica
+(`Instances.fol0_proves_iff_models`, 2026‑09‑27). -/
 theorem proves_iff_models [SoundLogic F] [CompleteLogic F] (T : Theory F) (f : F) :
     T.proves f ↔ T.models f := by
   constructor

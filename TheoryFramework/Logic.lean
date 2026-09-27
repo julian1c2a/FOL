@@ -27,7 +27,8 @@ deben serlo.**
 
 Ser un sistema lógico **no incluye** ser sólido ni completo: son **propiedades** que un
 sistema puede tener o no. Al exigirlos como campos, el marco **POSTULABA la solidez de cada
-instancia** — y para `FOL` ese campo es **indemostrable**: `soundness` es FALSO en presencia
+instancia** — y para `FOL` sobre la herramienta `Derives` ese campo es **indemostrable**:
+`soundness` es FALSO en presencia
 de `FOL/MetaRules.lean` (ver `cuarentena/README.md`). La instancia `folSystem` lo rellenaba
 con ese teorema, y se autodescribía «fully complete and verified».
 
@@ -43,9 +44,10 @@ class LogicSystem (F : Type) where
 
 /-- **Solidez** — una PROPIEDAD, no parte de «ser un sistema lógico».
 
-⛔ `FOL` **no puede habitarla**: con las meta‑reglas de `FOL/MetaRules.lean`, un testigo de
+⛔ La herramienta `Derives` (`⊢`) **no puede habitarla** (`Derives₀` sí: `Instances.fol0Sound`,
+2026‑09‑27): con las meta‑reglas de `FOL/MetaRules.lean`, un testigo de
 este campo demuestra `False` (`FOL/Inconsistencia.lean`, compilado). Cálculos del ecosistema con
-solidez probada: `Derives₀` (`Soundness0.derives0_soundness`), `LK₀`/`LKc` (`SequentSound0`) y `Prf₀`
+solidez probada: `Derives₀` (`Soundness0.derives0_soundness`), `LK₀`/`LKc` (`SequentSound0`) y `Prfᵢ`
 (`../ROBINSON_PlusPlus/sondeos/AnclaSoundness.lean`). -/
 class SoundLogic (F : Type) [LogicSystem F] : Prop where
   sound : ∀ {Γ : List F} {f : F},
@@ -58,7 +60,8 @@ prueba `completeness` apoyándose en **cinco `axiom`**»— era **falsa por part
 era su **tercera** aparición en el repo: ese fichero **no existe**, y `cuarentena/Completeness.lean`
 tenía **UN** `axiom` (el fichero se borró el 2026‑09‑23). 🏁 Hoy la completitud de FOL⁼ es **`FOL.Canonical0.completeness₀`**, con
 **cero axiomas del proyecto** (ADR‑041) — pero sobre **`Derives₀`**, no sobre el `Derives` que
-instanciaba `folSystem` (retirada el 2026‑09‑23), así que **no paga esta clase**. Ver `TheoryFramework/Instances/FOL.lean`. -/
+instanciaba `folSystem` (retirada el 2026‑09‑23), así que no pagaba esta clase; desde el 2026‑09‑27
+la paga sobre `Derives₀` (`Instances.fol0Complete`). Ver `TheoryFramework/Instances/FOL.lean`. -/
 class CompleteLogic (F : Type) [LogicSystem F] : Prop where
   complete : ∀ {Γ : List F} {f : F},
     LogicSystem.semanticEntails Γ f → LogicSystem.derives Γ f

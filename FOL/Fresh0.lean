@@ -58,7 +58,8 @@ punto clásico»: no hacía falta.)
 
 ⚠️ (2026‑09‑27) `FOL.HenkinLimit0` acabó escribiendo una función `Formula → Nat` —`bnd`, una COTA
 calculada, no el «mayor índice usado»—, pero para quitar un `Exists.choose`, no porque la iteración
-la necesitara.
+la necesitara. Desde entonces la iteración consume `HenkinLimit0.bnd_spec` (la misma forma: a partir
+de `bnd f`, todas frescas), no `cst_bound_formula`.
 
 ## 📏 Footprint
 
@@ -209,7 +210,8 @@ theorem cst_utf8ByteSize : ∀ m : Nat, (cst m).utf8ByteSize = m + 1
 larga. Antes esto se probaba por tercio excluso sobre `∃ k, cst k = s` («el único paso clásico»);
 no hacía falta (auditoría de constructividad, 2026‑09‑27).
 
-🔑 Éste es el lema que sustituye a la función `Formula → Nat` que §6.4 daba por necesaria. -/
+🔑 Éste es el lema que sustituyó a la función `Formula → Nat` de §6.4; desde el 2026‑09‑27 la
+iteración usa `HenkinLimit0.bnd_spec`. -/
 theorem cst_bound_sym (s : String) : ∃ N, ∀ m, N ≤ m → cst m ≠ s :=
   ⟨s.utf8ByteSize, fun m hm he => by
     have h := congrArg String.utf8ByteSize he
@@ -392,13 +394,15 @@ theorem shiftTheory_consistent₀ {S : Formula → Prop} (hCons : IsConsistent�
     IsConsistent₀ (shiftTheory S) := fun hbot => hCons (derivesSet0_shift_inv hbot)
 
 -- ============================================================
--- §6 · ⭐⭐ El enunciado que consume la iteración
+-- §6 · ⭐⭐ Una constante fresca para todo a la vez (`exists_fresh`; la iteración de `HenkinLimit0`
+-- va por `bnd_spec`)
 -- ============================================================
 
 /-- **Hay constante fresca para todo a la vez**: la teoría desplazada, la lista finita de axiomas
 de Henkin ya añadidos, y la fórmula del turno.
 
-🔑 Éste es el teorema que cierra la pieza (1) de §6.4 — y con él la iteración ω deja de necesitar
+🔑 Éste es el teorema que cierra la pieza (1) de §6.4. La iteración ω no lo usa (tomó
+`cst_bound_formula` y, desde el 2026‑09‑27, `HenkinLimit0.bnd_spec`), y dejó de necesitar
 la función «mayor índice usado». -/
 theorem exists_fresh (S : Formula → Prop) (extra : List Formula) (A : Formula) :
     ∃ c : String, And (∀ g, shiftTheory S g → Not (occursFormula c g))

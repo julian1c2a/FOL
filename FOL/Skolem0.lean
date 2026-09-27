@@ -70,7 +70,7 @@ decir que skolemizar no inventa teoremas.
 POSITIVO, el paso de Henkin (`Henkin0.henkin_step_derives`) transforma derivaciones de `⊥` desde
 `S ∪ {H}` en derivaciones de `⊥` desde `S`; con `¬φ` dentro de `S` da la conservatividad del caso
 constante sin pasar por la semántica, y así se prueba hoy `henkin_conservative₀`
-(`henkin_step_consistent₀` es ahora su corolario).
+(`henkin_step_consistent₀` es ahora corolario de `henkin_step_derives`).
 
 ## ⭐ La ruta, y dónde paga cada pieza
 

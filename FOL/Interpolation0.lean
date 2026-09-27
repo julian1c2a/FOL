@@ -25,7 +25,8 @@ import FOL.Hauptsatz0
 
 Paga la deuda que `FOL.Craig0` declaraba ABIERTA (D3a, 2026‑09‑26): `craigₚ` valía para `LKp`, el
 fragmento SIN `eqAx`, y no había puente desde lo que el proyecto deriva. 📏 **`[propext, Quot.sound]`**
-en todos los titulares (`predF_em` y `eqGen_side`, ninguno): **ni un `Classical.choice`**.
+en todos los titulares, y a lo sumo eso en todo el módulo (de lo impreso, `predF_em` y `eqGen_side`,
+ninguno): **ni un `Classical.choice`**.
 
 ## ⭐ El puente: la igualdad, al ANTECEDENTE y cerrada con `∀`
 
@@ -49,7 +50,8 @@ el lado donde no puede sobrevivir.*
 La única traducción `LK₀ → ⊢₀` del árbol era `SequentSound0.lk0_to_derives0`, que ES
 `completeness₀` compuesta con `lk0_sound`, la solidez de Tarski de los secuentes (`Classical.choice`:
 la semántica en `Prop`, el lema de la verdad sobre un maximal arbitrario y el `byContradiction`
-final; decía «el WKL», rectificado el 2026‑09‑27 por la auditoría de constructividad). `lk0_refute`
+final; este párrafo decía «el WKL», rectificado el 2026‑09‑27 por la auditoría de constructividad).
+`lk0_refute`
 la da SINTÁCTICAMENTE, leyendo `Γ ⟹ Δ` como «`Γ` y las negaciones de `Δ` son contradictorias» con
 la lista por pertenencia; de ahí `lk0_to_derives0_fin`, mismo enunciado, `[propext, Quot.sound]`.
 
@@ -275,7 +277,8 @@ theorem derives0_disjOf_of_refute : ∀ (Δ Γ : List Formula),
         (Derives₀.intro_or_r _ _ _ (derives0_disjOf_of_refute Δ (neg d :: Γ) h1))
 
 /-- ⭐ Dividendo: el MISMO enunciado que `SequentSound0.lk0_to_derives0`, que es
-`completeness₀` (`Classical.choice`); éste no. Sufijo `_fin` como `Finitary0.lk0_not_empty_fin`. -/
+`completeness₀` aplicada a `lk0_sound` (`Classical.choice`); éste no. Sufijo `_fin` como
+`Finitary0.lk0_not_empty_fin`. -/
 theorem lk0_to_derives0_fin {Γ Δ : List Formula} (h : LK₀ Γ Δ) : Γ ⊢₀ disjOf Δ :=
   derives0_disjOf_of_refute Δ Γ (lk0_refute h (Δ.map neg ++ Γ)
     (fun _ hx => List.mem_append_right _ hx)

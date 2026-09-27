@@ -21,7 +21,8 @@ import FOL.Hauptsatz0
     herbrand_extraction_block₀ : HerbrandExtractionBlock₀
     herbrand_block₀ : QuantFree φ → (([] ⊢₀ exBlock n φ) ↔ ∃ tss E, HerbrandCertBlock n φ tss E)
 
-📏 `[propext, Quot.sound]` en todo el módulo (`instB_nil`, ninguno): **ni un `Classical.choice`** — como toda la vía H.
+📏 `[propext, Quot.sound]` en lo que imprime (`instB_nil`, ninguno) y a lo sumo eso en todo el
+módulo: **ni un `Classical.choice`** — como toda la vía H.
 
 ## ⭐⭐ La medición que cambió el coste: **`instB` YA ERA la función de resto parcial**
 

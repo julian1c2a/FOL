@@ -895,7 +895,7 @@ módulo. Es lo que exige AI‑GUIDE §14.
 
 **`HenkinLimit0.lean`** — `occursTerm_lift`, `occursTerms_lift`, `not_occurs_substTerm`, `not_occurs_substTerms`, `not_occurs_substFormula`, `not_occurs_henkinAx`, `cst_ne_of_size`, `bndTerm`, `bndTerms`, `bnd`, `bndTerm_spec`, `bndTerms_spec`, `bnd_spec`, `hidx`, `hidx_ge`, `hidx_step`, `hidx_mono`, `hidx_ge_of_le`, `hen`, `hen_mono`, `hen_fresh`, `hen_fresh_at`, `hen_consistent`, `henLimit`, `shiftTheory_sub_henLimit`, `henLimit_finite`, `henLimit_consistent₀`, `henLimit_witness`
 
-**`Lindenbaum0.lean`** — `derivesSet0_hyp`, `derivesSet0_weakening`, `derivesSet0_intro_impl`, `derivesSet0_elim_impl`, `IsMaximalConsistent₀`, `LindenbaumStep`, `LindenbaumLimit`, `not_not_em`, `lindenbaum_step_consistent`, `lindenbaum_step_subset`, `lindenbaum_step_mono`, `lindenbaum_limit_bound`, `lindenbaum_limit_consistent`, `lindenbaum_limit_max`, **`lindenbaum_limit_closed`**, `lindenbaum_lemma₀`, `max_cons_bot`, `max_cons_contains`, `max_cons_impl`, `IsHenkin`, `henkin_completion₀`
+**`Lindenbaum0.lean`** — `derivesSet0_hyp`, `derivesSet0_weakening`, `derivesSet0_intro_impl`, `derivesSet0_elim_impl`, `IsMaximalConsistent₀`, `LindenbaumStep`, `LindenbaumLimit`, `lindenbaum_step_consistent`, `lindenbaum_step_subset`, `lindenbaum_step_mono`, `lindenbaum_limit_bound`, `lindenbaum_limit_consistent`, `lindenbaum_limit_max`, **`lindenbaum_limit_closed`**, `lindenbaum_lemma₀`, `max_cons_bot`, `max_cons_contains`, `max_cons_impl`, `IsHenkin`, `henkin_completion₀`
 
 **`Eq0.lean`** — `derives0_eq_symm`, `derives0_eq_trans`, `derives0_eq_func_congr`, `derives0_atom_congr`
 

@@ -63,7 +63,7 @@ ADR‑041 §4). Las dos cosas son FALSAS en Lean. El módulo nunca fue «constru
 `quotientOut`»: la familia `max_cons_*` es clásica de raíz. Y Lindenbaum no necesita decidir
 nada: `Prop` es impredicativo, la etapa lleva la condición DENTRO del predicado, y
 `lindenbaum_lemma₀` y `henkin_completion₀` miden `[propext, Quot.sound]` (auditoría de
-constructividad, `auditoria/constructividad-2026-09-27/`; decisiones D1 y D2 del propietario).
+constructividad, `auditoria/constructividad-2026-09-27/`; decisiones D1 y D2 del propietario, ADR‑110).
 
 Por dónde ENTRA el `Classical.choice` de `completeness₀`, medido sobre el entorno compilado:
 

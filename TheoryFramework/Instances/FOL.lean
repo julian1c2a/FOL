@@ -49,11 +49,13 @@ medida en la auditoría de constructividad (unas 20 líneas).
   clásicos de `Derives₀` (`dne_rule`, `dne_schema`, `forall_not_ex_not`) se validan con
   `byContradiction`. Con este enunciado es **inevitable**: la solidez implica `¬¬P → P` (medido).
 * `fol0Complete` lo toma de `completeness₀`: el lema de la verdad sobre un maximal ARBITRARIO
-  (sus lemas `max_cons_*` implican `¬¬P → P`, medido) y el `byContradiction` final, que tiene la
+  (los `max_cons_*` de la frontera y el propio `truth_lemma₀` implican `¬¬P → P`, medido) y el
+  `byContradiction` final, que tiene la
   forma del principio de Markov: que sea inevitable para el enunciado es HIPÓTESIS.
 * `fol0_proves_iff_models` usa las dos.
 
-⚠️ Ninguno es el `if IsConsistent₀` de Lindenbaum: `lindenbaum_lemma₀` es `[propext, Quot.sound]`.
+⚠️ Ninguno es el `if IsConsistent₀` de Lindenbaum, que ya no existe (desde el 2026‑09‑27 la etapa no
+decide su condición): `lindenbaum_lemma₀` es `[propext, Quot.sound]`.
 -/
 
 namespace TheoryFramework.Instances
@@ -76,7 +78,8 @@ instance fol0Complete : CompleteLogic Formula :=
   ⟨fun h => FOL.Canonical0.completeness₀ h⟩
 
 /-- 🏁 **El metateorema del marco, aplicado a FOL⁼**: para cualquier teoría, derivar y ser
-consecuencia semántica son lo mismo. -/
+consecuencia semántica son lo mismo (`Theory.models`: consecuencia de una parte FINITA de los
+axiomas, `EntailsSet`). -/
 theorem fol0_proves_iff_models (T : Theory Formula) (f : Formula) : T.proves f ↔ T.models f :=
   TheoryFramework.proves_iff_models T f
 

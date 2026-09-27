@@ -43,7 +43,8 @@ todas las fórmulas, así que puede mencionar cualquier `cst m` — «no vale `c
 La solución prevista era una función `Formula → Nat` («mayor índice usado»), ~40 líneas.
 
 ⭐ **No ha hecho falta.** `cst_bound_formula` (`FOL.Fresh0` §4) da, para cada fórmula, un índice a
-partir del cual **todas** las constantes son frescas; eso es un `∃`, y `Exists.choose` lo convierte
+partir del cual **todas** las constantes son frescas; eso es un `∃`, y `Exists.choose` lo convertía
+(hasta el 2026‑09‑27: ver la rectificación de abajo)
 en la función `bnd`. El índice del turno es entonces
 
     hidx 0 := bnd (natToFormula 0)     hidx (n+1) := max (hidx n + 1) (bnd (natToFormula (n+1)))
@@ -88,7 +89,8 @@ ni averigua qué `cst m` aparece).
 * **ningún axioma**: §1 entero (`occursTerm_lift`, `occursTerms_lift`, `not_occurs_substTerm`,
   `not_occurs_substTerms`, `not_occurs_substFormula`, `not_occurs_henkinAx`) y la cota `bndTerm`,
   `bndTerms`, `bnd`;
-* `[propext, Quot.sound]`: todo lo demás —`cst_ne_of_size`, `bndTerm_spec`, `bndTerms_spec`,
+* `[propext, Quot.sound]`: todo lo demás salvo el auxiliar privado `bnd_pair` (`[propext]`)
+  —`cst_ne_of_size`, `bndTerm_spec`, `bndTerms_spec`,
   `bnd_spec`, `hidx` y sus lemas, `hen`, `hen_mono`, `hen_fresh`, `hen_fresh_at`, `hen_consistent`,
   `henLimit`, `shiftTheory_sub_henLimit`, `henLimit_finite`, `henLimit_consistent₀`,
   `henLimit_witness`—.

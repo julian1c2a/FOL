@@ -8,7 +8,7 @@ License: MIT
 -- See AI-GUIDE.md §12 for the "proyectar" protocol.
 -- See NAMING-CONVENTIONS.md for naming rules.
 --
--- Dependencies: FOL.SkolemN0, FOL.PrenexNF0
+-- Dependencies: FOL.SkolemN0, FOL.PrenexNF0, FOL.Sequent0
 -- @axiom_system: classical
 -- @importance: high
 
@@ -56,7 +56,7 @@ conservatividad:
 * 🏁 `skolem_conservative_nf₀` — los axiomas de Skolem **se retiran todos**, iterando
   `FOL.SkolemN0.skolem_conservative_n₀` sobre la lista con la frescura correcta.
 
-📏 Sólo tres constantes del módulo llevan `Classical.choice` (medido el 2026‑09‑27):
+📏 Sólo tres constantes del módulo (sin las generadas) llevan `Classical.choice` (medido el 2026‑09‑27):
 `skolem_conservative_listF`, `skolem_conservative_nf₀` y `derives0_of_skolemNF`, y lo heredan
 de `skolem_conservative_n₀`, cuya ruta es semántica: la completitud (el lema de la verdad sobre un
 maximal arbitrario y el `byContradiction` final), la solidez de Tarski y `skF`. El resto del módulo
