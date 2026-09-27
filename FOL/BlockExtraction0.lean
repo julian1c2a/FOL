@@ -18,8 +18,8 @@ import FOL.Hauptsatz0
 /-!
 # `FOL.BlockExtraction0` — 🏁 la mitad ⟹ de HERBRAND DE BLOQUE, pagada
 
-    herbrand_extraction_block : HerbrandExtractionBlock
-    herbrand_block : ([] ⊢₀ exBlock n φ) ↔ ∃ tss E, HerbrandCertBlock n φ tss E
+    herbrand_extraction_block₀ : HerbrandExtractionBlock
+    herbrand_block₀ : ([] ⊢₀ exBlock n φ) ↔ ∃ tss E, HerbrandCertBlock n φ tss E
 
 📏 `[propext, Quot.sound]` en todo el módulo (`instB_nil`, ninguno): **ni un `Classical.choice`** — como toda la vía H.
 
@@ -500,13 +500,13 @@ theorem herbrandExtractionBlock_of (hcut : CutElim) (htr : NDtoLK) :
             | tail _ h2 => exact absurd h2 List.not_mem_nil
 
 /-- 🏁🏁 **LA MITAD ⟹ DE E, PAGADA.** -/
-theorem herbrand_extraction_block : HerbrandExtractionBlock :=
-  herbrandExtractionBlock_of FOL.Hauptsatz0.cut_elimination FOL.NDtoLK0.ndToLK_prop
+theorem herbrand_extraction_block₀ : HerbrandExtractionBlock :=
+  herbrandExtractionBlock_of FOL.Hauptsatz0.cut_elimination₀ FOL.NDtoLK0.ndToLK_prop
 
 /-- 🏁🏁🏁 **HERBRAND DE BLOQUE, YA INCONDICIONAL.** -/
-theorem herbrand_block {n : Nat} {φ : Formula} (hqf : QuantFree φ) :
+theorem herbrand_block₀ {n : Nat} {φ : Formula} (hqf : QuantFree φ) :
     Iff ([] ⊢₀ exBlock n φ) (∃ tss E, HerbrandCertBlock n φ tss E) :=
-  herbrand_block_iff herbrand_extraction_block hqf
+  herbrand_block_iff herbrand_extraction_block₀ hqf
 
 end FOL.BlockExtraction0
 
@@ -515,5 +515,5 @@ end FOL.BlockExtraction0
 #print axioms FOL.BlockExtraction0.quantFree_of_blockInv
 #print axioms FOL.BlockExtraction0.lk0_herbrand_block
 #print axioms FOL.BlockExtraction0.herbrandExtractionBlock_of
-#print axioms FOL.BlockExtraction0.herbrand_extraction_block
-#print axioms FOL.BlockExtraction0.herbrand_block
+#print axioms FOL.BlockExtraction0.herbrand_extraction_block₀
+#print axioms FOL.BlockExtraction0.herbrand_block₀

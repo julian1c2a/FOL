@@ -19,7 +19,7 @@ import FOL.BlockExtraction0
 # `FOL.SkolemHerbrand0` — 🏁 EL ENCHUFE: de la forma normal de Skolem al certificado de Herbrand
 
     derives0_neg_allBlock_iff : (Γ ⊢₀ ¬∀ᵐψ)  ↔  (Γ ⊢₀ ∃ᵐ¬ψ)
-    herbrand_of_skolemNF      : ∃ m ψ, QuantFree ψ ∧
+    herbrand_of_skolemNF₀      : ∃ m ψ, QuantFree ψ ∧
                                  ( [] ⊢₀ ¬(skolemize k (prenex φ))
                                    ↔ ∃ tss E, HerbrandCertBlock m (¬ψ) tss E )
     herbrand_validity₀        : ([] ⊢₀ φ) ↔ ∃ tss E, HerbrandCertBlock m (¬ψ) tss E,
@@ -31,14 +31,14 @@ import FOL.BlockExtraction0
 no los auxiliares `derives0_iff_neg_neg`, sin axiomas, ni `implChain_of_derives0`/`derives0_iff_implChain`,
 `[propext]`)
 llevan `[propext, Classical.choice, Quot.sound]` — medido —, porque retirar los axiomas de Skolem
-(`skolem_conservative_nf`) pasa por la completitud (el WKL). Por la estructura de la prueba entra
+(`skolem_conservative_nf₀`) pasa por la completitud (el WKL). Por la estructura de la prueba entra
 sólo en la dirección «certificado ⇒ derivación de `φ`» (la que retira los axiomas de Skolem); la otra
 no pasa por la conservatividad. (Las dos mitades no se imprimen por separado.)
 
 ## ⭐ Por qué hacía falta un puente, y no una composición
 
 ADR‑062 §4 midió la juntura y midió bien: `skolemNF_shape` entrega **exactamente** `∀ᵐ ψ` con
-`QuantFree ψ`, que es la hipótesis de `herbrand_block`… pero **Herbrand habla de EXISTENCIALES y
+`QuantFree ψ`, que es la hipótesis de `herbrand_block₀`… pero **Herbrand habla de EXISTENCIALES y
 Skolem los quita**. Las dos piezas no componen: se encuentran **al otro lado de una negación**.
 
 ⇒ el enchufe es la ley de De Morgan **iterada sobre el bloque**:
@@ -139,15 +139,15 @@ theorem quantFree_neg {ψ : Formula} (h : QuantFree ψ) : QuantFree (neg ψ) := 
 certificado de Herbrand **de bloque** para la negación de su matriz.
 
 ⭐ Las tres piezas encajan porque `skolemNF_shape` entrega exactamente `∀ᵐ ψ` con `QuantFree ψ`,
-que es la hipótesis de `herbrand_block`, y el puente convierte `¬∀ᵐψ` en `∃ᵐ¬ψ`. -/
-theorem herbrand_of_skolemNF (k : Nat) (φ : Formula) :
+que es la hipótesis de `herbrand_block₀`, y el puente convierte `¬∀ᵐψ` en `∃ᵐ¬ψ`. -/
+theorem herbrand_of_skolemNF₀ (k : Nat) (φ : Formula) :
     ∃ (m : Nat) (ψ : Formula), And (QuantFree ψ)
       (Iff ([] ⊢₀ neg (skolemize k (prenex φ)))
            (∃ tss E, HerbrandCertBlock m (neg ψ) tss E)) := by
   obtain ⟨m, ψ, heq, hq⟩ := skolemNF_shape k φ
   refine ⟨m, ψ, hq, ?_⟩
   rw [heq]
-  exact Iff.trans (derives0_neg_allBlock_iff m ψ []) (herbrand_block (quantFree_neg hq))
+  exact Iff.trans (derives0_neg_allBlock_iff m ψ []) (herbrand_block₀ (quantFree_neg hq))
 
 -- ══════════════════════════════════════════════════════════════════════════
 -- §3 · 🏁 HERBRAND PARA `φ` Y `Γ` CUALESQUIERA (D3, 2026-09-26)
@@ -162,7 +162,7 @@ open FOL.Fresh0 (cst)
 /-- ⭐ **Refutar `φ` es refutar su forma normal de Skolem.** ⟹ sin hipótesis: la forma normal
 IMPLICA el prenexo (`derives0_of_skolemizeF`), y éste equivale a `φ`. ⟸ con las constantes de
 Skolem FRESCAS en `φ`: los axiomas de Skolem dan la forma normal desde `φ`, y se retiran por
-conservatividad (`skolem_conservative_nf`) porque `⊥` no los menciona. -/
+conservatividad (`skolem_conservative_nf₀`) porque `⊥` no los menciona. -/
 theorem derives0_neg_iff_neg_skolemNF (k : Nat) (φ : Formula)
     (hφ : ∀ m, k ≤ m → Not (occursFormula (cst m) φ)) :
     Iff ([] ⊢₀ neg φ) ([] ⊢₀ neg (skolemize k (prenex φ))) := by
@@ -177,7 +177,7 @@ theorem derives0_neg_iff_neg_skolemNF (k : Nat) (φ : Formula)
       (Derives₀.weakening _ _ _ h (fun _ hx => absurd hx List.not_mem_nil)) hP
   · intro h
     refine Derives₀.intro_impl _ _ _ ?_
-    refine skolem_conservative_nf k (prenex φ) [φ] Formula.bottom
+    refine skolem_conservative_nf₀ k (prenex φ) [φ] Formula.bottom
       (fun m hm g hg => by
         cases hg with
         | head => exact hφ m hm
@@ -204,7 +204,7 @@ theorem herbrand_refutation₀ (k : Nat) (φ : Formula)
   refine ⟨m, ψ, heq, hq, ?_⟩
   refine Iff.trans (derives0_neg_iff_neg_skolemNF k φ hφ) ?_
   rw [heq]
-  exact Iff.trans (derives0_neg_allBlock_iff m ψ []) (herbrand_block (quantFree_neg hq))
+  exact Iff.trans (derives0_neg_allBlock_iff m ψ []) (herbrand_block₀ (quantFree_neg hq))
 
 /-- La doble negación, en las dos direcciones (`dne_rule` es un constructor). -/
 theorem derives0_iff_neg_neg (Γ : List Formula) (φ : Formula) :
@@ -274,7 +274,7 @@ end FOL.SkolemHerbrand0
 #print axioms FOL.SkolemHerbrand0.impAll_neg_allBlock
 #print axioms FOL.SkolemHerbrand0.impAll_ex_neg_not_forall
 #print axioms FOL.SkolemHerbrand0.derives0_neg_allBlock_iff
-#print axioms FOL.SkolemHerbrand0.herbrand_of_skolemNF
+#print axioms FOL.SkolemHerbrand0.herbrand_of_skolemNF₀
 #print axioms FOL.SkolemHerbrand0.derives0_neg_iff_neg_skolemNF
 #print axioms FOL.SkolemHerbrand0.herbrand_refutation₀
 #print axioms FOL.SkolemHerbrand0.derives0_iff_neg_neg

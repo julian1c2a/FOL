@@ -19,8 +19,8 @@ import FOL.Lift0
 # `FOL.Craig0` — 🏁 el lema de MAEHARA y la INTERPOLACIÓN DE CRAIG para `LKp`
 
     LKp                     -- el fragmento PURO: `LK₀` sin `eqAx` (13 constructores: los 14 de LK0 menos eqAx)
-    maehara : LKp Γ Δ → ∀ particiones, ∃ C interpolante con su condición de lenguaje
-    craig   : LKp [A] [B] → ∃ C, LKp [A] [C] ∧ LKp [C] [B] ∧ PredSub C [A] ∧ PredSub C [B]
+    maeharaₚ : LKp Γ Δ → ∀ particiones, ∃ C interpolante con su condición de lenguaje
+    craigₚ   : LKp [A] [B] → ∃ C, LKp [A] [C] ∧ LKp [C] [B] ∧ PredSub C [A] ∧ PredSub C [B]
 
 📏 **`[propext, Quot.sound]` en todo el módulo: ni un `Classical.choice`, ni un axioma del
 proyecto.** `lkp_to_lk0`, `predF_lift`, `predF_subst` y el control `lkp_example`, **sin ningún axioma**.
@@ -90,7 +90,7 @@ entonces las dos mitades salen de los CONSTRUCTORES más `substFormula_lift_var`
 * 🏁 **El puente HACIA `LKp` —y con él Craig para `⊢₀` CON igualdad— está en `FOL.Interpolation0`**
   (D3a, 2026‑09‑26): `lk0_to_lkp` deja en el antecedente las instancias de igualdad que `eqAx`
   usaba, cerradas con `∀`, y `craig₀` interpola lo que `Derives₀` deriva. Hasta entonces, consumir
-  `craig` exigía exhibir una derivación de `LKp` a mano.
+  `craigₚ` exigía exhibir una derivación de `LKp` a mano.
 * ⚠️ **Este módulo, solo, no es interpolación para FOLᐟ**: `LKp` no tiene los axiomas de la
   igualdad. La versión con igualdad es `Interpolation0.craig₀`.
 * ⚠️ **No incluye la condición sobre VARIABLES LIBRES** de la interpolación de Craig clásica, sólo
@@ -144,34 +144,8 @@ theorem lkp_to_lk0 : ∀ {Γ Δ : List Formula}, LKp Γ Δ → LK₀ Γ Δ := by
 
 -- ══════════════════════════════════════════════════════════════════════════
 -- §2 · auxiliares de listas y de PARTICIÓN
+-- (`sub_refl`/`sub_wk`/`sub_cons`/`sub_drop`/`swap_cons`: en `FOL.Sequent0` desde el 2026-09-27)
 -- ══════════════════════════════════════════════════════════════════════════
-
-theorem sub_refl (Γ : List Formula) : ∀ x, x ∈ Γ → x ∈ Γ := fun _ h => h
-
-theorem sub_wk {Γ Γ' : List Formula} (b : Formula) (h : ∀ x, x ∈ Γ → x ∈ Γ') :
-    ∀ x, x ∈ Γ → x ∈ b :: Γ' := fun x hx => List.Mem.tail _ (h x hx)
-
-theorem sub_cons {Γ Γ' : List Formula} (b : Formula) (h : ∀ x, x ∈ Γ → x ∈ Γ') :
-    ∀ x, x ∈ b :: Γ → x ∈ b :: Γ' := by
-  intro x hx
-  cases hx with
-  | head => exact List.Mem.head _
-  | tail _ hm => exact List.Mem.tail _ (h x hm)
-
-theorem sub_drop {Δ : List Formula} {b : Formula} (h : b ∈ Δ) : ∀ x, x ∈ b :: Δ → x ∈ Δ := by
-  intro x hx
-  cases hx with
-  | head => exact h
-  | tail _ hm => exact hm
-
-theorem swap_cons (a b : Formula) (Γ : List Formula) : ∀ x, x ∈ a :: b :: Γ → x ∈ b :: a :: Γ := by
-  intro x hx
-  cases hx with
-  | head => exact List.Mem.tail _ (List.Mem.head _)
-  | tail _ hm =>
-      cases hm with
-      | head => exact List.Mem.head _
-      | tail _ hm2 => exact List.Mem.tail _ (List.Mem.tail _ hm2)
 
 /-- La partición se da POR PERTENENCIA, no por concatenación: como `struct` reordena, contrae y
 debilita por pertenencia, el secuente se comporta como un CONJUNTO. ⭐ Es lo que permite el
@@ -322,7 +296,7 @@ theorem sub_rot3' (a b c : Formula) (Γ : List Formula) :
 -- §4 · 🏁 EL LEMA DE MAEHARA
 -- ══════════════════════════════════════════════════════════════════════════
 
-theorem maehara : ∀ {Γ Δ : List Formula}, LKp Γ Δ →
+theorem maeharaₚ : ∀ {Γ Δ : List Formula}, LKp Γ Δ →
     ∀ (Γ₁ Γ₂ Δ₁ Δ₂ : List Formula), Split Γ Γ₁ Γ₂ → Split Δ Δ₁ Δ₂ →
       ∃ C, And (LKp Γ₁ (C :: Δ₁)) (And (LKp (C :: Γ₂) Δ₂)
            (And (PredSub C (Γ₁ ++ Δ₁)) (PredSub C (Γ₂ ++ Δ₂)))) := by
@@ -805,10 +779,10 @@ theorem maehara : ∀ {Γ Δ : List Formula}, LKp Γ Δ →
 
 /-- 🏁🏁 **LA INTERPOLACIÓN DE CRAIG** para el fragmento puro, como corolario de Maehara con la
 partición `Γ₁ = [A]`, `Δ₂ = [B]`. -/
-theorem craig {A B : Formula} (h : LKp [A] [B]) :
+theorem craigₚ {A B : Formula} (h : LKp [A] [B]) :
     ∃ C, And (LKp [A] [C]) (And (LKp [C] [B])
          (And (PredSub C [A]) (PredSub C [B]))) := by
-  obtain ⟨C, h1, h2, hS1, hS2⟩ := maehara h [A] [] [] [B]
+  obtain ⟨C, h1, h2, hS1, hS2⟩ := maeharaₚ h [A] [] [] [B]
     (fun x hx => Or.inl hx) (fun x hx => Or.inr hx)
   exact ⟨C, h1, h2, predSub_of_cov hS1 (cov_append (cov_sub (fun _ hx => hx)) cov_nil),
     predSub_of_cov hS2 (cov_append cov_nil (cov_sub (fun _ hx => hx)))⟩
@@ -826,20 +800,20 @@ theorem lkp_example :
     (LKp.orR _ [] (Formula.atom "P" []) (Formula.atom "R" [])
       (LKp.ax _ _ (Formula.atom "P" []) (List.Mem.head _) (List.Mem.head _)))
 
-/-- ⭐ Y `craig` se aplica a ello: hay interpolante para `P ∧ Q ⊢ P ∨ R`, y su único predicado
+/-- ⭐ Y `craigₚ` se aplica a ello: hay interpolante para `P ∧ Q ⊢ P ∨ R`, y su único predicado
 posible es `P` — el común a los dos lados. -/
 theorem craig_example :
     ∃ C, And (LKp [Formula.and (Formula.atom "P" []) (Formula.atom "Q" [])] [C])
          (And (LKp [C] [Formula.or (Formula.atom "P" []) (Formula.atom "R" [])])
          (And (PredSub C [Formula.and (Formula.atom "P" []) (Formula.atom "Q" [])])
               (PredSub C [Formula.or (Formula.atom "P" []) (Formula.atom "R" [])]))) :=
-  craig lkp_example
+  craigₚ lkp_example
 
 /-- 🏁 **La forma reconocible de Craig**: de `A ⊢ B` salen `⊢ A ⇒ C` y `⊢ C ⇒ B`. -/
-theorem craig_impl {A B : Formula} (h : LKp [A] [B]) :
+theorem craig_implₚ {A B : Formula} (h : LKp [A] [B]) :
     ∃ C, And (LKp [] [Formula.impl A C]) (And (LKp [] [Formula.impl C B])
          (And (PredSub C [A]) (PredSub C [B]))) := by
-  obtain ⟨C, h1, h2, hS1, hS2⟩ := craig h
+  obtain ⟨C, h1, h2, hS1, hS2⟩ := craigₚ h
   exact ⟨C, LKp.implR [] [] A C (LKp.struct _ _ _ _ h1 (sub_refl _) (sub_refl _)),
     LKp.implR [] [] C B (LKp.struct _ _ _ _ h2 (sub_refl _) (sub_refl _)), hS1, hS2⟩
 
@@ -848,7 +822,7 @@ end FOL.Craig0
 #print axioms FOL.Craig0.lkp_to_lk0
 #print axioms FOL.Craig0.predF_lift
 #print axioms FOL.Craig0.predF_subst
-#print axioms FOL.Craig0.maehara
-#print axioms FOL.Craig0.craig
-#print axioms FOL.Craig0.craig_impl
+#print axioms FOL.Craig0.maeharaₚ
+#print axioms FOL.Craig0.craigₚ
+#print axioms FOL.Craig0.craig_implₚ
 #print axioms FOL.Craig0.lkp_example

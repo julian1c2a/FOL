@@ -54,7 +54,7 @@ Este ecosistema formaliza la sintaxis, semántica y metamatemática de la Lógic
 3. Construcción de Henkin + Lema de Lindenbaum.
 4. 🏁 **Teorema de Completitud** sobre `Derives₀`: `completeness₀ : Γ ⊨ f → Γ ⊢₀ f`, cero axiomas del proyecto; y su forma de Henkin, `model_existence_iff₀`.
 5. 🏁 **Compacidad** (`compactness`), **Löwenheim–Skolem descendente** y el **modelo infinito por compacidad** (`infinite_model_of_large`: numerable e infinito).
-6. Hauptsatz (`hauptsatz`), Herbrand, Craig, Skolem y forma prenexa; el fragmento sin cuantificadores caracterizado (`derives0_qf_iff`); decisor proposicional (`ptautCheck_iff`); inversión de `LK₀`. Catálogo: `REFERENCE.md` §6. ⛔ Los metateoremas genéricos sobre `LogicSystem` siguen en el build, pero el marco **no tiene instancias** desde el 2026-09-23.
+6. Hauptsatz (`hauptsatz₀`), Herbrand, Craig, Skolem y forma prenexa; el fragmento sin cuantificadores caracterizado (`derives0_qf_iff`); decisor proposicional (`ptautCheck_iff`); inversión de `LK₀`. Catálogo: `REFERENCE.md` §6. ⛔ Los metateoremas genéricos sobre `LogicSystem` siguen en el build, pero el marco **no tiene instancias** desde el 2026-09-23.
 
 ## Modules — ⚠️ HISTÓRICO (2026-05-16): el catálogo vigente es `REFERENCE.md` §6
 
@@ -211,4 +211,4 @@ Julián Calderón Almendros
 ---
 
 **Author**: Julián Calderón Almendros
-**Last updated:** 2026-09-26 — aviso, insignias, librerías, hitos y cabeceras HISTÓRICO corregidos; el resto del cuerpo es de 2026-05-16.
+**Last updated:** 2026-09-27 — renombres de la regla de subíndices (P2). Antes (2026-09-26): aviso, insignias, librerías, hitos y cabeceras HISTÓRICO corregidos; el resto del cuerpo es de 2026-05-16.

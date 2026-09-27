@@ -29,7 +29,7 @@ Sexta y última pieza de **H3** (`../ROBINSON_PlusPlus/doc/PLAN-COMPLETITUD-FINI
     §5  substFormula_subst_le  -- Barendregt general `w ≤ v`
     §6  lkh_subst              -- cerrado por SUSTITUCIÓN, preservando altura
     §7  deg · lkh_lift         -- el GRADO, y cerrado por LEVANTAMIENTO
-    §8  ⭐⭐⭐ hauptsatz · cut_elimination · herbrand_extraction · herbrand
+    §8  ⭐⭐⭐ hauptsatz₀ · cut_elimination₀ · herbrand_extraction₀ · herbrand₀
     §9  ⭐ EqPropCert · derives0_qf_iff  -- el fragmento SIN CUANTIFICADORES, caracterizado
 
 ## ⭐ §9: lo que el fragmento sin cuantificadores ES (y lo que no)
@@ -104,8 +104,8 @@ fórmula de corte.
 
 De lo que este módulo imprime: `cutElim_of`, `LKh.rec`, `lkh_mono`, `lkh_to_lk0`,
 `eqInstance_subst`, `eqInstance_lift` y `peval_true_eqInstance` **sin ningún axioma**; `lk0_to_lkh`
-sólo `[propext]`; el resto —incluidos **`hauptsatz`**, `cut_elimination`, `herbrand_extraction`,
-**`herbrand`** y **`derives0_qf_iff`**— `[propext, Quot.sound]`. **Ni un `Classical.choice`, ni un
+sólo `[propext]`; el resto —incluidos **`hauptsatz₀`**, `cut_elimination₀`, `herbrand_extraction₀`,
+**`herbrand₀`** y **`derives0_qf_iff`**— `[propext, Quot.sound]`. **Ni un `Classical.choice`, ni un
 axioma del proyecto.** (Lo que no lleva `#print axioms` no tiene footprint afirmado aquí.)
 -/
 
@@ -703,34 +703,9 @@ theorem lkh_lift : ∀ {n : Nat} {Γ Δ : List Formula}, LKh n Γ Δ → ∀ (k 
       exact hx
 
 -- ── §8.1 · aritmética de pertenencia, que es lo que más se repite ────────────
+-- ⭐ `sub_refl`/`sub_wk`/`sub_cons`/`sub_drop`/`swap_cons` viven en `FOL.Sequent0` desde el
+-- 2026-09-27: estaban duplicados literalmente aquí y en `Craig0` (P3). Aquí quedan los demás.
 -- ⚠️ `Or` explícito en todo el fichero: `∨` se parsea como `Formula.or` (trampa §12).
-theorem sub_cons {Γ Γ' : List Formula} (b : Formula) (h : ∀ x, x ∈ Γ → x ∈ Γ') :
-    ∀ x, x ∈ b :: Γ → x ∈ b :: Γ' := by
-  intro x hx
-  cases hx with
-  | head => exact List.Mem.head _
-  | tail _ hm => exact List.Mem.tail _ (h _ hm)
-
-theorem sub_wk {Γ Γ' : List Formula} (b : Formula) (h : ∀ x, x ∈ Γ → x ∈ Γ') :
-    ∀ x, x ∈ Γ → x ∈ b :: Γ' := fun x hx => List.Mem.tail _ (h x hx)
-
-theorem sub_drop {Δ : List Formula} {b : Formula} (h : b ∈ Δ) : ∀ x, x ∈ b :: Δ → x ∈ Δ := by
-  intro x hx
-  cases hx with
-  | head => exact h
-  | tail _ hm => exact hm
-
-theorem swap_cons (a b : Formula) (Γ : List Formula) : ∀ x, x ∈ a :: b :: Γ → x ∈ b :: a :: Γ := by
-  intro x hx
-  cases hx with
-  | head => exact List.Mem.tail _ (List.Mem.head _)
-  | tail _ h =>
-      cases h with
-      | head => exact List.Mem.head _
-      | tail _ h2 => exact List.Mem.tail _ (List.Mem.tail _ h2)
-
-theorem sub_refl (Γ : List Formula) : ∀ x, x ∈ Γ → x ∈ Γ := fun _ h => h
-
 theorem subA_cons {A : Formula} {Δ Δ' : List Formula} (b : Formula)
     (h : ∀ x, x ∈ Δ → Or (x = A) (x ∈ Δ')) :
     ∀ x, x ∈ b :: Δ → Or (x = A) (x ∈ b :: Δ') := by
@@ -1221,7 +1196,7 @@ theorem cutAll : ∀ (d : Nat), CutBelow d := by
 
 -- ── §8.8 · 🏁🏁🏁 EL HAUPTSATZ ──────────────────────────────────────────────
 /-- 🏁🏁🏁 **EL HAUPTSATZ**: el corte ÚNICO es ADMISIBLE en `LK₀`. -/
-theorem hauptsatz : CutAdm := by
+theorem hauptsatz₀ : CutAdm := by
   intro Γ Δ A P Q
   obtain ⟨m, hm⟩ := lk0_to_lkh P
   obtain ⟨n, hn⟩ := lk0_to_lkh Q
@@ -1237,18 +1212,18 @@ theorem hauptsatz : CutAdm := by
     | tail _ h => exact Or.inr h
 
 /-- 🏁 Y con él, la ELIMINACIÓN DE CORTES. -/
-theorem cut_elimination : CutElim := cutElim_of hauptsatz
+theorem cut_elimination₀ : CutElim := cutElim_of hauptsatz₀
 
 /-- 🏁🏁 Y con ella, **H3**: la EXTRACCIÓN DE HERBRAND deja de ser una deuda. -/
-theorem herbrand_extraction : HerbrandExtraction :=
-  FOL.NDtoLK0.herbrandExtraction_of_cutElim cut_elimination
+theorem herbrand_extraction₀ : HerbrandExtraction :=
+  FOL.NDtoLK0.herbrandExtraction_of_cutElim cut_elimination₀
 
 /-- 🏁🏁🏁 **EL TEOREMA DE HERBRAND, YA INCONDICIONAL.** Era un `↔` con hipótesis (`herbrand_iff`,
 ADR‑043) y la hipótesis era H3; H3 es ahora un teorema. ⭐ Y el recíproco ya lo era
 (`derives0_ex_of_cert`), luego el bicondicional queda **entero y sin deudas**. -/
-theorem herbrand {φ : Formula} (hqf : QuantFree φ) :
+theorem herbrand₀ {φ : Formula} (hqf : QuantFree φ) :
     ([] ⊢₀ Formula.ex φ) ↔ ∃ ts E, HerbrandCert φ ts E :=
-  herbrand_iff herbrand_extraction hqf
+  herbrand_iff herbrand_extraction₀ hqf
 
 -- ============================================================
 -- §9 · ⭐ El fragmento SIN CUANTIFICADORES: derivable ⟺ consecuencia PROPOSICIONAL módulo `E`
@@ -1283,7 +1258,7 @@ theorem eqPropCert_of_derives0 {Γ : List Formula} {φ : Formula}
     (hΓ : ∀ g, g ∈ Γ → QuantFree g) (hφ : QuantFree φ) (h : Γ ⊢₀ φ) :
     ∃ E, EqPropCert Γ φ E := by
   obtain ⟨_, E, hE, hout⟩ := lk0_herbrand (φ := Formula.bottom) trivial
-    (cut_elimination _ _ (FOL.NDtoLK0.ndToLK (FOL.Derives2.derives0_iff_derives2.mp h))) hΓ
+    (cut_elimination₀ _ _ (FOL.NDtoLK0.ndToLK (FOL.Derives2.derives0_iff_derives2.mp h))) hΓ
     (fun d hd => by
       cases hd with
       | head => exact Or.inl hφ
@@ -1350,10 +1325,10 @@ end FOL.Hauptsatz0
 #print axioms FOL.Hauptsatz0.eqInstance_lift
 #print axioms FOL.Hauptsatz0.cutPrinAux
 #print axioms FOL.Hauptsatz0.cutLeftAux
-#print axioms FOL.Hauptsatz0.hauptsatz
-#print axioms FOL.Hauptsatz0.cut_elimination
-#print axioms FOL.Hauptsatz0.herbrand_extraction
-#print axioms FOL.Hauptsatz0.herbrand
+#print axioms FOL.Hauptsatz0.hauptsatz₀
+#print axioms FOL.Hauptsatz0.cut_elimination₀
+#print axioms FOL.Hauptsatz0.herbrand_extraction₀
+#print axioms FOL.Hauptsatz0.herbrand₀
 #print axioms FOL.Hauptsatz0.derives0_of_eqPropCert
 #print axioms FOL.Hauptsatz0.eqPropCert_of_derives0
 #print axioms FOL.Hauptsatz0.derives0_qf_iff

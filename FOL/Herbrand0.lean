@@ -35,7 +35,7 @@ Footprint: `[propext, Quot.sound]`. **Ni un `Classical.choice`**, en todo el mó
 | | dirección | estado |
 |---|---|---|
 | ⟸ | **certificado ⇒ demostración** | 🏁 **DEMOSTRADA aquí**, incondicional y finitaria |
-| ⟹ | **demostración ⇒ certificado** (H3) | 🏁 **PAGADA** (ADR‑050/052) — `FOL.Hauptsatz0.herbrand_extraction`, **incondicional**, `[propext, Quot.sound]` |
+| ⟹ | **demostración ⇒ certificado** (H3) | 🏁 **PAGADA** (ADR‑050/052) — `FOL.Hauptsatz0.herbrand_extraction₀`, **incondicional**, `[propext, Quot.sound]` |
 
 🏁 **La ⟹ es H3 —la eliminación de cortes— y está PAGADA** (ADR-050/052, `Hauptsatz0`). Aquí se **enuncia** como
 `HerbrandExtraction`, y se escribe **el consumidor**: `herbrand_iff`, que con ella convierte
@@ -70,7 +70,7 @@ Pero es la mitad fácil, y es lo que permite que el certificado descargue su pro
 la aritmética de De Bruijn bajo binders anidados (`substFormula 0 t (∃ψ) = ∃ (substFormula 1 (lift t) ψ)`)
 pide su propia capa de lemas. 🏁 **HECHO**: la versión de BLOQUE está en
 `FOL.HerbrandBlock0` (`exBlock`, `subst_exBlock`) y su extracción en
-`FOL.BlockExtraction0.herbrand_extraction_block`, también incondicional.
+`FOL.BlockExtraction0.herbrand_extraction_block₀`, también incondicional.
 -/
 
 namespace FOL.Herbrand0
@@ -304,7 +304,7 @@ def QuantFree : Formula → Prop
   | .ex _ => False
 
 /-- 🏁 **H3 — la extracción del certificado. PAGADA el 2026-09-17** (ADR-050/051/052).
-Testigo incondicional: **`FOL.Hauptsatz0.herbrand_extraction`**, `[propext, Quot.sound]`.
+Testigo incondicional: **`FOL.Hauptsatz0.herbrand_extraction₀`**, `[propext, Quot.sound]`.
 
 Se sigue **enunciando** como `Prop` a propósito —es el idioma del proyecto, y sus consumidores
 (`herbrand_iff`, `herbrandExtraction_of`) la toman como hipótesis—, pero **ya no es una deuda**.

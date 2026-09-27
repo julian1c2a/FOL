@@ -19,12 +19,12 @@ import FOL.Skolem0
 
     skolemAxN c n A := ∀x₀ … ∀x_{n-1}. (∃y. A  →  A[y := c(x₀,…,x_{n-1})])
 
-    skolem_conservative_n : c fresco para Γ, A y φ →
+    skolem_conservative_n₀ : c fresco para Γ, A y φ →
                             (skolemAxN c n A :: Γ) ⊢₀ φ  →  Γ ⊢₀ φ
 
 ## ⭐ Por qué éste es el caso que faltaba, y no una variante más
 
-`FOL.Skolem0.skolem_conservative` cubre `c(t̄)` con `t̄` **fijo**, y es barato precisamente por eso:
+`FOL.Skolem0.skolem_conservative₀` cubre `c(t̄)` con `t̄` **fijo**, y es barato precisamente por eso:
 la interpretación del símbolo nuevo puede ser **constante** (`fun _ => w`) y entonces los argumentos
 dejan de importar. Aquí, bajo el prefijo, el testigo **depende de las variables ligadas**: la
 interpretación tiene que ser una **función de verdad**, `List D → D`, y hay que hacer coincidir la
@@ -206,7 +206,7 @@ contexto, el cuerpo y la conclusión, todo lo que se demuestra con él se demues
 
 ⚠️ El `Classical.choice` del footprint **no es nuevo**: `completeness₀` ya lo trae (es el WKL). Lo
 que `skF` añade es el `Exists.choose` de la elección del testigo, que vive en la misma columna. -/
-theorem skolem_conservative_n {c : String} {n : Nat} {A φ : Formula} {Γ : List Formula}
+theorem skolem_conservative_n₀ {c : String} {n : Nat} {A φ : Formula} {Γ : List Formula}
     (hΓ : ∀ g, g ∈ Γ → Not (occursFormula c g))
     (hA : Not (occursFormula c A))
     (hφ : Not (occursFormula c φ))
@@ -229,7 +229,7 @@ theorem skolem_conservative_n_zero {c : String} {A φ : Formula} {Γ : List Form
     (hA : Not (occursFormula c A))
     (hφ : Not (occursFormula c φ))
     (h : (skolemAxT c [] A :: Γ) ⊢₀ φ) : Γ ⊢₀ φ :=
-  skolem_conservative_n (n := 0) hΓ hA hφ h
+  skolem_conservative_n₀ (n := 0) hΓ hA hφ h
 
 end FOL.SkolemN0
 
@@ -237,4 +237,4 @@ end FOL.SkolemN0
 #print axioms FOL.SkolemN0.eval_allBlock_envPush
 #print axioms FOL.SkolemN0.evalTerms_vars
 #print axioms FOL.SkolemN0.eval_skolemAxN
-#print axioms FOL.SkolemN0.skolem_conservative_n
+#print axioms FOL.SkolemN0.skolem_conservative_n₀

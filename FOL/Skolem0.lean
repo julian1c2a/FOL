@@ -17,9 +17,9 @@ import FOL.Canonical0
 /-!
 # `FOL.Skolem0` — 🏁 el axioma de SKOLEM es **CONSERVATIVO**, con término de argumentos fijos
 
-    skolem_conservative : c fresco para Γ, A y φ →
+    skolem_conservative₀ : c fresco para Γ, A y φ →
                           (skolemAxT c t̄ A :: Γ) ⊢₀ φ  →  Γ ⊢₀ φ
-    henkin_conservative : el caso `t̄ = []`, ahora un COROLARIO
+    henkin_conservative₀ : el caso `t̄ = []`, ahora un COROLARIO
 
 ## ⭐ Y `t̄` NO necesita ser fresco — ésa es la medición que abarata todo
 
@@ -57,7 +57,7 @@ argumento de frescura que quiera decir algo semántico — no sólo por Skolem.
 
 Es literalmente el axioma de Skolem para un existencial cuyo cuerpo no tiene más variables libres.
 ⇒ no hay que definir nada nuevo: *antes de construir, buscar*.
-⚠️ Lo que el proyecto tenía sobre él era `henkin_step_consistent` (ADR‑037): que el paso **preserva
+⚠️ Lo que el proyecto tenía sobre él era `henkin_step_consistent₀` (ADR‑037): que el paso **preserva
 la CONSISTENCIA**. La conservatividad es **estrictamente más fuerte** y es lo que hace falta para
 decir que skolemizar no inventa teoremas.
 
@@ -77,13 +77,13 @@ una hace un trabajo distinto: en Γ para transportar el contexto, en A para eleg
 ## 📏 Footprint
 
 `updateFunc`, `evalTerm_updateFunc` y `evalFormula_updateFunc` **sin ningún axioma**.
-`skolem_conservative` y `henkin_conservative`, `[propext, Classical.choice, Quot.sound]` — el
+`skolem_conservative₀` y `henkin_conservative₀`, `[propext, Classical.choice, Quot.sound]` — el
 `Classical.choice` es el de `completeness₀`, el **WKL** de siempre (plan §6.3), más la elección del
 testigo. ⛔ Vía W, no vía H.
 
 ## 🏁 El axioma bajo un PREFIJO de universales — **HECHO en `FOL.SkolemN0`**
 
-🏁 `FOL.SkolemN0.skolem_conservative_n` lo cierra, y la pieza que aquí se dio por inexistente
+🏁 `FOL.SkolemN0.skolem_conservative_n₀` lo cierra, y la pieza que aquí se dio por inexistente
 —reconstruir el entorno desde una lista— resultó no hacer falta: `envPush` se **construye** con
 `shiftEnv` y las dos ecuaciones del paso inductivo salen `rfl`.
 ⚠️ Lo de abajo decía «**MEDIDO** que no existe nada de eso», y la falsedad iba etiquetada
@@ -213,7 +213,7 @@ que se demuestra con él se demuestra sin él.
 
 ⭐ `ts` **no** necesita ser fresco: como la interpretación de `c` es constante, `c(t̄)` vale lo
 mismo sean cuales sean los argumentos — incluso si mencionan `c`. -/
-theorem skolem_conservative {c : String} {A φ : Formula} {Γ : List Formula} {ts : List Term}
+theorem skolem_conservative₀ {c : String} {A φ : Formula} {Γ : List Formula} {ts : List Term}
     (hΓ : ∀ g, g ∈ Γ → Not (occursFormula c g))
     (hA : Not (occursFormula c A))
     (hφ : Not (occursFormula c φ))
@@ -246,17 +246,17 @@ theorem skolem_conservative {c : String} {A φ : Formula} {Γ : List Formula} {t
       (hex.elim (fun d hd => ⟨d, (evalFormula_updateFunc M c _ A (shiftEnv v d) hA).mp hd⟩)) hEx
 
 /-- 🏁 El caso de ADR‑056 (constante) es ahora un COROLARIO: `henkinAx c A = skolemAxT c [] A`. -/
-theorem henkin_conservative {c : String} {A φ : Formula} {Γ : List Formula}
+theorem henkin_conservative₀ {c : String} {A φ : Formula} {Γ : List Formula}
     (hΓ : ∀ g, g ∈ Γ → Not (occursFormula c g))
     (hA : Not (occursFormula c A))
     (hφ : Not (occursFormula c φ))
     (h : (henkinAx c A :: Γ) ⊢₀ φ) : Γ ⊢₀ φ :=
-  skolem_conservative (ts := []) hΓ hA hφ h
+  skolem_conservative₀ (ts := []) hΓ hA hφ h
 
 end FOL.Skolem0
 
 #print axioms FOL.Skolem0.evalTerm_updateFunc
 #print axioms FOL.Skolem0.evalFormula_updateFunc
 #print axioms FOL.Skolem0.evalTerm_new
-#print axioms FOL.Skolem0.skolem_conservative
-#print axioms FOL.Skolem0.henkin_conservative
+#print axioms FOL.Skolem0.skolem_conservative₀
+#print axioms FOL.Skolem0.henkin_conservative₀

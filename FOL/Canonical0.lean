@@ -44,11 +44,11 @@ FOL⁼. ⛔ Recuérdese que sobre `Derives` **no puede haberlas**: su solidez es
    y `rel` es la pertenencia a `S`. Más `evalTerm_canonical`: *evaluar un término en el modelo
    canónico es su propia clase.*
 5. **§5** — `max_cons_ex` y `max_cons_forall`. ⭐ Aquí es donde paga `IsHenkin`, y **sólo aquí**.
-6. **§6** — **`truth_lemma`**: la semántica coincide con la sintaxis. Inducción por
+6. **§6** — **`truth_lemma₀`**: la semántica coincide con la sintaxis. Inducción por
    **complejidad**, no por estructura, porque el caso `∀` pasa por `substFormula` —y por eso hace
    falta `complexity_substFormula`: *sustituir no cambia la complejidad*.
 7. **§7** — ⭐ **el renombrado es semánticamente transparente** (`pullback`). Es la pieza que el
-   ensamblaje necesita y que no estaba: `henkin_completion` entrega un modelo de `shiftTheory S`,
+   ensamblaje necesita y que no estaba: `henkin_completion₀` entrega un modelo de `shiftTheory S`,
    no de `S`. Se reinterpretan los símbolos, y ya.
 8. **§8** — `model_existence_lemma₀` y **`completeness₀`**.
 
@@ -474,7 +474,7 @@ theorem truth_lemma_lt {S : Formula → Prop} (hMax : IsMaximalConsistent₀ S)
       exact (max_cons_ex hMax hHenkin).symm
 
 /-- ⭐⭐⭐ **La semántica coincide con la sintaxis en el modelo canónico.** -/
-theorem truth_lemma {S : Formula → Prop} (hMax : IsMaximalConsistent₀ S) (hHenkin : IsHenkin S)
+theorem truth_lemma₀ {S : Formula → Prop} (hMax : IsMaximalConsistent₀ S) (hHenkin : IsHenkin S)
     (f : Formula) : evalFormula (canonicalModel S hMax) (canonicalEnv S hMax) f ↔ S f :=
   truth_lemma_lt hMax hHenkin (formulaComplexity f + 1) f (Nat.lt_succ_self _)
 
@@ -555,7 +555,7 @@ def IsSatisfiable (S : Formula → Prop) : Prop :=
   ∃ (D : Type) (M : Model D) (v : Nat → D), ∀ f, S f → evalFormula M v f
 
 /-- ⭐ **Volver del sublenguaje**: un modelo de `shiftTheory S` da un modelo de `S` sin más que
-reinterpretar los símbolos. Es la pieza que faltaba para que `henkin_completion` se pueda usar. -/
+reinterpretar los símbolos. Es la pieza que faltaba para que `henkin_completion₀` se pueda usar. -/
 theorem satisfiable_of_shift {S : Formula → Prop} (h : IsSatisfiable (shiftTheory S)) :
     IsSatisfiable S := by
   obtain ⟨D, M, v, hM⟩ := h
@@ -565,10 +565,10 @@ theorem satisfiable_of_shift {S : Formula → Prop} (h : IsSatisfiable (shiftThe
 /-- ⭐⭐ **Toda teoría consistente tiene modelo.** -/
 theorem model_existence_lemma₀ {S : Formula → Prop} (hCons : IsConsistent₀ S) :
     IsSatisfiable S := by
-  obtain ⟨T, hMax, hHenkin, hSub⟩ := henkin_completion hCons
+  obtain ⟨T, hMax, hHenkin, hSub⟩ := henkin_completion₀ hCons
   refine satisfiable_of_shift ⟨QuotientDomain T hMax, canonicalModel T hMax, canonicalEnv T hMax,
     fun f hf => ?_⟩
-  exact (truth_lemma hMax hHenkin f).mpr (hSub f hf)
+  exact (truth_lemma₀ hMax hHenkin f).mpr (hSub f hf)
 
 /-- ⭐⭐⭐ **EL TEOREMA DE COMPLETITUD** para `Derives₀`.
 
@@ -615,7 +615,7 @@ theorem derives0_peirce (A B : Formula) :
 
 end FOL.Canonical0
 
-#print axioms FOL.Canonical0.truth_lemma
+#print axioms FOL.Canonical0.truth_lemma₀
 #print axioms FOL.Canonical0.eval_pullback_formula
 #print axioms FOL.Canonical0.model_existence_lemma₀
 #print axioms FOL.Canonical0.completeness₀

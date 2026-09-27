@@ -32,12 +32,12 @@ import FOL.Hauptsatz0
 ## ⭐ Por qué esto es el primer dividendo del Hauptsatz fuera de Herbrand
 
 En un cálculo de secuentes **sin corte**, invertir una regla obliga a una inducción sobre la
-derivación, caso por caso. **Con el corte admisible** (`FOL.Hauptsatz0.hauptsatz : CutAdm`) cada
+derivación, caso por caso. **Con el corte admisible** (`FOL.Hauptsatz0.hauptsatz₀ : CutAdm`) cada
 inversión es **un solo corte**: la premisa dada, un secuente auxiliar que la regla **dual**
 deriva en un paso, y el corte sobre la fórmula principal.
 
 🔑 *El Hauptsatz no sólo elimina el corte de las derivaciones: lo convierte en una herramienta
-para PROBAR cosas sobre ellas.* Hasta el 2026‑09‑23 el único consumidor de `hauptsatz` era la extracción de
+para PROBAR cosas sobre ellas.* Hasta el 2026‑09‑23 el único consumidor de `hauptsatz₀` era la extracción de
 Herbrand.
 
 ## La plantilla — las nueve son la misma
@@ -49,7 +49,7 @@ Para invertir la regla que introduce `C` a la derecha:
 3. **corte** sobre `C`.
 
 Y simétricamente para las reglas izquierdas. Los helpers de pertenencia **ya estaban**
-(`sub_cons`, `sub_wk`, `sub_refl`, `FOL/Hauptsatz0.lean` §8.1): no se ha escrito ninguno.
+(`sub_cons`, `sub_wk`, `sub_refl`, hoy en `FOL.Sequent0`): no se ha escrito ninguno.
 
 ## Los cuantificadores: `allR` y `exL` SÍ, `allL` y `exR` NO
 
@@ -64,17 +64,18 @@ construir, buscar* — y antes de diferir, también.
 
 ## 📏 Footprint
 
-El de `hauptsatz`: `[propext, Quot.sound]`, las once. **Ni un `Classical.choice`.**
+El de `hauptsatz₀`: `[propext, Quot.sound]`, las once. **Ni un `Classical.choice`.**
 -/
 
 namespace FOL.Inversion0
 
 open FOL.Hauptsatz0
+open FOL.Sequent0
 
 /-- Invertir `implR`: de `Γ ⟹ A ⇒ B, Δ` a `A, Γ ⟹ B, Δ`. -/
 theorem inv_implR {Γ Δ : List Formula} {A B : Formula}
     (h : LK₀ Γ (Formula.impl A B :: Δ)) : LK₀ (A :: Γ) (B :: Δ) := by
-  refine hauptsatz (A :: Γ) (B :: Δ) (Formula.impl A B) ?_ ?_
+  refine hauptsatz₀ (A :: Γ) (B :: Δ) (Formula.impl A B) ?_ ?_
   · exact LK₀.struct _ _ _ _ h (sub_wk A (sub_refl Γ))
       (sub_cons (Formula.impl A B) (sub_wk B (sub_refl Δ)))
   · refine LK₀.implL (A :: Γ) (B :: Δ) A B ?_ ?_
@@ -84,7 +85,7 @@ theorem inv_implR {Γ Δ : List Formula} {A B : Formula}
 /-- Invertir `implL`, premisa izquierda: de `A ⇒ B, Γ ⟹ Δ` a `Γ ⟹ A, Δ`. -/
 theorem inv_implL_l {Γ Δ : List Formula} {A B : Formula}
     (h : LK₀ (Formula.impl A B :: Γ) Δ) : LK₀ Γ (A :: Δ) := by
-  refine hauptsatz Γ (A :: Δ) (Formula.impl A B) ?_ ?_
+  refine hauptsatz₀ Γ (A :: Δ) (Formula.impl A B) ?_ ?_
   · exact LK₀.implR Γ (A :: Δ) A B
       (LK₀.ax _ _ A (List.Mem.head _) (List.Mem.tail _ (List.Mem.head _)))
   · exact LK₀.struct _ _ _ _ h (sub_refl _) (sub_wk A (sub_refl Δ))
@@ -92,7 +93,7 @@ theorem inv_implL_l {Γ Δ : List Formula} {A B : Formula}
 /-- Invertir `implL`, premisa derecha: de `A ⇒ B, Γ ⟹ Δ` a `B, Γ ⟹ Δ`. -/
 theorem inv_implL_r {Γ Δ : List Formula} {A B : Formula}
     (h : LK₀ (Formula.impl A B :: Γ) Δ) : LK₀ (B :: Γ) Δ := by
-  refine hauptsatz (B :: Γ) Δ (Formula.impl A B) ?_ ?_
+  refine hauptsatz₀ (B :: Γ) Δ (Formula.impl A B) ?_ ?_
   · exact LK₀.implR (B :: Γ) Δ A B
       (LK₀.ax _ _ B (List.Mem.tail _ (List.Mem.head _)) (List.Mem.head _))
   · exact LK₀.struct _ _ _ _ h (sub_cons (Formula.impl A B) (sub_wk B (sub_refl Γ)))
@@ -101,7 +102,7 @@ theorem inv_implL_r {Γ Δ : List Formula} {A B : Formula}
 /-- Invertir `andR`, conjunto izquierdo. -/
 theorem inv_andR_l {Γ Δ : List Formula} {A B : Formula}
     (h : LK₀ Γ (Formula.and A B :: Δ)) : LK₀ Γ (A :: Δ) := by
-  refine hauptsatz Γ (A :: Δ) (Formula.and A B) ?_ ?_
+  refine hauptsatz₀ Γ (A :: Δ) (Formula.and A B) ?_ ?_
   · exact LK₀.struct _ _ _ _ h (sub_refl Γ)
       (sub_cons (Formula.and A B) (sub_wk A (sub_refl Δ)))
   · exact LK₀.andL Γ (A :: Δ) A B (LK₀.ax _ _ A (List.Mem.head _) (List.Mem.head _))
@@ -109,7 +110,7 @@ theorem inv_andR_l {Γ Δ : List Formula} {A B : Formula}
 /-- Invertir `andR`, conjunto derecho. -/
 theorem inv_andR_r {Γ Δ : List Formula} {A B : Formula}
     (h : LK₀ Γ (Formula.and A B :: Δ)) : LK₀ Γ (B :: Δ) := by
-  refine hauptsatz Γ (B :: Δ) (Formula.and A B) ?_ ?_
+  refine hauptsatz₀ Γ (B :: Δ) (Formula.and A B) ?_ ?_
   · exact LK₀.struct _ _ _ _ h (sub_refl Γ)
       (sub_cons (Formula.and A B) (sub_wk B (sub_refl Δ)))
   · exact LK₀.andL Γ (B :: Δ) A B
@@ -118,7 +119,7 @@ theorem inv_andR_r {Γ Δ : List Formula} {A B : Formula}
 /-- Invertir `andL`. -/
 theorem inv_andL {Γ Δ : List Formula} {A B : Formula}
     (h : LK₀ (Formula.and A B :: Γ) Δ) : LK₀ (A :: B :: Γ) Δ := by
-  refine hauptsatz (A :: B :: Γ) Δ (Formula.and A B) ?_ ?_
+  refine hauptsatz₀ (A :: B :: Γ) Δ (Formula.and A B) ?_ ?_
   · exact LK₀.andR _ _ A B (LK₀.ax _ _ A (List.Mem.head _) (List.Mem.head _))
       (LK₀.ax _ _ B (List.Mem.tail _ (List.Mem.head _)) (List.Mem.head _))
   · exact LK₀.struct _ _ _ _ h
@@ -127,7 +128,7 @@ theorem inv_andL {Γ Δ : List Formula} {A B : Formula}
 /-- Invertir `orR`. -/
 theorem inv_orR {Γ Δ : List Formula} {A B : Formula}
     (h : LK₀ Γ (Formula.or A B :: Δ)) : LK₀ Γ (A :: B :: Δ) := by
-  refine hauptsatz Γ (A :: B :: Δ) (Formula.or A B) ?_ ?_
+  refine hauptsatz₀ Γ (A :: B :: Δ) (Formula.or A B) ?_ ?_
   · exact LK₀.struct _ _ _ _ h (sub_refl Γ)
       (sub_cons (Formula.or A B) (sub_wk A (sub_wk B (sub_refl Δ))))
   · exact LK₀.orL Γ (A :: B :: Δ) A B (LK₀.ax _ _ A (List.Mem.head _) (List.Mem.head _))
@@ -136,7 +137,7 @@ theorem inv_orR {Γ Δ : List Formula} {A B : Formula}
 /-- Invertir `orL`, disyunto izquierdo. -/
 theorem inv_orL_l {Γ Δ : List Formula} {A B : Formula}
     (h : LK₀ (Formula.or A B :: Γ) Δ) : LK₀ (A :: Γ) Δ := by
-  refine hauptsatz (A :: Γ) Δ (Formula.or A B) ?_ ?_
+  refine hauptsatz₀ (A :: Γ) Δ (Formula.or A B) ?_ ?_
   · exact LK₀.orR _ _ A B (LK₀.ax _ _ A (List.Mem.head _) (List.Mem.head _))
   · exact LK₀.struct _ _ _ _ h (sub_cons (Formula.or A B) (sub_wk A (sub_refl Γ)))
       (sub_refl Δ)
@@ -144,7 +145,7 @@ theorem inv_orL_l {Γ Δ : List Formula} {A B : Formula}
 /-- Invertir `orL`, disyunto derecho. -/
 theorem inv_orL_r {Γ Δ : List Formula} {A B : Formula}
     (h : LK₀ (Formula.or A B :: Γ) Δ) : LK₀ (B :: Γ) Δ := by
-  refine hauptsatz (B :: Γ) Δ (Formula.or A B) ?_ ?_
+  refine hauptsatz₀ (B :: Γ) Δ (Formula.or A B) ?_ ?_
   · exact LK₀.orR _ _ A B
       (LK₀.ax _ _ B (List.Mem.head _) (List.Mem.tail _ (List.Mem.head _)))
   · exact LK₀.struct _ _ _ _ h (sub_cons (Formula.or A B) (sub_wk B (sub_refl Γ)))
@@ -160,7 +161,7 @@ theorem inv_allR {Γ Δ : List Formula} {A : Formula}
     FOL.Lift0.substFormula_lift_var A 0
   have P : LK₀ (Γ.map (liftFormula 0))
       (Formula.forall (liftFormula 1 A) :: Δ.map (liftFormula 0)) := lk0_lift h 0
-  refine hauptsatz (Γ.map (liftFormula 0)) (A :: Δ.map (liftFormula 0))
+  refine hauptsatz₀ (Γ.map (liftFormula 0)) (A :: Δ.map (liftFormula 0))
     (Formula.forall (liftFormula 1 A)) ?_ ?_
   · exact LK₀.struct (Γ.map (liftFormula 0)) (Γ.map (liftFormula 0))
       (Formula.forall (liftFormula 1 A) :: Δ.map (liftFormula 0))
@@ -180,7 +181,7 @@ theorem inv_exL {Γ Δ : List Formula} {A : Formula}
     FOL.Lift0.substFormula_lift_var A 0
   have Q : LK₀ (Formula.ex (liftFormula 1 A) :: Γ.map (liftFormula 0))
       (Δ.map (liftFormula 0)) := lk0_lift h 0
-  refine hauptsatz (A :: Γ.map (liftFormula 0)) (Δ.map (liftFormula 0))
+  refine hauptsatz₀ (A :: Γ.map (liftFormula 0)) (Δ.map (liftFormula 0))
     (Formula.ex (liftFormula 1 A)) ?_ ?_
   · refine LK₀.exR (A :: Γ.map (liftFormula 0)) (Δ.map (liftFormula 0)) (liftFormula 1 A)
       (Term.var 0) ?_

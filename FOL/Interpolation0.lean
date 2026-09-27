@@ -23,7 +23,7 @@ import FOL.Hauptsatz0
     lk0_to_lkp          : LK₀ Γ Δ → ∃ E, (∀ e ∈ E, EqGen e) ∧ LKp (E ++ Γ) Δ     -- el PUENTE
     lk0_to_derives0_fin : LK₀ Γ Δ → Γ ⊢₀ disjOf Δ                                -- sin completitud
 
-Paga la deuda que `FOL.Craig0` declaraba ABIERTA (D3a, 2026‑09‑26): `craig` valía para `LKp`, el
+Paga la deuda que `FOL.Craig0` declaraba ABIERTA (D3a, 2026‑09‑26): `craigₚ` valía para `LKp`, el
 fragmento SIN `eqAx`, y no había puente desde lo que el proyecto deriva. 📏 **`[propext, Quot.sound]`**
 en todos los titulares (`predF_em` y `eqGen_side`, ninguno): **ni un `Classical.choice`**.
 
@@ -38,7 +38,7 @@ devuelve `e` (`substFormula_lift_var`). Por eso `EqGen` son las instancias **cer
 ## ⭐⭐ Por qué NO hace falta borrar los predicados ajenos
 
 Cada `EqGen` menciona **a lo sumo un** símbolo de relación (el de `eqAtomAx`). Se reparte `E` en
-`E₁` (predicados del lenguaje de `Γ`) y `E₂` (predicados ajenos a `Γ`), y se llama a `maehara` con
+`E₁` (predicados del lenguaje de `Γ`) y `E₂` (predicados ajenos a `Γ`), y se llama a `maeharaₚ` con
 `Γ₁ = E₁ ++ Γ`, `Γ₂ = E₂`. Maehara da `preds C ⊆ preds(E₁ ∪ Γ) = preds Γ` **y**
 `preds C ⊆ preds(E₂ ∪ {B})`; como ningún predicado de `E₂` está en `Γ`, los de `C` están en `B`.
 🔑 *La intersección de los dos lenguajes ya excluye lo ajeno: no hay que quitarlo, basta ponerlo en
@@ -61,14 +61,15 @@ como «`Γ` y las negaciones de `Δ` son contradictorias» con la lista por pert
   interpolante se da a mano); prueba que la hipótesis se cumple en un caso NO degenerado.
 
 ⚠️ Higiene contra `Classical.choice`: nada de `by_cases` sobre `predF`/pertenencia (la macro de core
-hace `open Classical in`; se usan `predF_em`/`predL_em`), nada de `simp` sobre negaciones, y nada de
-`open FOL.Hauptsatz0` (redefine `sub_refl`/`sub_cons`/`sub_wk`/`sub_drop`/`swap_cons`).
+hace `open Classical in`; se usan `predF_em`/`predL_em`) y nada de `simp` sobre negaciones. (Los
+`sub_*` que antes chocaban entre `Hauptsatz0` y `Craig0` viven en `FOL.Sequent0` desde el 2026‑09‑27.)
 -/
 
 namespace FOL.Interpolation0
 
 open FOL.Herbrand0
 open FOL.Craig0
+open FOL.Sequent0
 
 -- ══════════════════════════════════════════════════════════════════════════
 -- §1 · LA VUELTA, SINTÁCTICA: LK₀ → ⊢₀ (forma de refutación, por pertenencia)
@@ -578,14 +579,14 @@ theorem split_exists {P Q : Formula → Prop} : ∀ (E : List Formula),
 theorem craig_ctx₀ {Γ : List Formula} {B : Formula} (h : Γ ⊢₀ B) :
     ∃ C, And (Γ ⊢₀ C) (And ([C] ⊢₀ B) (And (PredSub C Γ) (PredSub C [B]))) := by
   have hlk : LK₀ Γ [B] :=
-    FOL.Hauptsatz0.cut_elimination _ _
+    FOL.Hauptsatz0.cut_elimination₀ _ _
       (FOL.NDtoLK0.ndToLK (FOL.Derives2.derives0_iff_derives2.mp h))
   obtain ⟨E, hE, hp⟩ := lk0_to_lkp hlk
   obtain ⟨E₁, E₂, hs, h1, h2⟩ :=
     split_exists (P := fun e => ∀ p, predF p e → ∃ g, And (g ∈ Γ) (predF p g))
       (Q := fun e => ∀ p, predF p e → Not (∃ g, And (g ∈ Γ) (predF p g)))
       E (fun e he => eqGen_side Γ (hE e he))
-  obtain ⟨C, hC1, hC2, hS1, hS2⟩ := maehara hp (E₁ ++ Γ) E₂ [] [B]
+  obtain ⟨C, hC1, hC2, hS1, hS2⟩ := maeharaₚ hp (E₁ ++ Γ) E₂ [] [B]
     (fun x hx => by
       rcases List.mem_append.mp hx with hx' | hx'
       · exact (hs x hx').elim (fun h' => Or.inl (List.mem_append_left _ h')) Or.inr

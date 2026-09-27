@@ -85,7 +85,7 @@ axioma**.
 ## 🏁 Lo que faltaba para H3 — y ya no falta
 
 ⚠️ Se titulaba «⬜ Lo que sigue faltando» con el Hauptsatz ya probado
-(`FOL.Hauptsatz0.hauptsatz` / `cut_elimination`). El párrafo describe la ruta, no una deuda.
+(`FOL.Hauptsatz0.hauptsatz₀` / `cut_elimination₀`). El párrafo describe la ruta, no una deuda.
 
 **El Hauptsatz.** Esto no elimina cortes: pone el cálculo en la forma en que el Hauptsatz se puede
 plantear. Siguen siendo «de corte» `elim_impl`, `elim_and_l/r`, `elim_or` y `elim_ex` — los cinco

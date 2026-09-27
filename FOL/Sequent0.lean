@@ -26,7 +26,7 @@ demuestra lo único que valida esa forma: **que de una prueba sin corte salen lo
     LKc                    -- lo mismo MÁS la regla de corte (15)
     lk0_herbrand           -- ⭐⭐ la EXTRACCIÓN: de `LK₀ ⟹ ∃xφ` salen los términos Y las
                            --    instancias de igualdad que la derivación usa
-    CutElim                -- 🏁 PAGADA (ADR-050/052): `Hauptsatz0.cut_elimination`
+    CutElim                -- 🏁 PAGADA (ADR-050/052): `Hauptsatz0.cut_elimination₀`
     herbrandExtraction_of  -- ⭐⭐⭐ CutElim + NDtoLK ⇒ H3
 
 ## ⭐ Por qué el orden es éste, y no al revés
@@ -96,7 +96,7 @@ verdad y carísimo para la demostración.*
 
     CutElim : ∀ Γ Δ, LKc Γ Δ → LK₀ Γ Δ                       -- el HAUPTSATZ
 
-🏁 **`FOL.Hauptsatz0.cut_elimination : CutElim`** (ADR‑050/052), incondicional. Y el consumidor
+🏁 **`FOL.Hauptsatz0.cut_elimination₀ : CutElim`** (ADR‑050/052), incondicional. Y el consumidor
 ya estaba escrito: `herbrandExtraction_of (hcut) (htr)`, con `htr` demostrado en `FOL.NDtoLK0`.
 ⇒ **H3 y la vía H están cerradas.**
 
@@ -502,11 +502,11 @@ theorem lk0_to_lkc {G D : List Formula} (h : LK₀ G D) : LKc G D := by
 
 
 /-- 🏁 **El HAUPTSATZ — PAGADO el 2026-09-17** (ADR-050/051/052). Testigo incondicional:
-**`FOL.Hauptsatz0.cut_elimination`**, vía `hauptsatz : CutAdm`, `[propext, Quot.sound]`.
+**`FOL.Hauptsatz0.cut_elimination₀`**, vía `hauptsatz₀ : CutAdm`, `[propext, Quot.sound]`.
 
 Se sigue enunciando como `Prop` porque `herbrandExtraction_of` lo toma como hipótesis.
 ⚠️ Esta línea decía «LA ÚNICA DEUDA QUE QUEDA» —y otras dos veces más en este fichero— con
-`hauptsatz` ya probado. Lo cazó [G.1] (ADR-072). -/
+`hauptsatz₀` ya probado. Lo cazó [G.1] (ADR-072). -/
 def CutElim : Prop := ∀ Γ Δ, LKc Γ Δ → LK₀ Γ Δ
 
 /-- La traducción ND → secuentes con corte. ⭐ Ya NO lleva `E`: las instancias de igualdad
@@ -532,6 +532,38 @@ theorem herbrandExtraction_of (hcut : CutElim) (htr : NDtoLK) : HerbrandExtracti
       cases hdmem with
       | head => exact absurd rfl hdne
       | tail _ h2 => exact absurd h2 List.not_mem_nil
+
+-- ── Aritmética de pertenencia de los secuentes (2026-09-27) ────────────────────
+-- Estaba duplicada LITERALMENTE en `Hauptsatz0` §8.1 y en `Craig0` §2 (P3 de la criba de
+-- congelación): vive aquí, que es lo que importan los dos.
+
+theorem sub_refl (Γ : List Formula) : ∀ x, x ∈ Γ → x ∈ Γ := fun _ h => h
+
+theorem sub_wk {Γ Γ' : List Formula} (b : Formula) (h : ∀ x, x ∈ Γ → x ∈ Γ') :
+    ∀ x, x ∈ Γ → x ∈ b :: Γ' := fun x hx => List.Mem.tail _ (h x hx)
+
+theorem sub_cons {Γ Γ' : List Formula} (b : Formula) (h : ∀ x, x ∈ Γ → x ∈ Γ') :
+    ∀ x, x ∈ b :: Γ → x ∈ b :: Γ' := by
+  intro x hx
+  cases hx with
+  | head => exact List.Mem.head _
+  | tail _ hm => exact List.Mem.tail _ (h _ hm)
+
+theorem sub_drop {Δ : List Formula} {b : Formula} (h : b ∈ Δ) : ∀ x, x ∈ b :: Δ → x ∈ Δ := by
+  intro x hx
+  cases hx with
+  | head => exact h
+  | tail _ hm => exact hm
+
+theorem swap_cons (a b : Formula) (Γ : List Formula) : ∀ x, x ∈ a :: b :: Γ → x ∈ b :: a :: Γ := by
+  intro x hx
+  cases hx with
+  | head => exact List.Mem.tail _ (List.Mem.head _)
+  | tail _ h =>
+      cases h with
+      | head => exact List.Mem.head _
+      | tail _ h2 => exact List.Mem.tail _ (List.Mem.tail _ h2)
+
 
 end FOL.Sequent0
 

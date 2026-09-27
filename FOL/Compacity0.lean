@@ -154,7 +154,7 @@ theorem countable_of_shift {S : Formula → Prop}
 
 theorem model_existence_countable₀ {S : Formula → Prop} (hCons : IsConsistent₀ S) :
     IsSatisfiableCountable S := by
-  obtain ⟨T, hMax, hHenkin, hSub⟩ := henkin_completion hCons
+  obtain ⟨T, hMax, hHenkin, hSub⟩ := henkin_completion₀ hCons
   refine countable_of_shift ⟨QuotientDomain T hMax, canonicalModel T hMax, canonicalEnv T hMax,
     ⟨fun n => Quotient.mk (termSetoid T hMax) (FOL.Metamath.Enumeration.natToTerm n), ?_⟩,
     fun f hf => ?_⟩
@@ -164,7 +164,7 @@ theorem model_existence_countable₀ {S : Formula → Prop} (hCons : IsConsisten
     refine ⟨n, ?_⟩
     show Quotient.mk (termSetoid T hMax) (FOL.Metamath.Enumeration.natToTerm n) = d
     rw [hn]; exact ht
-  · exact (truth_lemma hMax hHenkin f).mpr (hSub f hf)
+  · exact (truth_lemma₀ hMax hHenkin f).mpr (hSub f hf)
 
 /-- 🏁 **LÖWENHEIM–SKOLEM DESCENDENTE**: toda teoría satisfacible tiene un modelo NUMERABLE. -/
 theorem loewenheim_skolem_down {S : Formula → Prop} (hSat : IsSatisfiable S) :

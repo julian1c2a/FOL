@@ -63,7 +63,7 @@ esqueleto proposicional es `p → q`, que no es tautología. La solidez proposic
 tiene que serlo: el cálculo sabe más que su esqueleto.
 
 🏁 **Y la vía H está ENTERA**, contra lo que esta línea decía: **H3** es
-`FOL.Hauptsatz0.cut_elimination` y **H4** es `FOL.Herbrand0` (el certificado) más
+`FOL.Hauptsatz0.cut_elimination₀` y **H4** es `FOL.Herbrand0` (el certificado) más
 `FOL.BlockExtraction0` (la extracción n‑aria). Ver §5.2 y §5.4 del plan.
 -/
 

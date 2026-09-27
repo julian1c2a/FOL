@@ -81,7 +81,7 @@ renombrado.
 `derives0_ex_forall_neg_absurd` (`∃A` y `∀¬A` se contradicen). Lo descubrió el ensamblaje: en un
 cálculo finitario esa contradicción pasa por `elim_ex`, cuya premisa vive en el contexto levantado.
 
-⭐⭐ **`FOL.Henkin0`** — **`henkin_step_consistent`**: añadir el testigo de Henkin con una constante
+⭐⭐ **`FOL.Henkin0`** — **`henkin_step_consistent₀`**: añadir el testigo de Henkin con una constante
 fresca **preserva la consistencia**. Es donde paga `derives0_gen_fresh`, y es la parte
 **matemática** del ensamblaje. 🏁 La iteración ω y el **suministro de constantes frescas** los
 pagan `FOL.HenkinLimit0` (`henLimit_consistent`, `henLimit_witness`) y `FOL.Fresh0` (`exists_fresh`).

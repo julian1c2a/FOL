@@ -351,6 +351,7 @@ ordinal de plan: `Derives₀` es el «PASO 0» de
 | `₀` | `Derives₀`: deducción natural **clásica** de FOL⁼, finitaria, sin habitantes-axioma | `⊢₀` | `derives0_…`, `derivesSet0_…`; módulos `*0.lean` |
 | `₁`, `₂` | `Derives₁`, `Derives₂`: presentaciones **equivalentes** a `Derives₀` (`derives0_iff_derives1`, `derives0_iff_derives2`) | `⊢₁`, `⊢₂` | `derives1_…`, `derives2_…` |
 | `₀` en `LK₀` | secuentes clásicos **sin corte** (`LKc` = `LK₀` + corte; `LKh`, `LKp` son variantes con letra normal) | — | `lk0_…` |
+| `ₚ` | `LKp`: el fragmento **puro** de `LK₀` (sin `eqAx`), el de Maehara y Craig sin igualdad (`FOL.Craig0`) | — | `lkp_…` |
 | `ᵢ` | `Derivesᵢ`: deducción natural **intuicionista** (los 18 constructores no clásicos de `Derives₀`), cuando llegue de PeanoRF | `⊢ᵢ` | `derivesI_…`; `DerivesI.lean` |
 
 **Reglas.**
@@ -367,8 +368,10 @@ ordinal de plan: `Derives₀` es el «PASO 0» de
    `loewenheim_skolem_down`, `infinite_model_of_large`).
 3. **Teoremas que dependen de un cálculo**: prefijo snake_case cuando el cálculo es el sujeto
    (`derives0_soundness`, `derives0_qf_iff`, `lk0_sound`, `derivesI_to_derives0`), o subíndice
-   final sobre un nombre propio de la literatura (`completeness₀`, `model_existence_lemma₀`).
-   Los lemas auxiliares pueden ir sin marca: los desambigua el namespace del módulo
+   final sobre un nombre propio de la literatura (`completeness₀`, `model_existence_lemma₀`, `hauptsatz₀`,
+   `herbrand₀`, `craig₀`, `craigₚ`).
+   Los TITULARES llevan siempre la marca (P2, 2026‑09‑27); los lemas AUXILIARES pueden ir sin ella:
+   los desambigua el namespace del módulo
    (`FOL.Canonical0.max_cons_neg`, `FOL.Inversion0.inv_allR`).
    - **Coherencia de familia**: un teorema que empaqueta teoremas marcados (el `iff` de dos
      mitades) lleva la misma marca que ellas.
@@ -398,6 +401,11 @@ ordinal de plan: `Derives₀` es el «PASO 0» de
 | `Compacity0.model_existence_iff` | `model_existence_iff₀` | 3, familia (`model_existence_lemma₀` + `consistency_of_satisfiable₀`) |
 | `Inconsistencia.DisjunctionProperty` | `DisjunctionProperty₀` | 1 (es de `⊢₀`, y FALSA) — antes de que llegue la `disjunction_property` de `⊢ᵢ` (VERDADERA) |
 | RPP `Meta/Hilbert.Prf₀` | `Prfᵢ` (y `prf0_…` → `prfI_…`) | tabla de arriba: es el intuicionista |
+| `Hauptsatz0.hauptsatz`, `cut_elimination`, `herbrand`, `herbrand_extraction` | `…₀` (P2, 2026‑09‑27) | 3: titulares de `LK₀`/`⊢₀` |
+| `BlockExtraction0.herbrand_block`, `herbrand_extraction_block`; `SkolemHerbrand0.herbrand_of_skolemNF` | `…₀` (P2) | 3 |
+| `Lindenbaum0.lindenbaum_lemma`, `henkin_completion`; `Henkin0.henkin_step_consistent`; `Canonical0.truth_lemma` | `…₀` (P2) | 3 |
+| `Skolem0.skolem_conservative`, `henkin_conservative`; `SkolemN0.skolem_conservative_n`; `SkolemNF0.skolem_conservative_nf` | `…₀` (P2) | 3 |
+| `Craig0.maehara`, `craig`, `craig_impl` | `maeharaₚ`, `craigₚ`, `craig_implₚ` (P2) | 3: son de `LKp`, no de `⊢₀` (el de `⊢₀` es `Interpolation0.craig₀`) |
 
 Al entregar PeanoRF (propuesta C), la regla 3 pide además `derivesI_` en
 `Slash.derives_empty_of_slashed`, `derives_rewrite_subst` y `derives_rewrite_back`, y marca en

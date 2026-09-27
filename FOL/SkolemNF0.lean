@@ -23,7 +23,7 @@ import FOL.PrenexNF0
 
     skolemize_shape       : Prenex f → ∃ m ψ, skolemize k f = allBlock m ψ ∧ QuantFree ψ
     skolemizeF_impAll     : la forma normal IMPLICA el original — ⭐ **net‑0**, sin axiomas de Skolem
-    skolem_conservative_nf: el BLOQUE ENTERO de axiomas de Skolem no inventa teoremas
+    skolem_conservative_nf₀: el BLOQUE ENTERO de axiomas de Skolem no inventa teoremas
     derives0_of_skolemNF  : 🏁 lo que se demuestra desde la forma normal se demuestra sin ella
 
 ## ⭐⭐ La decisión que mata el único riesgo que había: COMBUSTIBLE
@@ -52,8 +52,8 @@ conservatividad:
 
 * ⭐ `skolemizeF_impAll` — la forma normal **implica** el original, **sin ningún axioma de
   Skolem** y net‑0: es `intro_ex` bajo el prefijo.
-* 🏁 `skolem_conservative_nf` — los axiomas de Skolem **se retiran todos**, iterando
-  `FOL.SkolemN0.skolem_conservative_n` sobre la lista con la frescura correcta.
+* 🏁 `skolem_conservative_nf₀` — los axiomas de Skolem **se retiran todos**, iterando
+  `FOL.SkolemN0.skolem_conservative_n₀` sobre la lista con la frescura correcta.
 
 🏁 **Y la dirección `φ → skolemize φ` también** (§8, ADR‑065): exigía empujar el axioma bajo el
 prefijo `∀ⁿ` — la regla K iterada — y resultó ser **un solo lema**, porque `allBlock n (∀A)` y
@@ -295,7 +295,7 @@ theorem not_occurs_skolemAxN {c d : String} {n : Nat} {A : Formula}
 /-- 🏁 **Los axiomas de Skolem de toda la normalización se retiran.** La inducción va sobre el
 combustible y, en cada paso `∃`, hace tres cosas: permuta el axioma de ese paso al contexto,
 retira por hipótesis de inducción todos los interiores (que usan símbolos `≥ k+1`), y remata
-con `FOL.SkolemN0.skolem_conservative_n` sobre el de ese paso. -/
+con `FOL.SkolemN0.skolem_conservative_n₀` sobre el de ese paso. -/
 theorem skolem_conservative_listF :
     ∀ (fuel k n : Nat) (f : Formula) (Γ : List Formula) (χ : Formula),
       (∀ m, k ≤ m → ∀ g, g ∈ Γ → Not (occursFormula (cst m) g)) →
@@ -349,12 +349,12 @@ theorem skolem_conservative_listF :
       have hstep : (skolemAxN (cst k) n A :: Γ) ⊢₀ χ :=
         skolem_conservative_listF fuel (k + 1) n _ _ χ hΓ' hsub
           (fun m hm => hχ m (by omega)) hperm
-      -- (3) y el de este paso ya es `skolem_conservative_n`
-      exact skolem_conservative_n
+      -- (3) y el de este paso ya es `skolem_conservative_n₀`
+      exact skolem_conservative_n₀
         (fun g hg => hΓ k (Nat.le_refl k) g hg) (hAk k (Nat.le_refl k))
         (hχ k (Nat.le_refl k)) hstep
 
-theorem skolem_conservative_nf (k : Nat) (f : Formula) (Γ : List Formula) (χ : Formula)
+theorem skolem_conservative_nf₀ (k : Nat) (f : Formula) (Γ : List Formula) (χ : Formula)
     (hΓ : ∀ m, k ≤ m → ∀ g, g ∈ Γ → Not (occursFormula (cst m) g))
     (hf : ∀ m, k ≤ m → Not (occursFormula (cst m) f))
     (hχ : ∀ m, k ≤ m → Not (occursFormula (cst m) χ))
@@ -517,13 +517,13 @@ theorem derives0_of_skolemNF (k : Nat) (φ : Formula) (Γ : List Formula)
     derives0_of_skolemizeF _ _ _ _ _ h
   have h2 : (skolemAxioms k (prenex φ) ++ Γ) ⊢₀ φ :=
     (derives0_prenex_iff _ φ).mpr h1
-  exact skolem_conservative_nf k (prenex φ) Γ φ hΓ
+  exact skolem_conservative_nf₀ k (prenex φ) Γ φ hΓ
     (fun m hm => not_occurs_prenex (hφ m hm)) hφ h2
 
 /-- 🏁 Y la salida de todo el proceso **es universal con matriz sin cuantificadores**. ⚠️ NO es
-lo que `FOL.Hauptsatz0.herbrand` pide (un `∃` con matriz sin cuantificadores): Herbrand habla de
+lo que `FOL.Hauptsatz0.herbrand₀` pide (un `∃` con matriz sin cuantificadores): Herbrand habla de
 existenciales y Skolem los quita; el enchufe va al otro lado de una negación
-(`FOL.SkolemHerbrand0.herbrand_of_skolemNF`). -/
+(`FOL.SkolemHerbrand0.herbrand_of_skolemNF₀`). -/
 theorem skolemNF_shape (k : Nat) (φ : Formula) :
     ∃ (m : Nat) (ψ : Formula),
       And (skolemize k (prenex φ) = allBlock m ψ) (QuantFree ψ) :=
@@ -612,7 +612,7 @@ end FOL.SkolemNF0
 #print axioms FOL.SkolemNF0.skolemizeF_impAll
 #print axioms FOL.SkolemNF0.occursFormula_lift
 #print axioms FOL.SkolemNF0.occurs_prenex
-#print axioms FOL.SkolemNF0.skolem_conservative_nf
+#print axioms FOL.SkolemNF0.skolem_conservative_nf₀
 #print axioms FOL.SkolemNF0.derives0_of_skolemNF
 #print axioms FOL.SkolemNF0.skolemNF_shape
 #print axioms FOL.SkolemNF0.allBlock_forall

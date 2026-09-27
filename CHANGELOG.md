@@ -19,6 +19,21 @@ All notable changes to this project will be documented in this file.
 Format based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## 2026-09-27 (2) — 🧊 Los cinco primeros módulos CONGELADOS; P2 y P3 resueltas
+
+* 🧊 **FREEZE** (permanente; extensión sólo vía `*Ext.lean`) de `PrenexNF0`, `Prenex0`, `SequentSound0`,
+  `Soundness0` y `Rename`: los cinco que sobrevivieron a la criba con refutación, confirmados por el
+  propietario. Medido antes: ninguno usa los nombres renombrados ni los `sub_*` movidos.
+* 🏷️ **P2 · 18 titulares renombrados** por la regla de subíndices (`NAMING-CONVENTIONS.md` §9, regla 3:
+  los titulares llevan siempre la marca): `hauptsatz₀`, `cut_elimination₀`, `herbrand₀`,
+  `herbrand_extraction₀`, `herbrand_block₀`, `herbrand_extraction_block₀`, `herbrand_of_skolemNF₀`,
+  `lindenbaum_lemma₀`, `henkin_completion₀`, `henkin_step_consistent₀`, `truth_lemma₀`,
+  `skolem_conservative₀`, `henkin_conservative₀`, `skolem_conservative_n₀`, `skolem_conservative_nf₀`;
+  y los de `LKp`, con marca propia **`ₚ`** (nueva fila de la tabla): `maeharaₚ`, `craigₚ`, `craig_implₚ`.
+  140 sustituciones en 23 ficheros, 18 filas de `check-footprints` en RPP; compiló a la primera.
+* ♻️ **P3 · los cinco `sub_*`** (`sub_refl`, `sub_wk`, `sub_cons`, `sub_drop`, `swap_cons`), duplicados
+  literalmente en `Hauptsatz0` y `Craig0`, viven ahora en `FOL.Sequent0`.
+
 ## 2026-09-27 — Documentación al día, y la criba de congelación con refutación
 
 * 📝 **W2 · `REFERENCE.md`** contrastado con el árbol (60 ediciones): §2 regenerado de las líneas

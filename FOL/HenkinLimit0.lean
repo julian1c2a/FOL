@@ -62,7 +62,7 @@ valen». El primero obliga a leer los nombres; el segundo, no.*
    `not_occurs_henkinAx`: una constante distinta del testigo, y fresca en `A`, es fresca en
    `henkinAx d A`. ⭐ **Net‑0 puro** — no depende de ningún axioma.
 2. **§2** — `bnd` y `hidx`, con las dos propiedades.
-3. **§3** — la cadena, su monotonía, su frescura y su **consistencia**, que es `henkin_step_consistent`
+3. **§3** — la cadena, su monotonía, su frescura y su **consistencia**, que es `henkin_step_consistent₀`
    (ADR‑037) aplicado `n` veces.
 4. **§4** — el límite. ⭐ Su consistencia sale **de la definición de `DerivesSet₀`**: una derivación
    usa un contexto **finito**, luego vive en algún `hen S N`. *La compacidad sintáctica metida en la
@@ -257,12 +257,12 @@ theorem hen_fresh_at (S : Formula → Prop) (n : Nat) :
     (fun _ hi => Nat.ne_of_gt (hidx_mono hi))
     (fun i hi => bnd_spec (natToFormula i) (hidx n) (hidx_ge_of_le (Nat.le_of_lt hi)))
 
-/-- ⭐⭐ **Cada etapa es consistente** — `henkin_step_consistent` (ADR‑037) aplicado `n` veces. -/
+/-- ⭐⭐ **Cada etapa es consistente** — `henkin_step_consistent₀` (ADR‑037) aplicado `n` veces. -/
 theorem hen_consistent {S : Formula → Prop} (hCons : IsConsistent₀ S) :
     ∀ n, IsConsistent₀ (hen S n)
   | 0 => shiftTheory_consistent hCons
   | n + 1 =>
-      henkin_step_consistent (hen_consistent hCons n) (cst (hidx n)) (natToFormula n)
+      henkin_step_consistent₀ (hen_consistent hCons n) (cst (hidx n)) (natToFormula n)
         (hen_fresh_at S n) (bnd_spec (natToFormula n) (hidx n) (hidx_ge n))
 
 -- ============================================================

@@ -21,7 +21,7 @@ Pieza (3) del ensamblaje de
 `../ROBINSON_PlusPlus/doc/PLAN-COMPLETITUD-FINITISTA.md` §6.4. Con ella el **ensamblaje
 completo** queda demostrado en un solo enunciado:
 
-    henkin_completion : IsConsistent₀ S →
+    henkin_completion₀ : IsConsistent₀ S →
       ∃ T, IsMaximalConsistent₀ T ∧ IsHenkin T ∧ (∀ f, shiftTheory S f → T f)
 
 *Toda teoría consistente se extiende a una **maximal consistente** que además **tiene testigo para
@@ -33,11 +33,11 @@ cada existencial**.* Es exactamente la hipótesis que el modelo canónico consum
    **el teorema de deducción**, y sobre `Derives₀` **no hay que demostrarlo**: `intro_impl` es un
    **constructor**. La versión de `cuarentena/Completeness.lean` (borrado el 2026‑09‑23)
    invocaba `FOL.Metamath.Deduction.deduction_theorem`.
-2. **§2** — Lindenbaum: la cadena `LindenbaumStep`, el límite, y `lindenbaum_lemma`.
+2. **§2** — Lindenbaum: la cadena `LindenbaumStep`, el límite, y `lindenbaum_lemma₀`.
 3. **§3** — lo mínimo sobre un maximal consistente que el ensamblaje necesita: `max_cons_bot`,
    `max_cons_contains` y `max_cons_impl`. 🏁 El resto de la familia (`and`, `or`, `ex`, `forall`)
    fue con el modelo canónico, como aquí se predijo: está en `FOL.Canonical0` §1 y §5.
-4. **§4** — ⭐⭐ `henkin_completion`.
+4. **§4** — ⭐⭐ `henkin_completion₀`.
 
 ## ⛔ Dónde está, y dónde NO está, la no‑finitud
 
@@ -173,7 +173,7 @@ theorem lindenbaum_limit_bound {S : Formula → Prop} : ∀ Γ : List Formula,
       | tail _ hx' => exact lindenbaum_step_mono (Nat.le_max_right _ _) (hN x hx')
 
 /-- ⭐⭐ **Toda teoría consistente se extiende a una maximal consistente.** -/
-theorem lindenbaum_lemma {S : Formula → Prop} (hCons : IsConsistent₀ S) :
+theorem lindenbaum_lemma₀ {S : Formula → Prop} (hCons : IsConsistent₀ S) :
     ∃ T : Formula → Prop, And (IsMaximalConsistent₀ T) (∀ f, S f → T f) := by
   refine ⟨LindenbaumLimit S, ⟨?_, ?_⟩, fun f hf => ⟨0, hf⟩⟩
   · intro hbot
@@ -232,10 +232,10 @@ def IsHenkin (S : Formula → Prop) : Prop :=
 ⚠️ La conclusión es sobre `shiftTheory S`, no sobre `S`: la extensión vive en el **sublenguaje**.
 Es conservativa —`derivesSet0_shift_inv` (`FOL.Fresh0`)—, así que no se pierde nada; pero el
 enunciado tiene que decirlo. -/
-theorem henkin_completion {S : Formula → Prop} (hCons : IsConsistent₀ S) :
+theorem henkin_completion₀ {S : Formula → Prop} (hCons : IsConsistent₀ S) :
     ∃ T : Formula → Prop, And (IsMaximalConsistent₀ T)
       (And (IsHenkin T) (∀ f, shiftTheory S f → T f)) := by
-  obtain ⟨T, hMax, hSub⟩ := lindenbaum_lemma (henLimit_consistent hCons)
+  obtain ⟨T, hMax, hSub⟩ := lindenbaum_lemma₀ (henLimit_consistent hCons)
   refine ⟨T, hMax, ?_, fun f hf => hSub f (shiftTheory_sub_henLimit S f hf)⟩
   intro A hEx
   obtain ⟨c, hc⟩ := henLimit_witness S A
@@ -244,6 +244,6 @@ theorem henkin_completion {S : Formula → Prop} (hCons : IsConsistent₀ S) :
 end FOL.Lindenbaum0
 
 #print axioms FOL.Lindenbaum0.derivesSet0_intro_impl
-#print axioms FOL.Lindenbaum0.lindenbaum_lemma
+#print axioms FOL.Lindenbaum0.lindenbaum_lemma₀
 #print axioms FOL.Lindenbaum0.max_cons_contains
-#print axioms FOL.Lindenbaum0.henkin_completion
+#print axioms FOL.Lindenbaum0.henkin_completion₀

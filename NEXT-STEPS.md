@@ -19,7 +19,7 @@
 > **Fuentes:** `cuarentena/README.md` · `AXIOMS.md` ·
 > `../ROBINSON_PlusPlus/doc/AUDITORIA-FOL-2026-09-12.md`
 
-**Last updated:** 2026-09-27 — W2, W3 y W4 hechas; la criba de congelación, pasada con refutación (1 congelable ya, 4 tras arreglos —aplicados—, 18 todavía no). Antes (2026-09-26): aviso reescrito y sección «Lo que queda» nueva; el plan de fases de abajo es HISTÓRICO (2026-05-16).
+**Last updated:** 2026-09-27 — 🧊 cinco módulos congelados; P2 (18 renombres) y P3 (`sub_*` en `Sequent0`) hechas. Antes, el mismo día: W2, W3 y W4 hechas; la criba de congelación, pasada con refutación (1 congelable ya, 4 tras arreglos —aplicados—, 18 todavía no). Antes (2026-09-26): aviso reescrito y sección «Lo que queda» nueva; el plan de fases de abajo es HISTÓRICO (2026-05-16).
 **Autor**: Julián Calderón Almendros
 
 ## ⬜ Lo que queda para CERRAR FOL — 2026-09-26 (noche)
@@ -58,11 +58,19 @@ las decisiones D1, D2, D4, D5, D6 y D7 del propietario, **ejecutadas** el 2026-0
 
 ### ❄️ Congelación
 
-Nada congelado todavía. `py criba-congelacion.py` hay que **re‑correrlo** tras este ciclo (W1, D4, D5
-y los renombres cambian los criterios 1 y 2), y pasar otra refutación adversarial antes de congelar.
-Lo que seguirá bloqueando: la entrega de PeanoRF (su cierre transitivo, 14 módulos, no se congela
-hasta que compile aquí;
-15 con `FOL.Complexity`, que `Slash` importará al retirar `fdepth`). D3 ya no bloquea: CERRADA (RPP‑103).
+🧊 **Congelados el 2026‑09‑27** (confirmado por el propietario tras la criba con refutación, RPP‑104):
+`PrenexNF0`, `Prenex0`, `SequentSound0`, `Soundness0`, `Rename`.
+
+Decisiones de la criba, resueltas el mismo día: **P2** ✅ los 18 titulares renombrados por la regla de
+subíndices (`hauptsatz₀`, `cut_elimination₀`, `herbrand₀`, `herbrand_block₀`, `truth_lemma₀`,
+`lindenbaum_lemma₀`, `skolem_conservative*₀`…; y `maeharaₚ`/`craigₚ` para `LKp`); **P3** ✅ los cinco
+`sub_*` deduplicados en `Sequent0`; **P4** ⬜ la OFERTA de `Hauptsatz0` (versión acotada de
+`derives0_qf_iff`): cotización en curso.
+
+⬜ Siguiente: re‑correr la criba con refutación sobre los demás (P2 y P3 liberan su cono). Seguirán
+bloqueados hasta que la entrega de PeanoRF compile aquí los 15 de su cadena (`Complexity` incluido,
+que `Slash` importará al retirar `fdepth`), `Inconsistencia` (su §2 cambia con la entrega) y
+`Hauptsatz0` mientras la OFERTA siga abierta.
 
 ⛔ **Fuera de alcance, con su motivo**: LS↑ (ver `Compacity0` §3); la versión ACOTADA de
 `derives0_qf_iff` (OFERTA en `[G.2]`, coste no medido); Beth y Robinson (el puente `LK₀`→`LKp`

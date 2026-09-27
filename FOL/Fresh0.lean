@@ -20,7 +20,7 @@ import FOL.Rename
 # `FOL.Fresh0` — **el suministro de constantes frescas**
 
 Pieza (1) del ensamblaje de
-`../ROBINSON_PlusPlus/doc/PLAN-COMPLETITUD-FINITISTA.md` §6.4. `henkin_step_consistent`
+`../ROBINSON_PlusPlus/doc/PLAN-COMPLETITUD-FINITISTA.md` §6.4. `henkin_step_consistent₀`
 (ADR‑037) pide una constante `c` fresca **en la teoría y en la fórmula**; para una teoría
 `S : Formula → Prop` **arbitraria** no tiene por qué haber ninguna: `S` puede usar todas las
 cadenas. Este módulo fabrica el suministro por el camino clásico.
@@ -247,7 +247,7 @@ def shiftTheory (S : Formula → Prop) : Formula → Prop :=
   fun x => ∃ g, And (S g) (x = renameFormula shift g)
 
 /-- ⭐ **Todas** las constantes nuevas son frescas en la teoría desplazada, sin hipótesis
-ninguna sobre `S`. Es exactamente lo que `henkin_step_consistent` pide de la teoría. -/
+ninguna sobre `S`. Es exactamente lo que `henkin_step_consistent₀` pide de la teoría. -/
 theorem shiftTheory_fresh {S : Formula → Prop} (n : Nat) :
     ∀ g, shiftTheory S g → Not (occursFormula (cst n) g) := by
   intro g hg hocc

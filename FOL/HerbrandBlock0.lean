@@ -22,8 +22,8 @@ El enunciado‑titular de la vía H, tal como el plan lo promete
 
     ⊢₀ ∃x̄ φ(x̄)  ⟺  ∃ t̄₁…t̄ₙ : ⊢ᵖʳᵒᵖ φ(t̄₁) ∨ … ∨ φ(t̄ₙ)      (φ sin cuantificadores)
 
-⚠️ Y lo que había cuando se escribió esto (`FOL.Hauptsatz0.herbrand`, ADR‑052) era el caso **n = 1**:
-un solo `∃`. El bicondicional para bloques es hoy `FOL.BlockExtraction0.herbrand_block`.
+⚠️ Y lo que había cuando se escribió esto (`FOL.Hauptsatz0.herbrand₀`, ADR‑052) era el caso **n = 1**:
+un solo `∃`. El bicondicional para bloques es hoy `FOL.BlockExtraction0.herbrand_block₀`.
 Este módulo pone las tuplas.
 
 ## ⭐ La mitad que se paga aquí: ⟸, la que CONSUME el certificado
@@ -61,8 +61,8 @@ hubo `peelB` que escribir), no el total.
 ### Lo que se midió en su momento, y se conserva porque acertó en la forma
 
 `HerbrandExtractionBlock` se **enuncia** como `Prop` con su consumidor (`herbrand_block_iff`), y
-**no se postula**. ⛔ No sale de `herbrand` (n = 1) por composición: el cuerpo de un bloque de
-altura ≥ 2 **no es** una fórmula sin cuantificadores, luego `herbrand` no aplica a él.
+**no se postula**. ⛔ No sale de `herbrand₀` (n = 1) por composición: el cuerpo de un bloque de
+altura ≥ 2 **no es** una fórmula sin cuantificadores, luego `herbrand₀` no aplica a él.
 
 ⚠️ Lo que haría falta, medido leyendo `FOL.Sequent0.lk0_herbrand`: **rehacer su inducción de 14
 casos con un invariante más rico**. Hoy el invariante es «todo `d ∈ Δ` es sin cuantificadores **o**
@@ -180,7 +180,7 @@ theorem derives0_exBlock_of_cert {n : Nat} {φ : Formula} {tss : List (List Term
 -- ============================================================
 
 /-- 🏁 La extracción para bloques. **PAGADA el 2026-09-18** (ADR-064). Testigo incondicional:
-**`FOL.BlockExtraction0.herbrand_extraction_block`**.
+**`FOL.BlockExtraction0.herbrand_extraction_block₀`**.
 
 Se sigue **enunciando** como `Prop` porque su consumidor (`herbrand_block_iff`) la toma como
 hipótesis. ⚠️ La cabecera del módulo ya decía «PAGADA» mientras esta línea seguía diciendo ⬜:

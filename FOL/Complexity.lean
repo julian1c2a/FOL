@@ -54,7 +54,7 @@ namespace FOL.Complexity
 
 /-- La **complejidad** de una fórmula: la profundidad de sus conectivas y cuantificadores.
 ⚠️ Los átomos y las igualdades valen `0` **a propósito**: la inducción que la consume
-(`truth_lemma`) no baja por dentro de los términos. -/
+(`truth_lemma₀`) no baja por dentro de los términos. -/
 def formulaComplexity : Formula → Nat
   | .bottom => 0
   | .atom _ _ => 0

@@ -76,7 +76,7 @@ enteramente constructiva.
 ## 🏁 Lo que faltaba para H3 — y ya no falta
 
 ⚠️ Esta sección se titulaba «⬜ Lo que sigue faltando para H3» con **H3 ya probada**
-(`FOL.Hauptsatz0.cut_elimination`, ADR‑050/052). Se deja el contenido porque describe bien la
+(`FOL.Hauptsatz0.cut_elimination₀`, ADR‑050/052). Se deja el contenido porque describe bien la
 RUTA que se siguió; lo que cambia es el tiempo verbal.
 
 `subst` — la regla de Leibniz. La vía estándar es reducirla a **instancias de congruencia**

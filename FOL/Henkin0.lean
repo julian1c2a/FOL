@@ -19,7 +19,7 @@ import FOL.Lift0
 
 ⭐⭐ El corazón del ensamblaje de `../ROBINSON_PlusPlus/doc/PLAN-COMPLETITUD-FINITISTA.md` §6.2.
 
-    henkin_step_consistent :
+    henkin_step_consistent₀ :
         IsConsistent₀ S  →  (c fresca en S y en A)  →
         IsConsistent₀ (S ∪ { (∃A) → A[c] })
 
@@ -136,7 +136,7 @@ theorem abs_neg_witness (c : String) (A : Formula) (hcA : Not (occursFormula c A
 ⚠️ La frescura se pide sobre `S` y sobre `A`, que es lo que la construcción puede garantizar. Y
 ⭐ basta con eso porque `DerivesSet₀` entrega un contexto **finito**: `derives0_gen_fresh` sólo
 necesita frescura ahí. -/
-theorem henkin_step_consistent {S : Formula → Prop} (hCons : IsConsistent₀ S)
+theorem henkin_step_consistent₀ {S : Formula → Prop} (hCons : IsConsistent₀ S)
     (c : String) (A : Formula)
     (hcS : ∀ g, S g → Not (occursFormula c g)) (hcA : Not (occursFormula c A)) :
     IsConsistent₀ (fun x => Or (S x) (x = henkinAx c A)) := by
@@ -175,4 +175,4 @@ theorem henkin_step_consistent {S : Formula → Prop} (hCons : IsConsistent₀ S
 
 end FOL.Henkin0
 
-#print axioms FOL.Henkin0.henkin_step_consistent
+#print axioms FOL.Henkin0.henkin_step_consistent₀
