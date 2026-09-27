@@ -19,7 +19,7 @@
 > **Fuentes:** `cuarentena/README.md` · `AXIOMS.md` ·
 > `../ROBINSON_PlusPlus/doc/AUDITORIA-FOL-2026-09-12.md`
 
-**Last updated:** 2026-09-27 — la tercera criba con refutación: 10 congelables (4 ya, 6 con sus correcciones aplicadas), decisiones N5 y N7; N6 aplicada. Antes, el mismo día: la auditoría de constructividad y las decisiones D1‑D8 del propietario, ejecutadas (`Classical.choice` 157 → 84 constantes; Lindenbaum y Henkin sin él; la tesis del WKL, rectificada; la instancia de `TheoryFramework`, declarada; `Rename` descongelado para retirar `invOf`); los 17 candidatos, sólo bloqueados. Antes, el mismo día: N1‑N4 resueltas y aplicadas (13 renombres, dos duplicados retirados; `PrenexNF0`/`SequentSound0` descongelados y re‑congelados); los 10 congelables, sólo bloqueados. Antes, el mismo día: la segunda criba con refutación (71 correcciones). Antes, el mismo día: P4 hecha (`QFDecide0`). Antes, el mismo día: 🧊 cinco módulos congelados; P2 (18 renombres) y P3 (`sub_*` en `Sequent0`) hechas. Antes, el mismo día: W2, W3 y W4 hechas; la criba de congelación, pasada con refutación (1 congelable ya, 4 tras arreglos —aplicados—, 18 todavía no). Antes (2026-09-26): aviso reescrito y sección «Lo que queda» nueva; el plan de fases de abajo es HISTÓRICO (2026-05-16).
+**Last updated:** 2026-09-27 — 🧊 segundo lote congelado (10 módulos: 15 en total); quedan N5, N7 y X1. Antes, el mismo día: la tercera criba con refutación: 10 congelables (4 ya, 6 con sus correcciones aplicadas), decisiones N5 y N7; N6 aplicada. Antes, el mismo día: la auditoría de constructividad y las decisiones D1‑D8 del propietario, ejecutadas (`Classical.choice` 157 → 84 constantes; Lindenbaum y Henkin sin él; la tesis del WKL, rectificada; la instancia de `TheoryFramework`, declarada; `Rename` descongelado para retirar `invOf`); los 17 candidatos, sólo bloqueados. Antes, el mismo día: N1‑N4 resueltas y aplicadas (13 renombres, dos duplicados retirados; `PrenexNF0`/`SequentSound0` descongelados y re‑congelados); los 10 congelables, sólo bloqueados. Antes, el mismo día: la segunda criba con refutación (71 correcciones). Antes, el mismo día: P4 hecha (`QFDecide0`). Antes, el mismo día: 🧊 cinco módulos congelados; P2 (18 renombres) y P3 (`sub_*` en `Sequent0`) hechas. Antes, el mismo día: W2, W3 y W4 hechas; la criba de congelación, pasada con refutación (1 congelable ya, 4 tras arreglos —aplicados—, 18 todavía no). Antes (2026-09-26): aviso reescrito y sección «Lo que queda» nueva; el plan de fases de abajo es HISTÓRICO (2026-05-16).
 **Autor**: Julián Calderón Almendros
 
 ## ⬜ Lo que queda para CERRAR FOL — 2026-09-26 (noche)
@@ -61,6 +61,11 @@ El estado vigente, en `CURRENT-STATUS-PROJECT.md`. Lo que queda:
 
 🧊 **Congelados el 2026‑09‑27** (confirmado por el propietario tras la criba con refutación, RPP‑104):
 `PrenexNF0`, `Prenex0`, `SequentSound0`, `Soundness0`, `Rename`.
+🧊 **Segundo lote, el mismo día** (propietario: «congela lo congelable», tras la tercera criba; RPP‑112):
+`Compacity0`, `Inversion0`, `QFDecide0`, `SkolemN0`, `Craig0`, `Interpolation0`, `Canonical0`, `Fresh0`,
+`HenkinLimit0` y `TheoryFramework/Instances/FOL`. ⇒ **15 congelados**. ⚠️ `Fresh0` 🧊 cita por su título
+la sección «Dónde está, y dónde NO está, lo clásico de la completitud» de `Lindenbaum0` (no congelado):
+ese título no debe cambiar.
 
 Decisiones de la criba, resueltas el mismo día: **P2** ✅ los 18 titulares renombrados por la regla de
 subíndices (`hauptsatz₀`, `cut_elimination₀`, `herbrand₀`, `herbrand_block₀`, `truth_lemma₀`,
@@ -131,9 +136,9 @@ comentarios y docstrings aplicadas (código idéntico), y **N6** aplicada por la
 está duplicado, se retira»): `Lindenbaum0.not_not_em` repetía nombre y enunciado de `not_not_em` del
 núcleo y se retiró. Veredicto:
 
-* ❄️ **Congelables ya** (4): `Compacity0`, `Inversion0`, `QFDecide0`, `SkolemN0`.
-* ❄️ **Congelables con sus correcciones, ya aplicadas** (6): `Craig0` e `Interpolation0` (juntos),
-  `Canonical0`, `Fresh0`, `HenkinLimit0`, `TheoryFramework/Instances/FOL`.
+* 🧊 **CONGELADOS** (confirmado por el propietario, RPP‑112): los 4 congelables ya —`Compacity0`,
+  `Inversion0`, `QFDecide0`, `SkolemN0`— y los 6 con sus correcciones —`Craig0` e `Interpolation0`,
+  `Canonical0`, `Fresh0`, `HenkinLimit0`, `TheoryFramework/Instances/FOL`—.
 * ⬜ **Retenidos por decisiones nuevas del propietario**:
 
 | # | pregunta | retiene |

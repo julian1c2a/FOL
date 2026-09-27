@@ -19,6 +19,15 @@ All notable changes to this project will be documented in this file.
 Format based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## 2026-09-27 (8) — 🧊 Segundo lote CONGELADO: diez módulos
+
+* 🧊 **FREEZE** (propietario: «congela lo congelable», tras la tercera criba; RPP‑112) de `Compacity0`,
+  `Inversion0`, `QFDecide0`, `SkolemN0`, `Craig0`, `Interpolation0`, `Canonical0`, `Fresh0`,
+  `HenkinLimit0` y `TheoryFramework/Instances/FOL`. Con el primer lote, **15 congelados**.
+* ⬜ Siguen sólo bloqueados, por N5 (¿titulares los nombres técnicos que la cabecera nombra?) y N7
+  (`herbrand_of_skolemNF₀`): `Henkin0`, `Skolem0`, `Lindenbaum0`, `SkolemNF0`, `SkolemHerbrand0`,
+  `Hauptsatz0`, `HerbrandBlock0`, `BlockExtraction0`; e `Inconsistencia` por X1.
+
 ## 2026-09-27 (7) — La tercera criba de congelación, tras D1‑D8
 
 * 🔎 Sobre los 19 que deja pasar `criba-congelacion.py` (los 17, `Inconsistencia` y la instancia de
