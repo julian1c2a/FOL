@@ -71,7 +71,8 @@ root_map = {
 }
 ns_map = {'FOL.Metamath.Enumeration.': 'FOL/Enumeration.lean',
           'FOL.Metamath.Semantics.': 'FOL/Semantics.lean',
-          'FOL.Metamath.Soundness0.': 'FOL/Soundness0.lean'}
+          'FOL.Metamath.Soundness0.': 'FOL/Soundness0.lean',
+          'TheoryFramework.Instances.': 'TheoryFramework/Instances/FOL.lean'}
 rowmod, unmapped = {}, []
 for r in rows:
     if r.startswith('ROBINSON_PlusPlus.'): continue

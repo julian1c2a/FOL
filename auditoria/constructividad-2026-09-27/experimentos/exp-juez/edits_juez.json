@@ -1,0 +1,194 @@
+[
+ {
+  "fichero": "CURRENT-STATUS-PROJECT.md",
+  "buscar": "y ese `Classical.choice` es el WKL de `Lindenbaum0` (ADR-041).",
+  "reemplazar": "y ese `Classical.choice` **no** es el `if` de `Lindenbaum0`, como decía ADR-041: la auditoría del 2026-09-27 midió `lindenbaum_lemma₀` y `henkin_completion₀`, con los mismos enunciados, en `[propext, Quot.sound]` (etapa impredicativa, más las rutas de `String`, `open Classical`, `bnd` e `invOf` corregidas). Lo que queda es clásico de verdad: el lema de la verdad sobre un maximal ARBITRARIO (`max_cons_*`, cuyos enunciados implican ¬¬P→P, medido), el `byContradiction` final (forma de Markov, hipótesis) y la semántica en `Prop` (`derives0_soundness` implica ¬¬P→P, medido). La equivalencia con WKL₀ es de matemática inversa, sobre RCA₀, y no dice dónde está el choice en Lean.",
+  "motivo": "Afirmación de LOCALIZACIÓN refutada: exp-esencial/E4_Lindenbaum.lean (lindenbaum_nochoice [propext]) y exp-juez/Comb.lean (lindenbaum_lemma_nc y henkin_completion_nc [propext, Quot.sound], mismo tipo comprobado); esencialidad de max_cons_* y de derives0_soundness en exp-esencial/E3 y E1."
+ },
+ {
+  "fichero": "NEXT-STEPS.md",
+  "buscar": "y ese `Classical.choice` es el WKL de `Lindenbaum0` (ADR-041).",
+  "reemplazar": "y ese `Classical.choice` **no** es el `if` de `Lindenbaum0`, como decía ADR-041: la auditoría del 2026-09-27 midió `lindenbaum_lemma₀` y `henkin_completion₀`, con los mismos enunciados, en `[propext, Quot.sound]` (etapa impredicativa, más las rutas de `String`, `open Classical`, `bnd` e `invOf` corregidas). Lo que queda es clásico de verdad: el lema de la verdad sobre un maximal ARBITRARIO (`max_cons_*`, cuyos enunciados implican ¬¬P→P, medido), el `byContradiction` final (forma de Markov, hipótesis) y la semántica en `Prop` (`derives0_soundness` implica ¬¬P→P, medido). La equivalencia con WKL₀ es de matemática inversa, sobre RCA₀, y no dice dónde está el choice en Lean.",
+  "motivo": "Afirmación de LOCALIZACIÓN refutada: exp-esencial/E4_Lindenbaum.lean (lindenbaum_nochoice [propext]) y exp-juez/Comb.lean (lindenbaum_lemma_nc y henkin_completion_nc [propext, Quot.sound], mismo tipo comprobado); esencialidad de max_cons_* y de derives0_soundness en exp-esencial/E3 y E1."
+ },
+ {
+  "fichero": "README.md",
+  "buscar": "y ese `Classical.choice` es el WKL de `Lindenbaum0` (ADR-041).",
+  "reemplazar": "y ese `Classical.choice` **no** es el `if` de `Lindenbaum0`, como decía ADR-041: la auditoría del 2026-09-27 midió `lindenbaum_lemma₀` y `henkin_completion₀`, con los mismos enunciados, en `[propext, Quot.sound]` (etapa impredicativa, más las rutas de `String`, `open Classical`, `bnd` e `invOf` corregidas). Lo que queda es clásico de verdad: el lema de la verdad sobre un maximal ARBITRARIO (`max_cons_*`, cuyos enunciados implican ¬¬P→P, medido), el `byContradiction` final (forma de Markov, hipótesis) y la semántica en `Prop` (`derives0_soundness` implica ¬¬P→P, medido). La equivalencia con WKL₀ es de matemática inversa, sobre RCA₀, y no dice dónde está el choice en Lean.",
+  "motivo": "Afirmación de LOCALIZACIÓN refutada: exp-esencial/E4_Lindenbaum.lean (lindenbaum_nochoice [propext]) y exp-juez/Comb.lean (lindenbaum_lemma_nc y henkin_completion_nc [propext, Quot.sound], mismo tipo comprobado); esencialidad de max_cons_* y de derives0_soundness en exp-esencial/E3 y E1."
+ },
+ {
+  "fichero": "FOL/FOL.lean",
+  "buscar": "footprint titular de FOL (su `Classical.choice` es el WKL) y su dividendo es de RPP (`strCode`).",
+  "reemplazar": "footprint titular de FOL (lo que `String` aporta al `Classical.choice` es de RUTA y se quita sin salir de\n`String`: auditoría 2026‑09‑27, medido) y su dividendo es de RPP (`strCode`).",
+  "motivo": "«su Classical.choice es el WKL» es la misma localización refutada; y el aporte de String es de ruta (exp-string/E4: FreshSym/EnumSym String en [propext, Quot.sound])."
+ },
+ {
+  "fichero": "FOL/SymClasses.lean",
+  "buscar": "footprint titular de FOL (su `Classical.choice` es el WKL).",
+  "reemplazar": "footprint titular de FOL (y lo que `String` añadía al `Classical.choice` era de RUTA, no del tipo: con\n`instLawfulBEqString` y `String.exists_eq_ofList`, `FreshSym String` y `EnumSym String` miden\n`[propext, Quot.sound]`; auditoría 2026‑09‑27).",
+  "motivo": "Misma localización refutada; exp-inv/Fresh.lean (Exp.freshString) y exp-inv/Enum.lean (Exp.enumString) [propext, Quot.sound]."
+ },
+ {
+  "fichero": "FOL/Fresh0.lean",
+  "buscar": "`Classical.choice` entra, y **por tres vías distintas que conviene no confundir**: `Rename.invOf`\n(la inversa de `shift`, fabricada con elección; la usa `derivesSet0_shift_inv`, ver\n`FOL/Rename.lean`), y estas dos:\n\n* la **matemática**: `cst_bound_sym` usa el tercio excluso sobre `∃ k, cst k = s` (§4);\n* la **implementación** de `String` en el núcleo (v4.31): DESCOMPONER un `String` arrastra choice;\n  compararlo con `decEq`, no (`Skolem0.evalTerm_updateFunc` hace `if f = c` y no lleva ningún\n  axioma). Es el muro\n  de `../ROBINSON_PlusPlus/doc/PLAN-COMPLETITUD-FINITISTA.md` §7, que es deuda del núcleo y no de la\n  lógica.\n\n⚠️ Nada de esto es el `Classical.choice` de la completitud: ése es el `if IsConsistent …` de\nLindenbaum (§6.3), que entra más arriba en la cadena (`FOL.Lindenbaum0`).",
+  "reemplazar": "`Classical.choice` entra por tres vías, y la auditoría 2026‑09‑27 midió que **ninguna es necesaria**\npara estos enunciados:\n\n* `Rename.invOf` (la inversa GLOBAL de `shift`, fabricada con elección) en `derivesSet0_shift_inv`:\n  basta una inversa LOCAL sobre los símbolos del contexto finito, con `DecidableEq String`; con ella\n  `derivesSet0_shift_inv` y `shiftTheory_consistent₀` miden `[propext, Quot.sound]`;\n* el tercio excluso de `cst_bound_sym` sobre `∃ k, cst k = s` (§4): con la cota `s.utf8ByteSize`\n  (`(cst m).utf8ByteSize = m + 1`) el mismo enunciado mide `[propext, Quot.sound]`;\n* `String`, pero al COMPARAR, no al descomponer: `not_eq_of_beq_eq_false rfl` pide `ReflBEq String`, y\n  la síntesis la saca de `String.instOrd`/`instLawfulEqOrd`/`instTransOrd`, que llevan choice; con\n  `of_decide_eq_false rfl` (o pasando `instLawfulBEqString`) `cst_zero_ne`/`cst_ne_shift` miden\n  `[propext]`. No es el muro de `../ROBINSON_PlusPlus/doc/PLAN-COMPLETITUD-FINITISTA.md` §7:\n  `String.decEq`, `String.append_right_inj` y `shift_inj` nunca llevaron choice.\n\n⚠️ Y el `Classical.choice` de la completitud tampoco es el `if IsConsistent …` de Lindenbaum: ver\n`FOL.Lindenbaum0`, «Dónde está la no‑finitud».",
+  "motivo": "§Footprint da las tres vías por necesarias («la matemática», «deuda del núcleo») y localiza la completitud en el if: las tres medidas evitables (exp-bnd-invOf/Exp.lean derivesSet0_shift_inv'; exp-string/E3,E8; exp-inv/Fresh.lean; exp-string/E9 trampa de instancias) y el if refutado (E4, Comb)."
+ },
+ {
+  "fichero": "FOL/Henkin0.lean",
+  "buscar": "`Classical.choice` que aparece viene de ahí, de `Exists.choose`, del tercio excluso de\n`cst_bound_sym` y de los lemas de `String` del núcleo tras `shift_inj`/`cst_inj`\n(`String.append_right_inj`; `FOL.Fresh0` §Footprint, ADR",
+  "reemplazar": "`Classical.choice` que aparece viene de ahí, de `Exists.choose`, del tercio excluso de\n`cst_bound_sym`, de la `ReflBEq String` que la síntesis saca de `String.instOrd` en\n`cst_zero_ne`/`cst_ne_shift` (⚠️ `String.append_right_inj` y `shift_inj` miden `[propext, Quot.sound]`)\ny, aquí mismo, del `open Classical` que decide `x = henkinAx c A` en `henkin_step_consistent₀`.\nTodas son evitables (auditoría 2026‑09‑27, medido; la inversa GLOBAL `invOf` sólo hace falta en\n`Compacity0.hasLargeModels_shift`): partiendo el contexto con la disyunción que ya da la hipótesis\n(sin decidir nada), `henkin_step_consistent₀` mide `[propext, Quot.sound]` (`FOL.Fresh0` §Footprint, ADR",
+  "motivo": "Atribuye choice a String.append_right_inj (medido [propext, Quot.sound], exp-string/E1) y omite el propDecidable propio (exp-deceq/E1 con DecEq y E4 con ctx_split: [propext, Quot.sound])."
+ },
+ {
+  "fichero": "FOL/DecEq.lean",
+  "buscar": "sus `Decidable` siguen resolviéndose por `Classical.propDecidable`. Cambiarlo movería el footprint\nde teoremas ya publicados y medidos, y el `Classical.choice` de `FOL.Lindenbaum0` **tiene que\nseguir ahí** por otra razón —el `if IsConsistent₀ …`, que es Π⁰₁ (ADR‑040 §2)—, así que no se\nganaría nada y se perdería la trazabilidad.",
+  "reemplazar": "sus `Decidable` siguen resolviéndose por `Classical.propDecidable`. Cambiarlo movería el footprint\nde teoremas ya publicados y medidos. ⚠️ Lo que aquí se decía después era FALSO (auditoría 2026‑09‑27,\nmedido): ni «no se ganaría nada» —con este módulo importado, la misma prueba de\n`Henkin0.henkin_step_consistent₀` mide `[propext, Quot.sound]` y la de\n`Lindenbaum0.derivesSet0_intro_impl`, `[propext]`— ni el `if IsConsistent₀ …` de `FOL.Lindenbaum0`\n«tiene que seguir ahí»: con una etapa impredicativa, `lindenbaum_lemma₀` no lo necesita. Retrofitarlo\nes decisión del propietario: mueve filas de footprint.",
+  "motivo": "exp-deceq/E1,E2,E3 (con DecEq) y exp-esencial/E4 + exp-juez/Comb (Lindenbaum sin if)."
+ },
+ {
+  "fichero": "FOL/Compacity0.lean",
+  "buscar": "Los titulares, `[propext, Classical.choice, Quot.sound]`. ⚠️ **Y el `Classical.choice` es el de\nsiempre y está explicado**: viene de `model_existence_lemma₀` y de `derives0_soundness` (la\nsemántica es clásica: `FOL.Soundness0`); el primero trae varias procedencias (las enumeran\n`FOL.Canonical0` y `FOL.Lindenbaum0`), y la que da la fuerza es el\n`if IsConsistent₀` Π⁰₁ de `FOL.Lindenbaum0` — el **WKL** (ADR‑041;\n`../ROBINSON_PlusPlus/doc/PLAN-COMPLETITUD-FINITISTA.md` §6.3). No se añade fuerza\nnueva. ⛔ Y por eso esto **no** es finitario, al revés que `FOL.Finitary0`: es vía W, no vía H.\n⚠️ **En §3 el `Classical.choice` NO viene sólo de la completitud**: `infTheory_finSat` y\n`evalTerm_updateCsts` lo llevan SIN pasar por `model_existence_lemma₀`. Es el de `FOL.Fresh0`\n(`cst_bound_list`, `cst_inj`; ver su §Footprint: el tercio excluso de `cst_bound_sym` y la\nimplementación de `String` —descomponerlo, no compararlo—).\n`infinite_model_of_large` pasa por `Rename.invOf` también fuera de `model_existence_lemma₀` (vía\n`hasLargeModels_shift`). El conjunto\nde axiomas es el mismo; las procedencias son varias, y sólo una es el WKL.",
+  "reemplazar": "Los titulares, `[propext, Classical.choice, Quot.sound]`. ⚠️ **El `Classical.choice` viene de\n`model_existence_lemma₀` y de `derives0_soundness`** (la semántica es clásica: `FOL.Soundness0`), con\nvarias procedencias (las enumeran `FOL.Canonical0` y `FOL.Lindenbaum0`). ⚠️ Lo que se decía aquí,\nque la que da la fuerza es el `if IsConsistent₀` de `FOL.Lindenbaum0` (el WKL), es FALSO en Lean\n(auditoría 2026‑09‑27, medido): ese `if` se quita y `henkin_completion₀` mide `[propext, Quot.sound]`. Lo\nirreducible es el lema de la verdad sobre un maximal arbitrario y la semántica en `Prop` (el enunciado\nde `model_existence_lemma₀` implica ¬P ∨ ¬¬P, y el de `derives0_soundness`, ¬¬P → P). ⛔ Esto **no** es\nfinitario, al revés que `FOL.Finitary0`: es vía W, no vía H.\n⚠️ **En §3 el `Classical.choice` NO viene sólo de la completitud**: `infTheory_finSat` y\n`evalTerm_updateCsts` lo llevan SIN pasar por `model_existence_lemma₀`. Es el de `FOL.Fresh0`\n(`cst_bound_list`, `cst_inj`): el tercio excluso de `cst_bound_sym` y la `ReflBEq String` que\n`cst_zero_ne` saca de `String.instOrd` —comparar, no descomponer—; las dos, evitables (medido: con\nellas corregidas, los dos titulares miden `[propext, Quot.sound]`).\n`infinite_model_of_large` pasa por `Rename.invOf` también fuera de `model_existence_lemma₀` (vía\n`hasLargeModels_shift`, que necesita la inversa GLOBAL de `shift`). El conjunto de axiomas es el\nmismo; las procedencias son varias.",
+  "motivo": "Localiza la fuerza en el if (refutado: E4, Comb) y describe el choice de §3 como «descomponer» String (es comparar: exp-string/E9; evalTerm_updateCsts e infTheory_finSat en [propext, Quot.sound] en exp-string/E4). Esencialidad: exp-esencial/E7 (WLEM) y E1 (DNE)."
+ },
+ {
+  "fichero": "FOL/Skolem0.lean",
+  "buscar": "⚠️ El `if f = c` usa `String.decEq`, que **no** trae `Classical.choice`: lo que lo trae es\nDESCOMPONER un `String`, no compararlo\n(`../ROBINSON_PlusPlus/doc/PLAN-COMPLETITUD-FINITISTA.md` §7). -/",
+  "reemplazar": "⚠️ El `if f = c` usa `String.decEq`, que **no** trae `Classical.choice` (`#print axioms String.decEq`:\nvacío). Lo que lo trae no es `String` sino RUTAS concretas del núcleo (auditoría 2026‑09‑27, medido):\ndecodificar (`String.toList`/`String.ofList_toList`; `String.exists_eq_ofList` no lo trae) y el ORDEN\n(la `ReflBEq String` derivada de `String.instOrd` al usar `not_eq_of_beq_eq_false`;\n`instLawfulBEqString` no lo trae). -/",
+  "motivo": "«lo trae DESCOMPONER un String, no compararlo»: exp-string/E9 (not_eq_of_beq_eq_false sobre String lleva choice; beq_iff_eq no) y exp-inv/Enum.lean (String.exists_eq_ofList [propext])."
+ },
+ {
+  "fichero": "FOL/Skolem0.lean",
+  "buscar": "`skolem_conservative₀` y `henkin_conservative₀`, `[propext, Classical.choice, Quot.sound]` — el\n`Classical.choice` es el de `completeness₀`, el **WKL** de siempre\n(`../ROBINSON_PlusPlus/doc/PLAN-COMPLETITUD-FINITISTA.md` §6.3), más la elección del\ntestigo y el de `derives0_soundness` (`FOL.Soundness0`: la semántica es clásica). ⛔ Vía W, no vía H.",
+  "reemplazar": "`skolem_conservative₀` y `henkin_conservative₀`, `[propext, Classical.choice, Quot.sound]` — el\n`Classical.choice` es el de `completeness₀` (⚠️ que NO es el `if` de Lindenbaum: ver `FOL.Lindenbaum0`),\nmás la elección del testigo y el de `derives0_soundness` (`FOL.Soundness0`: la semántica es clásica).\n⛔ Vía W, no vía H. ⚠️ Pero el enunciado es SINTÁCTICO y la ruta semántica no es obligada: el caso\nHenkin (`henkin_conservative₀`) tiene prueba sintáctica con `[propext, Quot.sound]` (auditoría 2026‑09‑27,\nmedido); el caso con prefijo, hipótesis (Herbrand/ε).",
+  "motivo": "«el WKL de siempre» (localización refutada) y omite que henkin_conservative₀ sale sintáctico sin choice (exp-esencial/E8_HenkinSintactico.lean, mismo enunciado)."
+ },
+ {
+  "fichero": "FOL/HenkinLimit0.lean",
+  "buscar": "/-- La cota de `cst_bound_formula`, elegida. ⚠️ `noncomputable`: es `Exists.choose`, y ahí entra\n`Classical.choice`. No es evitable con este enunciado — y no importa, porque lo que se construye\nes una **teoría**, no un programa. -/",
+  "reemplazar": "/-- La cota de `cst_bound_formula`, elegida. ⚠️ `noncomputable`: es `Exists.choose`, y ahí entra\n`Classical.choice`. ⚠️ **Sí** es evitable con este mismo enunciado (auditoría 2026‑09‑27, medido): la\ncota calculada «mayor `utf8ByteSize` de los símbolos de función», con `(cst n).utf8ByteSize = n + 1`,\ncumple `bnd_spec` con `[propext, Quot.sound]`, no lleva ningún axioma y deja `bnd`, `hidx` y `hen`\ncomputables. Si se deja así es porque lo que se construye es una **teoría**, no un programa. -/",
+  "motivo": "«No es evitable con este enunciado»: exp-bnd-invOf/Exp.lean (bndC sin axiomas, bndC_spec [propext, Quot.sound], hidxC computable con #eval) y exp-inv/Bnd.lean."
+ },
+ {
+  "fichero": "FOL/HenkinLimit0.lean",
+  "buscar": "`[propext, Classical.choice, Quot.sound]` y **cero axiomas del proyecto**. El `Classical.choice`\nentra por `Exists.choose` en `bnd` (§2), por `String` (§7 del plan) y por lo que ya traen\n`shiftTheory_consistent₀` (`Rename.invOf`) y `henkin_step_consistent₀`; ⚠️ **no** es el de la\ncompletitud — ése es el `if IsConsistent …` de Lindenbaum (§6.3), que entra después, en `FOL.Lindenbaum0`.",
+  "reemplazar": "`[propext, Classical.choice, Quot.sound]` y **cero axiomas del proyecto**. El `Classical.choice`\nentra por `Exists.choose` en `bnd` (§2), por `String` (§7 del plan) y por lo que ya traen\n`shiftTheory_consistent₀` (`Rename.invOf`) y `henkin_step_consistent₀`. ⚠️ Las cuatro son evitables\n(auditoría 2026‑09‑27, medido): con ellas corregidas, `hen_consistent`, `henLimit_consistent₀` y\n`henLimit_witness` miden `[propext, Quot.sound]`. Y el de la completitud no es el\n`if IsConsistent …` de Lindenbaum: ver `FOL.Lindenbaum0`.",
+  "motivo": "Da por buenas las procedencias y localiza la completitud en el if. exp-juez/Comb.lean: henC_consistent, henLimitC_consistent₀, henLimitC_witness [propext, Quot.sound]."
+ },
+ {
+  "fichero": "FOL/Enumeration.lean",
+  "buscar": "Cero axiomas del proyecto. Todo lo que se usa de fuera es núcleo de Lean:\n`Char.ofNat_toNat` y `String.ofList_toList`.",
+  "reemplazar": "Cero axiomas del proyecto. Todo lo que se usa de fuera es núcleo de Lean:\n`Char.ofNat_toNat` y `String.ofList_toList`. ⚠️ Y `String.toList`/`String.ofList_toList` llevan\n`Classical.choice` (v4.31, medido: el decodificador UTF‑8): por ellos `natToString_surj`,\n`natToTerm_surj`, `natToTerms_surj`, `natToFormula_surj` y la instancia `EnumSym String` miden\n`[propext, Classical.choice, Quot.sound]`. Es de RUTA: con `String.exists_eq_ofList` (`[propext]`)\n`natToString_surj` y `natToFormula_surj` miden `[propext, Quot.sound]` (auditoría 2026‑09‑27).\n`natToFormula` y las demás funciones: `[propext, Quot.sound]`.",
+  "motivo": "«Cero axiomas… núcleo de Lean»: 7 constantes con choice en decls.tsv; exp-string/E3,E4,E8 y exp-inv/Enum.lean."
+ },
+ {
+  "fichero": "FOL/Theorems/Eq.lean",
+  "buscar": "-- puras**. Detalle completo en `../ROBINSON_PlusPlus/sondeos/ClassicalChoiceCenso.lean`.",
+  "reemplazar": "-- puras**. Detalle completo en `../ROBINSON_PlusPlus/sondeos/ClassicalChoiceCenso.lean`.\n--\n-- ⚠️ 2026-09-27 (auditoría, medido): el módulo NO quedó limpio del todo. `substTerm_subst_comm_succ`,\n-- `substTerms_subst_comm_succ` y `subst_subst_comm_succ` (RPP lo usa en `Meta/Hilbert.lean`) llevan\n-- `[propext, Classical.choice, Quot.sound]`: tres `simp` del caso `var` reescriben con\n-- `Nat.left_eq_add`/`Nat.add_eq_left`, que en v4.31 llevan choice. Con\n-- `simp [..., -Nat.left_eq_add, -Nat.add_eq_left]` la misma prueba mide `[propext, Quot.sound]`.",
+  "motivo": "La cabecera da el módulo por limpio: decls.tsv y exp-varios/Eq0orig (control) / Eq4min [propext, Quot.sound]."
+ },
+ {
+  "fichero": "FOL/Lindenbaum0.lean",
+  "buscar": "Aquí. En una línea:\n\n    if IsConsistent₀ (Sₙ ∪ {φₙ}) then … else …\n\nEsa condición es **Π⁰₁** y se decide con `Classical.propDecidable`. **Ahí cabe toda la no‑finitud\ndel teorema de completitud** — es el WKL del que habla\n`../ROBINSON_PlusPlus/doc/PLAN-COMPLETITUD-FINITISTA.md` §6.3,\ny por eso el entregable de la vía W **no es un footprint limpio** sino un `Classical.choice`\n**explicado**: ≡ completitud sobre RCA₀, y WKL₀ es Π⁰₂‑conservativo sobre PRA.\n\n⚠️ Los `Classical.choice` de `FOL.Fresh0` y `FOL.HenkinLimit0` **no eran** éste: eran\n`Exists.choose`, el tercio excluso de `cst_bound_sym`, `Rename.invOf`, lo que ya traía\n`henkin_step_consistent₀` y `String`. Éste sí.",
+  "reemplazar": "Aquí se decía que en una línea:\n\n    if IsConsistent₀ (Sₙ ∪ {φₙ}) then … else …\n\nEsa condición es **Π⁰₁** y se decide con `Classical.propDecidable`, y se afirmaba que **ahí cabe\ntoda la no‑finitud del teorema de completitud** (el WKL de\n`../ROBINSON_PlusPlus/doc/PLAN-COMPLETITUD-FINITISTA.md` §6.3).\n\n⛔ **Eso es FALSO en Lean** (auditoría 2026‑09‑27, medido). La etapa no necesita decidir nada: con\n\n    Step (n+1) x := Step n x ∨ (x = φₙ ∧ IsConsistent₀ (Step n ∪ {φₙ}))\n\n(posible porque `Prop` es impredicativo; la consistencia es negativa y basta ¬¬(C ∨ ¬C)), el mismo\n`lindenbaum_lemma₀` mide `[propext]` para cualquier enumeración sobreyectiva, y el límite queda\nCERRADO por deducción sin tercio excluso, así que `henkin_completion₀` también sale, con el mismo\nenunciado, en `[propext, Quot.sound]` (corrigiendo además las rutas de `String`, `bnd`, `invOf` y el\n`filter` de `derivesSet0_intro_impl`). Lo clásico de verdad está al USAR la teoría: el tercio excluso\nsobre la pertenencia a un maximal ARBITRARIO (`max_cons_contains`, y en `FOL.Canonical0`\n`max_cons_impl_iff`, `max_cons_or`, `max_cons_complete`: sus enunciados implican ¬¬P → P, medido) y\nel `byContradiction` final de `completeness₀`. La equivalencia completitud ≡ WKL₀ vale sobre RCA₀,\ndonde la teoría completa tiene que existir como conjunto; en Lean existe gratis como predicado.\n\n⚠️ Los demás `Classical.choice` que llegan aquí (`Exists.choose` de `bnd`, el tercio excluso de\n`cst_bound_sym`, `Rename.invOf`, `henkin_step_consistent₀`, `String`) son también evitables.",
+  "motivo": "La tesis de localización (ADR-040 §2) está refutada: exp-esencial/E4_Lindenbaum.lean y exp-juez/Comb.lean (limit_max, limit_closed [propext]; lindenbaum_lemma_nc y henkin_completion_nc [propext, Quot.sound], tipos iguales). Esencialidad de max_cons_*: exp-esencial/E3_MaxCons.lean."
+ },
+ {
+  "fichero": "FOL/Lindenbaum0.lean",
+  "buscar": "/-- ⛔ **Aquí está toda la no‑finitud del teorema**: la condición del `if` es **Π⁰₁** y se decide\ncon `Classical.propDecidable`. Ver la cabecera del módulo. -/",
+  "reemplazar": "/-- La condición del `if` es **Π⁰₁** y se decide con `Classical.propDecidable`. ⚠️ No es «toda la\nno‑finitud del teorema», como se decía: la etapa impredicativa la evita (ver la cabecera). -/",
+  "motivo": "Docstring «⛔ Aquí está toda la no‑finitud del teorema»: refutado por E4 y Comb."
+ },
+ {
+  "fichero": "FOL/Canonical0.lean",
+  "buscar": "**No aquí.** Todo este módulo es constructivo salvo el uso de `Classical.choose` en `quotientOut`\ny el tercio excluso (`byContradiction`, `by_cases`, `em`, `byCases`). La no‑finitud del teorema está **una capa más abajo**, en el\n`if IsConsistent₀ (Sₙ ∪ {φₙ})` de `FOL.Lindenbaum0` (Π⁰₁) — ADR‑040 §2.\n\n⇒ El entregable de la vía W es, como el plan decía, **`completeness₀` con footprint\n`[propext, Classical.choice, Quot.sound]`, cero axiomas del proyecto, y la nota de reducción al\nlado**: ese `Classical.choice` es el WKL; la completitud para lenguajes numerables es **≡ WKL₀**\nsobre RCA₀ (Simpson IV.3.3), y WKL₀ es **Π⁰₂‑conservativo sobre PRA** (Friedman).",
+  "reemplazar": "Todo este módulo es constructivo salvo el uso de `Classical.choose` en `quotientOut` y el tercio\nexcluso (`byContradiction`, `by_cases`, `em`, `byCases`). ⚠️ Aquí se decía que la no‑finitud del\nteorema está **una capa más abajo**, en el `if IsConsistent₀ (Sₙ ∪ {φₙ})` de `FOL.Lindenbaum0`\n(ADR‑040 §2), y que «ese `Classical.choice` es el WKL». ⛔ **Es al revés** (auditoría 2026‑09‑27, medido):\n`henkin_completion₀` tiene prueba con `[propext, Quot.sound]`, y el `Classical.choice` irreducible\nestá AQUÍ: en `max_cons_contains`/`max_cons_impl_iff`/`max_cons_or`/`max_cons_complete`, cuyos\nenunciados (sobre un maximal ARBITRARIO) implican ¬¬P → P; en `model_existence_lemma₀`, cuyo enunciado\nimplica ¬P ∨ ¬¬P; y en el `byContradiction` final de `completeness₀` (forma de Markov; hipótesis).\n`quotientOut` es evitable: con `Quot.lift` sobre listas el modelo canónico sale computable. La\ncompletitud para lenguajes numerables es **≡ WKL₀** sobre RCA₀ (Simpson IV.3.3), y WKL₀ es\n**Π⁰₂‑conservativo sobre PRA** (Friedman); pero eso es matemática inversa y no localiza el\n`Classical.choice` de Lean.",
+  "motivo": "Localización refutada (E4, Comb) y la del choice irreducible, medida: exp-esencial/E3 (DNE), E7 (WLEM), E5 (cociente por listas, canonicalModel' sin noncomputable)."
+ },
+ {
+  "fichero": "FOL/Canonical0.lean",
+  "buscar": "⛔ Lo que su `Classical.choice` tiene de no finitario es el `if IsConsistent₀ …` de `FOL.Lindenbaum0`\n(Π⁰₁) — es el **WKL**, y\nva explicado en la cabecera de este módulo y en ADR‑040 §2. -/",
+  "reemplazar": "⛔ Aquí se decía que lo que su `Classical.choice` tiene de no finitario es el `if IsConsistent₀ …` de\n`FOL.Lindenbaum0` (el WKL). ⚠️ FALSO en Lean (auditoría 2026‑09‑27, medido): viene del lema de la verdad\nsobre un maximal arbitrario (`max_cons_*`) y del `byContradiction` de abajo. Ver la cabecera. -/",
+  "motivo": "Mismo error de localización en el docstring del titular."
+ },
+ {
+  "fichero": "FOL/SkolemN0.lean",
+  "buscar": "⚠️ El `Classical.choice` del footprint **no es nuevo**: `completeness₀` ya lo trae (es el WKL). Lo",
+  "reemplazar": "⚠️ El `Classical.choice` del footprint **no es nuevo**: `completeness₀` ya lo trae (⚠️ no es el `if`\nde Lindenbaum: ver `FOL.Lindenbaum0`). Lo",
+  "motivo": "«(es el WKL)»: localización refutada (E4, Comb)."
+ },
+ {
+  "fichero": "FOL/SkolemHerbrand0.lean",
+  "buscar": "(`skolem_conservative_nf₀`) pasa por la completitud (el WKL). Por la estructura de la prueba entra",
+  "reemplazar": "(`skolem_conservative_nf₀`) pasa por la completitud semántica (`completeness₀`). Por la estructura de la prueba entra",
+  "motivo": "«(el WKL)»: localización refutada (E4, Comb)."
+ },
+ {
+  "fichero": "FOL/Interpolation0.lean",
+  "buscar": "`completeness₀` (el WKL, `Classical.choice`). `lk0_refute` la da SINTÁCTICAMENTE, leyendo `Γ ⟹ Δ`",
+  "reemplazar": "`completeness₀` (`Classical.choice`). `lk0_refute` la da SINTÁCTICAMENTE, leyendo `Γ ⟹ Δ`",
+  "motivo": "«(el WKL, …)»: localización refutada (E4, Comb)."
+ },
+ {
+  "fichero": "FOL/SkolemNF0.lean",
+  "buscar": "normal son **interderivables**. 📏 Y las dos mitades **sin `Classical.choice`** — el WKL entra",
+  "reemplazar": "normal son **interderivables**. 📏 Y las dos mitades **sin `Classical.choice`** — el choice entra",
+  "motivo": "«el WKL entra»: localización refutada (E4, Comb)."
+ },
+ {
+  "fichero": "REFERENCE.md",
+  "buscar": "`natToFormula` y su sobreyectividad, **computables**, cero axiomas",
+  "reemplazar": "`natToFormula` (**computable**, `[propext, Quot.sound]`) y su sobreyectividad —⚠️ `natToFormula_surj` lleva `Classical.choice` (vía `String.toList`/`ofList_toList`), evitable con `String.exists_eq_ofList` (auditoría 2026‑09‑27, medido)—, cero axiomas **del proyecto**",
+  "motivo": "decls.tsv: natToFormula_surj [propext, Classical.choice, Quot.sound]."
+ },
+ {
+  "fichero": "REFERENCE.md",
+  "buscar": "| `Enumeration.lean` | `natToFormula` y su sobreyectividad, **computables** | `net‑0` | 030 |",
+  "reemplazar": "| `Enumeration.lean` | `natToFormula` y su sobreyectividad (⚠️ `natToFormula_surj` lleva `Classical.choice` por `String.toList`; evitable, auditoría 2026‑09‑27) | ``propext, Classical.choice, Quot.sound`` | 030 |",
+  "motivo": "La tabla de footprints por módulo da `net‑0` a un módulo con 7 constantes con choice (decls.tsv)."
+ },
+ {
+  "fichero": "REFERENCE.md",
+  "buscar": "⛔ Aquí vive la no‑finitud del teorema (`if IsConsistent₀ …`, Π⁰₁).",
+  "reemplazar": "⚠️ Se decía que aquí vive la no‑finitud del teorema (`if IsConsistent₀ …`); FALSO en Lean: `henkin_completion₀` sale con `[propext, Quot.sound]` (auditoría 2026‑09‑27, medido).",
+  "motivo": "Localización refutada (Comb)."
+ },
+ {
+  "fichero": "REFERENCE.md",
+  "buscar": "⛔ Aquí vive la no‑finitud (Π⁰₁) |",
+  "reemplazar": "⚠️ la «no‑finitud» NO vive aquí: `henkin_completion₀` sale con `[propext, Quot.sound]` (auditoría 2026‑09‑27) |",
+  "motivo": "Localización refutada (Comb)."
+ },
+ {
+  "fichero": "REFERENCE.md",
+  "buscar": "triple en `EnumSym`—, porque no descompone ninguna cadena.",
+  "reemplazar": "triple en `EnumSym`—. ⚠️ Pero la diferencia es de RUTA, no del tipo (auditoría 2026‑09‑27, medido): la de `FreshSym String` sale de COMPARAR (`not_eq_of_beq_eq_false` con una `ReflBEq String` derivada de `String.instOrd`) y la de `EnumSym String` de `String.toList`/`ofList_toList`; con `instLawfulBEqString` y `String.exists_eq_ofList` las dos instancias de `String` miden `[propext, Quot.sound]`.",
+  "motivo": "exp-inv/Fresh.lean, exp-inv/Enum.lean, exp-string/E9."
+ },
+ {
+  "fichero": "AXIOMS.md",
+  "buscar": "* ⚠️ **ROBINSON_PlusPlus tiene su propio censo** (`../ROBINSON_PlusPlus/AXIOMS.md`), y **fabrica",
+  "reemplazar": "* ⚠️ **No cuenta `Classical.choice`**, que no es un `axiom` del proyecto: lo llevan 157 de las 2978\n  constantes de FOL y `TheoryFramework`, en 17 módulos (auditoría 2026‑09‑27, `collectAxioms` sobre el\n  entorno compilado). Según el grafo, 60 lo pierden con cambios locales de prueba medidos (`String`,\n  `open Classical`, `simp` aritmético, `bnd`) y 91 con todo lo medido evitable (más la inversa local\n  de `shift`, la etapa impredicativa de Lindenbaum, el cociente por listas y las pruebas alternativas\n  medidas de los corolarios que hoy pasan por la completitud o la solidez).\n  Lo irreducible (enunciados que implican ¬¬P → P, ¬P ∨ ¬¬P o AC, medido) es la semántica en `Prop`\n  (`derives0_soundness`, `lkc_sound`, `lk0_sound`), el lema de la verdad sobre un maximal arbitrario\n  (`max_cons_*`, `model_existence_lemma₀`) y las funciones de Skolem semánticas (`skF`).\n* ⚠️ **ROBINSON_PlusPlus tiene su propio censo** (`../ROBINSON_PlusPlus/AXIOMS.md`), y **fabrica",
+  "motivo": "El censo sólo cuenta axiom; decls.tsv + exp-juez/scen.py (S1: 157→97; S6: 157→66)."
+ },
+ {
+  "fichero": "AXIOMS.md",
+  "buscar": "y se midió antes de construir: el núcleo de Lean da `Char.ofNat_toNat` y `String.ofList_toList`,\nque es exactamente lo que hace falta. ⚠️ `String` ya **no** es `structure String where data : List Char`\nen v4.31 —es UTF‑8 opaco— así que `String.mk s.data = s` **no** vale por `rfl`; el lema sí.",
+  "reemplazar": "y se midió antes de construir: el núcleo de Lean da `Char.ofNat_toNat` y `String.ofList_toList`,\nque es exactamente lo que hace falta. ⚠️ `String` ya **no** es `structure String where data : List Char`\nen v4.31 —es UTF‑8 opaco— así que `String.mk s.data = s` **no** vale por `rfl`; el lema sí. ⚠️ Pero el\nlema lleva `Classical.choice` (el decodificador UTF‑8 del núcleo): `String.exists_eq_ofList`\n(`[propext]`) hace el mismo trabajo sin él (auditoría 2026‑09‑27, medido).",
+  "motivo": "String.ofList_toList [propext, Classical.choice, Quot.sound] (exp-esencial/E4b, exp-string/E1)."
+ },
+ {
+  "fichero": "TheoryFramework/Logic.lean",
+  "buscar": "`LK₀`/`LKc` (`SequentSound0`) y `Prf₀`\n(`../ROBINSON_PlusPlus/sondeos/AnclaSoundness.lean`). -/",
+  "reemplazar": "`LK₀`/`LKc` (`SequentSound0`) y `Prfᵢ`\n(`prfI_soundness`, `../ROBINSON_PlusPlus/sondeos/AnclaSoundness.lean`). -/",
+  "motivo": "Nombre muerto: D6 renombró Prf₀ → Prfᵢ (inventario; RPP sondeos/AnclaSoundness.lean)."
+ },
+ {
+  "fichero": "TheoryFramework.lean",
+  "buscar": "-- Instances are NOT imported here: FOLPure and FOL both define `Formula`\n-- at root level, causing a conflict when imported together.\n-- Users import whichever instance they need:\n--   import TheoryFramework.Instances.PropLogic\n--   import TheoryFramework.Instances.FOLPure\n--   import TheoryFramework.Instances.FOL",
+  "reemplazar": "-- `Instances/` no se importa aquí. Sólo queda `TheoryFramework/Instances/FOL.lean`, y SIN\n-- declaraciones (`folSystem` retirada el 2026-09-23): explica por qué no hay instancia.\n-- `PropLogic` y `FOLPure` se retiraron el 2026-09-12 (`cuarentena/librerias-retiradas/`).",
+  "motivo": "Cita instancias PropLogic/FOLPure que ya no existen (inventario)."
+ }
+]

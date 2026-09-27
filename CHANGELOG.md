@@ -19,6 +19,65 @@ All notable changes to this project will be documented in this file.
 Format based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## 2026-09-27 (6) — La auditoría de constructividad, y D1‑D8 ejecutadas: `Classical.choice` 157 → 84
+
+* 🔎 **Auditoría de constructividad** (`auditoria/constructividad-2026-09-27/`, guardada en el repo por
+  decisión del propietario): el metaprograma `Audit.lean` mide, para CADA constante de FOL y
+  TheoryFramework, sus axiomas, si es `noncomputable` y por dónde le entra `Classical.choice`; seis
+  tareas de experimento, un juez y un escéptico que recompiló los 42 experimentos y refutó 13 de 25
+  puntos con medida. La clasificación, en `AXIOMS.md` §4 (nueva).
+* ⛔ **El hallazgo**: la tesis «el `Classical.choice` de la completitud es el WKL del `if IsConsistent₀`
+  de Lindenbaum» (ADR‑040 §2, ADR‑041 §4, docstrings) es FALSA en Lean: `Prop` es impredicativo y la
+  etapa se define con la condición dentro, sin decidirla. Lo clásico está en el lema de la verdad sobre
+  un maximal ARBITRARIO (`max_cons_*`), en la semántica de Tarski en `Prop` y en el `byContradiction`
+  final de `completeness₀`. **D2**: se corrigen las afirmaciones de LOCALIZACIÓN; «el WKL» queda sólo
+  como apodo de la FUERZA de la completitud sobre RCA₀. Las entradas de abajo que dicen otra cosa
+  (2026‑09‑16, 2026‑09‑26) son historia: no se tocan.
+* ✂️ **D1 — lo eliminable, eliminado**, con los mismos enunciados de los titulares:
+  - `Fresh0`: `cst_zero_ne`/`cst_ne_shift` por `of_decide_eq_false` (la síntesis de `ReflBEq String`
+    pasaba por `String.instOrd`); `cst_bound_sym` por la cota `utf8ByteSize` (`cst_utf8ByteSize`);
+    nuevas `valid_tail`, `unshift` (inversa global y computable de `shift`, sobre bytes), `shift_bytes`,
+    `unshift_shift`; `derivesSet0_shift_inv` usa `unshift`.
+  - `Enumeration`: `natToString_surj` por `String.exists_eq_ofList` (sin decodificar UTF‑8).
+  - `Henkin0`: nuevos `ctx_split` (partir un contexto finito sin decidir la igualdad: ningún axioma) y
+    `henkin_step_derives` (el paso de Henkin en positivo); `henkin_step_consistent₀`, su corolario;
+    fuera el `open Classical`.
+  - `Lindenbaum0`: `LindenbaumStep` IMPREDICATIVA (deja de ser `noncomputable`); nuevos `not_not_em`,
+    `lindenbaum_limit_consistent`, `lindenbaum_limit_max`, `lindenbaum_limit_closed`;
+    `derivesSet0_intro_impl` por `ctx_split`; **`lindenbaum_lemma₀` y `henkin_completion₀`,
+    `[propext, Quot.sound]`**. `max_cons_contains` conserva su `byContradiction` (esencial).
+  - `HenkinLimit0`: `bnd` CALCULADA por recursión (`bndTerm`, `bndTerms`, sus `_spec`,
+    `cst_ne_of_size`); `bnd`, `hidx` y `hen`, computables.
+  - `Canonical0`: fuera `quotientOut`, `quotientOut_eq` y `pointwiseEqv_out_mk`; el modelo canónico se
+    levanta con `Quot.lift` sobre listas (`pointwiseEqv_refl`, `consQ`, `consQ_resp`, `listQuot`,
+    `listQuot_mk`); `canonicalModel`, computable; `QuotientDomain`, `abbrev`.
+  - 🧊↩️ `Rename`, congelado, **descongelado** (`thaw --confirm`, su primer `thaw`) para retirar `invOf` e
+    `invOf_spec`: nuevos `symsTerm`/`symsTerms`/`symsFormula`/`symsList`, `locInv` (inversa LOCAL sobre la
+    lista finita de símbolos), `locInv_spec` y los `rename_rename_*_loc`; `derives0_rename_conservative`
+    sin choice. Vuelve a congelarse en el mismo ciclo.
+  - `Compacity0`: `hasLargeModels_shift` con `Fresh0.unshift`.
+  - `Theorems/Eq` (D6): tres `simp` sin `Nat.left_eq_add`/`Nat.add_eq_left` (lemas del núcleo con
+    choice) ⇒ `FOL.Core` sin choice salvo el código meta de `Tactics`.
+* 🔁 **D3 y D5**: `Skolem0.henkin_conservative₀` por la vía SINTÁCTICA (`henkin_step_derives`,
+  `ctx_split`, `dne_rule`) —es el caso Henkin de Skolem de D5—, e
+  `Inconsistencia.derives0_no_disjunction_property` por la valuación booleana de `Finitary0` (nuevos
+  `derives0_not_negP_fin`, `derives0_not_complete_fin`; importa `FOL.Finitary0`): los dos
+  `[propext, Quot.sound]`. Los corolarios de ruta de `Soundness0`/`SequentSound0` 🧊 y los controles
+  `derives0_em`/`derives0_peirce` se quedan (ADR‑061).
+* 🏁 **D7 — la instancia de `TheoryFramework`, declarada**: `fol0System : LogicSystem Formula` sobre
+  `Derives₀` (ningún axioma), `fol0Sound`, `fol0Complete` y `fol0_proves_iff_models`
+  (`[propext, Classical.choice, Quot.sound]`). `Derives` sigue sin instancia. Salen las 2 DIFERIDA de
+  `[G.2]` (14 → 12 marcadores); 4 filas nuevas en `check-footprints` de RPP.
+* 📨 **D8**: PeanoRF, sin plazo; la información va en una carta en su repositorio. D4 (variantes
+  constructivas) y la vía sintáctica general de Skolem, a «fuera de alcance» de `NEXT-STEPS.md`.
+* 📏 **Cifras** (`decls.tsv`): constantes 2978 → 3074; con `Classical.choice` **157 → 84** (3 son código
+  meta); `noncomputable` **8 → 1** (`SkolemN0.skF`); la frontera por donde entra choice, 30 → **13**
+  declaraciones lógicas (más 3 meta); titulares de FOL con choice **55 → 34** de 252 (21 filas de
+  `check-footprints` lo pierden); `check-footprints`, 513 → 517. Axiomas del proyecto: los mismos 4.
+* ⭐ La migración `String` → `List Char` (D7 del 2026‑09‑26) no hacía falta: lo que trae
+  `Classical.choice` en v4.31 es DECODIFICAR UTF‑8 (y el orden de `String`); la capa de bytes está limpia.
+* 🔒 Los 17 candidatos a congelar siguen sólo bloqueados; congelarlos pide confirmación.
+
 ## 2026-09-27 (5) — N1‑N4 resueltas: 13 renombres y dos duplicados retirados
 
 * 🏷️ **N1** (propietario: renombrar): las once definiciones POR DERIVABILIDAD que no llevaban marca

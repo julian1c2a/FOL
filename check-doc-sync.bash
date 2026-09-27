@@ -575,8 +575,6 @@ G2TAB=$(mktemp); G2CUR=$(mktemp)
 
 # ── LA TABLA ──  fichero § ancla (subcadena ÚNICA en ese fichero) § clase § nota
 cat > "$G2TAB" <<'G2EOF'
-TheoryFramework/Instances/FOL.lean§`CompleteLogic Formula` tampoco se declara§DIFERIDA§`folSystem` RETIRADA el 2026-09-23; la salida (declararla sobre `Derives₀`) esta escrita
-TheoryFramework/Instances/FOL.lean§**Para reabrirlo**§DIFERIDA§la via para volver a tener instancia: `LogicSystem Formula` sobre `Derives₀`
 FOL/Derives1.lean§Esta sección se titulaba§HISTORIAL§H3 la paga `Hauptsatz0.cut_elimination₀`
 FOL/Derives2.lean§Se titulaba§HISTORIAL§H3 la paga `Hauptsatz0.hauptsatz₀`
 FOL/Herbrand0.lean§Esta cabecera decía§HISTORIAL§H3 la paga `Hauptsatz0.herbrand_extraction₀`

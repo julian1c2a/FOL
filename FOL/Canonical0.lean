@@ -41,7 +41,8 @@ FOL⁼. ⛔ Recuérdese que sobre `Derives` **no puede haberlas**: su solidez es
    bien definido. ⭐ Se levantan de `Derives₀` a `⊢₀*` con `derivesSet0_map`/`map2`: *la regla
    viaja con su contexto finito.*
 4. **§4** — el **modelo canónico**: el dominio es `Term / ≈`, `func` es la aplicación de símbolos
-   y `rel` es la pertenencia a `S`. Más `evalTerm_canonical`: *evaluar un término en el modelo
+   y `rel` es la pertenencia a `S`, levantadas con `Quot.lift` sobre listas (`listQuot`), sin
+   elegir representantes. Más `evalTerm_canonical`: *evaluar un término en el modelo
    canónico es su propia clase.*
 5. **§5** — `max_cons_ex` y `max_cons_forall`. ⭐ Aquí es donde paga `IsHenkin`, y **sólo aquí**.
 6. **§6** — **`truth_lemma₀`**: la semántica coincide con la sintaxis. Inducción por
@@ -52,18 +53,53 @@ FOL⁼. ⛔ Recuérdese que sobre `Derives` **no puede haberlas**: su solidez es
    no de `S`. Se reinterpretan los símbolos, y ya.
 8. **§8** — `model_existence_lemma₀` y **`completeness₀`**.
 
-## ⛔ Dónde está la no‑finitud, otra vez
+## ⛔ Dónde está lo clásico — medido el 2026‑09‑27
 
-**No aquí.** Todo este módulo es constructivo salvo el uso de `Classical.choose` en `quotientOut`
-y el tercio excluso (`byContradiction`, `by_cases`, `em`, `byCases`). La no‑finitud del teorema está **una capa más abajo**, en el
-`if IsConsistent₀ (Sₙ ∪ {φₙ})` de `FOL.Lindenbaum0` (Π⁰₁) — ADR‑040 §2.
+⚠️⚠️ **RECTIFICACIÓN (2026‑09‑27).** Esta sección decía: *«**No aquí.** Todo este módulo es
+constructivo salvo el uso de `Classical.choose` en `quotientOut` y el tercio excluso […]. La
+no‑finitud del teorema está una capa más abajo, en el `if IsConsistent₀ (Sₙ ∪ {φₙ})` de
+`FOL.Lindenbaum0` (Π⁰₁)»*, y que el `Classical.choice` de `completeness₀` «es el WKL» (ADR‑040 §2,
+ADR‑041 §4). Las dos cosas son FALSAS en Lean. El módulo nunca fue «constructivo salvo
+`quotientOut`»: la familia `max_cons_*` es clásica de raíz. Y Lindenbaum no necesita decidir
+nada: `Prop` es impredicativo, la etapa lleva la condición DENTRO del predicado, y
+`lindenbaum_lemma₀` y `henkin_completion₀` miden `[propext, Quot.sound]` (auditoría de
+constructividad, `auditoria/constructividad-2026-09-27/`; decisiones D1 y D2 del propietario).
 
-⇒ El entregable de la vía W es, como el plan decía, **`completeness₀` con footprint
-`[propext, Classical.choice, Quot.sound]`, cero axiomas del proyecto, y la nota de reducción al
-lado**: ese `Classical.choice` es el WKL; la completitud para lenguajes numerables es **≡ WKL₀**
-sobre RCA₀ (Simpson IV.3.3), y WKL₀ es **Π⁰₂‑conservativo sobre PRA** (Friedman).
+Por dónde ENTRA el `Classical.choice` de `completeness₀`, medido sobre el entorno compilado:
 
-🔑 **Un `Classical.choice` explicado vale más que un `Classical.choice` escondido.**
+1. **El lema de la verdad sobre un maximal ARBITRARIO.** `IsMaximalConsistent₀` se define por
+   NO‑AMPLIABILIDAD, que es una negación, y `S` es un predicado de Lean cualquiera. Pasar de «añadir
+   `A` no es consistente» a «`S ∪ {A} ⊢₀* ⊥`», o de «`S A` no puede fallar» a «`S A`», es `¬¬P → P`.
+   Las puertas son `Lindenbaum0.max_cons_contains`, que heredan el setoide, las congruencias y el
+   modelo canónico, y aquí `max_cons_impl_iff` (`by_cases` + `byContradiction`), `max_cons_or`,
+   `max_cons_complete` (`em`) y `max_cons_forall`.
+   ⭐ **Es esencial, no un atajo.** El ENUNCIADO de `max_cons_contains`, `max_cons_impl_iff`,
+   `max_cons_or` y `max_cons_complete` implica `∀ P, ¬¬P → P` sin `Classical.choice`
+   (`…/experimentos/exp-esencial/E3_MaxCons.lean`), y el de `max_cons_forall`, `max_cons_neg` y
+   `truth_lemma₀` también (`…/experimentos/exp-esceptico/Esc2.lean`). El de
+   `model_existence_lemma₀` implica el tercio excluso débil `∀ P, ¬P ∨ ¬¬P`
+   (`…/exp-esencial/E7_ModelExistence.lean`). Con
+   `[DecidablePred S]`, `max_cons_contains`, `_impl_iff`, `_or`, `_complete` y `_forall` salen sin
+   elección (E3): lo clásico es la ARBITRARIEDAD de `S`.
+2. **El `byContradiction` final de `completeness₀`**: `¬¬(Γ ⊢₀ f) → Γ ⊢₀ f`, la forma de Markov
+   (`⊢₀` es Σ⁰₁). Que sea esencial es HIPÓTESIS: el argumento de Kreisel vía Gödel–Gentzen no se ha
+   compilado.
+3. Los dos controles de §9 añaden su propio `em`/`byCases`, a propósito.
+
+⭐ **El cociente ya no elige.** Hasta el 2026‑09‑27 el modelo tomaba representantes con
+`quotientOut := Classical.choose …` (ver §4). Ahora `func` y `rel` se levantan con `Quot.lift` sobre
+listas, y `canonicalModel` es computable. ⚠️ Su footprint **sigue** llevando `Classical.choice`,
+heredado de `max_cons_contains` a través de `termSetoid`: se quitó la elección, no la clasicidad.
+
+⇒ El entregable de la vía W es **`completeness₀` con footprint `[propext, Classical.choice,
+Quot.sound]` y cero axiomas del proyecto**, con la nota de reducción al lado. La nota se conserva
+como nota de FUERZA, no de localización: la completitud para lenguajes numerables es **≡ WKL₀**
+sobre RCA₀ (Simpson IV.3.3), y WKL₀ es **Π⁰₂‑conservativo sobre PRA** (Friedman). ⚠️ Eso es
+aritmética de segundo orden, donde los conjuntos tienen que ser definibles. En Lean, con `Prop`
+impredicativo, lo clásico no está en la construcción de Lindenbaum sino en (1) y (2).
+
+🔑 **Un `Classical.choice` explicado vale más que un `Classical.choice` escondido** — siempre que
+la explicación también se mida: ésta lo localizaba en un sitio donde no hacía falta.
 -/
 
 namespace FOL.Canonical0
@@ -83,6 +119,11 @@ local notation:50 Γ " ⊨ " f => FOL.Metamath.Semantics.satisfies Γ f
 -- ============================================================
 -- §1 · Lo que falta de la familia `max_cons_*`
 -- ============================================================
+
+-- ⚠️ Aquí ENTRA `Classical.choice` (medido el 2026‑09‑27): `max_cons_impl_iff`, `max_cons_or` y
+-- `max_cons_complete` —y `max_cons_forall` en §5—, más lo que todos heredan de
+-- `Lindenbaum0.max_cons_contains`. Es el `¬¬P → P` de un maximal ARBITRARIO, y es esencial (ver
+-- la cabecera). `derivesSet0_map`, `derivesSet0_map2` e `IsMemComplete` no llevan elección.
 
 /-- Eleva una regla de `Derives₀` a `⊢₀*`: **el contexto finito viaja con ella**. -/
 theorem derivesSet0_map {S : Formula → Prop} {A B : Formula}
@@ -151,7 +192,8 @@ def IsMemComplete (S : Formula → Prop) : Prop :=
 
 /-- ⭐ **Todo maximal consistente es completo POR PERTENENCIA** (`IsMemComplete`; ⛔ no es
 la «teoría completa» sobre sentencias). ⚠️ Usa el tercio excluido del METANIVEL
-(`Classical.em` sobre `S f`), no el del cálculo: `S` es un predicado de Lean arbitrario. -/
+(`Classical.em` sobre `S f`), no el del cálculo: `S` es un predicado de Lean arbitrario. Y no se
+puede evitar: el enunciado implica `∀ P, ¬¬P → P` (medido el 2026‑09‑27; ver la cabecera). -/
 theorem max_cons_complete {S : Formula → Prop} (hMax : IsMaximalConsistent₀ S) :
     IsMemComplete S := fun f =>
   (Classical.em (S f)).elim Or.inl (fun h => Or.inr ((max_cons_neg hMax).mpr h))
@@ -272,36 +314,66 @@ theorem termEqv_rel_congr {S : Formula → Prop} (hMax : IsMaximalConsistent₀ 
 -- §4 · El modelo canónico
 -- ============================================================
 
-noncomputable def quotientOut {α : Type u} {s : Setoid α} (q : Quotient s) : α :=
-  Classical.choose (Quotient.exists_rep q)
-
-theorem quotientOut_eq {α : Type u} {s : Setoid α} (q : Quotient s) :
-    Quotient.mk s (quotientOut q) = q :=
-  Classical.choose_spec (Quotient.exists_rep q)
-
-/-- El dominio: **los términos módulo la igualdad demostrable**. -/
-def QuotientDomain (S : Formula → Prop) (hMax : IsMaximalConsistent₀ S) : Type :=
+/-- El dominio: **los términos módulo la igualdad demostrable**. (`abbrev`: las reescrituras del
+modelo canónico lo ven como el `Quotient` que es.) -/
+abbrev QuotientDomain (S : Formula → Prop) (hMax : IsMaximalConsistent₀ S) : Type :=
   Quotient (termSetoid S hMax)
 
+-- ── Levantar funciones n‑arias al cociente SIN elegir representantes ─────────────────────
+-- ⭐ Una lista FINITA de clases se convierte en la clase de una lista (`listQuot`), por
+-- recursión y `Quotient.lift`: elección finita. El mecanismo, sobre un setoide cualquiera,
+-- mide `[Quot.sound]` (`auditoria/constructividad-2026-09-27/experimentos/exp-esencial/
+-- E5_Cociente.lean`). Hasta el 2026‑09‑27 el modelo elegía un representante de cada clase con
+-- `quotientOut := Classical.choose …`: una sección de un cociente ARBITRARIO implica el tercio
+-- excluso (medido: `…/experimentos/exp-esceptico/Esc2.lean`), pero aquí no hacía falta ninguna
+-- (auditoría de constructividad; `quotientOut`, `quotientOut_eq` y `pointwiseEqv_out_mk` se
+-- retiraron, y `canonicalModel` deja de ser `noncomputable`).
+-- ⚠️ Los footprints de §4 SIGUEN llevando `Classical.choice`, heredado de `termSetoid`
+-- (`termEqv_refl` pasa por `max_cons_contains`): lo que se retiró es la ELECCIÓN de
+-- representantes, no la clasicidad del maximal arbitrario, que es esencial (ver la cabecera).
+
+theorem pointwiseEqv_refl {S : Formula → Prop} (hMax : IsMaximalConsistent₀ S) :
+    ∀ ts : List Term, PointwiseEqv S ts ts
+  | [] => PointwiseEqv.nil
+  | t :: ts => PointwiseEqv.cons (termEqv_refl hMax t) (pointwiseEqv_refl hMax ts)
+
+def consQ {S : Formula → Prop} (hMax : IsMaximalConsistent₀ S) (a : Term) :
+    Quot (PointwiseEqv S) → Quot (PointwiseEqv S) :=
+  Quot.lift (fun as => Quot.mk (PointwiseEqv S) (a :: as))
+    (fun _ _ h => Quot.sound (PointwiseEqv.cons (termEqv_refl hMax a) h))
+
+theorem consQ_resp {S : Formula → Prop} (hMax : IsMaximalConsistent₀ S) (a b : Term)
+    (hab : termEqv S a b) (L : Quot (PointwiseEqv S)) : consQ hMax a L = consQ hMax b L :=
+  Quot.ind (β := fun L => consQ hMax a L = consQ hMax b L)
+    (fun as => Quot.sound (PointwiseEqv.cons hab (pointwiseEqv_refl hMax as))) L
+
+/-- ⭐ La clase de la lista, a partir de la lista de clases. -/
+def listQuot {S : Formula → Prop} (hMax : IsMaximalConsistent₀ S) :
+    List (Quotient (termSetoid S hMax)) → Quot (PointwiseEqv S)
+  | [] => Quot.mk _ []
+  | q :: qs => Quotient.lift (s := termSetoid S hMax) (fun a => consQ hMax a (listQuot hMax qs))
+      (fun a b hab => consQ_resp hMax a b hab _) q
+
+theorem listQuot_mk {S : Formula → Prop} (hMax : IsMaximalConsistent₀ S) : ∀ ts : List Term,
+    listQuot hMax (ts.map (Quotient.mk (termSetoid S hMax))) = Quot.mk _ ts
+  | [] => rfl
+  | t :: ts => by
+      show consQ hMax t (listQuot hMax (ts.map (Quotient.mk (termSetoid S hMax)))) = _
+      rw [listQuot_mk hMax ts]
+      rfl
+
 /-- ⭐ `func` **aplica el símbolo**, `rel` **es la pertenencia a `S`**. El modelo canónico no
-interpreta nada: se interpreta a sí mismo. -/
-noncomputable def canonicalModel (S : Formula → Prop) (hMax : IsMaximalConsistent₀ S) :
+interpreta nada: se interpreta a sí mismo. Las dos congruencias de §3 son exactamente lo que
+`Quot.lift` pide. -/
+def canonicalModel (S : Formula → Prop) (hMax : IsMaximalConsistent₀ S) :
     Model (QuotientDomain S hMax) where
-  func := fun f qs => Quotient.mk (termSetoid S hMax) (Term.func f (qs.map quotientOut))
-  rel := fun p qs => S (Formula.atom p (qs.map quotientOut))
+  func := fun f qs => Quot.lift (fun ts => Quotient.mk (termSetoid S hMax) (Term.func f ts))
+    (fun _ _ h => Quotient.sound (termEqv_func_congr hMax f h)) (listQuot hMax qs)
+  rel := fun p qs => Quot.lift (fun ts => S (Formula.atom p ts))
+    (fun _ _ h => propext (termEqv_rel_congr hMax p h)) (listQuot hMax qs)
 
 def canonicalEnv (S : Formula → Prop) (hMax : IsMaximalConsistent₀ S) :
     Nat → QuotientDomain S hMax := fun n => Quotient.mk (termSetoid S hMax) (Term.var n)
-
-theorem pointwiseEqv_out_mk {S : Formula → Prop} (hMax : IsMaximalConsistent₀ S)
-    (ts : List Term) :
-    PointwiseEqv S ((ts.map (Quotient.mk (termSetoid S hMax))).map quotientOut) ts := by
-  induction ts with
-  | nil => exact PointwiseEqv.nil
-  | cons t ts' ih =>
-    unfold List.map
-    refine PointwiseEqv.cons ?_ ih
-    exact Quotient.exact (quotientOut_eq (Quotient.mk (termSetoid S hMax) t))
 
 -- ⭐⭐ **Evaluar un término en el modelo canónico es su propia clase.**
 mutual
@@ -311,10 +383,9 @@ theorem evalTerm_canonical (S : Formula → Prop) (hMax : IsMaximalConsistent₀
   cases t with
   | var n => rfl
   | func f ts =>
-    unfold evalTerm
-    rw [evalTerms_canonical S hMax ts]
-    simp only [canonicalModel]
-    exact Quotient.sound (termEqv_func_congr hMax f (pointwiseEqv_out_mk hMax ts))
+    show Quot.lift _ _ (listQuot hMax (evalTerms (canonicalModel S hMax) (canonicalEnv S hMax) ts))
+      = _
+    rw [evalTerms_canonical S hMax ts, listQuot_mk]
 
 theorem evalTerms_canonical (S : Formula → Prop) (hMax : IsMaximalConsistent₀ S)
     (ts : List Term) :
@@ -398,10 +469,9 @@ theorem truth_lemma_lt {S : Formula → Prop} (hMax : IsMaximalConsistent₀ S)
       simp only [evalFormula]
       exact ⟨fun h => h.elim, max_cons_bot hMax⟩
     | atom p ts =>
-      simp only [evalFormula]
-      show (canonicalModel S hMax).rel p (evalTerms (canonicalModel S hMax) _ ts) ↔ _
-      rw [evalTerms_canonical S hMax ts]
-      exact termEqv_rel_congr hMax p (pointwiseEqv_out_mk hMax ts)
+      show Quot.lift _ _ (listQuot hMax (evalTerms (canonicalModel S hMax) (canonicalEnv S hMax) ts))
+        ↔ _
+      rw [evalTerms_canonical S hMax ts, listQuot_mk]
     | eq t1 t2 =>
       simp only [evalFormula]
       rw [evalTerm_canonical S hMax t1, evalTerm_canonical S hMax t2]
@@ -574,9 +644,14 @@ theorem model_existence_lemma₀ {S : Formula → Prop} (hCons : IsConsistent₀
 
 /-- ⭐⭐⭐ **EL TEOREMA DE COMPLETITUD** para `Derives₀`.
 
-⛔ Lo que su `Classical.choice` tiene de no finitario es el `if IsConsistent₀ …` de `FOL.Lindenbaum0`
-(Π⁰₁) — es el **WKL**, y
-va explicado en la cabecera de este módulo y en ADR‑040 §2. -/
+⛔ Su `Classical.choice` **no** viene de Lindenbaum: desde el 2026‑09‑27 `lindenbaum_lemma₀` y
+`henkin_completion₀` miden `[propext, Quot.sound]`, porque la etapa es impredicativa y no decide
+nada. Entra por dos sitios, los dos explicados en la cabecera: el lema de la verdad sobre un maximal
+ARBITRARIO (`max_cons_*`, `¬¬P → P`, esencial y medido) y el `byContradiction` de aquí abajo, que
+es la forma de Markov `¬¬(Γ ⊢₀ f) → Γ ⊢₀ f` (esencial como HIPÓTESIS).
+⚠️ Hasta ese día este docstring decía que lo no finitario de ese `Classical.choice` era «el
+`if IsConsistent₀ …` de `FOL.Lindenbaum0` (Π⁰₁) — es el **WKL**». Era falso como localización.
+Lo que sigue en pie es la FUERZA: la completitud equivale a WKL₀ sobre RCA₀ (Simpson IV.3.3). -/
 theorem completeness₀ {Γ : List Formula} {f : Formula} (h : Γ ⊨ f) : Γ ⊢₀ f := by
   refine Classical.byContradiction (fun hNot => ?_)
   have hCons : IsConsistent₀ (fun x => Or (x ∈ Γ) (x = neg f)) := by
@@ -604,6 +679,11 @@ theorem derives0_complete_iff {Γ : List Formula} {f : Formula} : (Γ ⊢₀ f) 
 -- las dos conclusiones tienen además derivación directa (`FOL.Propositional0.derives0_em_ctx`,
 -- `derives0_peirce_prop`). Que el consecuente no es trivial lo dice `derives0_consistent`
 -- (`FOL/Soundness0.lean`).
+-- ⚠️ Su `Classical.choice` es A PROPÓSITO (ADR‑061: el footprint de un corolario dice la verdad
+-- sobre la ruta por la que se prueba): el de `completeness₀`, más el `em`/`byCases` con que se
+-- comprueba la validez en la semántica de Tarski. Son 2 de las 13 puertas por las que entra la
+-- elección en la parte lógica de FOL (medido el 2026‑09‑27). Las derivaciones directas no la
+-- llevan: `derives0_em_ctx`, ningún axioma; `derives0_peirce_prop`, `[propext, Quot.sound]`.
 
 /-- ⭐ **El tercio excluso a nivel OBJETO, obtenido POR COMPLETITUD.** -/
 theorem derives0_em (A : Formula) : [] ⊢₀ Formula.or A (neg A) :=

@@ -62,8 +62,20 @@ sin construir a mano un principio de inducción mutua.
 
 ## Footprint
 
-Cero axiomas del proyecto. Todo lo que se usa de fuera es núcleo de Lean:
-`Char.ofNat_toNat` y `String.ofList_toList`.
+Cero axiomas del proyecto, y **sin `Classical.choice`** (medido el 2026‑09‑27): los titulares
+(`natToString_surj`, `natToTerm_surj`, `natToFormula_surj` y las dos instancias `EnumSym`) y las
+funciones `natToList`, `natToString`, `natToTerm` y `natToFormula` miden `[propext, Quot.sound]`;
+`unpair`, ningún axioma. Lo que se usa de fuera es núcleo de Lean: `Char.ofNat_toNat` y
+`String.exists_eq_ofList`.
+
+⚠️ **RECTIFICACIÓN (2026‑09‑27).** Aquí decía «`Char.ofNat_toNat` y `String.ofList_toList`», sin
+más. `String.ofList_toList` y `String.toList` decodifican UTF‑8, y en v4.31 eso lleva
+`Classical.choice`. Hasta ese día lo arrastraba `natToString_surj`, y con ella `natToTerm_surj`,
+`natToFormula_surj` y la instancia `EnumSym String`. Ahora la prueba elimina el testigo de validez
+con `String.exists_eq_ofList` (`[propext]`) y no decodifica nada (auditoría de constructividad,
+`auditoria/constructividad-2026-09-27/`). ⭐ Eso limpia también `Lindenbaum0.lindenbaum_lemma₀`,
+que consume `natToFormula_surj`: con la etapa ya impredicativa, era la única elección que le
+quedaba (medido: `…/experimentos/exp-esencial/E4_Lindenbaum.lean`).
 
 ## ⚠️ Hay una SEGUNDA ruta, también compilada, y más corta
 
@@ -76,6 +88,12 @@ Se adoptó ésta, y la razón conviene que quede escrita: aquélla da una sobrey
 —`formula_enum` no computa nada—, y ésta da una **efectiva**, que es la que un proyecto sobre
 representabilidad y conjuntos r.e. quiere tener. `#eval (List.range 12).map natToFormula` funciona.
 El precio son 230 líneas.
+
+⭐ (2026‑09‑27) Y desde la auditoría de constructividad hay una razón más: el footprint **ya no es el
+mismo**. «Mismo footprint» era cierto cuando las dos rutas llevaban `Classical.choice`, ésta por
+decodificar UTF‑8 (ver §Footprint). Hoy ésta mide `[propext, Quot.sound]`, y la corta sigue
+llevándolo por construcción: `if h : ∃ f, codeNat f = n then h.choose …`, bajo `open Classical`.
+Es justo la elección que ésta evita.
 
 ⛔ **La alternativa corta ya no existe como opción** (2026‑09‑23): se ofrecía como *«un cambio de
 una línea en `cuarentena/Completeness.lean`»*, y ese módulo se **borró** en el cierre de FOL
@@ -189,21 +207,28 @@ theorem map_ofNat_toNat : ∀ L : List Char, (L.map Char.toNat).map Char.ofNat =
 
 def natToString (n : Nat) : String := String.ofList ((natToList n).map Char.ofNat)
 
+/-- ⭐ Sin `String.toList`: `String.exists_eq_ofList` da la lista de caracteres sin decodificar
+(`[propext]`), mientras que `toList`/`ofList_toList` decodifican UTF‑8 y en v4.31 arrastran
+`Classical.choice` (auditoría de constructividad, 2026‑09‑27). -/
 theorem natToString_surj (s : String) : ∃ n, natToString n = s := by
-  obtain ⟨n, hn⟩ := natToList_surj (s.toList.map Char.toNat)
-  refine ⟨n, ?_⟩
-  simp only [natToString, hn, map_ofNat_toNat, String.ofList_toList]
+  obtain ⟨l, rfl⟩ := s.exists_eq_ofList
+  obtain ⟨n, hn⟩ := natToList_surj (l.map Char.toNat)
+  exact ⟨n, congrArg String.ofList (by rw [hn, map_ofNat_toNat])⟩
 
 /-- ⭐ `String` satisface `FOL.EnumSym` con lo que esta capa ya tiene probado (ADR-069). -/
 instance : FOL.EnumSym String where
   enum := natToString
   enum_surj := natToString_surj
 
-/-- ⭐⭐ Y `List Char` la satisface **más barato**, saliendo de la **capa 1**
-(`natToList_surj`, sobre `List Nat`) más `map_ofNat_toNat`: **no toca `String` en absoluto**.
-⇒ el `Classical.choice` que entra al DESCOMPONER un `String` no entra por esta puerta.
-Contéjese con la instancia de arriba: `#print axioms` las separa. ⚠️ Es una MEDIDA, no una capa
-en uso: la metateoría no se instancia en `List Char` (vía CERRADA, ver `FOL/FOL.lean`). -/
+/-- ⭐⭐ Y `List Char` la satisface saliendo de la **capa 1** (`natToList_surj`, sobre `List Nat`)
+más `map_ofNat_toNat`: **no toca `String` en absoluto**. ⚠️ Es una MEDIDA, no una capa en uso: la
+metateoría no se instancia en `List Char` (vía CERRADA, ver `FOL/FOL.lean`).
+
+⚠️ **RECTIFICACIÓN (2026‑09‑27).** Aquí decía que ésta la satisfacía «más barato», que «el
+`Classical.choice` que entra al DESCOMPONER un `String` no entra por esta puerta» y que
+`#print axioms` separaba las dos instancias. Era cierto hasta ese día, y ya no lo es. Desde que
+`natToString_surj` no decodifica (`String.exists_eq_ofList`), las dos miden lo mismo,
+`[propext, Quot.sound]`. La elección no la traía `String`, sino decodificar UTF‑8. -/
 instance : FOL.EnumSym (List Char) where
   enum n := (natToList n).map Char.ofNat
   enum_surj := by

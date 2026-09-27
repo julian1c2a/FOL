@@ -16,7 +16,12 @@ línea**: meter el PARÁMETRO costó TRES ficheros (éste, `FOL/DecEq.lean` y
 `ROBINSON_PlusPlus/Meta/HilbertSeq.lean`) y los 147 footprints de entonces salieron idénticos (ADR-068).
 ⛔ Eso **no** es la migración `String`→`List Char` (plan §7.3 de RPP): los `abbrev` siguen en
 `String`, y la instanciación en `List Char` queda ABANDONADA en FOL (D7): no mueve ningún
-footprint titular de FOL (su `Classical.choice` es el WKL) y su dividendo es de RPP (`strCode`).
+footprint titular de FOL y su dividendo es de RPP (`strCode`).
+⚠️ (2026‑09‑27) Aquí se daba entre paréntesis la razón «su `Classical.choice` es el WKL», y era
+falsa como localización (ver la cabecera de `FOL/Canonical0.lean`). La razón buena: lo que en v4.31
+trae `Classical.choice` a `String` es DECODIFICAR UTF‑8, no `String` en sí. La capa de bytes está
+limpia, y la auditoría de constructividad del 2026‑09‑27 retiró esos usos sin migrar
+(`FOL/SymClasses.lean`, al final de la cabecera).
 
 ⛔⛔ **La razón que aquí se daba para el parámetro era FALSA, y se midió el 2026‑09‑23.**
 Decía: *«`List Char` es numerable y sirve para Gödel, pero si Löwenheim-Skolem **ascendente**

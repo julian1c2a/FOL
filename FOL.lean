@@ -86,6 +86,13 @@ cálculo finitario esa contradicción pasa por `elim_ex`, cuya premisa vive en e
 fresca **preserva la consistencia**. Es donde paga `derives0_gen_fresh`, y es la parte
 **matemática** del ensamblaje. 🏁 La iteración ω y el **suministro de constantes frescas** los
 pagan `FOL.HenkinLimit0` (`henLimit_consistent₀`, `henLimit_witness`) y `FOL.Fresh0` (`exists_fresh`).
+⭐ Desde el 2026‑09‑27 (auditoría de constructividad, `auditoria/constructividad-2026-09-27/`) la
+construcción entera va **sin `Classical.choice`**: `Rename`, `Eigenvariable`, `Henkin0`, `Fresh0`,
+`HenkinLimit0` y `Lindenbaum0` hasta `henkin_completion₀` miden `[propext, Quot.sound]` o menos.
+En `Lindenbaum0` sólo quedan `max_cons_contains` y `max_cons_impl`, que ya son lema de la verdad.
+Lo clásico de la completitud está en ese lema, sobre un maximal arbitrario, en la semántica de
+Tarski en `Prop` y en el `byContradiction` final de `completeness₀` (cabecera de
+`FOL/Canonical0.lean`).
 
 ⭐ **`FOL.Enumeration` entró el 2026‑09‑13**: construye `natToFormula : Nat → Formula` y su
 sobreyectividad, **cero axiomas**. Es lo que retira `formula_enum` y `formula_enum_surj` de

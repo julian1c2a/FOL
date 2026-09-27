@@ -26,6 +26,11 @@ Hitos **H1** y **H2** de `doc/PLAN-COMPLETITUD-FINITISTA.md` §5.2:
 ⭐⭐ **Y son `[propext, Quot.sound]`: ni un `Classical.choice`.** Ésa es toda la diferencia con la
 vía W: aquí no hay König, porque `Γ` es **finito** y la valuación recorre una lista **finita** de
 átomos. *Esto es lo que Hilbert llamaría finitario, y lo es de verdad.*
+⚠️ **Precisión del 2026‑09‑27** (auditoría de constructividad): «König» nombra la fuerza lógica de
+la vía W (completitud ⇔ WKL₀ sobre RCA₀), no el sitio de su `Classical.choice` en Lean. Éste no sale
+de Lindenbaum (`lindenbaum_lemma₀` es `[propext, Quot.sound]`), sino de la semántica de Tarski en
+`Prop`, del lema de la verdad sobre un maximal arbitrario y del `byContradiction` final de
+`completeness₀`.
 
 ## H1 · La semántica proposicional, y el ⭐ que la hace útil
 
@@ -366,7 +371,9 @@ theorem derives0_of_ptaut_ctx {Γ : List Formula} {φ : Formula}
 
 -- ⭐⭐ `FOL.Canonical0` ya demuestra estos dos, pero **por completitud semántica**, y por eso
 -- arrastran `Classical.choice`. Aquí salen por la vía H y son **net‑0**. Es la demostración
--- práctica de para qué sirve la vía H: *el mismo teorema, sin el WKL.*
+-- práctica de para qué sirve la vía H: *el mismo teorema, sin pasar por la completitud (la que
+-- tiene la fuerza del WKL).* (Decía «sin el WKL»; precisado el 2026‑09‑27: el `Classical.choice`
+-- de los gemelos de `Canonical0` es el de la completitud en Lean, no el WKL; ver la cabecera.)
 
 theorem derives0_em_prop (A : Formula) : [] ⊢₀ Formula.or A (neg A) :=
   derives0_of_ptaut (fun v => by

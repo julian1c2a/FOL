@@ -10,7 +10,7 @@
 > |---|---|
 > | «Teorema de Corrección (Soundness): `Γ ⊢ A → Γ ⊨ A`» ✅ | 🏁 **Sí, sobre `Derives₀`** (2026-09-14): `derives0_soundness : Γ ⊢₀ f → Γ ⊨ f` (`FOL/Soundness0.lean`), y con ella `derives0_consistent`. ⛔ La de **`Derives`** sigue siendo **FALSA** en presencia de `FOL/MetaRules.lean`: `FOL/Inconsistencia.lean`, hoy **en el build** |
 > | «Compacidad» ✅ | 🏁 `compactness`, `loewenheim_skolem_down` y el modelo infinito `infinite_model_of_large`, en `FOL/Compacity0.lean`. El `Compacity.lean` vacuo **se borró** el 2026-09-23 |
-> | «Completitud» ✅ / «1 sorry» | 🏁 `completeness₀ : Γ ⊨ f → Γ ⊢₀ f` (`FOL/Canonical0.lean`, 2026-09-16), con **cero axiomas del proyecto**: `[propext, Classical.choice, Quot.sound]`, y ese `Classical.choice` es el WKL de `Lindenbaum0` (ADR-041). `Completeness.lean` y su último postulado, `henkin_extension_lemma`, **se borraron** el 2026-09-23. Ver **`AXIOMS.md`** |
+> | «Completitud» ✅ / «1 sorry» | 🏁 `completeness₀ : Γ ⊨ f → Γ ⊢₀ f` (`FOL/Canonical0.lean`, 2026-09-16), con **cero axiomas del proyecto**: `[propext, Classical.choice, Quot.sound]`. Ese `Classical.choice` viene del lema de la verdad sobre un maximal arbitrario (`max_cons_*`) y del `byContradiction` final de `completeness₀`; **no** del `if` de `Lindenbaum0`, que ya no decide nada (`lindenbaum_lemma₀` es `[propext, Quot.sound]`). Hasta el 2026-09-27 esta celda decía que era «el WKL de `Lindenbaum0`» (ADR-041): refutado, ADR-110 y `AXIOMS.md` §4. `Completeness.lean` y su último postulado, `henkin_extension_lemma`, **se borraron** el 2026-09-23. Ver **`AXIOMS.md`** |
 > | «4 `lean_lib`, ~43 módulos, 1 sorry, v4.28.0» | **2 `lean_lib`** (`FOL`, `TheoryFramework`) · **4 `axiom`**, los de `MetaRules` que el kernel obliga, y ninguno más fuera de las librerías retiradas · **0 sorry** · **v4.31.0**. `FOLPure`, `PropLogic` y `FOL_poli` **retiradas** el 2026-09-12 a `cuarentena/librerias-retiradas/` |
 >
 > ⭐ **Los seis teoremas del cierre (T1 a T6, 2026-09-23 y 2026-09-26) están en el árbol**, sobre `Derives₀`; el catálogo, en `CURRENT-STATUS-PROJECT.md` («Estado vigente») y `REFERENCE.md` §6. ⛔ Y lo que NO hay: la propiedad de disyunción para `Derives₀` es **FALSA** (`derives0_no_disjunction_property`).
@@ -19,7 +19,7 @@
 > **Fuentes:** `cuarentena/README.md` · `AXIOMS.md` ·
 > `../ROBINSON_PlusPlus/doc/AUDITORIA-FOL-2026-09-12.md`
 
-**Last updated:** 2026-09-27 — P4: el fragmento sin cuantificadores, acotado y DECIDIDO (`QFDecide0`, **55 módulos**). Antes, 🧊 cinco módulos congelados; 18 titulares renombrados por la regla de subíndices (`hauptsatz₀`, `herbrand₀`, `craigₚ`…). Antes (2026-09-26): D3 cerrada: Craig para `⊢₀` con igualdad (`Interpolation0`, **54 módulos**) y Herbrand para `φ`/`Γ` cualesquiera. Antes, D3b: Herbrand para `φ` y `Γ` cualesquiera. Antes, D2/D4/D5/D6/D7 ejecutadas: refactor `absTerm'` (D5), regla de subíndices y sus renombres (T1 = `model_existence_iff₀`, T2 = `IsMemComplete`, `compactness`), vía de `ModelG` y migración a `List Char` CERRADAS, higiene de docstrings. Antes, 🗑️ D1: `Tactics2.lean` borrado ⇒ **53 módulos activos**. Antes, el mismo día: ⭐ entran T4 (`Hauptsatz0` §9) y T6 (`Compacity0` §3): **los seis teoremas del cierre están en el árbol**; aviso de cabecera reescrito (el del 2026-09-12 negaba Corrección, Completitud y Compacidad) y sección «Estado vigente» nueva. Antes (2026-09-23): entra `FOL/Complexity.lean` (encargo PeanoRF §3) y la cifra canónica pasa a **54 módulos**. ⚠️ La marca decía **2026-09-18 15:40** y `[E]` la cazó el mismo día que se movió el cuerpo — que es para lo que está el control.
+**Last updated:** 2026-09-27 — la auditoría de constructividad y sus decisiones D1–D8: `Classical.choice` en 84 constantes (eran 157) y en 34 titulares (eran 55); Lindenbaum y la extensión de Henkin, sin `Classical.choice`; la tesis del WKL, rectificada; la instancia `fol0System` de `TheoryFramework`, declarada. Antes, el mismo día, P4: el fragmento sin cuantificadores, acotado y DECIDIDO (`QFDecide0`, **55 módulos**). Antes, 🧊 cinco módulos congelados; 18 titulares renombrados por la regla de subíndices (`hauptsatz₀`, `herbrand₀`, `craigₚ`…). Antes (2026-09-26): D3 cerrada: Craig para `⊢₀` con igualdad (`Interpolation0`, **54 módulos**) y Herbrand para `φ`/`Γ` cualesquiera. Antes, D3b: Herbrand para `φ` y `Γ` cualesquiera. Antes, D2/D4/D5/D6/D7 ejecutadas: refactor `absTerm'` (D5), regla de subíndices y sus renombres (T1 = `model_existence_iff₀`, T2 = `IsMemComplete`, `compactness`), vía de `ModelG` y migración a `List Char` CERRADAS, higiene de docstrings. Antes, 🗑️ D1: `Tactics2.lean` borrado ⇒ **53 módulos activos**. Antes, el mismo día: ⭐ entran T4 (`Hauptsatz0` §9) y T6 (`Compacity0` §3): **los seis teoremas del cierre están en el árbol**; aviso de cabecera reescrito (el del 2026-09-12 negaba Corrección, Completitud y Compacidad) y sección «Estado vigente» nueva. Antes (2026-09-23): entra `FOL/Complexity.lean` (encargo PeanoRF §3) y la cifra canónica pasa a **54 módulos**. ⚠️ La marca decía **2026-09-18 15:40** y `[E]` la cazó el mismo día que se movió el cuerpo — que es para lo que está el control.
 **Author**: Julián Calderón Almendros
 
 > 📐 **CIFRAS CANÓNICAS — medidas, no copiadas** (`bash check-doc-sync.bash`, 2026-09-26):
@@ -37,7 +37,7 @@
 
 ---
 
-## 🏁 Estado vigente — 2026-09-26
+## 🏁 Estado vigente — 2026-09-27
 
 El sujeto de la metateoría es **`Derives₀`** (`FOL/Derives0.lean`): los constructores de `Derives`
 sin la ω-regla y sin los habitantes-axioma de `MetaRules`, así que se puede inducir sobre él. Todo lo
@@ -48,6 +48,7 @@ de esta tabla compila sin `sorry` y **sin axiomas del proyecto**; los footprints
 |---|---|---|---|
 | Corrección, consistencia | `derives0_soundness`, `derives0_consistent` | `Soundness0` | `[propext, Classical.choice, Quot.sound]` |
 | Consistencia finitaria | `derives0_consistent_fin` | `Finitary0` | `[propext, Quot.sound]` |
+| Lindenbaum; la extensión de Henkin (maximal consistente con testigos) | `lindenbaum_lemma₀`, `henkin_completion₀` | `Lindenbaum0` | `[propext, Quot.sound]` (desde el 2026-09-27) |
 | Completitud | `completeness₀`, `derives0_complete_iff` | `Canonical0` | `[propext, Classical.choice, Quot.sound]` |
 | **T1** · existencia de modelo | `model_existence_iff₀` | `Compacity0` | ídem |
 | **T2** · el maximal consistente decide cada fórmula (por pertenencia; ⚠️ aún no la «teoría completa» sobre sentencias) | `max_cons_neg`, `IsMemComplete`, `max_cons_complete` | `Canonical0` | ídem |
@@ -62,12 +63,28 @@ de esta tabla compila sin `sorry` y **sin axiomas del proyecto**; los footprints
 | Craig (fragmento puro `LKp`) | `craigₚ`, `craig_implₚ` | `Craig0` | `[propext, Quot.sound]` |
 | **Craig para `⊢₀` CON igualdad** (D3) | `craig₀`, `craig_ctx₀` | `Interpolation0` | `[propext, Quot.sound]` |
 | Skolem bajo prefijo | `skolem_conservative_n₀` | `SkolemN0` | `[propext, Classical.choice, Quot.sound]` |
+| Conservatividad del axioma de Henkin (vía sintáctica) | `henkin_conservative₀` | `Skolem0` | `[propext, Quot.sound]` (desde el 2026-09-27) |
+| **`TheoryFramework` sobre `Derives₀`** (D7, 2026-09-27) | `fol0System`, `fol0Sound`, `fol0Complete`, `fol0_proves_iff_models` | `TheoryFramework/Instances/FOL` | `fol0System`: ninguno; los otros tres, `[propext, Classical.choice, Quot.sound]` |
+
+📍 **Dónde está el `Classical.choice`** (auditoría de constructividad, 2026-09-27; `AXIOMS.md` §4):
+lo llevan 84 de las 3074 constantes de FOL y TheoryFramework (eran 157) y 34 de los 252 titulares de
+FOL (eran 55); `noncomputable` sólo queda `SkolemN0.skF`. Entra por **13** declaraciones: la
+semántica de Tarski en `Prop` (`derives0_soundness`, `lkc_sound`) y el lema de la verdad sobre un
+maximal ARBITRARIO (`max_cons_contains`, `max_cons_impl_iff`, `max_cons_or`, `max_cons_complete`,
+`max_cons_forall`), esenciales y medidas; el `byContradiction` final de `completeness₀` (forma de
+Markov: esencial como hipótesis); las funciones de Skolem semánticas (`skF`, `skF_spec`, esenciales) y
+la ruta semántica de `skolem_conservative₀`, cuyo enunciado es sintáctico; y los controles
+`derives0_em`/`derives0_peirce`. Más el código meta de `FOL.Tactics`. ⛔ **No** el `if` de
+Lindenbaum: la tesis «el choice de la completitud es el WKL de Lindenbaum» está refutada; «el WKL»
+nombra sólo la FUERZA de la completitud sobre RCA₀.
 
 ⛔ **Lo que NO hay, y está medido**: la solidez de `Derives` (FALSA con `MetaRules`:
 `inconsistencia_de_cualquier_solidez`); la propiedad de disyunción para `Derives₀` (FALSA:
-`derives0_no_disjunction_property`; las dos en `FOL/Inconsistencia.lean`); LS↑ a cardinal arbitrario
-(no está en el árbol: con `String` sólo hay ℵ₀ constantes y la 2ª entrega de `ModelG` está cerrada); y una instancia de `TheoryFramework`
-(`folSystem` retirada el 2026-09-23). Lo que falta: **`NEXT-STEPS.md`**.
+`derives0_no_disjunction_property`, sin `Classical.choice` desde el 2026-09-27; las dos en
+`FOL/Inconsistencia.lean`); LS↑ a cardinal arbitrario (no está en el árbol: con `String` sólo hay ℵ₀
+constantes y la 2ª entrega de `ModelG` está cerrada); y una instancia de `TheoryFramework` para la
+HERRAMIENTA `Derives` (`folSystem` se retiró el 2026-09-23: su solidez es falsa; la de `Derives₀`
+existe desde el 2026-09-27). Lo que falta: **`NEXT-STEPS.md`**.
 
 ---
 

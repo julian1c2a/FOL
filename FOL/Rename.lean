@@ -59,12 +59,25 @@ mismo teorema aplicado a la inversa.*
 | `derives0_rename` | `[propext, Quot.sound]` |
 | `derives0_rename_inv` | `[propext, Quot.sound]` ⭐ **constructivo** |
 | `derives0_rename_iff` | `[propext, Quot.sound]` |
-| `derives0_rename_conservative` (hipótesis: `ρ` **inyectiva**) | `[propext, Classical.choice, Quot.sound]` |
+| `derives0_rename_conservative` (hipótesis: `ρ` **inyectiva**) | `[propext, Quot.sound]` ⭐ sin elección desde el 2026‑09‑27 |
+| `locInv` / `locInv_spec` (la inversa LOCAL) | ningún axioma |
 
-⭐ **La separación es exacta y vale la pena leerla**: la conservatividad **no** necesita elección;
-la necesita **sólo** el paso «inyectiva ⇒ tiene inversa». Por eso la forma buena es
-`derives0_rename_inv`, que pide la inversa. ⚠️ La construcción de Henkin **no** la escribe:
-`Fresh0.derivesSet0_shift_inv` usa `invOf shift` (vía `invOf_spec shift_inj`), y por ahí entra `Classical.choice`.
+⭐ **La separación es exacta y vale la pena leerla**: la conservatividad **no** necesita elección.
+Lo que no sale de la mera inyectividad es una inversa GLOBAL **computable** (habría que decidir
+`∃ t, ρ t = s` para cada `s`); pero una derivación sólo menciona un número FINITO de símbolos, y
+sobre ellos la inversa se calcula buscando en una lista con la igualdad decidible de `String`
+(`locInv`). ⇒ Las dos formas son constructivas: `derives0_rename_inv` pide la inversa;
+`derives0_rename_conservative` pide la inyectividad y fabrica la inversa LOCAL. ⭐ La construcción
+de Henkin escribe la suya: `Fresh0.derivesSet0_shift_inv` mapea con `Fresh0.unshift`, inversa
+GLOBAL y computable de `shift`, calculada sobre bytes.
+
+⚠️ **Hasta el 2026‑09‑27 aquí decía** que la elección la necesitaba «**sólo** el paso "inyectiva ⇒
+tiene inversa"», que `derives0_rename_conservative` llevaba `[propext, Classical.choice, Quot.sound]`
+y que `Fresh0.derivesSet0_shift_inv` usaba `invOf shift` (vía `invOf_spec shift_inj`). `invOf` e
+`invOf_spec` se retiraron ese día (auditoría de constructividad): `invOf` aportaba una inversa
+GLOBAL de un `ρ` cualquiera, y ningún consumidor la necesitaba. El único que necesitaba una
+inversa global (`Compacity0.hasLargeModels_shift`: el modelo se lee a través de una función total)
+la necesitaba de `shift`, y `unshift` la calcula.
 
 ## 🏁 Lo que esto no era todavía — y ya lo es
 
@@ -332,10 +345,12 @@ renombrado se cancelan. Cero casos, cuatro líneas.
 mismo teorema aplicado a la inversa.* No hay que volver a inducir sobre el cálculo.
 
 ⚠️ **Se pide la inversa, no la inyectividad**, y a propósito: así el enunciado es **constructivo**
-(`[propext, Quot.sound]`). ⚠️ El renombrado que Henkin usa es explícito
-(«mete todo en un sublenguaje»), pero `FOL.Fresh0` **no** escribe su inversa: usa `invOf`. La versión con hipótesis de
-**inyectividad** está debajo como corolario, y ésa sí paga `Classical.choice` para fabricar la
-inversa.
+(`[propext, Quot.sound]`) y no hay que fabricar nada. ⭐ El renombrado que Henkin usa es explícito
+(«mete todo en un sublenguaje») y `FOL.Fresh0` escribe su inversa: `unshift`, computable. La
+versión con hipótesis de **inyectividad** está debajo como corolario, y desde el 2026‑09‑27
+**tampoco** paga `Classical.choice`: fabrica una inversa LOCAL (`locInv`) sobre los símbolos,
+finitos, de la derivación. (Hasta ese día este párrafo decía que `FOL.Fresh0` usaba `invOf` y que
+la versión con inyectividad «sí paga `Classical.choice` para fabricar la inversa».)
 -/
 
 mutual
@@ -388,36 +403,140 @@ theorem derives0_rename_inv {ρ σ : String → String} (hσ : ∀ s, σ (ρ s) 
   have h' := derives0_rename σ h
   rwa [map_rename_rename hσ, rename_rename_formula hσ] at h'
 
--- ── La versión con INYECTIVIDAD, que sí paga elección ───────────────────────
+-- ── La versión con INYECTIVIDAD, sin elección: una inversa LOCAL ─────────────
+-- ⭐ De la mera inyectividad no sale una inversa GLOBAL computable, pero no hace falta: la
+-- derivación sólo menciona un número FINITO de símbolos, y sobre ellos la inversa se calcula
+-- buscando en una lista, con la igualdad decidible de `String` (sin axiomas). Hasta el
+-- 2026‑09‑27 esto era `invOf ρ := fun s => if h : ∃ t, ρ t = s then h.choose else s`,
+-- `noncomputable` y con `Classical.choice` (auditoría de constructividad; se retiró).
 
--- ⚠️ `open Classical` SÓLO aquí: la instancia `Decidable (∃ t, ρ t = s)` no existe, y es
--- justamente el punto — de la inyectividad no sale una inversa computable.
-section ConElección
-open Classical
+mutual
+/-- Los símbolos de función de un término. -/
+def symsTerm : Term → List String
+  | .var _ => []
+  | .func s ts => s :: symsTerms ts
 
-/-- Inversa por la izquierda fabricada con elección. ⚠️ `noncomputable` a propósito: de la mera
-inyectividad no sale una inversa **computable**. Por eso la forma buena del teorema es
-`derives0_rename_inv`, que pide la inversa y es constructiva. -/
-noncomputable def invOf (ρ : String → String) : String → String :=
-  fun s => if h : ∃ t, ρ t = s then h.choose else s
+def symsTerms : List Term → List String
+  | [] => []
+  | t :: ts => symsTerm t ++ symsTerms ts
+end
 
-theorem invOf_spec {ρ : String → String} (hinj : ∀ s t, ρ s = ρ t → s = t) (s : String) :
-    invOf ρ (ρ s) = s := by
-  have hex : ∃ t, ρ t = ρ s := ⟨s, rfl⟩
-  show (if h : ∃ t, ρ t = ρ s then h.choose else ρ s) = s
-  rw [dif_pos hex]
-  exact hinj _ _ hex.choose_spec
+def symsFormula : Formula → List String
+  | .bottom => []
+  | .atom _ ts => symsTerms ts
+  | .eq t u => symsTerm t ++ symsTerm u
+  | .impl a b => symsFormula a ++ symsFormula b
+  | .forall a => symsFormula a
+  | .and a b => symsFormula a ++ symsFormula b
+  | .or a b => symsFormula a ++ symsFormula b
+  | .ex a => symsFormula a
 
-/-- **Conservatividad con la hipótesis habitual**: `ρ` inyectiva.
-⚠️ Su footprint lleva `Classical.choice`, y no por la lógica sino **por fabricar la inversa**.
-Si se tiene la inversa a mano (⚠️ `FOL.Fresh0` no la tiene: usa `invOf`), usar
-`derives0_rename_inv`, que es constructivo. -/
+def symsList : List Formula → List String
+  | [] => []
+  | g :: l => symsFormula g ++ symsList l
+
+theorem symsList_mem : ∀ {l : List Formula} {g : Formula} {s : String},
+    g ∈ l → s ∈ symsFormula g → s ∈ symsList l
+  | _ :: _, _, _, .head _, hs => List.mem_append_left _ hs
+  | _ :: _, _, _, .tail _ hg, hs => List.mem_append_right _ (symsList_mem hg hs)
+
+/-- ⭐ **La inversa local**: busca en la lista FINITA `L` una preimagen por `ρ`. -/
+def locInv (ρ : String → String) : List String → String → String
+  | [], x => x
+  | t :: L, x => if ρ t = x then t else locInv ρ L x
+
+theorem locInv_spec {ρ : String → String} (hinj : ∀ s t, ρ s = ρ t → s = t) :
+    ∀ {L : List String} {s : String}, s ∈ L → locInv ρ L (ρ s) = s
+  | t :: L, s, hs => by
+      show (if ρ t = ρ s then t else locInv ρ L (ρ s)) = s
+      by_cases h : ρ t = ρ s
+      · rw [if_pos h]; exact hinj t s h
+      · rw [if_neg h]
+        cases hs with
+        | head => exact absurd rfl h
+        | tail _ hs' => exact locInv_spec hinj hs'
+
+-- La cancelación, LOCAL: basta con que `σ ∘ ρ = id` sobre los símbolos que aparecen.
+mutual
+theorem rename_rename_term_loc {ρ σ : String → String} : ∀ t : Term,
+    (∀ s, s ∈ symsTerm t → σ (ρ s) = s) → renameTerm σ (renameTerm ρ t) = t
+  | .var _, _ => rfl
+  | .func s ts, h => by
+      show TermG.func (σ (ρ s)) (renameTerms σ (renameTerms ρ ts)) = TermG.func s ts
+      rw [h s (List.Mem.head _),
+        rename_rename_terms_loc ts (fun x hx => h x (List.Mem.tail _ hx))]
+
+theorem rename_rename_terms_loc {ρ σ : String → String} : ∀ ts : List Term,
+    (∀ s, s ∈ symsTerms ts → σ (ρ s) = s) → renameTerms σ (renameTerms ρ ts) = ts
+  | [], _ => rfl
+  | t :: ts, h => by
+      show renameTerm σ (renameTerm ρ t) :: renameTerms σ (renameTerms ρ ts) = t :: ts
+      rw [rename_rename_term_loc t (fun x hx => h x (List.mem_append_left _ hx)),
+        rename_rename_terms_loc ts (fun x hx => h x (List.mem_append_right _ hx))]
+end
+
+theorem rename_rename_formula_loc {ρ σ : String → String} : ∀ f : Formula,
+    (∀ s, s ∈ symsFormula f → σ (ρ s) = s) → renameFormula σ (renameFormula ρ f) = f := by
+  intro f
+  induction f with
+  | bottom => exact fun _ => rfl
+  | atom p ts =>
+      intro h
+      show FormulaG.atom p (renameTerms σ (renameTerms ρ ts)) = FormulaG.atom p ts
+      rw [rename_rename_terms_loc ts h]
+  | eq t u =>
+      intro h
+      show FormulaG.eq (renameTerm σ (renameTerm ρ t)) (renameTerm σ (renameTerm ρ u)) = _
+      rw [rename_rename_term_loc t (fun x hx => h x (List.mem_append_left _ hx)),
+        rename_rename_term_loc u (fun x hx => h x (List.mem_append_right _ hx))]
+  | impl a b iha ihb =>
+      intro h
+      show FormulaG.impl (renameFormula σ (renameFormula ρ a))
+        (renameFormula σ (renameFormula ρ b)) = _
+      rw [iha (fun x hx => h x (List.mem_append_left _ hx)),
+        ihb (fun x hx => h x (List.mem_append_right _ hx))]
+  | «forall» a ih =>
+      intro h
+      show FormulaG.forall (renameFormula σ (renameFormula ρ a)) = _
+      rw [ih h]
+  | and a b iha ihb =>
+      intro h
+      show FormulaG.and (renameFormula σ (renameFormula ρ a))
+        (renameFormula σ (renameFormula ρ b)) = _
+      rw [iha (fun x hx => h x (List.mem_append_left _ hx)),
+        ihb (fun x hx => h x (List.mem_append_right _ hx))]
+  | or a b iha ihb =>
+      intro h
+      show FormulaG.or (renameFormula σ (renameFormula ρ a))
+        (renameFormula σ (renameFormula ρ b)) = _
+      rw [iha (fun x hx => h x (List.mem_append_left _ hx)),
+        ihb (fun x hx => h x (List.mem_append_right _ hx))]
+  | ex a ih =>
+      intro h
+      show FormulaG.ex (renameFormula σ (renameFormula ρ a)) = _
+      rw [ih h]
+
+theorem map_rename_rename_loc {ρ σ : String → String} : ∀ Γ : List Formula,
+    (∀ g, g ∈ Γ → renameFormula σ (renameFormula ρ g) = g) →
+    (Γ.map (renameFormula ρ)).map (renameFormula σ) = Γ
+  | [], _ => rfl
+  | g :: Γ, h => by
+      show renameFormula σ (renameFormula ρ g) :: (Γ.map (renameFormula ρ)).map (renameFormula σ)
+        = g :: Γ
+      rw [h g (List.Mem.head _), map_rename_rename_loc Γ (fun x hx => h x (List.Mem.tail _ hx))]
+
+/-- **Conservatividad con la hipótesis habitual**: `ρ` inyectiva. ⭐ Sin elección: la inversa
+sólo tiene que valer sobre los símbolos de `Γ` y `f`, que son finitos (`locInv`). Mide
+`[propext, Quot.sound]`, como `derives0_rename_inv`; hasta el 2026‑09‑27 llevaba
+`Classical.choice`, por la inversa GLOBAL elegida `invOf` (retirada). -/
 theorem derives0_rename_conservative {ρ : String → String} (hinj : ∀ s t, ρ s = ρ t → s = t)
     {Γ : List Formula} {f : Formula}
-    (h : (Γ.map (renameFormula ρ)) ⊢₀ renameFormula ρ f) : Γ ⊢₀ f :=
-  derives0_rename_inv (invOf_spec hinj) h
-
-end ConElección
+    (h : (Γ.map (renameFormula ρ)) ⊢₀ renameFormula ρ f) : Γ ⊢₀ f := by
+  have hc : ∀ g, g ∈ f :: Γ →
+      renameFormula (locInv ρ (symsList (f :: Γ))) (renameFormula ρ g) = g :=
+    fun g hg => rename_rename_formula_loc g (fun _ hs => locInv_spec hinj (symsList_mem hg hs))
+  have h' := derives0_rename (locInv ρ (symsList (f :: Γ))) h
+  rwa [map_rename_rename_loc Γ (fun g hg => hc g (List.Mem.tail _ hg)), hc f (List.Mem.head _)] at h'
 
 /-- ⭐ **Las dos direcciones juntas**: con inversa por la izquierda, derivar en el original y
 derivar en la imagen es **lo mismo**. Es el enunciado que consume la extensión de lenguaje. -/

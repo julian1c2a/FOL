@@ -1,0 +1,215 @@
+# -*- coding: utf-8 -*-
+import io, sys, json
+sys.stdout.reconfigure(encoding='utf-8')
+R = 'E:/dropbox/github/lean4/FOL/'
+OUT = 'C:/msys64/tmp/claude/e--dropbox-github-lean4-FOL/dc390825-7a17-4693-bf72-7a68c475e9c7/scratchpad/audit/exp-inv/edits.json'
+
+
+def rd(f):
+    return io.open(R + f, encoding='utf-8').read()
+
+
+def lines(f, a, b):
+    return '\n'.join(rd(f).split('\n')[a - 1:b])
+
+
+E = []
+
+
+def add(f, texto, realidad, buscar, reemplazar):
+    E.append(dict(fichero=f, texto=texto, realidad=realidad, buscar=buscar, reemplazar=reemplazar))
+
+
+WKL = "y ese `Classical.choice` es el WKL de `Lindenbaum0` (ADR-041)."
+WKLr = ("y la FUERZA de ese `Classical.choice` es el WKL de `Lindenbaum0` (ADR-041); en el footprint "
+        "tiene 21 procedencias en 7 módulos, y 8 son accidentales y evitables (auditoría 2026-09-27, medido).")
+REAL_WKL = ("decls.tsv/choice_edges: completeness₀ recibe Classical.choice por 21 puntos de entrada en 7 módulos "
+            "(Canonical0 x6 incl. su propio byContradiction y quotientOut/Classical.choose; Lindenbaum0 x6; Fresh0 x3; "
+            "HenkinLimit0 x2; Rename x2; Henkin0; Enumeration). El `if IsConsistent₀` (LindenbaumStep) es uno de ellos; "
+            "truth_lemma₀ lleva choice sin pasar por él. 8 entradas son evitables (medido: exp-inv/Accidental, Fresh, Enum, Bnd).")
+for f in ['CURRENT-STATUS-PROJECT.md', 'NEXT-STEPS.md', 'README.md']:
+    add(f, "aviso de cabecera, fila Completitud: «ese `Classical.choice` es el WKL de `Lindenbaum0`»", REAL_WKL, WKL, WKLr)
+
+add('FOL/FOL.lean',
+    "«no mueve ningún footprint titular de FOL (su `Classical.choice` es el WKL)»",
+    "El choice de los titulares clásicos tiene varias procedencias (21 en completeness₀); la de `String` es de RUTA "
+    "y se quita sin salir de `String` (Exp.freshString, Exp.enumString: [propext, Quot.sound]).",
+    "footprint titular de FOL (su `Classical.choice` es el WKL) y su dividendo es de RPP (`strCode`).",
+    "footprint titular de FOL (su `Classical.choice` tiene varias procedencias; la que da la fuerza es el WKL, "
+    "y las de `String` son rutas evitables DENTRO de `String`: auditoría 2026-09-27) y su dividendo es de RPP (`strCode`).")
+
+add('FOL/SymClasses.lean',
+    "«terminarla no movería ningún footprint titular de FOL (su `Classical.choice` es el WKL)»",
+    "Medido: con `instLawfulBEqString` (cst_zero_ne/cst_ne_shift) y `String.exists_eq_ofList` (natToString_surj), "
+    "FreshSym String y EnumSym String miden [propext, Quot.sound]: el sobrecoste de String era de ruta.",
+    "footprint titular de FOL (su `Classical.choice` es el WKL).",
+    "footprint titular de FOL (la fuerza de su `Classical.choice` es el WKL; y lo que `String` añadía era de RUTA, "
+    "no del tipo: con `instLawfulBEqString` y `String.exists_eq_ofList` las instancias `FreshSym String`/"
+    "`EnumSym String` miden `[propext, Quot.sound]`, auditoría 2026-09-27).")
+
+add('FOL/Fresh0.lean',
+    "§Footprint: `cst_bound_sym` es «la matemática» y `String` entra al DESCOMPONER, «deuda del núcleo y no de la lógica»",
+    "Medido: (1) cst_zero_ne/cst_ne_shift COMPARAN (`not_eq_of_beq_eq_false rfl`); la ReflBEq String sintetizada pasa "
+    "por String.instOrd/instLawfulEqOrd/instTransOrd (choice); con `LawfulBEq.toReflBEq instLawfulBEqString` miden "
+    "[propext]. (2) cst_bound_sym con cota `s.utf8ByteSize` mide [propext, Quot.sound]. (3) String.append_right_inj y "
+    "shift_inj: [propext, Quot.sound]. Nada en Fresh0 descompone un String.",
+    lines('FOL/Fresh0.lean', 61, 66),
+    "* `cst_bound_sym` usa el tercio excluso sobre `∃ k, cst k = s` (§4) — ⚠️ **evitable** (auditoría\n"
+    "  2026-09-27, medido): con la cota `s.utf8ByteSize` (`(cst m).utf8ByteSize = m + 1` por\n"
+    "  `String.utf8ByteSize_append`) el mismo enunciado mide `[propext, Quot.sound]`;\n"
+    "* `String`, pero **al COMPARAR, no al descomponer**: `cst_zero_ne`/`cst_ne_shift` usan\n"
+    "  `not_eq_of_beq_eq_false rfl`, y la síntesis le da una `ReflBEq String` sacada de `String.instOrd`/\n"
+    "  `instLawfulEqOrd`/`instTransOrd` (los tres con choice); pasándole la de `instLawfulBEqString`\n"
+    "  (sin axiomas) miden `[propext]`, y la instancia `FreshSym String` entera `[propext, Quot.sound]`.\n"
+    "  No es un muro del núcleo (`PLAN-COMPLETITUD-FINITISTA.md` §7): `String.append_right_inj` y\n"
+    "  `shift_inj` nunca llevaron choice.")
+
+add('FOL/Henkin0.lean',
+    "cabecera: el choice «viene … de los lemas de `String` del núcleo tras `shift_inj`/`cst_inj` (`String.append_right_inj`…)»",
+    "Medido: String.append_right_inj y shift_inj son [propext, Quot.sound]; el choice de cst_inj viene de cst_zero_ne "
+    "(ReflBEq String vía String.instOrd). Y omite el de este módulo: henkin_step_consistent₀ usa Classical.propDecidable "
+    "(open Classical en el filter); con FOL.DecEq mide [propext, Quot.sound] (Exp.henkin_step_consistent₀).",
+    lines('FOL/Henkin0.lean', 65, 67).split('‑')[0],
+    "`Classical.choice` que aparece viene de ahí, de `Exists.choose`, del tercio excluso de\n"
+    "`cst_bound_sym`, de la `ReflBEq String` que la síntesis saca de `String.instOrd` en\n"
+    "`cst_zero_ne`/`cst_ne_shift` (y por ellas `cst_inj`; ⚠️ `String.append_right_inj` y `shift_inj`\n"
+    "miden `[propext, Quot.sound]`) — y, aquí mismo, del `open Classical` del `filter` de\n"
+    "`henkin_step_consistent₀`, que con `FOL.DecEq` importado mide `[propext, Quot.sound]` (auditoría\n"
+    "2026-09-27, medido; `FOL.Fresh0` §Footprint, ADR")
+
+add('FOL/DecEq.lean',
+    "«Cambiarlo movería el footprint … así que no se ganaría nada»",
+    "Medido con la misma prueba, FOL.DecEq importado y sin open Classical: Henkin0.henkin_step_consistent₀ (titular) "
+    "[propext, Quot.sound] y Lindenbaum0.derivesSet0_intro_impl (titular, fila de check-footprints) [propext]. "
+    "Sólo lindenbaum_lemma₀ conserva choice (por el if).",
+    "así que no se\nganaría nada y se perdería la trazabilidad.",
+    "así que\n`lindenbaum_lemma₀` no ganaría nada. ⚠️ Pero «no se ganaría nada» es FALSO para dos titulares\n"
+    "(auditoría 2026-09-27, medido con la misma prueba, este módulo importado y sin `open Classical`):\n"
+    "`Henkin0.henkin_step_consistent₀` baja a `[propext, Quot.sound]` y `Lindenbaum0.derivesSet0_intro_impl`\n"
+    "a `[propext]`. Retrofitarlo es decisión del propietario: mueve sus filas de footprint.")
+
+add('FOL/Compacity0.lean',
+    "§Footprint: el choice de §3 es el de `String` «—descomponerlo, no compararlo—»",
+    "Medido: evalTerm_updateCsts sólo lo hereda de Fresh0.cst_zero_ne, e infTheory_finSat de cst_zero_ne + cst_bound_sym: "
+    "es COMPARAR (ReflBEq String vía String.instOrd), no descomponer; las dos procedencias, evitables (exp-inv/Fresh.lean).",
+    "implementación de `String` —descomponerlo, no compararlo—).",
+    "implementación de `String` —⚠️ compararlo, no descomponerlo: `evalTerm_updateCsts` sólo lo hereda de "
+    "`Fresh0.cst_zero_ne`, cuya `ReflBEq String` sale de `String.instOrd`; las dos procedencias son evitables, "
+    "auditoría 2026-09-27, medido—).")
+
+add('FOL/Skolem0.lean',
+    "docstring de `updateFunc`: «lo que lo trae es DESCOMPONER un `String`, no compararlo»",
+    "Medido: String.decEq sin axiomas (correcto); pero comparar con `==` sí lo trae en Fresh0.cst_zero_ne (ReflBEq vía "
+    "String.instOrd), y descomponer no lo trae por String.exists_eq_ofList ([propext]); lo traen String.toList/ofList_toList.",
+    lines('FOL/Skolem0.lean', 113, 115),
+    "⚠️ El `if f = c` usa `String.decEq`, que **no** trae `Classical.choice` (`#print axioms String.decEq`:\n"
+    "vacío). Lo que lo trae no es `String` sino RUTAS concretas del núcleo (auditoría 2026-09-27,\n"
+    "medido): `String.toList`/`String.ofList_toList` al descomponer (`String.exists_eq_ofList` no), y la\n"
+    "`ReflBEq String` derivada de `String.instOrd` al comparar con `==` (`instLawfulBEqString` no). -/")
+
+add('FOL/HenkinLimit0.lean',
+    "docstring de `bnd`: «No es evitable con este enunciado»",
+    "Medido (exp-inv/Bnd.lean): Exp.bnd := mayor utf8ByteSize de los símbolos de función, computable y SIN axiomas; "
+    "Exp.bnd_spec, con el enunciado idéntico al de bnd_spec, [propext, Quot.sound].",
+    "`Classical.choice`. No es evitable con este enunciado — y no importa, porque lo que se construye",
+    "`Classical.choice`. ⚠️ **Sí** es evitable con este mismo enunciado (auditoría 2026-09-27, medido: la\n"
+    "cota computable «mayor `utf8ByteSize` de los símbolos de función» cumple `bnd_spec` con\n"
+    "`[propext, Quot.sound]` y no lleva ningún axioma). Si se deja —y no importa—, es porque lo que se construye")
+
+add('FOL/HenkinLimit0.lean',
+    "§Footprint: entra «por `Exists.choose` en `bnd` (§2), por `String` (§7 del plan)»",
+    "Medido: las dos procedencias son evitables (Exp.bnd; cst_zero_ne/cst_bound_sym/natToString_surj). henLimit_witness "
+    "sólo depende de ellas: quedaría sin choice.",
+    "entra por `Exists.choose` en `bnd` (§2), por `String` (§7 del plan) y por lo que ya traen",
+    "entra por `Exists.choose` en `bnd` (§2), por `String` (§7 del plan) —las dos, evitables: auditoría "
+    "2026-09-27, medido— y por lo que ya traen")
+
+add('FOL/Enumeration.lean',
+    "§Footprint: «Cero axiomas del proyecto. Todo lo que se usa de fuera es núcleo de Lean»",
+    "decls.tsv: natToString_surj, natToTerm_surj, natToTerms_surj, term_surj_aux, formula_surj_aux, natToFormula_surj e "
+    "instEnumSymString llevan [propext, Classical.choice, Quot.sound] (String.toList y String.ofList_toList, medidos con "
+    "choice). Con String.exists_eq_ofList ([propext]) Exp.natToString_surj mide [propext, Quot.sound].",
+    lines('FOL/Enumeration.lean', 65, 66),
+    lines('FOL/Enumeration.lean', 65, 66) + " ⚠️ Y `String.toList`/`String.ofList_toList` llevan\n"
+    "`Classical.choice` (v4.31, medido): por ellos `natToString_surj`, `natToTerm_surj`, `natToTerms_surj`,\n"
+    "`natToFormula_surj` y la instancia `EnumSym String` miden `[propext, Classical.choice, Quot.sound]`.\n"
+    "Es de RUTA: con `String.exists_eq_ofList` (`[propext]`) `natToString_surj` mide `[propext, Quot.sound]`\n"
+    "(auditoría 2026-09-27). `natToFormula` y las demás funciones: `[propext, Quot.sound]`.")
+
+add('FOL/Theorems/Eq.lean',
+    "cabecera «REESCRITO PARA QUITAR `Classical.choice`» (da el módulo por limpio)",
+    "decls.tsv: substTerm_subst_comm_succ, substTerms_subst_comm_succ y subst_subst_comm_succ llevan choice por "
+    "Nat.left_eq_add._simp_1/Nat.add_eq_left._simp_1 (medidos con choice). Con simp [-Nat.left_eq_add, -Nat.add_eq_left, …] "
+    "Exp.substTerm_subst_comm_succ mide [propext, Quot.sound]. RPP usa subst_subst_comm_succ (Meta/Hilbert.lean:217).",
+    lines('FOL/Theorems/Eq.lean', 27, 27),
+    lines('FOL/Theorems/Eq.lean', 27, 27) + "\n--\n"
+    "-- ⚠️ 2026-09-27 (auditoría, medido): el módulo NO quedó limpio del todo. `substTerm_subst_comm_succ`,\n"
+    "-- `substTerms_subst_comm_succ` y `subst_subst_comm_succ` (Barendregt `j+1`/`j`; RPP lo usa en\n"
+    "-- `Meta/Hilbert.lean`) llevan `[propext, Classical.choice, Quot.sound]`: su `simp` reescribe con\n"
+    "-- `Nat.left_eq_add`/`Nat.add_eq_left`, que en v4.31 llevan choice. Con\n"
+    "-- `simp [-Nat.left_eq_add, -Nat.add_eq_left, …]` la misma prueba mide `[propext, Quot.sound]`.")
+
+add('FOL/Lindenbaum0.lean',
+    "cabecera: los choice de Fresh0/HenkinLimit0 «eran Exists.choose, el tercio excluso de cst_bound_sym, Rename.invOf, … y String. Éste sí.»",
+    "Lista correcta pero incompleta: salvo Rename.invOf, todos son evitables (medido); el filter de derivesSet0_intro_impl "
+    "(open Classical) también ([propext] con FOL.DecEq); y lindenbaum_lemma₀ hereda además Enumeration.natToString_surj.",
+    "`henkin_step_consistent₀` y `String`. Éste sí.",
+    "`henkin_step_consistent₀` y `String`. Éste sí. ⚠️ Y todos ésos salvo `Rename.invOf` son\n"
+    "accidentales y evitables (auditoría 2026-09-27, medido), como el `filter` de `derivesSet0_intro_impl`\n"
+    "(con `FOL.DecEq`: `[propext]`); `lindenbaum_lemma₀` hereda además `Enumeration.natToString_surj`.")
+
+add('REFERENCE.md',
+    "§1.1, fila Enumeration: «`natToFormula` y su sobreyectividad, **computables**, cero axiomas»",
+    "decls.tsv: natToFormula [propext, Quot.sound]; natToFormula_surj [propext, Classical.choice, Quot.sound]. "
+    "«cero axiomas» sólo vale como «del proyecto».",
+    "`natToFormula` y su sobreyectividad, **computables**, cero axiomas",
+    "`natToFormula` (**computable**, `[propext, Quot.sound]`) y su sobreyectividad —⚠️ `natToFormula_surj` lleva "
+    "`Classical.choice` (vía `String.toList`/`ofList_toList`), evitable con `String.exists_eq_ofList` (auditoría "
+    "2026-09-27, medido)—, cero axiomas **del proyecto**")
+
+add('REFERENCE.md',
+    "§6.16: la instancia `List Char` es más barata «porque no descompone ninguna cadena»",
+    "Medido: el choice de FreshSym String viene de COMPARAR (ReflBEq String vía String.instOrd en cst_zero_ne/cst_ne_shift), "
+    "no de descomponer; el de EnumSym String, de String.toList/ofList_toList. Exp.freshString y Exp.enumString (en String) "
+    "miden [propext, Quot.sound].",
+    "triple en `EnumSym`—, porque no descompone ninguna cadena.",
+    "triple en `EnumSym`—. ⚠️ Pero la diferencia es de RUTA, no del tipo (auditoría 2026-09-27, medido): la de "
+    "`FreshSym String` sale de COMPARAR (`not_eq_of_beq_eq_false` con una `ReflBEq String` derivada de `String.instOrd`) "
+    "y la de `EnumSym String` de `String.toList`/`ofList_toList`; con `instLawfulBEqString` y `String.exists_eq_ofList` "
+    "las dos instancias de `String` miden `[propext, Quot.sound]`.")
+
+add('AXIOMS.md',
+    "§3 «Lo que este censo NO dice» no menciona `Classical.choice` (el censo sólo cuenta `axiom`)",
+    "decls.tsv: 157 de 2978 constantes llevan Classical.choice, en 17 módulos; por el grafo medido, 60 dependen sólo de "
+    "procedencias accidentales y evitables (String, open Classical, simp aritmético, Exists.choose en bnd).",
+    lines('AXIOMS.md', 225, 225),
+    "* ⚠️ **No cuenta `Classical.choice`**, que no es un `axiom` del proyecto: lo llevan 157 de las 2978\n"
+    "  constantes de FOL y `TheoryFramework`, en 17 módulos (auditoría 2026-09-27, `collectAxioms` sobre el\n"
+    "  entorno compilado); según el grafo medido, 60 de ellas sólo por procedencias accidentales y evitables\n"
+    "  (`String`, `open Classical`, `simp` aritmético, `Exists.choose` en `bnd`).\n" + lines('AXIOMS.md', 225, 225))
+
+add('TheoryFramework/Logic.lean',
+    "docstring de `SoundLogic`: cálculo con solidez probada «`Prf₀`»",
+    "Nombre muerto: D6 (2026-09-26) renombró RPP `Prf₀` → `Prfᵢ` y `prf0_soundness` → `prfI_soundness` "
+    "(ROBINSON_PlusPlus/sondeos/AnclaSoundness.lean:19).",
+    "`LK₀`/`LKc` (`SequentSound0`) y `Prf₀`\n(`../ROBINSON_PlusPlus/sondeos/AnclaSoundness.lean`). -/",
+    "`LK₀`/`LKc` (`SequentSound0`) y `Prfᵢ`\n(`prfI_soundness`, `../ROBINSON_PlusPlus/sondeos/AnclaSoundness.lean`). -/")
+
+add('TheoryFramework.lean',
+    "comentario del barril: instancias `TheoryFramework.Instances.PropLogic`/`FOLPure` y el conflicto de `Formula`",
+    "Ni `PropLogic` ni `FOLPure` existen (retiradas el 2026-09-12 a cuarentena/librerias-retiradas/); "
+    "`TheoryFramework/Instances/` sólo tiene `FOL.lean`, sin declaraciones (folSystem retirada el 2026-09-23).",
+    lines('TheoryFramework.lean', 15, 20),
+    "-- `Instances/` no se importa aquí. Sólo queda `TheoryFramework/Instances/FOL.lean`, y SIN\n"
+    "-- declaraciones (`folSystem` retirada el 2026-09-23): explica por qué no hay instancia.\n"
+    "-- `PropLogic` y `FOLPure` se retiraron el 2026-09-12 (`cuarentena/librerias-retiradas/`).")
+
+ok = True
+for e in E:
+    s = rd(e['fichero'])
+    n = s.count(e['buscar'])
+    print(n, e['fichero'], '|', e['buscar'][:70].replace('\n', '⏎'))
+    if n != 1:
+        ok = False
+print('TODAS UNICAS' if ok else 'HAY NO-UNICAS', len(E))
+json.dump(E, io.open(OUT, 'w', encoding='utf-8'), ensure_ascii=False, indent=1)

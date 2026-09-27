@@ -33,9 +33,14 @@ import FOL.BlockExtraction0
 no los auxiliares `derives0_iff_neg_neg`, sin axiomas, ni `implChain_of_derives0`/`derives0_iff_implChain`,
 `[propext]`)
 llevan `[propext, Classical.choice, Quot.sound]` — medido —, porque retirar los axiomas de Skolem
-(`skolem_conservative_nf₀`) pasa por la completitud (el WKL). Por la estructura de la prueba entra
+(`skolem_conservative_nf₀`) pasa por la ruta semántica de `SkolemN0.skolem_conservative_n₀`: la
+completitud (el lema de la verdad sobre un maximal arbitrario y el `byContradiction` final), la
+solidez de Tarski y la función de Skolem `skF`. Por la estructura de la prueba entra
 sólo en la dirección «certificado ⇒ derivación de `φ`» (la que retira los axiomas de Skolem); la otra
 no pasa por la conservatividad. (Las dos mitades no se imprimen por separado.)
+⚠️ Rectificado el 2026‑09‑27: decía que esa ruta «pasa por la completitud (el WKL)». El
+`Classical.choice` de la completitud no es el WKL en Lean (`lindenbaum_lemma₀` es
+`[propext, Quot.sound]`, auditoría de constructividad), y la completitud no es su única procedencia.
 
 ## ⭐ Por qué hacía falta un puente, y no una composición
 

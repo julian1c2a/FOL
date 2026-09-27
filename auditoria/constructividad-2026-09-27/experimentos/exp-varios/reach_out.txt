@@ -1,0 +1,62 @@
+C:/msys64/tmp/claude/e--dropbox-github-lean4-FOL/dc390825-7a17-4693-bf72-7a68c475e9c7/scratchpad/audit/exp-varios/Reach.lean:71:23: warning: `String.trim` has been deprecated: Use `String.trimAscii` instead
+
+Note: The updated constant has a different type:
+  String → String.Slice
+instead of
+  String → String
+titulares resueltos: 513
+constantes de proyecto (FOL+TF+RPP): 9535
+constantes alcanzables desde los titulares: 9576
+(a) alcanza trio: ROBINSON_PlusPlus.Meta.ChainNegPrf.derives_chainOk_neg_of_line  choice_hoy=true  choice_si_trio_limpio=true
+(a) alcanza trio: ROBINSON_PlusPlus.Meta.ChainNegPrf.derives_chainOk_neg_of_prems  choice_hoy=true  choice_si_trio_limpio=true
+(a) alcanza trio: ROBINSON_PlusPlus.Meta.ChainNegPrf.derives_not_boundedCarcLt  choice_hoy=true  choice_si_trio_limpio=true
+(a) alcanza trio: ROBINSON_PlusPlus.Meta.ChainNegPrf.derives_lineWF_neg_of_tag_big  choice_hoy=true  choice_si_trio_limpio=true
+(a) alcanza trio: ROBINSON_PlusPlus.Meta.ChainNegPrf.derives_lineWF_neg_of_lenc_imp  choice_hoy=true  choice_si_trio_limpio=true
+(a) alcanza trio: ROBINSON_PlusPlus.Meta.LineWFCases.derives_lineWF_neg_thy_of_not_mem  choice_hoy=true  choice_si_trio_limpio=true
+(a) alcanza trio: ROBINSON_PlusPlus.Meta.ChainNegPrf.derives_lineWF_neg_thy_of_decode  choice_hoy=true  choice_si_trio_limpio=true
+(a) alcanza trio: ROBINSON_PlusPlus.Meta.ChainNegPrf.derives_not_boundedCarcLt_of_not_mem  choice_hoy=true  choice_si_trio_limpio=true
+(a) alcanza trio: ROBINSON_PlusPlus.Meta.ChainNegPrf.derives_chainOk_neg_of_prem  choice_hoy=true  choice_si_trio_limpio=true
+(a) alcanza trio: ROBINSON_PlusPlus.Meta.ChainNegPrf.derives_chainOk_neg_of_prem_line  choice_hoy=true  choice_si_trio_limpio=true
+(a) alcanza trio: ROBINSON_PlusPlus.Meta.ChainNegPrf.derives_lineWF_neg_of_arity  choice_hoy=true  choice_si_trio_limpio=true
+(a) alcanza trio: ROBINSON_PlusPlus.Meta.ChainNegPrf.derives_lineWF_neg_of_concl  choice_hoy=true  choice_si_trio_limpio=true
+(a) alcanza trio: ROBINSON_PlusPlus.Meta.ChainNegPrf.derives_chainOk_neg_of_prem_code  choice_hoy=true  choice_si_trio_limpio=true
+(a) alcanza trio: ROBINSON_PlusPlus.Meta.ChainNegPrf.derives_chainOk_neg_mp_major  choice_hoy=true  choice_si_trio_limpio=true
+(a) alcanza trio: ROBINSON_PlusPlus.Meta.ChainNegPrf.derives_chainOk_neg_gen  choice_hoy=true  choice_si_trio_limpio=true
+(a) alcanza trio: ROBINSON_PlusPlus.Meta.ChainNegPrf.derives_lineWF_neg_p1_badtype  choice_hoy=true  choice_si_trio_limpio=true
+(a) alcanza trio: ROBINSON_PlusPlus.Meta.ChainNegPrf.derives_lineWF_neg_eqrefl_badtype  choice_hoy=true  choice_si_trio_limpio=true
+(a) alcanza trio: ROBINSON_PlusPlus.Meta.ChainNegPrf.rama_tag_grande  choice_hoy=true  choice_si_trio_limpio=true
+(a) alcanza trio: ROBINSON_PlusPlus.Meta.ChainNegPrf.rama_concl  choice_hoy=true  choice_si_trio_limpio=true
+(a) alcanza trio: ROBINSON_PlusPlus.Meta.ChainNegPrf.rama_aridad  choice_hoy=true  choice_si_trio_limpio=true
+(a) alcanza trio: ROBINSON_PlusPlus.Meta.ChainNegPrf.rama_tipo_p1  choice_hoy=true  choice_si_trio_limpio=true
+(a) alcanza trio: ROBINSON_PlusPlus.Meta.ChainNegPrf.cierra_tag0  choice_hoy=true  choice_si_trio_limpio=true
+(a) alcanza trio: ROBINSON_PlusPlus.Meta.ChainNegPrf.cierra_FF  choice_hoy=true  choice_si_trio_limpio=true
+(a) alcanza trio: ROBINSON_PlusPlus.Meta.ChainNegPrf.cierra_c1  choice_hoy=true  choice_si_trio_limpio=true
+(a) alcanza trio: ROBINSON_PlusPlus.Meta.ChainNegPrf.cierra_qconf  choice_hoy=true  choice_si_trio_limpio=true
+(a) alcanza trio: ROBINSON_PlusPlus.Meta.ChainNegPrf.cierra_F  choice_hoy=true  choice_si_trio_limpio=true
+(a) alcanza trio: ROBINSON_PlusPlus.Meta.ChainNegPrf.cierra_FFF  choice_hoy=true  choice_si_trio_limpio=true
+(a) alcanza trio: ROBINSON_PlusPlus.Meta.ChainNegPrf.cierra_FT  choice_hoy=true  choice_si_trio_limpio=true
+(a) alcanza trio: ROBINSON_PlusPlus.Meta.ChainNegPrf.cierra_listInd  choice_hoy=true  choice_si_trio_limpio=true
+(a) alcanza trio: ROBINSON_PlusPlus.Meta.ChainNegPrf.cierra_eqrefl  choice_hoy=true  choice_si_trio_limpio=true
+(a) alcanza trio: ROBINSON_PlusPlus.Meta.ChainNegPrf.cierra_q1  choice_hoy=true  choice_si_trio_limpio=true
+(a) alcanza trio: ROBINSON_PlusPlus.Meta.ChainNegPrf.cierra_leibniz  choice_hoy=true  choice_si_trio_limpio=true
+(a) alcanza trio: ROBINSON_PlusPlus.Meta.ChainNegPrf.neg_hasWit_formCode  choice_hoy=true  choice_si_trio_limpio=true
+(a) alcanza trio: ROBINSON_PlusPlus.Meta.ChainNegPrf.neg_hasWitF_termCode  choice_hoy=true  choice_si_trio_limpio=true
+(a) alcanza trio: ROBINSON_PlusPlus.Meta.ChainNegPrf.cierra_thy  choice_hoy=true  choice_si_trio_limpio=true
+(a) alcanza trio: ROBINSON_PlusPlus.Meta.ChainNegPrf.cierra_mp  choice_hoy=true  choice_si_trio_limpio=true
+(a) alcanza trio: ROBINSON_PlusPlus.Meta.ChainNegPrf.cierra_gen  choice_hoy=true  choice_si_trio_limpio=true
+(a) alcanza trio: ROBINSON_PlusPlus.Meta.ChainNegPrf.cierra_por_tag  choice_hoy=true  choice_si_trio_limpio=true
+(a) alcanza trio: ROBINSON_PlusPlus.Meta.ChainNegPrf.deuda_chainNeg_proved  choice_hoy=true  choice_si_trio_limpio=true
+(a) alcanza trio: ROBINSON_PlusPlus.Meta.ChainNegPrf.negVerifier_proved  choice_hoy=true  choice_si_trio_limpio=true
+(a) alcanza trio: ROBINSON_PlusPlus.Meta.ChainNegPrf.deuda_inNeg  choice_hoy=true  choice_si_trio_limpio=true
+(a) alcanza trio: ROBINSON_PlusPlus.Meta.GodelTwo.d3  choice_hoy=true  choice_si_trio_limpio=true
+(a) titulares con choice (medido aqui): 313
+(a) usuario directo del trio: ROBINSON_PlusPlus.Meta.Hilbert.list_induction_derives [ROBINSON_PlusPlus.Meta.Hilbert] usa FOL.subst_subst_comm_succ
+(b) fin
+(c) FOL depende de MetaRules: FOL.MetaRules.raa [FOL.MetaRules]
+(c) FOL depende de MetaRules: FOL.MetaRules.ex_elim [FOL.MetaRules]
+(c) FOL depende de MetaRules: FOL.Inconsistencia.inconsistencia_de_cualquier_solidez [FOL.Inconsistencia]
+(c) FOL depende de MetaRules: FOL.MetaRules.imp_intro [FOL.MetaRules]
+(c) FOL depende de MetaRules: FOL.MetaRules.or_elim [FOL.MetaRules]
+(c) total constantes que dependen de MetaRules (incl. los 4 axiomas): 354
+(c) de ellas fuera de FOL/TheoryFramework: 349 en 42 modulos (con FOL incluidos)
+(d) fin

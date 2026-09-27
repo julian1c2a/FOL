@@ -3,7 +3,7 @@ import FOL.FOL
 /-!
 # `FOL.SymClasses` — lo que hay que saber del tipo de los SÍMBOLOS
 
-**Last updated:** 2026-09-26
+**Last updated:** 2026-09-27
 
 ADR-068 metió el parámetro (`TermG Sym` / `FormulaG Sym`) y ADR-069 generificó la capa de
 operaciones. Falta lo que **no** es sintaxis: la metateoría de FOL⁼ le pide al tipo de símbolos
@@ -13,13 +13,22 @@ exactamente **dos** cosas, y este módulo las declara.
 
 | clase | quién la pide | qué le pide | medido en |
 |---|---|---|---|
-| `FreshSym` | `FOL.Fresh0` | fabricar constantes nuevas, y que no colisionen | `Fresh0.lean:79‑110` |
-| `EnumSym` | `FOL.Metamath.Enumeration` | una **sobreyección** `Nat → Sym` | `Enumeration.lean:186` |
+| `FreshSym` | `FOL.Fresh0` | fabricar constantes nuevas, y que no colisionen | `Fresh0.shift`, `cst`, `shift_inj`, `cst_inj`, `cst_ne_shift` |
+| `EnumSym` | `FOL.Metamath.Enumeration` | una **sobreyección** `Nat → Sym` | `Enumeration.natToString_surj` |
 
 ⭐ **`FreshSym` tiene exactamente tres propiedades, ni una más.** Se midió leyendo el único
-consumidor no trivial: `Fresh0.cst_bound_sym` (`Fresh0.lean:155`) se demuestra con `by_cases`
-sobre `∃ k, cst k = s` más `cst_inj`, y **no toca la estructura de `String`**. De ahí salen
+consumidor no trivial: `Fresh0.cst_bound_sym` se demostraba con `by_cases`
+sobre `∃ k, cst k = s` más `cst_inj`, y **no tocaba la estructura de `String`**. De ahí salen
 `cst_bound_term`, `cst_bound_formula` y `cst_bound_list` sin pedir nada nuevo.
+
+⚠️ **RECTIFICACIÓN (2026‑09‑27).** La medida sigue siendo cierta **con tercio excluso**, pero el
+consumidor ya no es así. `Fresh0.cst_bound_sym` se prueba ahora con una cota CALCULADA,
+`s.utf8ByteSize`, porque `cst m` ocupa `m + 1` bytes (`Fresh0.cst_utf8ByteSize`): sin `by_cases`,
+sin `cst_inj` y sin `Classical.choice`, mirando la capa de bytes de `String`. ⇒ Para un `Sym`
+genérico, la prueba con las tres propiedades es la de antes, clásica; la de `String` usa algo que
+la clase no tiene: una cota de tamaño. La instancia de `List Char` de abajo también la tendría
+(`cst n` mide `n + 1`). A 2026‑09‑27 la clase no se amplía: es una MEDIDA, y ningún módulo la
+consume.
 
 ⭐ **`EnumSym` pide una sobreyección y nada más**: ni biyección, ni decidibilidad, ni orden, ni
 inyectividad. Medido sobre `Enumeration.lean`: los `if` de `natToTerm`/`natToFormula` son todos
@@ -48,6 +57,17 @@ por dentro y así se quedan. Para que la medida no sea *cierta y vacua*, aquí v
 Y la migración `String`→`List Char` del plan §7.3 de RPP queda **ABANDONADA en FOL** (D7,
 2026-09-26): la parte de FOL está hecha como parámetro, y terminarla no movería ningún
 footprint titular de FOL (su `Classical.choice` es el WKL).
+
+⚠️ **RECTIFICACIÓN (2026‑09‑27) de esa razón.** «Su `Classical.choice` es el WKL» era falso como
+localización (ver la cabecera de `FOL/Canonical0.lean`). La conclusión se mantiene, y con mejor
+fundamento: la migración **no hacía falta**. Lo que en v4.31 trae `Classical.choice` a `String` es
+DECODIFICAR UTF‑8 (`toList`, `ofList_toList`, `String.instOrd`), no `String` en sí; la capa de bytes
+está limpia. La auditoría de constructividad retiró esos usos sin migrar: `Fresh0` compara con
+`String.decEq` y acota con `utf8ByteSize`, y `natToString_surj` usa `String.exists_eq_ofList`.
+Los 34 titulares de FOL que conservan `Classical.choice` lo llevan por la semántica de Tarski, por
+el lema de la verdad sobre un maximal arbitrario, por el `byContradiction` final de
+`completeness₀` o por las funciones de Skolem, directamente o por ruta. `List Char` no cambiaría
+ninguno.
 -/
 
 namespace FOL

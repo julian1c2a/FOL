@@ -10,7 +10,7 @@
 > |---|---|
 > | «Teorema de Corrección (Soundness): `Γ ⊢ A → Γ ⊨ A`» ✅ | 🏁 **Sí, sobre `Derives₀`** (2026-09-14): `derives0_soundness : Γ ⊢₀ f → Γ ⊨ f` (`FOL/Soundness0.lean`), y con ella `derives0_consistent`. ⛔ La de **`Derives`** sigue siendo **FALSA** en presencia de `FOL/MetaRules.lean`: `FOL/Inconsistencia.lean`, hoy **en el build** |
 > | «Compacidad» ✅ | 🏁 `compactness`, `loewenheim_skolem_down` y el modelo infinito `infinite_model_of_large`, en `FOL/Compacity0.lean`. El `Compacity.lean` vacuo **se borró** el 2026-09-23 |
-> | «Completitud» ✅ / «1 sorry» | 🏁 `completeness₀ : Γ ⊨ f → Γ ⊢₀ f` (`FOL/Canonical0.lean`, 2026-09-16), con **cero axiomas del proyecto**: `[propext, Classical.choice, Quot.sound]`, y ese `Classical.choice` es el WKL de `Lindenbaum0` (ADR-041). `Completeness.lean` y su último postulado, `henkin_extension_lemma`, **se borraron** el 2026-09-23. Ver **`AXIOMS.md`** |
+> | «Completitud» ✅ / «1 sorry» | 🏁 `completeness₀ : Γ ⊨ f → Γ ⊢₀ f` (`FOL/Canonical0.lean`, 2026-09-16), con **cero axiomas del proyecto**: `[propext, Classical.choice, Quot.sound]`. Ese `Classical.choice` viene del lema de la verdad sobre un maximal arbitrario (`max_cons_*`) y del `byContradiction` final de `completeness₀`; **no** del `if` de `Lindenbaum0`, que ya no decide nada (`lindenbaum_lemma₀` es `[propext, Quot.sound]`). Hasta el 2026-09-27 esta celda decía que era «el WKL de `Lindenbaum0`» (ADR-041): refutado, ADR-110 y `AXIOMS.md` §4. `Completeness.lean` y su último postulado, `henkin_extension_lemma`, **se borraron** el 2026-09-23. Ver **`AXIOMS.md`** |
 > | «4 `lean_lib`, ~43 módulos, 1 sorry, v4.28.0» | **2 `lean_lib`** (`FOL`, `TheoryFramework`) · **4 `axiom`**, los de `MetaRules` que el kernel obliga, y ninguno más fuera de las librerías retiradas · **0 sorry** · **v4.31.0**. `FOLPure`, `PropLogic` y `FOL_poli` **retiradas** el 2026-09-12 a `cuarentena/librerias-retiradas/` |
 >
 > ⭐ **Los seis teoremas del cierre (T1 a T6, 2026-09-23 y 2026-09-26) están en el árbol**, sobre `Derives₀`; el catálogo, en `CURRENT-STATUS-PROJECT.md` («Estado vigente») y `REFERENCE.md` §6. ⛔ Y lo que NO hay: la propiedad de disyunción para `Derives₀` es **FALSA** (`derives0_no_disjunction_property`).
@@ -19,14 +19,15 @@
 > **Fuentes:** `cuarentena/README.md` · `AXIOMS.md` ·
 > `../ROBINSON_PlusPlus/doc/AUDITORIA-FOL-2026-09-12.md`
 
-**Last updated:** 2026-09-27 — N1‑N4 resueltas y aplicadas (13 renombres, dos duplicados retirados; `PrenexNF0`/`SequentSound0` descongelados y re‑congelados); los 10 congelables, sólo bloqueados. Antes, el mismo día: la segunda criba con refutación (71 correcciones). Antes, el mismo día: P4 hecha (`QFDecide0`). Antes, el mismo día: 🧊 cinco módulos congelados; P2 (18 renombres) y P3 (`sub_*` en `Sequent0`) hechas. Antes, el mismo día: W2, W3 y W4 hechas; la criba de congelación, pasada con refutación (1 congelable ya, 4 tras arreglos —aplicados—, 18 todavía no). Antes (2026-09-26): aviso reescrito y sección «Lo que queda» nueva; el plan de fases de abajo es HISTÓRICO (2026-05-16).
+**Last updated:** 2026-09-27 — la auditoría de constructividad y las decisiones D1‑D8 del propietario, ejecutadas (`Classical.choice` 157 → 84 constantes; Lindenbaum y Henkin sin él; la tesis del WKL, rectificada; la instancia de `TheoryFramework`, declarada; `Rename` descongelado para retirar `invOf`); los 17 candidatos, sólo bloqueados. Antes, el mismo día: N1‑N4 resueltas y aplicadas (13 renombres, dos duplicados retirados; `PrenexNF0`/`SequentSound0` descongelados y re‑congelados); los 10 congelables, sólo bloqueados. Antes, el mismo día: la segunda criba con refutación (71 correcciones). Antes, el mismo día: P4 hecha (`QFDecide0`). Antes, el mismo día: 🧊 cinco módulos congelados; P2 (18 renombres) y P3 (`sub_*` en `Sequent0`) hechas. Antes, el mismo día: W2, W3 y W4 hechas; la criba de congelación, pasada con refutación (1 congelable ya, 4 tras arreglos —aplicados—, 18 todavía no). Antes (2026-09-26): aviso reescrito y sección «Lo que queda» nueva; el plan de fases de abajo es HISTÓRICO (2026-05-16).
 **Autor**: Julián Calderón Almendros
 
 ## ⬜ Lo que queda para CERRAR FOL — 2026-09-26 (noche)
 
 **Hecho**: los seis teoremas del catálogo del cierre (T1-T6) más `inv_allR`/`inv_exL` (RPP-100), y
 las decisiones D1, D2, D4, D5, D6 y D7 del propietario, **ejecutadas** el 2026-09-26 (RPP-101, RPP-102;
-`CHANGELOG.md`). El estado vigente, en `CURRENT-STATUS-PROJECT.md`. Lo que queda:
+`CHANGELOG.md`); y las D1‑D8 de la auditoría de constructividad, el 2026‑09‑27 (RPP‑110; abajo, en ❄️).
+El estado vigente, en `CURRENT-STATUS-PROJECT.md`. Lo que queda:
 
 ### Decisiones del propietario
 
@@ -38,14 +39,14 @@ las decisiones D1, D2, D4, D5, D6 y D7 del propietario, **ejecutadas** el 2026-0
 | D4 | La vía de `ModelG` | ✅ medida TERMINADA y **CERRADA definitiva** (sin receta de reapertura; fuera de `[G.2]`) |
 | D5 | El refactor de `Lift0` | ✅ **hecho**: núcleo genérico `absTerm'` en `Eigenvariable`; 40 nombres conservados; −56 líneas de código (no «~150»); una inducción y un transporte menos |
 | D6 | ¿Qué marca `₀`? | ✅ **regla decidida** (`NAMING-CONVENTIONS.md` §9, FOL **y** RPP): `₀` clásico, `ᵢ` intuicionista, sin subíndice lo que no depende de cálculo. Renombres: `model_existence_iff₀`, `compactness`, `IsHenkin`, `DisjunctionProperty₀`; RPP `Prf₀` → `Prfᵢ`. Y `Prf` (el Hilbert clásico de RPP) **se queda sin subíndice**: decisión del propietario (2026‑09‑26), excepción histórica como `Derives` en FOL |
-| D7 | Migración `String`→`List Char` | ✅ **CERRADA como ABANDONADA en FOL** (no estaba terminada; instanciar no mueve ningún footprint titular) |
+| D7 | Migración `String`→`List Char` | ✅ **CERRADA como ABANDONADA en FOL** (no estaba terminada; instanciar no mueve ningún footprint titular). 📝 2026‑09‑27: y no hacía falta — lo que trae `Classical.choice` en v4.31 es DECODIFICAR UTF‑8 (y el orden de `String`), no `String`; la capa de bytes está limpia y `Fresh0`/`Enumeration` quedaron sin él sin cambiar la firma (auditoría de constructividad) |
 
 ### Externo
 
 | # | qué |
 |---|---|
 | X0 | ⛔ **Condición del propietario, no negociable: FOL no depende de nada más allá de sí mismo.** ✅ Comunicada: `RESPUESTA-PEANORF-2026-09-26.md` (lo que hoy la incumple, con file:line: los siete importan `PeanoRF.Prelim`, que trae RPP y Peano; `Collapse`/`Eq` usan `zero`/`succ` de RPP; `Eq` recibe `FOL.substTerm_liftTerm` a través de RPP; y el parámetro de `collapseT` tiene que ser un SÍMBOLO, no «un término cerrado») |
-| X1 | **PeanoRF**, propuesta (C): los siete módulos, sin entregar. Al recibirlos: namespace de FOL, los renombres de D6 en `Slash` (`derivesI_…`), `fdepth` fuera, filas de footprint, `[G.2]`, proyección, y `lock` para `Eq`/`Collapse`/`Slash` |
+| X1 | **PeanoRF**, propuesta (C): los siete módulos, sin entregar. Al recibirlos: namespace de FOL, los renombres de D6 en `Slash` (`derivesI_…`), `fdepth` fuera, filas de footprint, `[G.2]`, proyección, y `lock` para `Eq`/`Collapse`/`Slash`. 📨 **D8 (2026‑09‑27)**: no responde desde el 2026‑09‑23; sin plazo fijado: la información va en una carta que se deja en su repositorio (`../Peano-from-ROB-n-FOL/`), y el propietario se la pasa |
 
 ### Trabajo
 
@@ -90,11 +91,53 @@ es FALSA y la correcta añade «mezclas de prefijo» (un paso, no un cierre); de
 * Siguen fuera los 15 de la cadena de PeanoRF (`Complexity` incluido, que `Slash` importará al
   retirar `fdepth`), hasta que la entrega compile aquí; e `Inconsistencia` (su §2 cambia con ella).
 
+**La auditoría de constructividad (2026‑09‑27, RPP‑110)** — `auditoria/constructividad-2026-09-27/`
+(metaprograma, datos antes/después, experimentos; su `README.md`), y la clasificación vigente en
+`AXIOMS.md` §4. Midió, constante a constante, por dónde entra `Classical.choice`, y encontró que 11 de
+los 17 candidatos afirmaban cosas falsas sobre él: sobre todo, que el de la completitud «es el WKL del
+`if` de Lindenbaum». Las decisiones del propietario (⚠️ no confundir con las D1‑D7 del 2026‑09‑26, de
+arriba):
+
+| # | pregunta | decisión | hecho |
+|---|---|---|---|
+| D1 | ¿se elimina lo eliminable MEDIDO antes de congelar? | «elimina lo eliminable antes de congelar» | ✅ con los mismos enunciados: `Fresh0` (`of_decide_eq_false`, la cota `utf8ByteSize`, `unshift` sobre bytes), `Enumeration` (`String.exists_eq_ofList`), `Henkin0` (`ctx_split`, `henkin_step_derives`), `Lindenbaum0` (etapa impredicativa, `lindenbaum_limit_closed`), `HenkinLimit0` (`bnd` calculada), `Canonical0` (modelo canónico por `Quot.lift` sobre listas; fuera `quotientOut`), `Compacity0` (`unshift`), `Theorems/Eq` (tres `simp`) y `Rename` 🧊↩️ (descongelado con `thaw --confirm` para retirar `invOf`; `locInv`, inversa local) |
+| D2 | la tesis «el choice de la completitud es el WKL del `if` de Lindenbaum», refutada: ¿cómo se reescribe? | «Ok» a la opción (b) | ✅ se corrige toda afirmación de LOCALIZACIÓN (docstrings, `AXIOMS.md` §4.5, ADR‑110 en RPP, notas en el PLAN de RPP); «el WKL» queda sólo como apodo de la FUERZA de la completitud sobre RCA₀ |
+| D3 | `henkin_conservative₀` y `derives0_no_disjunction_property`: ¿se reprueban sin elección? | «se reprueban sin elección» | ✅ los dos en `[propext, Quot.sound]`. Los corolarios de ruta de `Soundness0`/`SequentSound0` 🧊 y los controles `derives0_em`/`derives0_peirce` se quedan como están (ADR‑061) |
+| D4 | variantes constructivas de lo irreducible | no se preguntó: fuera de alcance, como recomendó la auditoría | ⛔ abajo, en «Fuera de alcance» |
+| D5 | el caso Henkin de Skolem (~60 líneas, medido): ¿antes de congelar `Skolem0`? | «se hace antes de congelar `Skolem0`» | ✅ es `henkin_conservative₀`, por la vía sintáctica (el mismo trabajo que D3); el caso general, fuera de alcance |
+| D6 | los tres `simp` de `Theorems/Eq` | no se preguntó aparte: entra con D1 | ✅ `FOL.Core` sin `Classical.choice` salvo el código meta de `Tactics`; ninguna fila de RPP cambia |
+| D7 | la instancia de `TheoryFramework` (las 2 DIFERIDA de `[G.2]`) | «declara la instancia» | ✅ `fol0System : LogicSystem Formula` sobre `Derives₀` (ningún axioma), `fol0Sound`, `fol0Complete`, `fol0_proves_iff_models`; `[G.2]` baja a 12 marcadores |
+| D8 | PeanoRF (X1) no responde desde el 2026‑09‑23 | sin plazo: el propietario le pasa la información | ✅ la información va en una carta que se deja en su repositorio (fila X1, arriba) |
+
+Cifras (`decls.tsv` de la auditoría): constantes con `Classical.choice`, **157 → 84** (3 son código
+meta de `FOL.Tactics`); `noncomputable`, **8 → 1** (`SkolemN0.skF`); titulares de FOL con choice,
+**55 → 34** de 252; `check-footprints`, 513 → 517 filas (4 de la instancia). Los 34 que quedan son los
+27 irreducibles de la auditoría y 7 corolarios de ruta conservados a propósito.
+
+* 🔒 Los **17 candidatos** (los 10 de la segunda criba y los 7 que liberaron N1‑N3) siguen **sólo
+  BLOQUEADOS**, no congelados: congelar cualquiera pide confirmación explícita del propietario. D1 y
+  D2, que retenían a 11 de ellos, están ejecutadas. ⚠️ Pero los veredictos de las cribas son de ANTES
+  de esta tanda: `Henkin0`, `HenkinLimit0`, `Lindenbaum0`, `Fresh0`, `Canonical0`, `Compacity0` y
+  `Skolem0` cambiaron de código hoy, y otros candidatos, de docstrings (D2).
+* 🧊 `Rename` estaba congelado (RPP‑105): es su primer `thaw`, autorizado por D1 (la auditoría ya
+  advertía que retirar `invOf` pedía descongelarlo), y vuelve a congelarse en el mismo ciclo.
+* 🧊 ⚠️ D2 no ha llegado a `SequentSound0`, CONGELADO: su cabecera y el docstring de `lk0_not_empty`
+  conservan tres localizaciones del WKL («en vez del **WKL**», dos veces; «el `Classical.choice` que
+  ADR‑041 identificó como el **WKL**»). Se rectifican en su próximo `thaw` autorizado (`AXIOMS.md` §4.5).
+
 ⛔ **Fuera de alcance, con su motivo**: LS↑ (ver `Compacity0` §3); un decisor PRÁCTICO del fragmento sin cuantificadores
 (cierre de congruencia con certificado: el de `QFDecide0` es de juguete); Beth y Robinson (el puente `LK₀`→`LKp`
 ya existe, `Interpolation0.lk0_to_lkp`; piden además renombrar símbolos de relación); la noción de **sentencia** (bloqueo transversal: sin ella no se
 enuncian bien la equivalencia elemental ni la categoricidad); y la propiedad de disyunción para
-`Derives₀`, que es **FALSA**.
+`Derives₀`, que es **FALSA**. Y desde el 2026‑09‑27, de la auditoría de constructividad:
+**D4**, las variantes constructivas de lo irreducible, que lo es para enunciados sobre un maximal
+ARBITRARIO con semántica en `Prop` — un módulo con `[DecidablePred S]` (medido: las cinco `max_cons_*`
+salen con `[propext]`), la semántica ¬¬ (Gödel–Gentzen) o de Kripke, o los modelos «explosivos» de
+Krivine (Berardi–Valentini, Forster–Kirst–Wehr), con la completitud debilitada a `⊨ → ¬¬⊢`; iría en
+módulos nuevos y no impide congelar; y la **vía sintáctica GENERAL de Skolem** (Herbrand/ε): los
+ocho titulares de enunciado sintáctico que sólo llevan `Classical.choice` por la ruta semántica
+(`skolem_conservative₀` con `t̄` cualquiera, `skolem_conservative_n₀`, `skolem_conservative_nf₀`, los de
+Herbrand de `SkolemHerbrand0`…); el caso Henkin ya está hecho (D5).
 
 ## Plan de fases — ⚠️ HISTÓRICO (2026-05-16)
 

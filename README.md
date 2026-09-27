@@ -10,7 +10,7 @@
 > |---|---|
 > | «Teorema de Corrección (Soundness): `Γ ⊢ A → Γ ⊨ A`» ✅ | 🏁 **Sí, sobre `Derives₀`** (2026-09-14): `derives0_soundness : Γ ⊢₀ f → Γ ⊨ f` (`FOL/Soundness0.lean`), y con ella `derives0_consistent`. ⛔ La de **`Derives`** sigue siendo **FALSA** en presencia de `FOL/MetaRules.lean`: `FOL/Inconsistencia.lean`, hoy **en el build** |
 > | «Compacidad» ✅ | 🏁 `compactness`, `loewenheim_skolem_down` y el modelo infinito `infinite_model_of_large`, en `FOL/Compacity0.lean`. El `Compacity.lean` vacuo **se borró** el 2026-09-23 |
-> | «Completitud» ✅ / «1 sorry» | 🏁 `completeness₀ : Γ ⊨ f → Γ ⊢₀ f` (`FOL/Canonical0.lean`, 2026-09-16), con **cero axiomas del proyecto**: `[propext, Classical.choice, Quot.sound]`, y ese `Classical.choice` es el WKL de `Lindenbaum0` (ADR-041). `Completeness.lean` y su último postulado, `henkin_extension_lemma`, **se borraron** el 2026-09-23. Ver **`AXIOMS.md`** |
+> | «Completitud» ✅ / «1 sorry» | 🏁 `completeness₀ : Γ ⊨ f → Γ ⊢₀ f` (`FOL/Canonical0.lean`, 2026-09-16), con **cero axiomas del proyecto**: `[propext, Classical.choice, Quot.sound]`. Ese `Classical.choice` viene del lema de la verdad sobre un maximal arbitrario (`max_cons_*`) y del `byContradiction` final de `completeness₀`; **no** del `if` de `Lindenbaum0`, que ya no decide nada (`lindenbaum_lemma₀` es `[propext, Quot.sound]`). Hasta el 2026-09-27 esta celda decía que era «el WKL de `Lindenbaum0`» (ADR-041): refutado, ADR-110 y `AXIOMS.md` §4. `Completeness.lean` y su último postulado, `henkin_extension_lemma`, **se borraron** el 2026-09-23. Ver **`AXIOMS.md`** |
 > | «4 `lean_lib`, ~43 módulos, 1 sorry, v4.28.0» | **2 `lean_lib`** (`FOL`, `TheoryFramework`) · **4 `axiom`**, los de `MetaRules` que el kernel obliga, y ninguno más fuera de las librerías retiradas · **0 sorry** · **v4.31.0**. `FOLPure`, `PropLogic` y `FOL_poli` **retiradas** el 2026-09-12 a `cuarentena/librerias-retiradas/` |
 >
 > ⭐ **Los seis teoremas del cierre (T1 a T6, 2026-09-23 y 2026-09-26) están en el árbol**, sobre `Derives₀`; el catálogo, en `CURRENT-STATUS-PROJECT.md` («Estado vigente») y `REFERENCE.md` §6. ⛔ Y lo que NO hay: la propiedad de disyunción para `Derives₀` es **FALSA** (`derives0_no_disjunction_property`).
@@ -33,7 +33,7 @@ Dos librerías Lean 4 en el build (`FOL`, `TheoryFramework`), construidas desde 
 | `FOL` | Lógica de Primer Orden **con** igualdad (FOL^=) | 0 |
 | ~~`FOLPure`~~ | 🗑️ retirada (`cuarentena/librerias-retiradas/`) | — |
 | ~~`PropLogic`~~ | 🗑️ retirada (`cuarentena/librerias-retiradas/`) | — |
-| `TheoryFramework` | Marco genérico de teorías — ⛔ **sin instancias** desde el 2026-09-23 (`folSystem` retirada) | 0 |
+| `TheoryFramework` | Marco genérico de teorías — instancia **`fol0System`, sobre `Derives₀`**, desde el 2026-09-27 (`folSystem`, sobre `Derives`, se retiró el 2026-09-23) | 0 |
 
 ## Description
 
@@ -45,16 +45,16 @@ Este ecosistema formaliza la sintaxis, semántica y metamatemática de la Lógic
 - **Deducción Natural**: Sistema extendido con reglas de reescritura local y RAA (lógica clásica).
 - **Automatización**: Tácticas `derive_hyp`, `derive_weaken`, `derive_rewrite` via `MetaM`.
 - **Semántica Tarskiana**: Modelos, evaluación de fórmulas, satisfacción `Γ ⊨ f`.
-- **Marco Genérico**: `class LogicSystem (F : Type)` con metateoremas reutilizables — ⛔ sin instancias desde el 2026-09-23.
+- **Marco Genérico**: `class LogicSystem (F : Type)` con metateoremas reutilizables; desde el 2026-09-27, instanciado para FOL⁼ sobre `Derives₀` (`TheoryFramework/Instances/FOL.lean`: `fol0System`, con solidez y completitud).
 
 **Hitos Metamatemáticos:**
 
 1. Teorema de Deducción.
 2. 🏁 **Teorema de Corrección** sobre `Derives₀` (`derives0_soundness`). ⛔ La de `Derives` es FALSA con `MetaRules`: ver el aviso.
-3. Construcción de Henkin + Lema de Lindenbaum.
-4. 🏁 **Teorema de Completitud** sobre `Derives₀`: `completeness₀ : Γ ⊨ f → Γ ⊢₀ f`, cero axiomas del proyecto; y su forma de Henkin, `model_existence_iff₀`.
+3. Construcción de Henkin + Lema de Lindenbaum (`henkin_completion₀`, `lindenbaum_lemma₀`): sin `Classical.choice` desde el 2026-09-27, `[propext, Quot.sound]`.
+4. 🏁 **Teorema de Completitud** sobre `Derives₀`: `completeness₀ : Γ ⊨ f → Γ ⊢₀ f`, cero axiomas del proyecto; y su forma de Henkin, `model_existence_iff₀`. Su `Classical.choice` es el del lema de la verdad sobre un maximal arbitrario (`max_cons_*`) y el de su `byContradiction` final (auditoría de constructividad del 2026-09-27: `AXIOMS.md` §4).
 5. 🏁 **Compacidad** (`compactness`), **Löwenheim–Skolem descendente** y el **modelo infinito por compacidad** (`infinite_model_of_large`: numerable e infinito).
-6. Hauptsatz (`hauptsatz₀`), Herbrand, Craig, Skolem y forma prenexa; el fragmento sin cuantificadores caracterizado (`derives0_qf_iff`) y DECIDIDO (`decideDerives0QF`); decisor proposicional (`ptautCheck_iff`); inversión de `LK₀`. Catálogo: `REFERENCE.md` §6. ⛔ Los metateoremas genéricos sobre `LogicSystem` siguen en el build, pero el marco **no tiene instancias** desde el 2026-09-23.
+6. Hauptsatz (`hauptsatz₀`), Herbrand, Craig, Skolem y forma prenexa; el fragmento sin cuantificadores caracterizado (`derives0_qf_iff`) y DECIDIDO (`decideDerives0QF`); decisor proposicional (`ptautCheck_iff`); inversión de `LK₀`. Catálogo: `REFERENCE.md` §6. Y los metateoremas genéricos de `LogicSystem` se aplican a FOL⁼: `fol0_proves_iff_models` (desde el 2026-09-27; entre el 2026-09-23 y esa fecha el marco no tuvo instancias).
 
 ## Modules — ⚠️ HISTÓRICO (2026-05-16): el catálogo vigente es `REFERENCE.md` §6
 
@@ -135,8 +135,9 @@ lake build TheoryFramework
 Para usar una instancia concreta del TheoryFramework:
 
 ```lean
-import TheoryFramework
--- ⛔ HISTÓRICO: `Instances/FOLPure` y `Instances/PropLogic` ya no existen, e `Instances/FOL` no declara ninguna instancia desde el 2026-09-23
+import TheoryFramework.Instances.FOL   -- el barril `TheoryFramework` no importa las instancias
+-- `fol0System : LogicSystem Formula` sobre `Derives₀` (desde el 2026-09-27), con `fol0Sound` y `fol0Complete`
+-- ⛔ HISTÓRICO: `Instances/FOLPure` y `Instances/PropLogic` ya no existen
 ```
 
 ## Requirements
@@ -211,4 +212,4 @@ Julián Calderón Almendros
 ---
 
 **Author**: Julián Calderón Almendros
-**Last updated:** 2026-09-27 — el decisor del fragmento sin cuantificadores; renombres de la regla de subíndices (P2). Antes (2026-09-26): aviso, insignias, librerías, hitos y cabeceras HISTÓRICO corregidos; el resto del cuerpo es de 2026-05-16.
+**Last updated:** 2026-09-27 — la auditoría de constructividad y D1–D8: aviso (la tesis del WKL, rectificada), la instancia de `TheoryFramework` y los hitos 3, 4 y 6. Antes, el mismo día: el decisor del fragmento sin cuantificadores; renombres de la regla de subíndices (P2). Antes (2026-09-26): aviso, insignias, librerías, hitos y cabeceras HISTÓRICO corregidos; el resto del cuerpo es de 2026-05-16.

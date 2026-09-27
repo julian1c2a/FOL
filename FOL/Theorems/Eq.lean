@@ -25,6 +25,14 @@ namespace FOL
 -- Efecto medido del arreglo: FOL pasa de **26** a **16** declaraciones con `Classical.choice`, y
 -- `derive_eq_symm`/`derive_eq_trans`/`derive_eq_func_congr`/`derive_atom_congr` quedan **net‑0
 -- puras**. Detalle completo en `../ROBINSON_PlusPlus/sondeos/ClassicalChoiceCenso.lean`.
+--
+-- ⭐ **2026‑09‑27 · el mismo patrón, otra vez** (auditoría de constructividad,
+-- `auditoria/constructividad-2026-09-27/`). Tres `simp` de `substTerm_subst_comm_succ` cerraban sus
+-- ramas con dos lemas simp del núcleo, `Nat.left_eq_add` y `Nat.add_eq_left`, que en v4.31 llevan
+-- `Classical.choice`. Se excluyen con `-` y bastan las hipótesis `show`. Efecto medido: el trío
+-- `substTerm_subst_comm_succ`/`substTerms_subst_comm_succ`/`subst_subst_comm_succ` pasa a
+-- `[propext, Quot.sound]`; este módulo queda sin ninguna constante con `Classical.choice`, y
+-- `FOL.Core` (la capa de la herramienta) también, salvo el código meta de `FOL.Tactics`.
 mutual
 theorem substTerm_liftTerm (t : Term) (c : Nat) (s : Term) :
     substTerm c s (liftTerm c t) = t := by
@@ -274,15 +282,20 @@ theorem substTerm_subst_comm_succ (u : Term) (a b : Term) (j : Nat) :
           show ¬ k = j+1 from by omega, show ¬ k > j+1 from by omega,
           show ¬ k = j+2 from by omega, show ¬ k > j+2 from by omega]
       · subst heq
-        simp [substTerm, show ¬ k = k+2 from by omega, show ¬ k > k+2 from by omega]
+        -- ⛔ `-Nat.left_eq_add, -Nat.add_eq_left`: en v4.31 esos dos lemas simp del núcleo llevan
+        -- `Classical.choice`, y aquí bastan las hipótesis `show` (auditoría, 2026‑09‑27).
+        simp [-Nat.left_eq_add, -Nat.add_eq_left, substTerm,
+          show ¬ k = k+2 from by omega, show ¬ k > k+2 from by omega]
       · rcases Nat.lt_trichotomy k (j+2) with h2 | h2 | h2
         · have hk : k = j+1 := by omega
           subst hk
-          simp [substTerm, show ¬ j+1 = j from by omega, show j+1 > j from by omega,
+          simp [-Nat.left_eq_add, -Nat.add_eq_left, substTerm,
+            show ¬ j+1 = j from by omega, show j+1 > j from by omega,
             show ¬ j+1 = j+2 from by omega, show ¬ j+1 > j+2 from by omega,
             show ¬ j = j+1 from by omega, show ¬ j > j+1 from by omega]
         · subst h2
-          simp [substTerm, show ¬ j+2 = j from by omega, show j+2 > j from by omega,
+          simp [-Nat.left_eq_add, -Nat.add_eq_left, substTerm,
+            show ¬ j+2 = j from by omega, show j+2 > j from by omega,
             show j+2 = j+2 from rfl, substTerm_liftTerm]
         · simp [substTerm, show ¬ k = j from by omega, show k > j from hgt,
             show ¬ k = j+2 from by omega, show k > j+2 from h2,

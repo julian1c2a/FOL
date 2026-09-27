@@ -1,0 +1,2979 @@
+modulo	nombre	clase	noncomputable	axiomas
+FOL.Finitary0	_private.FOL.Finitary0.0.FOL.Finitary0.tval.match_1.splitter	def	false	
+FOL.FOL	TermG.var.elim	def	false	
+FOL.DecEq	instDecidableEqFormulaG.decEq._proof_71	thm	false	
+FOL.Enumeration	FOL.Metamath.Enumeration.formula_surj_aux._proof_1_14	thm	false	propext,Quot.sound
+FOL.Lift0	FOL.Lift0.substTerms_lift_var	thm	false	propext,Quot.sound
+FOL.Rename	_private.FOL.Rename.0.instReprFormulaG.repr.match_1.eq_7	thm	false	
+FOL.Rename	FOL.Rename.derives0_rename_iff	thm	false	propext,Quot.sound
+FOL.FOL	substFormula._sunfold	def	false	
+FOL.Theorems.Quantifiers	FOL.Theorems.Quantifiers.subst_lift_cancel_formula	thm	false	propext,Quot.sound
+FOL.Semantics	_private.FOL.Semantics.0.instReprPos.repr.match_1.splitter	def	false	
+FOL.FOL	substTerms._unsafe_rec	def	false	
+FOL.Hauptsatz0	FOL.Hauptsatz0.lkh_mono	thm	false	
+FOL.Derives1	FOL.Derives1.or_congr_l	thm	false	
+FOL.SymClasses	FOL.EnumSym.mk.noConfusion	def	false	
+FOL.Herbrand0	FOL.Herbrand0.derives0_ex_of_disj._f	def	false	
+FOL.Soundness0	FOL.Metamath.Soundness0.derives0_consistent	thm	false	propext,Classical.choice,Quot.sound
+FOL.QFDecide0	FOL.QFDecide0.Good	ind	false	propext
+FOL.Eigenvariable	_private.FOL.Eigenvariable.0.FOL.Eigenvariable.posDepth.match_1.eq_1	thm	false	
+FOL.Semantics	replaceAt.eq_def	thm	false	propext
+FOL.FOL	Derives.casesOn	def	false	propext
+FOL.Eigenvariable	FOL.Eigenvariable.occursTerm._unsafe_rec	def	false	
+FOL.MetaRules	FOL.MetaRules.or_intro_left	def	false	propext
+FOL.Rename	_private.FOL.Rename.0.instReprFormulaG.repr.match_1.eq_1	thm	false	
+FOL.Interpolation0	FOL.Interpolation0.split_exists	thm	false	
+FOL.Fresh0	FOL.Fresh0.cst_bound_list._f	def	false	propext,Classical.choice,Quot.sound
+FOL.Eigenvariable	_private.FOL.Eigenvariable.0.FOL.Eigenvariable.posDepth.match_1.eq_2	thm	false	
+FOL.Derives2	Derives₂.brecOn	thm	false	
+FOL.HerbrandBlock0	FOL.HerbrandBlock0.quantFree_instB._f	def	false	propext
+FOL.Tactics	getAllPositions._unsafe_rec	def	false	propext
+FOL.Theorems.Impl	FOL.Theorems.Impl.s_impl	thm	false	propext
+FOL.QFDecide0	_private.FOL.QFDecide0.0.FOL.QFDecide0.eqTerms._sparseCasesOn_1	def	false	propext
+FOL.SkolemNF0	FOL.SkolemNF0.derives0_skolemize	thm	false	propext,Quot.sound
+FOL.Hauptsatz0	FOL.Hauptsatz0.liftTerm_subst_le._proof_10	thm	false	propext,Quot.sound
+FOL.HenkinLimit0	FOL.HenkinLimit0.hidx._f	def	false	propext,Classical.choice,Quot.sound
+FOL.Eigenvariable	FOL.Eigenvariable.posDepth._sunfold	def	false	
+FOL.QFDecide0	FOL.QFDecide0.Pw	ind	false	
+FOL.QFDecide0	FOL.QFDecide0.memB._sunfold	def	false	
+FOL.Eigenvariable	FOL.Eigenvariable.posDepth.eq_4	thm	false	
+FOL.SkolemNF0	FOL.SkolemNF0.quantFree_of_qdepth_zero	thm	false	propext
+FOL.Hauptsatz0	FOL.Hauptsatz0.substTerm_subst_le._proof_20	thm	false	propext,Quot.sound
+FOL.Enumeration	FOL.Metamath.Enumeration.natToFormula._unsafe_rec	def	false	propext,Quot.sound
+FOL.Eigenvariable	FOL.Eigenvariable.abs'_getAt?	thm	false	propext
+FOL.Eigenvariable	_private.FOL.Eigenvariable.0.getAt?.match_4.eq_1	thm	false	propext
+FOL.QFDecide0	FOL.QFDecide0.mem_dedup	thm	false	propext
+FOL.Derives1	Derives₁.below.elim_and_r	ctor	false	
+FOL.Herbrand0	FOL.Herbrand0.instDecidablePTaut._proof_2	thm	false	propext
+FOL.QFDecide0	FOL.QFDecide0.mem_ctxA_left	thm	false	propext,Quot.sound
+FOL.PrenexNF0	FOL.PrenexNF0.mergeAndR_prenex	thm	false	propext
+FOL.Enumeration	FOL.Metamath.Enumeration.formulaSize.eq_7	thm	false	
+FOL.Herbrand0	FOL.Herbrand0.disjOf._f	def	false	
+FOL.NDtoLK0	FOL.NDtoLK0.wkR	thm	false	
+FOL.Enumeration	FOL.Metamath.Enumeration.formulaSize._f	def	false	
+FOL.Eigenvariable	_private.FOL.Eigenvariable.0.instReprFormulaG.repr.match_1.eq_3	thm	false	
+FOL.Eigenvariable	FOL.Eigenvariable.abs_neg	thm	false	
+FOL.Compacity0	FOL.Compacity0.infiniteDom_nat	thm	false	
+FOL.Semantics	FOL.Metamath.Semantics.updateEnv.eq_1	thm	false	
+FOL.Sequent0	LK₀.below.exL	ctor	false	
+FOL.FOL	Derives.bot_elim	ctor	false	
+FOL.Canonical0	FOL.Canonical0.eval_pullback_terms	thm	false	
+TheoryFramework.Logic	TheoryFramework.CompleteLogic.rec	rec	false	
+FOL.Semantics	_private.FOL.Semantics.0.getAt?.match_4.eq_1	thm	false	propext
+FOL.QFDecide0	FOL.QFDecide0.dedup_sub._f	def	false	
+FOL.DecEq	instDecidableEqFormulaG.decEq._proof_21	thm	false	
+FOL.Fresh0	FOL.Fresh0.cst_bound_term._f	def	false	propext,Classical.choice,Quot.sound
+FOL.Semantics	FOL.Metamath.Semantics.evalTerm._unsafe_rec	def	false	
+FOL.Henkin0	FOL.Henkin0.DerivesSet₀	def	false	
+FOL.Finitary0	FOL.Finitary0.lk0_not_empty_fin	thm	false	propext,Quot.sound
+FOL.Hauptsatz0	FOL.Hauptsatz0.liftTerm_subst_le._proof_5	thm	false	propext,Quot.sound
+FOL.Hauptsatz0	FOL.Hauptsatz0.substTerm_subst_le._proof_10	thm	false	propext,Quot.sound
+FOL.BlockExtraction0	_private.FOL.BlockExtraction0.0.FOL.BlockExtraction0.appEq	thm	false	propext
+FOL.Semantics	FOL.Metamath.Semantics.shift_updateEnv_subst_comm	thm	false	propext,Quot.sound
+FOL.Tactics	getAllPositions._sparseCasesOn_1	def	false	propext
+FOL.QFDecide0	FOL.QFDecide0.mem_splits	thm	false	propext,Quot.sound
+FOL.Sequent0	LKc.below	ind	false	
+FOL.Semantics	replaceAt.eq_4	thm	false	propext
+FOL.Semantics	FOL.Metamath.Semantics.evalFormula.eq_4	thm	false	
+FOL.QFDecide0	FOL.QFDecide0.evIs_S._f	def	false	propext
+FOL.DecEq	instDecidableEqFormulaG.decEq._proof_17	thm	false	
+FOL.DecEq	instDecidableEqFormulaG.decEq._proof_18	thm	false	
+FOL.Derives2	FOL.Derives2.eq_symm	thm	false	
+FOL.Eigenvariable	FOL.Eigenvariable.occursFormula._f	def	false	
+FOL.Enumeration	FOL.Metamath.Enumeration.natToString	def	false	propext,Quot.sound
+TheoryFramework.Logic	TheoryFramework.CompleteLogic.recOn	def	false	
+FOL.QFDecide0	FOL.QFDecide0.ext.match_1	def	false	propext
+FOL.Semantics	FOL.Metamath.Semantics.ModelG.mk.injEq	thm	false	propext
+FOL.Enumeration	FOL.Metamath.Enumeration.natToFormula._proof_8	thm	false	propext,Quot.sound
+FOL.Enumeration	FOL.Metamath.Enumeration.termSize._unsafe_rec	def	false	
+FOL.FOL	instBEqTermG.beq	opaque	false	
+FOL.Eigenvariable	_private.FOL.Eigenvariable.0.instReprPos.repr.match_1.eq_1	thm	false	
+FOL.Eigenvariable	FOL.Eigenvariable.occursFormula	def	false	
+FOL.Derives2	FOL.Derives2.eq_substTerms.match_1	def	false	
+FOL.Hauptsatz0	FOL.Hauptsatz0.LeftPrin₀._sparseCasesOn_1	def	false	propext
+FOL.Rename	_private.FOL.Rename.0.instReprPos.repr.match_1.eq_1	thm	false	
+FOL.FOL	FormulaG.eq.sizeOf_spec	thm	false	
+FOL.FOL	FormulaG.ex.sizeOf_spec	thm	false	
+FOL.Derives2	Derives₂.below.dne_schema	ctor	false	
+FOL.Semantics	FOL.Metamath.Semantics.contextSatisfies_lift_zero	thm	false	propext,Quot.sound
+FOL.Inversion0	FOL.Inversion0.inv_orL_l	thm	false	propext,Quot.sound
+FOL.Lindenbaum0	FOL.Lindenbaum0.derivesSet0_intro_impl	thm	false	propext,Classical.choice,Quot.sound
+FOL.SkolemNF0	FOL.SkolemNF0.derives0_allBlock_mp	thm	false	propext,Quot.sound
+FOL.Complexity	_private.FOL.Complexity.0.FOL.Complexity.formulaComplexity.match_1.eq_4	thm	false	
+FOL.Inversion0	FOL.Inversion0.inv_exL	thm	false	propext,Quot.sound
+FOL.QFDecide0	FOL.QFDecide0.subT.match_1	def	false	
+FOL.Enumeration	FOL.Metamath.Enumeration.natToList.eq_2	thm	false	propext,Quot.sound
+FOL.FOL	instReprTermG.repr._unsafe_rec	def	false	propext
+FOL.SkolemN0	FOL.SkolemN0.envPush.match_1	def	false	
+FOL.Craig0	FOL.Craig0.LKp.below.exL	ctor	false	
+FOL.Theorems.Eq	_private.FOL.Theorems.Eq.0.instReprFormulaG.repr.match_1.eq_5	thm	false	
+FOL.Finitary0	_private.FOL.Finitary0.0.FOL.Finitary0.tval.match_1.eq_3	thm	false	
+FOL.Derives2	FOL.Derives2.eq_atom_pw	thm	false	propext
+FOL.Semantics	replaceAt.eq_3	thm	false	propext
+FOL.DecEq	FOL.DecEq.decEqTerms._unsafe_rec	def	false	
+FOL.Derives2	FOL.Derives2.PwEq₂.below.cons	ctor	false	
+FOL.QFDecide0	FOL.QFDecide0.pick_exists._f	def	false	Quot.sound
+FOL.Sequent0	LK₀.andL	ctor	false	
+FOL.Semantics	FOL.Metamath.Semantics.eval_liftFormula_ext	thm	false	propext,Quot.sound
+FOL.Deduction	FOL.Metamath.Deduction.deduction_theorem	thm	false	propext
+FOL.Enumeration	FOL.Metamath.Enumeration.unpair.eq_def	thm	false	
+TheoryFramework.Theory	TheoryFramework.Theory.recOn	def	false	
+FOL.SkolemHerbrand0	FOL.SkolemHerbrand0.impAll_ex_neg_not_forall	thm	false	propext,Quot.sound
+FOL.Semantics	FOL.Metamath.Semantics.ModelG.mk.inj	thm	false	
+FOL.Semantics	_private.FOL.Semantics.0.FOL.Metamath.Semantics.evalFormula.match_1.eq_8	thm	false	
+FOL.Craig0	FOL.Craig0.predF._sunfold	def	false	
+FOL.NDtoLK0	FOL.NDtoLK0.herbrandExtraction_of_cutElim	thm	false	propext,Quot.sound
+FOL.Derives2	Derives₂.forall_not_ex_not	ctor	false	
+FOL.Complexity	FOL.Complexity.formulaComplexity.eq_4	thm	false	
+FOL.SkolemNF0	FOL.SkolemNF0.occurs_mergeImplR	thm	false	propext
+FOL.Derives1	Derives₁.intro_or_r	ctor	false	
+FOL.Fresh0	FOL.Fresh0.cst	def	false	propext
+FOL.Tactics	_aux_FOL_Tactics___macroRules_tacticDerive_weaken__1	def	false	
+FOL.SymClasses	FOL.FreshSym	ind	false	
+FOL.Theorems.Eq	FOL.substTerms_subst_comm_succ._f	def	false	
+FOL.QFDecide0	FOL.QFDecide0.atomT_sub	thm	false	propext
+FOL.Semantics	_private.FOL.Semantics.0.instReprFormulaG.repr.match_1.eq_8	thm	false	
+FOL.SkolemNF0	FOL.SkolemNF0.skolemize	def	false	propext
+FOL.QFDecide0	FOL.QFDecide0.eqPropCert_iff_ptaut	thm	false	propext
+FOL.Derives0	Derives₀.below.forall_not_ex_not	ctor	false	
+FOL.Semantics	_private.FOL.Semantics.0.FOL.Metamath.Semantics.evalFormula.match_1.eq_1	thm	false	
+FOL.Theorems.Eq	FOL.substTerms_lift_hole	thm	false	propext,Quot.sound
+FOL.Fresh0	FOL.Fresh0.cst_inj.match_1_1	def	false	propext
+FOL.QFDecide0	FOL.QFDecide0.pick.eq_1	thm	false	
+FOL.Interpolation0	FOL.Interpolation0.craig_impl₀	thm	false	propext,Quot.sound
+FOL.Rename	_private.FOL.Rename.0.getAt?.match_1.eq_1	thm	false	propext
+FOL.PrenexNF0	FOL.PrenexNF0.mergeAnd_iff.match_1_1	def	false	
+FOL.Complexity	FOL.Complexity.formulaComplexity.eq_8	thm	false	
+FOL.Sequent0	LK₀.casesOn	def	false	
+FOL.FOL	liftTerms.match_1	def	false	
+FOL.FOL	Derives	ind	false	propext
+FOL.Herbrand0	FOL.Herbrand0.eqReflAx	def	false	
+FOL.Derives1	Derives₁.below.hyp	ctor	false	
+FOL.Rename	FOL.Rename.renameTerms._unsafe_rec	def	false	
+FOL.Derives2	Derives₂.elim_ex	ctor	false	
+FOL.QFDecide0	FOL.QFDecide0.subTs	def	false	
+FOL.Herbrand0	_private.FOL.Herbrand0.0.FOL.Herbrand0.c	def	false	
+FOL.Semantics	FOL.Metamath.Semantics.shift_updateEnv_comm._proof_1_2	thm	false	propext,Quot.sound
+FOL.Rename	FOL.Rename.rename_liftTerm	thm	false	propext
+FOL.Semantics	_private.FOL.Semantics.0.instReprTermG.repr.match_1.eq_1	thm	false	
+FOL.QFDecide0	_private.FOL.QFDecide0.0.FOL.QFDecide0.v0	def	false	propext
+FOL.PrenexNF0	FOL.PrenexNF0.mergeOr_prenex._f	def	false	propext
+FOL.Finitary0	FOL.Finitary0.derives0_consistent_fin	thm	false	propext,Quot.sound
+FOL.Compacity0	FOL.Compacity0.CountableDom	def	false	
+FOL.FOL	Pos.body.sizeOf_spec	thm	false	
+FOL.Fresh0	_private.FOL.Fresh0.0.FOL.Fresh0.«_aux_FOL_Fresh0___macroRules__private_FOL_Fresh0_0_FOL_Fresh0_term_⊢₀*__1»	def	false	
+FOL.FOL	getAt?.match_1	def	false	propext
+FOL.PrenexNF0	FOL.PrenexNF0.or_commA	thm	false	
+FOL.Lift0	FOL.Lift0.substTerm_lift_var._f	def	false	propext,Quot.sound
+FOL.FOL	Derives.weakening	ctor	false	
+FOL.Semantics	getAt?.eq_10	thm	false	propext
+FOL.Finitary0	FOL.Finitary0.someTrue	def	false	
+FOL.FOL	liftTerms._unsafe_rec	def	false	
+FOL.QFDecide0	FOL.QFDecide0.peval_mp	thm	false	
+FOL.Soundness0	FOL.Metamath.Soundness0.derives0_soundness	thm	false	propext,Classical.choice,Quot.sound
+FOL.Hauptsatz0	FOL.Herbrand0.eqAtomAx.eq_1	thm	false	
+FOL.FOL	Pos.ctorElimType	def	false	
+FOL.Semantics	FOL.Metamath.Semantics.eval_substFormula_zero	thm	false	propext,Quot.sound
+TheoryFramework.Theory	TheoryFramework.Theory.mk	ctor	false	
+FOL.Hauptsatz0	LKh.implR	ctor	false	
+FOL.Derives0	derives0_raa	thm	false	
+FOL.Derives0	Derives₀.intro_forall	ctor	false	
+FOL.FOL	getAt?._sparseCasesOn_4	def	false	propext
+FOL.Eigenvariable	FOL.Eigenvariable.absFormula'.eq_2	thm	false	
+FOL.FOL	getAt?.match_4	def	false	propext
+FOL.SkolemNF0	FOL.SkolemNF0.qdepth.match_1	def	false	propext
+FOL.Interpolation0	FOL.Interpolation0.EqGen.inst	ctor	false	
+TheoryFramework.Logic	TheoryFramework.LogicSystem.semanticEntails	def	false	
+FOL.SequentSound0	FOL.SequentSound0.lk0_not_empty	thm	false	propext,Classical.choice,Quot.sound
+FOL.FOL	instReprPos	def	false	
+TheoryFramework.Theory	TheoryFramework.Theory.axioms	def	false	
+FOL.Eigenvariable	FOL.Eigenvariable.absDerives	thm	false	propext,Quot.sound
+FOL.Derives2	FOL.Derives2.PwEq₂.below.casesOn	def	false	
+FOL.QFDecide0	FOL.QFDecide0.dedup._f	def	false	
+FOL.BlockExtraction0	FOL.BlockExtraction0.instB_snoc	thm	false	propext,Quot.sound
+FOL.Derives2	Derives₂.below.intro_ex	ctor	false	
+FOL.Sequent0	LK₀.below.struct	ctor	false	
+FOL.Sequent0	LKc.below.rec	rec	false	
+FOL.Derives0	Derives₀.below.elim_ex	ctor	false	
+FOL.Rename	_private.FOL.Rename.0.instReprPos.repr.match_1.splitter	def	false	
+FOL.Semantics	FOL.Metamath.Semantics.evalFormula.eq_3	thm	false	
+FOL.Theorems.Derived	FOL.Theorems.Derived.or_assoc	thm	false	propext
+FOL.SkolemN0	FOL.SkolemN0.vars	def	false	
+FOL.Propositional0	FOL.Propositional0.derives0_em_ctx	thm	false	
+TheoryFramework.Properties	TheoryFramework.IsAxiomRedundant	def	false	
+FOL.Craig0	FOL.Craig0.cov_unlift	thm	false	propext,Quot.sound
+FOL.Hauptsatz0	_private.FOL.Hauptsatz0.0.FOL.Hauptsatz0.deg.match_1.eq_8	thm	false	
+FOL.Eigenvariable	FOL.Eigenvariable.absTerm'_subst._f	def	false	propext,Quot.sound
+FOL.QFDecide0	FOL.QFDecide0.instsOf_eqInstance	thm	false	propext,Quot.sound
+FOL.PrenexNF0	FOL.PrenexNF0.mergeImpl._sunfold	def	false	propext
+FOL.Sequent0	FOL.Sequent0.lk0_herbrand	thm	false	propext
+FOL.HerbrandBlock0	FOL.HerbrandBlock0.exBlock._unsafe_rec	def	false	
+FOL.Fresh0	FOL.Fresh0.shift_inj	thm	false	propext,Quot.sound
+FOL.Interpolation0	FOL.Interpolation0.predL_em.match_1_1	def	false	
+FOL.Sequent0	LK₀.below.implR	ctor	false	
+FOL.PrenexNF0	FOL.PrenexNF0.prenex._f	def	false	propext
+FOL.Finitary0	_private.FOL.Finitary0.0.FOL.Finitary0.tval.match_1.eq_2	thm	false	
+FOL.Semantics	FOL.Metamath.Semantics.replaceAt_soundness.match_1_50	def	false	propext
+FOL.Complexity	FOL.Complexity.formulaComplexity.eq_3	thm	false	
+FOL.Eigenvariable	FOL.Eigenvariable.absFormula_subst	thm	false	propext,Quot.sound
+FOL.Derives2	FOL.Derives2.PwEq₂.recOn	def	false	
+FOL.Sequent0	LKc.below.implL	ctor	false	
+FOL.FOL	liftFormula._f	def	false	
+FOL.DecEq	instDecidableEqFormulaG.decEq._proof_39	thm	false	
+FOL.FOL	Pos.left.inj	thm	false	
+FOL.HerbrandBlock0	FOL.HerbrandBlock0.instB._sunfold	def	false	
+FOL.Interpolation0	FOL.Interpolation0.sub_front'	thm	false	propext
+FOL.Eigenvariable	FOL.Eigenvariable.occursTerm	def	false	
+FOL.DecEq	instDecidableEqFormulaG.decEq._proof_72	thm	false	
+FOL.Lindenbaum0	FOL.Lindenbaum0.lindenbaum_step_consistent._f	def	false	propext,Classical.choice,Quot.sound
+FOL.Inconsistencia	FOL.Inconsistencia.ctx_nil	thm	false	
+FOL.QFDecide0	FOL.QFDecide0.eq_of_cls	thm	false	propext,Quot.sound
+FOL.Theorems.Eq	FOL.substTerm_lift_comm_zero._proof_2	thm	false	propext,Quot.sound
+FOL.QFDecide0	_private.FOL.QFDecide0.0.FOL.QFDecide0.ca	def	false	
+FOL.Hauptsatz0	LKh.below.andL	ctor	false	
+FOL.Craig0	FOL.Craig0.LKp	ind	false	
+FOL.Rename	FOL.Rename.renameFormula.eq_3	thm	false	
+FOL.FOL	LocalRule.rec	rec	false	
+FOL.Sequent0	LKc.below.orR	ctor	false	
+FOL.QFDecide0	FOL.QFDecide0.Good.symm	thm	false	propext,Quot.sound
+FOL.PrenexNF0	FOL.PrenexNF0.or_ex_r	thm	false	propext,Quot.sound
+FOL.Craig0	FOL.Craig0.LKp.below.allL	ctor	false	
+TheoryFramework.Logic	TheoryFramework.LogicSystem.casesOn	def	false	
+FOL.Derives2	FOL.Derives2.derives0_iff_derives2	thm	false	propext,Quot.sound
+FOL.Hauptsatz0	FOL.Hauptsatz0.subA_wk	thm	false	
+FOL.Semantics	FOL.Metamath.Semantics.shiftEnv.eq_1	thm	false	
+TheoryFramework.Logic	TheoryFramework.SoundLogic.casesOn	def	false	
+TheoryFramework.Relations	TheoryFramework.TheoryUnion	def	false	
+FOL.Theorems.Eq	FOL.substTerms_liftTerms	thm	false	propext,Quot.sound
+FOL.Hauptsatz0	FOL.Hauptsatz0.map_subst_lift._f	def	false	propext,Quot.sound
+FOL.Eigenvariable	FOL.Eigenvariable.absTerm	def	false	
+FOL.QFDecide0	FOL.QFDecide0.subT	def	false	
+FOL.Derives2	Derives₂.below.rec	rec	false	
+FOL.Propositional0	FOL.Propositional0.patoms._f	def	false	
+FOL.Craig0	FOL.Craig0.predF	def	false	
+FOL.DecEq	instDecidableEqFormulaG.decEq._proof_7	thm	false	
+FOL.Enumeration	FOL.Metamath.Enumeration.termsSize._unsafe_rec	def	false	
+FOL.FOL	Derives.below.rewrite_at	ctor	false	propext
+FOL.Finitary0	FOL.Finitary0.lkc_empty_of_no_bot	thm	false	
+FOL.DecEq	instDecidableEqFormulaG.decEq._proof_40	thm	false	
+FOL.PrenexNF0	FOL.PrenexNF0.mergeOrR_iff	thm	false	propext,Quot.sound
+FOL.MetaRules	FOL.MetaRules.raa	axiom	false	propext,FOL.MetaRules.raa
+FOL.SkolemN0	FOL.SkolemN0.eval_skolemAxN	thm	false	propext,Classical.choice,Quot.sound
+FOL.HenkinLimit0	FOL.HenkinLimit0.hen_mono._f	def	false	propext,Classical.choice,Quot.sound
+FOL.Craig0	FOL.Craig0.predF_subst	thm	false	
+FOL.Sequent0	LK₀.eqAx	ctor	false	
+FOL.Semantics	_private.FOL.Semantics.0.instReprTermG.repr.match_1.splitter	def	false	
+FOL.Herbrand0	FOL.Herbrand0.QuantFree._f	def	false	
+FOL.Lift0	FOL.Lift0.liftTerm_lift	thm	false	propext,Quot.sound
+FOL.Herbrand0	FOL.Herbrand0.EqInstance.func	ctor	false	
+FOL.Derives0	Derives₀.forall_not_ex_not	ctor	false	
+FOL.Enumeration	FOL.Metamath.Enumeration.natToTerm._mutual._proof_3	thm	false	propext,Quot.sound
+FOL.Herbrand0	FOL.Herbrand0.QuantFree	def	false	
+FOL.FOL	LocalRule.commuteImpl	ctor	false	
+FOL.SkolemNF0	FOL.SkolemNF0.occurs_mergeAnd._f	def	false	propext
+FOL.FOL	_aux_FOL_FOL___unexpand_FormulaG_or_1	def	false	
+FOL.Hauptsatz0	FOL.Hauptsatz0.liftTerm_subst_le._proof_7	thm	false	propext,Quot.sound
+FOL.Propositional0	FOL.Propositional0.peval	def	false	
+FOL.SymClasses	FOL.FreshSym.shift	def	false	
+FOL.Propositional0	FOL.Propositional0.peval_implChain.match_1_1	def	false	
+FOL.Rename	FOL.Rename.renameFormula.eq_6	thm	false	
+FOL.Eigenvariable	FOL.Eigenvariable.occursTerms._sunfold	def	false	
+FOL.DecEq	FOL.DecEq.decEqTerm._proof_3	thm	false	
+FOL.Rename	FOL.Rename.rename_substTerm._f	def	false	propext
+TheoryFramework.Logic	TheoryFramework.CompleteLogic.complete	thm	false	
+FOL.Canonical0	FOL.Canonical0.derives0_peirce	thm	false	propext,Classical.choice,Quot.sound
+FOL.Eigenvariable	FOL.Eigenvariable.absTerm_subst	thm	false	propext,Quot.sound
+FOL.Eigenvariable	FOL.Eigenvariable.occursTerms._f	def	false	
+FOL.Derives2	«_aux_FOL_Derives2___macroRules_term_⊢₂__1»	def	false	
+FOL.Herbrand0	FOL.Herbrand0.pcheck_sound.match_1_1	def	false	
+FOL.Theorems.Eq	FOL.liftTerm_comm_zero	thm	false	propext,Quot.sound
+FOL.HenkinLimit0	FOL.HenkinLimit0.occursTerm_lift._f	def	false	
+FOL.PrenexNF0	FOL.PrenexNF0.mergeOr_iff	thm	false	propext,Quot.sound
+FOL.Theorems.Derived	FOL.Theorems.Derived.and_elim_left	thm	false	propext
+FOL.Enumeration	FOL.Metamath.Enumeration.unpair	def	false	
+FOL.Eigenvariable	_private.FOL.Eigenvariable.0.FOL.Eigenvariable.absTerms'.match_1.splitter	def	false	
+FOL.Theorems.Quantifiers	liftFormula.eq_1	thm	false	
+FOL.Semantics	FOL.Metamath.Semantics.ModelG.mk.sizeOf_spec	thm	false	
+FOL.DecEq	FOL.DecEq.decEqTerms.match_3	def	false	
+FOL.Hauptsatz0	LKh.orL	ctor	false	
+FOL.QFDecide0	FOL.QFDecide0.pick_some	thm	false	propext
+FOL.Theorems.Quantifiers	substTerms.eq_def	thm	false	
+FOL.Rename	FOL.Rename.renameTerms.eq_2	thm	false	
+FOL.QFDecide0	FOL.QFDecide0.end_mem_mixL	thm	false	propext,Quot.sound
+FOL.FOL	Pos.left.elim	def	false	
+FOL.Sequent0	FOL.Sequent0.quantFree_subst	thm	false	
+FOL.PrenexNF0	FOL.PrenexNF0.iffAll_and	thm	false	propext,Quot.sound
+FOL.SymClasses	FOL.EnumSym	ind	false	
+FOL.Propositional0	FOL.Propositional0.kalmar	thm	false	propext
+FOL.Theorems.Eq	FOL.substTerm_subst_comm_succ._proof_2	thm	false	propext,Quot.sound
+FOL.Enumeration	FOL.Metamath.Enumeration.formulaSize.match_1	def	false	
+FOL.FOL	Derives.below.casesOn	def	false	propext
+FOL.Eigenvariable	FOL.Eigenvariable.absTerms'.congr_simp	thm	false	Quot.sound
+FOL.FOL	Derives.below.dne_schema	ctor	false	propext
+FOL.DecEq	instDecidableEqFormulaG.decEq._proof_66	thm	false	
+FOL.Theorems.Eq	FOL.substTerms_append.match_1_1	def	false	
+TheoryFramework.Theory	TheoryFramework.Theory.mk.inj	thm	false	
+FOL.Derives0	Derives₀.recOn	def	false	propext
+FOL.HenkinLimit0	FOL.HenkinLimit0.occursTerms_lift.match_1	def	false	
+FOL.Craig0	FOL.Craig0.LKp.below.andL	ctor	false	
+FOL.HenkinLimit0	FOL.HenkinLimit0.hen_consistent.match_1_1	def	false	
+FOL.Herbrand0	FOL.Herbrand0.HerbrandCert	def	false	
+FOL.Rename	FOL.Rename.renameTerm._f	def	false	
+FOL.SkolemN0	FOL.SkolemN0.vars._unsafe_rec	def	false	
+FOL.Fresh0	FOL.Fresh0.shift	def	false	propext
+FOL.Derives1	Derives₁.below.intro_or_l	ctor	false	
+FOL.SkolemNF0	FOL.SkolemNF0.occurs_mergeImpl	thm	false	propext
+FOL.QFDecide0	FOL.QFDecide0.atomT_ctx	thm	false	propext,Quot.sound
+FOL.Semantics	FOL.Metamath.Semantics.replaceAt_soundness.match_1_44	def	false	propext
+FOL.Derives2	Derives₂.below.intro_or_r	ctor	false	
+FOL.SkolemHerbrand0	FOL.SkolemHerbrand0.herbrand_of_skolemNF₀	thm	false	propext,Quot.sound
+FOL.SymClasses	FOL.FreshSym.cst_ne_shift	thm	false	
+FOL.Hauptsatz0	FOL.Hauptsatz0.leftPrin_close	thm	false	propext
+FOL.SequentSound0	FOL.SequentSound0.lk0_sound	thm	false	propext,Classical.choice,Quot.sound
+FOL.PrenexNF0	FOL.PrenexNF0.iffAll_refl	thm	false	
+FOL.SkolemNF0	FOL.SkolemNF0.occurs_mergeImpl._f	def	false	propext
+FOL.Derives1	Derives₁.intro_forall	ctor	false	
+FOL.QFDecide0	FOL.QFDecide0.mem_subTs_of_mem._f	def	false	propext
+TheoryFramework.Logic	TheoryFramework.LogicSystem.ctorIdx	def	false	
+FOL.Herbrand0	FOL.Herbrand0.ptautCheck_iff	thm	false	propext
+FOL.Finitary0	FOL.Finitary0.lkc_empty	thm	false	propext,Quot.sound
+FOL.Fresh0	FOL.Fresh0.cst_bound_formula	thm	false	propext,Classical.choice,Quot.sound
+FOL.Canonical0	FOL.Canonical0.derives0_em	thm	false	propext,Classical.choice,Quot.sound
+TheoryFramework.MetaTheorems	TheoryFramework.equiv_of_conservative	thm	false	
+FOL.Eigenvariable	FOL.Eigenvariable.absTerm'_subst._proof_9	thm	false	propext,Quot.sound
+FOL.Eigenvariable	_private.FOL.Eigenvariable.0.liftTerms.match_1.eq_2	thm	false	
+TheoryFramework.Logic	TheoryFramework.LogicSystem.rec	rec	false	
+FOL.Prenex0	FOL.Prenex0.or_forall	thm	false	propext,Quot.sound
+FOL.Hauptsatz0	FOL.Hauptsatz0.map_sub	thm	false	propext,Quot.sound
+FOL.Eigenvariable	FOL.Eigenvariable.absTerm_lift	thm	false	propext,Quot.sound
+FOL.FOL	Term	def	false	
+FOL.Sequent0	LKc.allR	ctor	false	
+FOL.NDtoLK0	FOL.NDtoLK0.mpLK	thm	false	
+FOL.Lindenbaum0	FOL.Lindenbaum0.LindenbaumStep.eq_1	thm	false	propext,Classical.choice,Quot.sound
+TheoryFramework.Properties	TheoryFramework.SetIsConsistent	def	false	
+FOL.QFDecide0	FOL.QFDecide0.headA.eq_1	thm	false	propext
+FOL.Enumeration	FOL.Metamath.Enumeration.natToFormula	def	false	propext,Quot.sound
+FOL.Derives2	Derives₂.below.intro_forall	ctor	false	
+FOL.Derives1	_aux_FOL_Derives1___unexpand_Derives₁_1	def	false	
+FOL.Eigenvariable	FOL.Eigenvariable.posDepth.eq_3	thm	false	
+FOL.Herbrand0	FOL.Herbrand0.eqFuncAx	def	false	
+FOL.Skolem0	FOL.Skolem0.evalTerms_updateFunc.match_1	def	false	
+FOL.PrenexNF0	FOL.PrenexNF0.mergeAndR	def	false	propext
+FOL.HenkinLimit0	FOL.HenkinLimit0.hidx_mono	thm	false	propext,Classical.choice,Quot.sound
+FOL.Sequent0	LK₀.allL	ctor	false	
+FOL.Theorems.Quantifiers	FOL.Theorems.Quantifiers.substTerm_lift_cancel_var._proof_8	thm	false	propext,Quot.sound
+FOL.Rename	_private.FOL.Rename.0.instReprFormulaG.repr.match_1.eq_2	thm	false	
+FOL.FOL	instBEqTermG.beq._sparseCasesOn_2	def	false	propext
+FOL.Propositional0	_private.FOL.Propositional0.0.FOL.Propositional0.peval.match_1.eq_1	thm	false	
+FOL.Derives0	Derives₀.refl	ctor	false	
+FOL.Enumeration	FOL.Metamath.Enumeration.natToTerm.eq_def	thm	false	propext,Quot.sound
+FOL.Theorems.Quantifiers	substFormula.eq_def	thm	false	
+FOL.QFDecide0	FOL.QFDecide0.mixL._f	def	false	
+FOL.Derives2	Derives₂.below	ind	false	
+FOL.Lift0	FOL.Lift0.liftTerms_subst	thm	false	propext,Quot.sound
+FOL.Propositional0	FOL.Propositional0.implChain.match_1	def	false	
+FOL.FOL	instBEqTermG	def	false	
+FOL.NDtoLK0	FOL.NDtoLK0.viaEqImpl	thm	false	
+FOL.Hauptsatz0	LKh	ind	false	
+FOL.FOL	«term_∨__1»	def	false	
+FOL.HenkinLimit0	FOL.HenkinLimit0.not_occurs_substTerms	thm	false	
+FOL.Hauptsatz0	FOL.Hauptsatz0.lk0_lift	thm	false	propext,Quot.sound
+FOL.Enumeration	_private.FOL.Enumeration.0.FOL.Metamath.Enumeration.formulaSize.match_1.eq_5	thm	false	
+FOL.Derives1	Derives₁.below.casesOn	def	false	
+FOL.SkolemNF0	FOL.SkolemNF0.occurs_mergeOrR.match_1_1	def	false	propext
+FOL.Semantics	FOL.Metamath.Semantics.evalFormula.eq_7	thm	false	
+FOL.Hauptsatz0	LKh.below.allL	ctor	false	
+FOL.DecEq	FOL.DecEq.decEqTerms._proof_6	thm	false	
+FOL.Eigenvariable	FOL.Eigenvariable.absTerm'_subst._proof_10	thm	false	propext,Quot.sound
+FOL.QFDecide0	FOL.QFDecide0.derives0_qf_iff_sub	thm	false	propext,Quot.sound
+FOL.Hauptsatz0	LKh.exR	ctor	false	
+FOL.Herbrand0	FOL.Herbrand0.pcheck	def	false	
+FOL.Theorems.Eq	FOL.substTerm_lift_comm._f	def	false	propext,Quot.sound
+FOL.FOL	FormulaG.eq.inj	thm	false	
+FOL.Compacity0	FOL.Compacity0.evalTerm_updateCsts.match_1_1	def	false	
+FOL.Fresh0	FOL.Fresh0.cst_inj	thm	false	propext,Classical.choice,Quot.sound
+FOL.FOL	FormulaG.casesOn	def	false	
+FOL.Theorems.Eq	FOL.substTerms_append._f	def	false	
+FOL.Derives0	Derives₀.below.elim_and_l	ctor	false	
+FOL.Enumeration	FOL.Metamath.Enumeration.instEnumSymListChar	def	false	propext,Quot.sound
+FOL.Derives2	FOL.Derives2.eq_substTerms	thm	false	propext
+FOL.Theorems.Quantifiers	liftFormula.eq_def	thm	false	
+FOL.FOL	TermG.func.elim	def	false	
+FOL.Hauptsatz0	LKh.rec	rec	false	
+FOL.FOL	instBEqFormulaG.beq._sparseCasesOn_6	def	false	propext
+FOL.Tactics	getAllPositions.match_1	def	false	propext
+FOL.Semantics	getAt?.eq_9	thm	false	propext
+FOL.Hauptsatz0	FOL.Hauptsatz0.CutAdm₀	def	false	
+FOL.SymClasses	FOL.FreshSym.cst_inj	thm	false	
+FOL.BlockExtraction0	FOL.BlockExtraction0.herbrand_block₀	thm	false	propext,Quot.sound
+FOL.Soundness0	FOL.Metamath.Soundness0.derives0_not_derives_negP	thm	false	propext,Classical.choice,Quot.sound
+FOL.QFDecide0	FOL.QFDecide0.pick_exists	thm	false	Quot.sound
+FOL.Sequent0	LKc.below.casesOn	def	false	
+FOL.Semantics	FOL.Metamath.Semantics.evalFormula.match_1	def	false	
+FOL.Finitary0	FOL.Finitary0.tval	def	false	
+FOL.Compacity0	FOL.Compacity0.evalFormula_updateCsts.match_1_1	def	false	
+FOL.Interpolation0	FOL.Interpolation0.derives0_disjOf_of_refute	thm	false	propext
+FOL.Hauptsatz0	FOL.Hauptsatz0.liftTerm_subst_le._proof_13	thm	false	propext,Quot.sound
+FOL.HerbrandBlock0	FOL.HerbrandBlock0.liftN._unsafe_rec	def	false	
+FOL.Herbrand0	FOL.Herbrand0.disjOf	def	false	
+FOL.SkolemNF0	FOL.SkolemNF0.occurs_mergeOr	thm	false	propext
+FOL.FOL	TermG.below_1	def	false	
+FOL.Eigenvariable	FOL.Eigenvariable.derives0_inst_fresh	thm	false	propext,Quot.sound
+FOL.Canonical0	FOL.Canonical0.evalTerms_canonical	thm	false	propext,Classical.choice,Quot.sound
+FOL.SkolemN0	FOL.SkolemN0.evalTerms_vars.match_1_1	def	false	
+FOL.Hauptsatz0	_private.FOL.Hauptsatz0.0.FOL.Hauptsatz0.deg.match_1.eq_1	thm	false	
+FOL.Interpolation0	FOL.Interpolation0.gen_app	thm	false	propext
+FOL.PrenexNF0	FOL.PrenexNF0.mergeAnd._f	def	false	propext
+FOL.Derives2	Derives₂.eq_atom_congr	ctor	false	
+FOL.NDtoLK0	FOL.NDtoLK0.wkL	thm	false	
+FOL.HenkinLimit0	FOL.HenkinLimit0.hen	def	true	propext,Classical.choice,Quot.sound
+FOL.FOL	TermG.casesOn	def	false	
+TheoryFramework.Logic	TheoryFramework.CompleteLogic.mk	ctor	false	
+FOL.Derives2	FOL.Derives2.derives1_iff_derives2	thm	false	propext,Quot.sound
+TheoryFramework.Relations	TheoryFramework.intersection_le_left	thm	false	
+FOL.Lift0	FOL.Lift0.derives0_ex_forall_neg_absurd	thm	false	propext,Quot.sound
+FOL.Semantics	getAt?.eq_7	thm	false	propext
+FOL.SequentSound0	FOL.SequentSound0.eval_disjOf_of_mem.match_1_1	def	false	
+FOL.Enumeration	_private.FOL.Enumeration.0.FOL.Metamath.Enumeration.unpair.match_1.eq_1	thm	false	
+TheoryFramework.Logic	TheoryFramework.LogicSystem.mk._flat_ctor	def	false	
+FOL.Finitary0	FOL.Finitary0.tval._f	def	false	
+FOL.Theorems.Quantifiers	_private.FOL.Theorems.Quantifiers.0.instReprFormulaG.repr.match_1.eq_2	thm	false	
+FOL.HerbrandBlock0	FOL.HerbrandBlock0.subst_exBlock._proof_1_3	thm	false	propext,Quot.sound
+FOL.Enumeration	FOL.Metamath.Enumeration.natToFormula._proof_6	thm	false	propext,Quot.sound
+TheoryFramework.Properties	TheoryFramework.IsConsistent	def	false	
+FOL.FOL	FormulaG.atom.elim	def	false	
+FOL.QFDecide0	FOL.QFDecide0.ext_eqInstance	thm	false	propext
+FOL.QFDecide0	FOL.QFDecide0.pick.eq_2	thm	false	
+FOL.FOL	FormulaG.forall	ctor	false	
+TheoryFramework.Logic	TheoryFramework.CompleteLogic.casesOn	def	false	
+FOL.SkolemHerbrand0	FOL.SkolemHerbrand0.impAll_exBlock_neg	thm	false	propext,Quot.sound
+FOL.FOL	FormulaG.eq.injEq	thm	false	propext
+FOL.QFDecide0	FOL.QFDecide0.mem_qfT_of_S	thm	false	propext
+FOL.HenkinLimit0	_private.FOL.HenkinLimit0.0.FOL.HenkinLimit0._aux_FOL_HenkinLimit0___unexpand_FOL_Henkin0_DerivesSet₀_1	def	false	
+FOL.Semantics	FOL.Metamath.Semantics.ModelG.func	def	false	
+FOL.FOL	LocalRule.recOn	def	false	
+FOL.Fresh0	_private.FOL.Fresh0.0.FOL.Fresh0._aux_FOL_Fresh0___unexpand_FOL_Henkin0_DerivesSet₀_1	def	false	
+FOL.FOL	FormulaG.bottom.sizeOf_spec	thm	false	
+FOL.QFDecide0	_private.FOL.QFDecide0.0.FOL.QFDecide0.atomInsts.match_1.splitter	def	false	propext
+FOL.Semantics	FOL.Metamath.Semantics.shiftEnv.match_1	def	false	
+FOL.Lindenbaum0	FOL.Lindenbaum0.henkin_completion₀	thm	false	propext,Classical.choice,Quot.sound
+FOL.Sequent0	LKc.botL	ctor	false	
+FOL.HenkinLimit0	FOL.HenkinLimit0.hidx_ge.match_1_1	def	false	
+FOL.HerbrandBlock0	FOL.HerbrandBlock0.derives0_exBlock_of_inst.match_1_1	def	false	
+FOL.Derives2	Derives₂.below.refl	ctor	false	
+FOL.Theorems.Eq	FOL.substTerm_lift_comm._proof_5	thm	false	propext,Quot.sound
+FOL.Tactics	getAllPositions	opaque	false	
+FOL.Finitary0	FOL.Finitary0.allTrue_sub	thm	false	
+FOL.QFDecide0	FOL.QFDecide0.headF.eq_1	thm	false	
+FOL.Eigenvariable	FOL.Eigenvariable.absTerm'_lift._proof_11	thm	false	propext,Quot.sound
+FOL.Hauptsatz0	LKh.orR	ctor	false	
+FOL.MetaRules	FOL.MetaRules.and_intro	def	false	propext
+FOL.Theorems.Eq	FOL.substTerm_lift_comm	thm	false	propext,Quot.sound
+FOL.FOL	FormulaG.rec	rec	false	
+FOL.Rename	_private.FOL.Rename.0.instReprPos.repr.match_1.eq_2	thm	false	
+FOL.QFDecide0	FOL.QFDecide0.memB.eq_2	thm	false	
+FOL.Finitary0	FOL.Finitary0.allTrue_tl	thm	false	
+FOL.Hauptsatz0	FOL.Hauptsatz0.deg.eq_2	thm	false	
+FOL.SkolemHerbrand0	FOL.SkolemHerbrand0.herbrand_refutation₀	thm	false	propext,Classical.choice,Quot.sound
+TheoryFramework.Properties	TheoryFramework.IsSyntacticallyComplete	def	false	
+FOL.Propositional0	FOL.Propositional0.derives0_of_implChain	thm	false	
+FOL.Enumeration	_private.FOL.Enumeration.0.FOL.Metamath.Enumeration.unpair.match_3._arg_pusher	thm	false	
+FOL.Lift0	FOL.Lift0.liftTerm_subst	thm	false	propext,Quot.sound
+FOL.SymClasses	FOL.FreshSym.mk	ctor	false	
+FOL.FOL	instBEqFormulaG.beq.match_1	def	false	propext
+FOL.HenkinLimit0	FOL.HenkinLimit0.hen_consistent._f	def	false	propext,Classical.choice,Quot.sound
+FOL.Theorems.Eq	_private.FOL.Theorems.Eq.0.instReprTermG.repr.match_1.eq_2	thm	false	
+FOL.Canonical0	FOL.Canonical0.truth_lemma_lt._proof_1_3	thm	false	propext,Quot.sound
+FOL.Rename	FOL.Rename.rename_rename_formula	thm	false	propext
+FOL.Semantics	FOL.Metamath.Semantics.evalTerms.eq_def	thm	false	
+FOL.Canonical0	FOL.Canonical0.eval_pullback_terms.match_1	def	false	
+FOL.QFDecide0	FOL.QFDecide0.evI._sunfold	def	false	
+FOL.Interpolation0	FOL.Interpolation0.predL_em._f	def	false	
+FOL.FOL	liftTerms._sunfold	def	false	
+FOL.Derives1	Derives₁.below.dne_schema	ctor	false	
+FOL.SkolemNF0	FOL.SkolemNF0.allBlock_forall._f	def	false	
+FOL.DecEq	FOL.DecEq.decEqTerms	def	false	
+FOL.Derives0	Derives₀.elim_forall	ctor	false	
+FOL.Hauptsatz0	LKh.below.rec	rec	false	
+FOL.Rename	FOL.Rename.renameTerm._sunfold	def	false	
+FOL.QFDecide0	FOL.QFDecide0.mixT.match_1	def	false	propext
+FOL.Interpolation0	FOL.Interpolation0.derives0_discharge_ctx.match_1_1	def	false	
+FOL.Derives2	FOL.Derives2.eq_substTerm.match_1	def	false	
+FOL.Canonical0	FOL.Canonical0.PointwiseEqv.below.rec	rec	false	
+TheoryFramework.Relations	TheoryFramework.le_union_right	thm	false	
+FOL.FOL	FormulaG.atom.inj	thm	false	
+FOL.QFDecide0	FOL.QFDecide0.ext._sparseCasesOn_1	def	false	propext
+FOL.Eigenvariable	FOL.Eigenvariable.absTerm'.eq_1	thm	false	
+TheoryFramework.Relations	TheoryFramework.le_trans	thm	false	
+FOL.Theorems.Eq	FOL.substTerm_subst_lift_gen._proof_5	thm	false	propext,Quot.sound
+FOL.QFDecide0	_private.FOL.QFDecide0.0.FOL.QFDecide0.naiveInst	def	false	propext
+FOL.FOL	FormulaG.eq	ctor	false	
+FOL.FOL	FormulaG.ex.elim	def	false	
+FOL.Herbrand0	FOL.Herbrand0.pcheck._unsafe_rec	def	false	
+FOL.Craig0	FOL.Craig0.LKp.brecOn	thm	false	
+FOL.Eigenvariable	_private.FOL.Eigenvariable.0.FOL.Eigenvariable.posDepth.match_1.eq_4	thm	false	
+FOL.Theorems.Derived	FOL.Theorems.Derived.or_intro_left	thm	false	propext
+FOL.SkolemNF0	FOL.SkolemNF0.occurs_prenex.match_1_1	def	false	propext
+FOL.HenkinLimit0	FOL.HenkinLimit0.not_occurs_substFormula	thm	false	
+FOL.Soundness0	_private.FOL.Soundness0.0.FOL.Metamath.Soundness0.«term_⊨_»	def	false	
+FOL.Enumeration	FOL.Metamath.Enumeration.termsSize	def	false	
+FOL.Canonical0	FOL.Canonical0.IsMemComplete	def	false	
+FOL.FOL	TermG.var.injEq	thm	false	propext
+FOL.Canonical0	FOL.Canonical0.termEqv	def	false	
+FOL.QFDecide0	FOL.QFDecide0.qfInst	def	false	propext
+FOL.DecEq	instDecidableEqFormulaG.decEq._proof_57	thm	false	
+FOL.FOL	substTerm._f	def	false	
+FOL.Enumeration	FOL.Metamath.Enumeration.natToList.eq_def	thm	false	propext,Quot.sound
+FOL.QFDecide0	FOL.QFDecide0.subTs_closed._f	def	false	propext
+FOL.DecEq	instDecidableEqFormulaG.decEq._proof_36	thm	false	
+FOL.Craig0	FOL.Craig0.LKp.implR	ctor	false	
+FOL.Hauptsatz0	FOL.Hauptsatz0.liftTerm_subst_le	thm	false	propext,Quot.sound
+FOL.Semantics	getAt?.eq_def	thm	false	propext
+FOL.Enumeration	FOL.Metamath.Enumeration.unpair.eq_2	thm	false	
+FOL.Eigenvariable	_private.FOL.Eigenvariable.0.FOL.Eigenvariable.absTerm'.match_1.eq_3	thm	false	
+FOL.Enumeration	FOL.Metamath.Enumeration.natToFormula_surj	thm	false	propext,Classical.choice,Quot.sound
+FOL.HerbrandBlock0	FOL.HerbrandBlock0.liftN._sunfold	def	false	
+FOL.FOL	instReprPos.repr._unsafe_rec	def	false	
+FOL.HerbrandBlock0	FOL.HerbrandBlock0.instB	def	false	
+FOL.Craig0	FOL.Craig0.LKp.exL	ctor	false	
+FOL.SkolemNF0	FOL.SkolemNF0.qdepth_subst.match_1_1	def	false	
+FOL.DecEq	instDecidableEqFormulaG.decEq._proof_32	thm	false	
+FOL.Tactics	tacticDerive_rewrite_At_	def	false	
+FOL.FOL	substTerm._sunfold	def	false	
+FOL.Compacity0	FOL.Compacity0.countable_infinite_of_infinite	thm	false	propext,Classical.choice,Quot.sound
+FOL.Eigenvariable	_private.FOL.Eigenvariable.0.liftTerms.match_1.eq_1	thm	false	
+FOL.Eigenvariable	FOL.Eigenvariable.occursTerm._sunfold	def	false	
+FOL.FOL	TermG._sizeOf_inst	def	false	
+FOL.Semantics	FOL.Metamath.Semantics.contextSatisfies_lift_zero._simp_1_1	thm	false	propext,Quot.sound
+FOL.Canonical0	FOL.Canonical0.max_cons_or	thm	false	propext,Classical.choice,Quot.sound
+FOL.QFDecide0	FOL.QFDecide0.Pw.below.rec	rec	false	
+FOL.Complexity	_private.FOL.Complexity.0.instReprFormulaG.repr.match_1.eq_6	thm	false	
+FOL.Fresh0	FOL.Fresh0.exists_fresh	thm	false	propext,Classical.choice,Quot.sound
+FOL.Derives1	Derives₁.below.intro_or_r	ctor	false	
+FOL.Theorems.Eq	FOL.substTerm_subst_comm_succ._proof_12	thm	false	propext,Quot.sound
+FOL.Semantics	FOL.Metamath.Semantics.evalTerm.eq_2	thm	false	
+FOL.QFDecide0	FOL.QFDecide0.cls_spec	thm	false	propext,Quot.sound
+TheoryFramework.Logic	TheoryFramework.SoundLogic.recOn	def	false	
+FOL.Enumeration	FOL.Metamath.Enumeration.natToString_surj	thm	false	propext,Classical.choice,Quot.sound
+FOL.Interpolation0	FOL.Interpolation0.EqGen.below.all	ctor	false	
+FOL.Derives1	Derives₁.dne_schema	ctor	false	
+FOL.FOL	FormulaG.atom.noConfusion	def	false	
+FOL.Sequent0	FOL.Sequent0.disj_or_allFalse	thm	false	propext
+FOL.Sequent0	LKc.orL	ctor	false	
+FOL.Semantics	FOL.Metamath.Semantics.shiftEnv	def	false	
+FOL.Prenex0	FOL.Prenex0.and_forall	thm	false	propext,Quot.sound
+FOL.QFDecide0	FOL.QFDecide0.memB._unsafe_rec	def	false	
+FOL.Theorems.Eq	FOL.substTerm_lift_comm_zero._f	def	false	propext,Quot.sound
+FOL.Propositional0	FOL.Propositional0.peval.eq_3	thm	false	
+FOL.Herbrand0	FOL.Herbrand0.EqInstance.atom	ctor	false	
+FOL.Finitary0	FOL.Finitary0.tval_lift	thm	false	propext
+FOL.Theorems.Eq	FOL.substTerms_subst_comm_succ	thm	false	propext,Classical.choice,Quot.sound
+FOL.HenkinLimit0	FOL.HenkinLimit0.hen_mono.match_1_1	def	false	propext,Classical.choice,Quot.sound
+FOL.Derives1	Derives₁.brecOn	thm	false	
+FOL.Eigenvariable	FOL.Eigenvariable.posDepth.eq_def	thm	false	
+FOL.Interpolation0	FOL.Interpolation0.split_exists._f	def	false	
+FOL.FOL	Derives.below.weakening	ctor	false	propext
+FOL.Derives2	Derives₂.below.elim_forall	ctor	false	
+FOL.Sequent0	LK₀.below.casesOn	def	false	
+FOL.DecEq	instDecidableEqFormulaG.decEq._proof_23	thm	false	
+FOL.Semantics	FOL.Metamath.Semantics.evalTerm.eq_def	thm	false	
+FOL.Semantics	_private.FOL.Semantics.0.FOL.Metamath.Semantics.evalTerms.match_1.eq_2	thm	false	
+FOL.PrenexNF0	FOL.PrenexNF0.quantFree_lift	thm	false	
+FOL.PrenexNF0	FOL.PrenexNF0.impAll_or_l	thm	false	propext,Quot.sound
+FOL.QFDecide0	FOL.QFDecide0.topT._sunfold	def	false	propext
+FOL.Enumeration	FOL.Metamath.Enumeration.unpair_surj._proof_1_1	thm	false	propext,Quot.sound
+FOL.PrenexNF0	FOL.PrenexNF0.mergeOr_prenex.match_1_1	def	false	
+FOL.Finitary0	_private.FOL.Finitary0.0.FOL.Finitary0.tval.match_1.eq_4	thm	false	
+FOL.Interpolation0	FOL.Interpolation0.split_exists.match_1_1	def	false	
+FOL.Derives1	FOL.Derives1.rewrite_equiv._f	def	false	propext,Quot.sound
+TheoryFramework.Logic	TheoryFramework.LogicSystem.bottom	def	false	
+FOL.Hauptsatz0	FOL.Hauptsatz0.cutOf	thm	false	propext
+FOL.Hauptsatz0	FOL.Hauptsatz0.hauptsatz₀	thm	false	propext,Quot.sound
+FOL.Sequent0	LKc.eqAx	ctor	false	
+FOL.QFDecide0	_private.FOL.QFDecide0.0.FOL.QFDecide0.inL	thm	false	propext
+FOL.Eq0	FOL.Eq0.derives0_eq_symm	thm	false	propext,Quot.sound
+FOL.FOL	Derives.below.intro_forall	ctor	false	propext
+FOL.Rename	FOL.Rename.map_rename_rename	thm	false	propext
+FOL.QFDecide0	FOL.QFDecide0.qfT	def	false	propext
+FOL.Theorems.Eq	FOL.substTerm_subst_comm_succ._proof_9	thm	false	propext,Quot.sound
+FOL.Propositional0	FOL.Propositional0.peval_neg	thm	false	propext
+FOL.Derives2	FOL.Derives2.derives1_to_derives2	thm	false	propext,Quot.sound
+FOL.Hauptsatz0	FOL.Hauptsatz0.liftTerm_subst_le._proof_9	thm	false	propext,Quot.sound
+FOL.Canonical0	FOL.Canonical0.QuotientDomain	def	false	propext,Classical.choice,Quot.sound
+FOL.Complexity	FOL.Complexity.formulaComplexity.eq_6	thm	false	
+FOL.QFDecide0	FOL.QFDecide0.derives0_qf_iff_sub.match_1_1	def	false	propext
+FOL.FOL	instBEqFormulaG.beq._sunfold	def	false	propext
+FOL.DecEq	instDecidableEqFormulaG.decEq._proof_73	thm	false	
+FOL.FOL	Derives.below.refl	ctor	false	propext
+FOL.Canonical0	FOL.Canonical0.quotientOut	def	true	Classical.choice
+FOL.QFDecide0	FOL.QFDecide0.mem_dedup.match_1_1	def	false	
+FOL.SkolemN0	FOL.SkolemN0.not_occurs_vars	thm	false	
+FOL.Enumeration	FOL.Metamath.Enumeration.termsSize.eq_def	thm	false	
+FOL.Enumeration	FOL.Metamath.Enumeration.natToFormula._proof_4	thm	false	propext,Quot.sound
+FOL.Interpolation0	FOL.Interpolation0.sub_catR	thm	false	propext
+FOL.Finitary0	FOL.Finitary0.tval.eq_4	thm	false	
+FOL.Eigenvariable	FOL.Eigenvariable.absFormula'_subst._proof_1_19	thm	false	propext,Quot.sound
+FOL.Eigenvariable	FOL.Eigenvariable.posDepth.eq_2	thm	false	
+FOL.Theorems.Derived	FOL.Theorems.Derived.or_comm	thm	false	propext
+FOL.PrenexNF0	FOL.PrenexNF0.and_forall_r	thm	false	propext,Quot.sound
+FOL.PrenexNF0	FOL.PrenexNF0.mergeImplR_iff._f	def	false	propext,Quot.sound
+FOL.DecEq	instDecidableEqFormulaG.decEq._proof_6	thm	false	
+FOL.Fresh0	FOL.Fresh0.not_occurs_shiftTerms.match_1	def	false	
+FOL.FOL	getAt?._sunfold	def	false	propext
+FOL.Interpolation0	FOL.Interpolation0.predF_em.match_1_1	def	false	
+FOL.Fresh0	FOL.Fresh0.cst_ne_shift.match_1_1	def	false	
+FOL.HenkinLimit0	FOL.HenkinLimit0.hen_consistent	thm	false	propext,Classical.choice,Quot.sound
+FOL.Hauptsatz0	_private.FOL.Hauptsatz0.0.FOL.Hauptsatz0.deg.match_1.splitter	def	false	
+FOL.Lindenbaum0	FOL.Lindenbaum0.LindenbaumStep._sunfold	def	false	propext,Classical.choice,Quot.sound
+FOL.Canonical0	FOL.Canonical0.PointwiseEqv.below.casesOn	def	false	
+FOL.QFDecide0	FOL.QFDecide0.splits._f	def	false	
+FOL.Theorems.Eq	FOL.substTerm_subst_comm_succ._proof_10	thm	false	propext,Quot.sound
+FOL.Derives0	Derives₀.weakening	ctor	false	
+FOL.HerbrandBlock0	FOL.HerbrandBlock0.subst_exBlock	thm	false	propext,Quot.sound
+TheoryFramework.MetaTheorems	TheoryFramework.TheoryEquivalent.trans	thm	false	
+FOL.SkolemN0	FOL.SkolemN0.skolem_conservative_n₀	thm	false	propext,Classical.choice,Quot.sound
+FOL.Rename	FOL.Rename.derives0_rename	thm	false	propext,Quot.sound
+FOL.Enumeration	_private.FOL.Enumeration.0.FOL.Metamath.Enumeration.formulaSize.match_1.eq_1	thm	false	
+FOL.Eigenvariable	FOL.Eigenvariable.absFormula'_lift	thm	false	propext,Quot.sound
+FOL.Enumeration	FOL.Metamath.Enumeration.unpair_reach._proof_1_2	thm	false	propext,Quot.sound
+FOL.Theorems.Eq	FOL.substFormula_liftFormula	thm	false	propext,Quot.sound
+FOL.Semantics	FOL.Metamath.Semantics.updateEnv	def	false	
+FOL.Hauptsatz0	FOL.Hauptsatz0.mapA_sub	thm	false	propext,Quot.sound
+FOL.Theorems.Eq	FOL.derive_atom_congr	thm	false	propext,Quot.sound
+FOL.DecEq	FOL.DecEq.decEqTerm._proof_2	thm	false	
+FOL.HerbrandBlock0	FOL.HerbrandBlock0.ex_bloque_igualdad	thm	false	propext,Quot.sound
+FOL.Finitary0	FOL.Finitary0.someTrue_sub	thm	false	
+FOL.HenkinLimit0	FOL.HenkinLimit0.hen._sunfold	def	false	propext,Classical.choice,Quot.sound
+FOL.Enumeration	FOL.Metamath.Enumeration.term_surj_aux._proof_1_12	thm	false	propext,Quot.sound
+FOL.Theorems.Derived	FOL.Theorems.Derived.or_intro_right	thm	false	propext
+FOL.Derives2	Derives₂.below.bot_elim	ctor	false	
+FOL.FOL	FormulaG.or.noConfusion	def	false	
+FOL.PrenexNF0	FOL.PrenexNF0.prenex_isPrenex	thm	false	propext
+FOL.FOL	Pos.root.elim	def	false	
+FOL.Enumeration	FOL.Metamath.Enumeration.natToFormula.eq_1	thm	false	propext,Quot.sound
+TheoryFramework.Properties	TheoryFramework.IsIrredundant	def	false	
+FOL.QFDecide0	FOL.QFDecide0.qfCheck_iff	thm	false	propext
+FOL.Eigenvariable	_private.FOL.Eigenvariable.0.instReprPos.repr.match_1.eq_3	thm	false	
+FOL.BlockExtraction0	_private.FOL.BlockExtraction0.0.FOL.BlockExtraction0.nilLen	thm	false	
+FOL.BlockExtraction0	FOL.BlockExtraction0.BlockInv	def	false	
+FOL.Craig0	FOL.Craig0.predF_lift.match_1_1	def	false	
+FOL.Theorems.Derived	FOL.Theorems.Derived.and_assoc	thm	false	propext
+FOL.SkolemN0	FOL.SkolemN0.evalTerms_vars	thm	false	propext,Quot.sound
+FOL.Hauptsatz0	FOL.Hauptsatz0.cut_elimination₀	thm	false	propext,Quot.sound
+FOL.Interpolation0	FOL.Interpolation0.EqGen.all	ctor	false	
+FOL.Canonical0	FOL.Canonical0.PointwiseEqv.cons	ctor	false	
+FOL.SkolemHerbrand0	FOL.SkolemHerbrand0.derives0_iff_implChain	thm	false	propext
+FOL.Hauptsatz0	LKh.below.allR	ctor	false	
+FOL.QFDecide0	FOL.QFDecide0.dedup._sunfold	def	false	
+FOL.Eigenvariable	FOL.Eigenvariable.posDepth._f	def	false	
+FOL.FOL	FormulaG.ex.injEq	thm	false	propext
+FOL.Eigenvariable	FOL.Eigenvariable.occursTerm.match_1	def	false	
+FOL.Eigenvariable	FOL.Eigenvariable.absTerms'_eq_lift	thm	false	propext
+FOL.Sequent0	LK₀.below.allL	ctor	false	
+FOL.PrenexNF0	FOL.PrenexNF0.impAll_ex	thm	false	propext,Quot.sound
+FOL.HenkinLimit0	FOL.HenkinLimit0.hen_mono	thm	false	propext,Classical.choice,Quot.sound
+FOL.Herbrand0	FOL.Herbrand0.herbrandDisj	def	false	
+FOL.Hauptsatz0	FOL.Hauptsatz0.map_lift_subst.match_1_1	def	false	
+FOL.Complexity	FOL.Complexity.formulaComplexity.eq_1	thm	false	
+FOL.Complexity	_private.FOL.Complexity.0.instReprFormulaG.repr.match_1.splitter	def	false	
+FOL.Semantics	_private.FOL.Semantics.0.FOL.Metamath.Semantics.evalTerm.match_1.eq_1	thm	false	
+FOL.Canonical0	FOL.Canonical0.truth_lemma_lt._proof_1_2	thm	false	propext,Quot.sound
+FOL.QFDecide0	_private.FOL.QFDecide0.0.FOL.QFDecide0.cb	def	false	
+FOL.QFDecide0	FOL.QFDecide0.peval_implChain_inv._f	def	false	
+FOL.DecEq	instDecidableEqFormulaG.decEq._proof_74	thm	false	
+FOL.Derives0	Derives₀	ind	false	
+FOL.Rename	FOL.Rename.renameFormula._sunfold	def	false	
+FOL.Prenex0	FOL.Prenex0.or_ex	thm	false	propext,Quot.sound
+FOL.Compacity0	FOL.Compacity0.HasLargeModels	def	false	
+FOL.Propositional0	FOL.Propositional0.elim_atoms	thm	false	propext,Quot.sound
+FOL.SkolemNF0	FOL.SkolemNF0.skolemizeF_impAll.match_1_1	def	false	
+FOL.Hauptsatz0	LKh.below.struct	ctor	false	
+FOL.Derives2	«term_⊢₂_»	def	false	
+FOL.DecEq	instDecidableEqFormulaG.decEq._proof_41	thm	false	
+FOL.QFDecide0	FOL.QFDecide0.subTs_closed	thm	false	propext
+FOL.Eigenvariable	FOL.Eigenvariable.derives0_gen_fresh	thm	false	propext,Quot.sound
+FOL.PrenexNF0	FOL.PrenexNF0.mergeImplR_iff.match_1_1	def	false	
+FOL.Complexity	FOL.Complexity.formulaComplexity.eq_def	thm	false	
+FOL.Eigenvariable	FOL.Eigenvariable.abs'_replaceAt	thm	false	propext,Quot.sound
+FOL.Eigenvariable	_private.FOL.Eigenvariable.0.getAt?.match_1.splitter._sparseCasesOn_4	def	false	propext
+FOL.Sequent0	LKc.implL	ctor	false	
+FOL.HenkinLimit0	FOL.HenkinLimit0.not_occurs_substTerm.match_1	def	false	
+TheoryFramework.Theory	TheoryFramework.Theory.mk._flat_ctor	def	false	
+FOL.Hauptsatz0	FOL.Hauptsatz0.substTerms_subst_le	thm	false	propext,Quot.sound
+FOL.Semantics	FOL.Metamath.Semantics.evalTerm	def	false	
+FOL.Eigenvariable	FOL.Eigenvariable.occursTerms	def	false	
+FOL.Hauptsatz0	FOL.Hauptsatz0.leftPrin_mono	thm	false	propext,Quot.sound
+FOL.SkolemNF0	FOL.SkolemNF0.skolemNF_shape	thm	false	propext,Quot.sound
+FOL.FOL	getAt?._f	def	false	propext
+FOL.FOL	Derives.below.intro_ex	ctor	false	propext
+FOL.FOL	replaceAt._f	def	false	propext
+FOL.QFDecide0	FOL.QFDecide0.Good.atoms	thm	false	propext
+FOL.Craig0	FOL.Craig0.cov_one	thm	false	
+FOL.FOL	FormulaG.eq.elim	def	false	
+FOL.Theorems.Eq	FOL.substTerm_subst_comm_succ._proof_13	thm	false	propext,Quot.sound
+FOL.Theorems.Eq	_private.FOL.Theorems.Eq.0.instReprFormulaG.repr.match_1.eq_8	thm	false	
+FOL.SkolemN0	FOL.SkolemN0.allBlock._unsafe_rec	def	false	
+FOL.DecEq	instDecidableEqFormulaG.decEq._proof_56	thm	false	
+FOL.Derives2	FOL.Derives2.PwEq₂.below.rec	rec	false	
+FOL.Enumeration	FOL.Metamath.Enumeration.natToTerm_surj	thm	false	propext,Classical.choice,Quot.sound
+FOL.Enumeration	FOL.Metamath.Enumeration.natToTerm._mutual.eq_def	thm	false	propext,Quot.sound
+FOL.FOL	getAt?	def	false	propext
+FOL.Derives2	FOL.Derives2.PwEq₂.casesOn	def	false	
+FOL.Eigenvariable	FOL.Eigenvariable.absFormula_lift	thm	false	propext,Quot.sound
+FOL.Finitary0	FOL.Finitary0.someTrue_nil	thm	false	
+FOL.Eigenvariable	FOL.Eigenvariable.absTerm'_lift._f	def	false	propext,Quot.sound
+FOL.FOL	Derives.dne_schema	ctor	false	
+FOL.Hauptsatz0	FOL.Hauptsatz0.EqPropCert	def	false	
+FOL.Canonical0	FOL.Canonical0.PointwiseEqv.recOn	def	false	
+FOL.Theorems.Quantifiers	substFormula.eq_2	thm	false	
+FOL.Sequent0	FOL.Sequent0.CutElim₀	def	false	
+FOL.Derives2	Derives₂.below.intro_impl	ctor	false	
+FOL.Sequent0	LK₀.recOn	def	false	
+FOL.Theorems.Quantifiers	substTerm.eq_1	thm	false	
+FOL.FOL	_aux_FOL_FOL___unexpand_TermG_var_1	def	false	
+FOL.DecEq	instDecidableEqFormulaG.decEq._proof_65	thm	false	
+FOL.Canonical0	_private.FOL.Canonical0.0.FOL.Canonical0.«_aux_FOL_Canonical0___macroRules__private_FOL_Canonical0_0_FOL_Canonical0_term_⊢₀*__1»	def	false	
+FOL.Derives0	Derives₀.dne_schema	ctor	false	
+FOL.SkolemHerbrand0	FOL.SkolemHerbrand0.implChain_of_derives0	thm	false	propext
+FOL.Eigenvariable	FOL.Eigenvariable.absTerms'_subst._f	def	false	propext
+FOL.Soundness0	_private.FOL.Soundness0.0.FOL.Metamath.Soundness0._aux_FOL_Soundness0___unexpand_FOL_Metamath_Semantics_satisfies_1	def	false	
+FOL.QFDecide0	FOL.QFDecide0.Pw.casesOn	def	false	
+FOL.Canonical0	FOL.Canonical0.max_cons_complete	thm	false	propext,Classical.choice,Quot.sound
+FOL.Tactics	_aux_FOL_Tactics___elabRules_tacticDerive_hyp_1	def	false	propext,Classical.choice,Quot.sound
+FOL.SkolemNF0	FOL.SkolemNF0.skolemizeF_impAll	thm	false	propext,Quot.sound
+FOL.Interpolation0	FOL.Interpolation0.derives0_disjOf_of_refute._f	def	false	propext
+FOL.Theorems.Quantifiers	FOL.Theorems.Quantifiers.subst_distrib_and	thm	false	
+FOL.Fresh0	FOL.Fresh0.shiftTheory_fresh	thm	false	propext,Classical.choice,Quot.sound
+FOL.MetaRules	FOL.MetaRules.and_elim_right	def	false	propext
+FOL.FOL	Pos.body.inj	thm	false	
+FOL.Semantics	FOL.Metamath.Semantics.evalTerms._sunfold	def	false	
+FOL.Derives2	Derives₂.intro_and	ctor	false	
+FOL.Enumeration	FOL.Metamath.Enumeration.unpair._unsafe_rec	def	false	
+FOL.Eigenvariable	_private.FOL.Eigenvariable.0.FOL.Eigenvariable.absFormula'.match_1.eq_2	thm	false	
+FOL.Theorems.Quantifiers	substFormula.eq_7	thm	false	
+FOL.Herbrand0	FOL.Herbrand0.ex_tercio	thm	false	propext,Quot.sound
+FOL.FOL	FormulaG.bottom.elim	def	false	
+FOL.FOL	FormulaG	ind	false	
+FOL.SkolemN0	FOL.SkolemN0.vars._f	def	false	
+FOL.QFDecide0	FOL.QFDecide0.evIs._sunfold	def	false	
+FOL.Finitary0	_private.FOL.Finitary0.0.FOL.Finitary0.tval.match_1.eq_8	thm	false	
+FOL.Lindenbaum0	FOL.Lindenbaum0.lindenbaum_limit_bound.match_1_1	def	false	propext,Classical.choice,Quot.sound
+FOL.Compacity0	FOL.Compacity0.hasLargeModels_empty	thm	false	
+FOL.QFDecide0	FOL.QFDecide0.cls.match_1	def	false	
+FOL.Compacity0	FOL.Compacity0.infinite_model_of_large	thm	false	propext,Classical.choice,Quot.sound
+FOL.SkolemNF0	FOL.SkolemNF0.prenex_subst.match_1_1	def	false	
+FOL.Semantics	FOL.Metamath.Semantics.eval_liftTerms_ext.match_1	def	false	
+FOL.Semantics	FOL.Metamath.Semantics.evalTerms._unsafe_rec	def	false	
+FOL.Enumeration	FOL.Metamath.Enumeration.natToList._unsafe_rec	def	false	
+FOL.FOL	neg	def	false	
+TheoryFramework.Logic	TheoryFramework.CompleteLogic	ind	false	
+FOL.SkolemHerbrand0	FOL.SkolemHerbrand0.implChain_of_derives0.match_1_1	def	false	
+FOL.DecEq	instDecidableEqFormulaG.decEq._proof_67	thm	false	
+FOL.Craig0	FOL.Craig0.LKp.below.botL	ctor	false	
+FOL.Eigenvariable	_private.FOL.Eigenvariable.0.FOL.Eigenvariable.posDepth.match_1.eq_3	thm	false	
+FOL.Derives2	Derives₂.elim_forall	ctor	false	
+FOL.Rename	FOL.Rename.renameTerms._f	def	false	
+FOL.Hauptsatz0	FOL.Hauptsatz0.deg.eq_5	thm	false	
+FOL.DecEq	instDecidableEqFormulaG.decEq._proof_70	thm	false	
+FOL.PrenexNF0	FOL.PrenexNF0.mergeAnd_prenex.match_1_1	def	false	
+FOL.QFDecide0	FOL.QFDecide0.memB.eq_1	thm	false	
+FOL.FOL	Derives.below.gen_rule	ctor	false	propext
+FOL.Canonical0	_private.FOL.Canonical0.0.FOL.Canonical0.«term_⊢₀*_»	def	false	
+FOL.FOL	instBEqFormulaG.beq._sparseCasesOn_8	def	false	propext
+FOL.Herbrand0	FOL.Herbrand0.EqInstance.refl	ctor	false	
+TheoryFramework.MetaTheorems	TheoryFramework.empty_le	thm	false	
+FOL.Prenex0	FOL.Prenex0.inst_var0	thm	false	propext,Quot.sound
+FOL.Semantics	FOL.Metamath.Semantics.replaceAt_soundness.match_1_27	def	false	propext
+FOL.Rename	_private.FOL.Rename.0.FOL.Rename.renameTerms.match_1.eq_1	thm	false	
+FOL.Complexity	_private.FOL.Complexity.0.FOL.Complexity.formulaComplexity.match_1.eq_2	thm	false	
+TheoryFramework.Theory	TheoryFramework.Theory.fromList	def	false	
+FOL.QFDecide0	FOL.QFDecide0.headF.eq_2	thm	false	
+FOL.Semantics	FOL.Metamath.Semantics.ModelG.rel	def	false	
+FOL.FOL	«term⊥»	def	false	
+FOL.PrenexNF0	FOL.PrenexNF0.impAll_or_r	thm	false	propext,Quot.sound
+FOL.HerbrandBlock0	FOL.HerbrandBlock0.herbrand_block_iff	thm	false	propext,Quot.sound
+FOL.FOL	substTerms._sunfold	def	false	
+FOL.Derives2	Derives₂.elim_or	ctor	false	
+FOL.PrenexNF0	FOL.PrenexNF0.derives0_prenex_iff	thm	false	propext,Quot.sound
+FOL.Theorems.Eq	FOL.substTerm_subst_comm_succ._proof_16	thm	false	propext,Quot.sound
+FOL.QFDecide0	FOL.QFDecide0.dedup	def	false	
+FOL.Theorems.Eq	_private.FOL.Theorems.Eq.0.liftTerms.match_1.eq_1	thm	false	
+FOL.Derives0	derives0_to_derives	thm	false	propext
+FOL.FOL	substTerms	def	false	
+FOL.SymClasses	FOL.FreshSym.noConfusion	def	false	
+FOL.FOL	FormulaG._sizeOf_1	def	false	
+FOL.Compacity0	FOL.Compacity0.evalTerm_updateCsts._f	def	false	propext,Classical.choice,Quot.sound
+FOL.Herbrand0	FOL.Herbrand0.EqInstance	ind	false	
+FOL.Derives0	Derives₀.below	ind	false	propext
+FOL.Eigenvariable	FOL.Eigenvariable.absTerms'_subst	thm	false	propext,Quot.sound
+FOL.Rename	_private.FOL.Rename.0.FOL.Rename.renameFormula.match_1.eq_3	thm	false	
+FOL.Derives0	Derives₀.casesOn	def	false	propext
+FOL.Rename	FOL.Rename.rename_rename_terms._f	def	false	propext
+FOL.FOL	«term#_»	def	false	
+FOL.Fresh0	FOL.Fresh0.cst_bound_terms	thm	false	propext,Classical.choice,Quot.sound
+FOL.Hauptsatz0	FOL.Hauptsatz0.deg._f	def	false	
+FOL.Hauptsatz0	FOL.Hauptsatz0.substTerm_subst_le._proof_9	thm	false	propext,Quot.sound
+FOL.DecEq	instDecidableEqFormulaG.decEq._proof_68	thm	false	
+FOL.Craig0	FOL.Craig0.predF._unsafe_rec	def	false	
+FOL.QFDecide0	FOL.QFDecide0.ext	def	false	propext
+FOL.Eigenvariable	FOL.Eigenvariable.absFormula'.eq_7	thm	false	
+FOL.Sequent0	LK₀.orL	ctor	false	
+FOL.FOL	Pos.recOn	def	false	
+FOL.DecEq	instDecidableEqFormulaG.decEq._proof_28	thm	false	
+FOL.Sequent0	LKc.andL	ctor	false	
+FOL.SkolemNF0	FOL.SkolemNF0.derives0_allBlock_mp._f	def	false	propext,Quot.sound
+FOL.SkolemNF0	FOL.SkolemNF0.occurs_mergeOrR._f	def	false	propext
+FOL.FOL	«_aux_FOL_FOL___macroRules_term⊥_1»	def	false	
+FOL.FOL	Derives.below.dne_rule	ctor	false	propext
+FOL.SymClasses	FOL.instFreshSymListChar._proof_3	thm	false	
+FOL.Sequent0	LK₀.rec	rec	false	
+FOL.Theorems.Eq	FOL.substTerms_liftLift	thm	false	propext,Quot.sound
+FOL.Sequent0	LK₀.below.allR	ctor	false	
+FOL.DecEq	instDecidableEqFormula	def	false	
+FOL.FOL	Derives.elim_impl	ctor	false	
+FOL.Compacity0	FOL.Compacity0.loewenheim_skolem_down	thm	false	propext,Classical.choice,Quot.sound
+FOL.Rename	_private.FOL.Rename.0.getAt?.match_4.splitter	def	false	propext
+FOL.Derives0	Derives₀.below.elim_and_r	ctor	false	
+FOL.Semantics	FOL.Metamath.Semantics.evalFormula	def	false	
+FOL.Hauptsatz0	FOL.Hauptsatz0.lk0_subst	thm	false	propext,Quot.sound
+FOL.Semantics	_private.FOL.Semantics.0.getAt?.match_1.splitter._sparseCasesOn_4	def	false	propext
+FOL.FOL	FormulaG.forall.elim	def	false	
+FOL.FOL	Derives.rewrite_at	ctor	false	propext
+FOL.Eigenvariable	FOL.Eigenvariable.absTerms'._sunfold	def	false	
+FOL.HerbrandBlock0	FOL.HerbrandBlock0.quantFree_instB	thm	false	propext
+FOL.FOL	Derives.intro_and	ctor	false	
+FOL.Theorems.Eq	FOL.substTerm_liftLift._f	def	false	propext,Quot.sound
+FOL.Eigenvariable	FOL.Eigenvariable.absFormula'_subst	thm	false	propext,Quot.sound
+FOL.Complexity	_private.FOL.Complexity.0.FOL.Complexity.formulaComplexity.match_1.splitter	def	false	
+FOL.SkolemNF0	FOL.SkolemNF0.allBlock_forall	thm	false	
+FOL.Rename	_private.FOL.Rename.0.FOL.Rename.renameFormula.match_1.splitter	def	false	
+FOL.Herbrand0	FOL.Herbrand0.disjOf.match_1	def	false	
+FOL.Finitary0	FOL.Finitary0.tval.eq_3	thm	false	
+FOL.Skolem0	FOL.Skolem0.evalFormula_updateFunc	thm	false	
+FOL.Sequent0	FOL.Sequent0.sub_refl	thm	false	
+FOL.SkolemHerbrand0	FOL.SkolemHerbrand0.impAll_neg_allBlock.match_1_1	def	false	
+FOL.Derives0	«_aux_FOL_Derives0___macroRules_term_⊢₀__1»	def	false	
+FOL.FOL	FormulaG.impl.inj	thm	false	
+FOL.FOL	Derives.dne_rule	ctor	false	
+FOL.Derives2	FOL.Derives2.liftTerms_append	thm	false	
+FOL.SkolemNF0	FOL.SkolemNF0.not_occurs_skolemAxN	thm	false	
+FOL.SequentSound0	FOL.SequentSound0.eval_disjOf_of_mem	thm	false	
+FOL.Eigenvariable	FOL.Eigenvariable.absTerms_subst	thm	false	propext,Quot.sound
+FOL.Semantics	replaceAt.eq_2	thm	false	propext
+FOL.Eigenvariable	FOL.Eigenvariable.absTerms'	def	false	
+FOL.Hauptsatz0	FOL.Hauptsatz0.liftTerm_subst_le._proof_3	thm	false	propext,Quot.sound
+FOL.Enumeration	FOL.Metamath.Enumeration.formulaSize.eq_2	thm	false	
+FOL.QFDecide0	FOL.QFDecide0.good_ctx	thm	false	propext,Quot.sound
+FOL.Henkin0	_private.FOL.Henkin0.0.FOL.Henkin0.«_aux_FOL_Henkin0___macroRules__private_FOL_Henkin0_0_FOL_Henkin0_term_⊢₀*__1»	def	false	
+FOL.Sequent0	LKc.below.struct	ctor	false	
+FOL.Craig0	FOL.Craig0.predF.match_1	def	false	
+FOL.FOL	_aux_FOL_FOL___unexpand_FormulaG_and_1	def	false	
+FOL.Eigenvariable	FOL.Eigenvariable.absTerm'_lift._proof_13	thm	false	propext,Quot.sound
+FOL.Eigenvariable	_private.FOL.Eigenvariable.0.instReprTermG.repr.match_1.eq_1	thm	false	
+FOL.Theorems.Eq	FOL.substTerm_subst_lift_gen._proof_3	thm	false	propext,Quot.sound
+FOL.FOL	FormulaG.ex.noConfusion	def	false	
+FOL.FOL	TermG.ctorElimType	def	false	
+FOL.FOL	instBEqFormulaG.beq._sparseCasesOn_1	def	false	propext
+FOL.FOL	FormulaG.impl	ctor	false	
+FOL.Hauptsatz0	_private.FOL.Hauptsatz0.0.FOL.Hauptsatz0.deg.match_1.eq_7	thm	false	
+TheoryFramework.Theory	TheoryFramework.Theory._sizeOf_1	def	false	
+FOL.Eigenvariable	FOL.Eigenvariable.absFormula'.eq_4	thm	false	
+FOL.Skolem0	FOL.Skolem0.evalTerms_updateFunc._f	def	false	
+FOL.Rename	_private.FOL.Rename.0.instReprPos.repr.match_1.eq_4	thm	false	
+FOL.SkolemNF0	FOL.SkolemNF0.skolemize_shape	thm	false	propext,Quot.sound
+FOL.Theorems.Eq	FOL.substTerm_liftTerm._proof_1	thm	false	propext,Quot.sound
+FOL.QFDecide0	FOL.QFDecide0.atomInsts.match_1	def	false	propext
+FOL.SymClasses	FOL.EnumSym.mk._flat_ctor	def	false	
+FOL.Herbrand0	FOL.Herbrand0.EqInstance.symm	ctor	false	
+FOL.Theorems.Quantifiers	substTerm.eq_2	thm	false	
+FOL.FOL	Pos.right	ctor	false	
+FOL.Eigenvariable	FOL.Eigenvariable.absTerm'_subst._proof_12	thm	false	propext,Quot.sound
+FOL.FOL	liftTerms._f	def	false	
+FOL.Interpolation0	FOL.Interpolation0.craig₀	thm	false	propext,Quot.sound
+FOL.Enumeration	FOL.Metamath.Enumeration.natToTerms.eq_def	thm	false	propext,Quot.sound
+FOL.Semantics	_private.FOL.Semantics.0.FOL.Metamath.Semantics.evalFormula.match_1.eq_2	thm	false	
+TheoryFramework.Logic	TheoryFramework.LogicSystem.derives	def	false	
+FOL.HerbrandBlock0	FOL.HerbrandBlock0.liftN	def	false	
+FOL.Derives2	Derives₂.below.elim_impl	ctor	false	
+FOL.Craig0	FOL.Craig0.craig_example	thm	false	propext,Quot.sound
+FOL.Canonical0	FOL.Canonical0.PointwiseEqv.rec	rec	false	
+FOL.Craig0	FOL.Craig0.lkp_example	thm	false	
+FOL.DecEq	instDecidableEqFormulaG.decEq._proof_55	thm	false	
+FOL.QFDecide0	FOL.QFDecide0.mem_of_memB.match_1_1	def	false	
+FOL.Tactics	tacticDerive_hyp	def	false	
+FOL.SymClasses	FOL.EnumSym.ctorIdx	def	false	
+FOL.Enumeration	FOL.Metamath.Enumeration.natToFormula._proof_1	thm	false	propext,Quot.sound
+FOL.SkolemNF0	FOL.SkolemNF0.occurs_mergeAndR._f	def	false	propext
+FOL.Rename	_private.FOL.Rename.0.getAt?.match_1.splitter._sparseCasesOn_4	def	false	propext
+FOL.NDtoLK0	FOL.NDtoLK0.axH	thm	false	
+FOL.Derives1	FOL.Derives1.derives0_iff_derives1	thm	false	propext,Quot.sound
+FOL.HerbrandBlock0	FOL.HerbrandBlock0.liftN.match_1	def	false	
+FOL.Semantics	replaceAt.eq_6	thm	false	propext
+FOL.HenkinLimit0	_private.FOL.HenkinLimit0.0.FOL.HenkinLimit0.«_aux_FOL_HenkinLimit0___macroRules__private_FOL_HenkinLimit0_0_FOL_HenkinLimit0_term_⊢₀*__1»	def	false	
+FOL.QFDecide0	FOL.QFDecide0.mem_splits._f	def	false	propext,Quot.sound
+FOL.Lift0	FOL.Lift0.lift_localRule	thm	false	propext
+FOL.FOL	Pos.noConfusionType	def	false	
+FOL.Enumeration	FOL.Metamath.Enumeration.natToFormula.eq_def	thm	false	propext,Quot.sound
+FOL.Hauptsatz0	FOL.Hauptsatz0.substTerm_subst_le	thm	false	propext,Quot.sound
+FOL.Eigenvariable	FOL.Eigenvariable.absFormula'_subst._proof_1_20	thm	false	propext,Quot.sound
+FOL.QFDecide0	FOL.QFDecide0.pick_some._f	def	false	propext
+FOL.PrenexNF0	_private.FOL.PrenexNF0.0.FOL.PrenexNF0.down	thm	false	propext,Quot.sound
+FOL.Eigenvariable	_private.FOL.Eigenvariable.0.FOL.Eigenvariable.absFormula'.match_1.eq_8	thm	false	
+FOL.DecEq	FOL.DecEq.decEqTerm._proof_5	thm	false	
+FOL.Craig0	FOL.Craig0.cov_append	thm	false	propext
+FOL.QFDecide0	FOL.QFDecide0.mixL.match_1	def	false	
+FOL.FOL	Derives.below	ind	false	propext
+FOL.Enumeration	FOL.Metamath.Enumeration.natToList._proof_1	thm	false	propext,Quot.sound
+FOL.Eigenvariable	FOL.Eigenvariable.absFormula'._sunfold	def	false	
+FOL.Enumeration	FOL.Metamath.Enumeration.termSize	def	false	
+FOL.DecEq	instDecidableEqFormulaG.decEq._proof_52	thm	false	
+FOL.Finitary0	FOL.Finitary0.tval_subst	thm	false	propext
+FOL.Hauptsatz0	LKh.brecOn	thm	false	
+FOL.FOL	FormulaG.brecOn	def	false	
+FOL.Semantics	replaceAt.eq_10	thm	false	propext
+FOL.SymClasses	FOL.FreshSym.ctorIdx	def	false	
+FOL.FOL	Derives.intro_forall	ctor	false	
+FOL.Compacity0	FOL.Compacity0.updateCsts._unsafe_rec	def	false	propext
+FOL.FOL	instCoeStringFormula	def	false	
+FOL.Derives2	Derives₂.intro_impl	ctor	false	
+FOL.Sequent0	FOL.Sequent0.quantFree_of_eqInstance	thm	false	
+FOL.Propositional0	FOL.Propositional0.peval.eq_6	thm	false	
+FOL.Semantics	FOL.Metamath.Semantics.replaceAt_soundness.match_1_38	def	false	
+FOL.Fresh0	FOL.Fresh0.shiftTheory_consistent₀	thm	false	propext,Classical.choice,Quot.sound
+FOL.Skolem0	FOL.Skolem0.updateFunc	def	false	
+FOL.Theorems.Quantifiers	_private.FOL.Theorems.Quantifiers.0.instReprFormulaG.repr.match_1.eq_5	thm	false	
+FOL.QFDecide0	FOL.QFDecide0.pw_of_cls._f	def	false	propext,Quot.sound
+FOL.Theorems.Eq	FOL.substTerm_liftTerm	thm	false	propext,Quot.sound
+FOL.Semantics	_private.FOL.Semantics.0.FOL.Metamath.Semantics.shiftEnv.match_1.eq_1	thm	false	
+FOL.Rename	_private.FOL.Rename.0.instReprFormulaG.repr.match_1.eq_4	thm	false	
+FOL.Eigenvariable	FOL.Eigenvariable.absTerm'.congr_simp	thm	false	Quot.sound
+FOL.Herbrand0	FOL.Herbrand0.QuantFree.match_1	def	false	
+FOL.PrenexNF0	FOL.PrenexNF0.mkIff	thm	false	
+FOL.Theorems.Quantifiers	_private.FOL.Theorems.Quantifiers.0.liftTerms.match_1.splitter	def	false	
+FOL.Theorems.Quantifiers	substFormula.eq_3	thm	false	
+FOL.Derives0	Derives₀.intro_ex	ctor	false	
+FOL.Fresh0	FOL.Fresh0.cst.match_1	def	false	
+FOL.HenkinLimit0	FOL.HenkinLimit0.henLimit_finite._f	def	false	propext,Classical.choice,Quot.sound
+FOL.Theorems.Eq	FOL.liftTerm_comm_zero._proof_2	thm	false	propext,Quot.sound
+FOL.Derives1	Derives₁.intro_ex	ctor	false	
+FOL.Eigenvariable	FOL.Eigenvariable.absFormula'.congr_simp	thm	false	Quot.sound
+FOL.Theorems.Quantifiers	substTerm.eq_def	thm	false	
+FOL.Propositional0	FOL.Propositional0.peval.eq_1	thm	false	
+FOL.SkolemN0	FOL.SkolemN0.eval_allBlock_envPush._proof_1_4	thm	false	propext,Quot.sound
+FOL.SkolemNF0	FOL.SkolemNF0.qdepth._f	def	false	propext
+FOL.Lift0	FOL.Lift0.substTerm_lift_var._proof_3	thm	false	propext,Quot.sound
+FOL.Compacity0	FOL.Compacity0.IsSatisfiableCountable	def	false	
+TheoryFramework.Theory	TheoryFramework.Theory.rec	rec	false	
+FOL.Propositional0	FOL.Propositional0.lit.eq_1	thm	false	
+FOL.Sequent0	LK₀.botL	ctor	false	
+FOL.SkolemN0	FOL.SkolemN0.skolem_conservative_n_zero	thm	false	propext,Classical.choice,Quot.sound
+FOL.Complexity	FOL.Complexity.formulaComplexity._unsafe_rec	def	false	
+FOL.QFDecide0	FOL.QFDecide0.peval_implChain_inv.match_1_1	def	false	
+FOL.QFDecide0	FOL.QFDecide0.symm_mem	thm	false	propext,Quot.sound
+FOL.Complexity	_private.FOL.Complexity.0.FOL.Complexity.formulaComplexity.match_1.eq_5	thm	false	
+FOL.Enumeration	FOL.Metamath.Enumeration.natToFormula.eq_2	thm	false	propext,Quot.sound
+FOL.SkolemNF0	FOL.SkolemNF0.skolemizeF._sunfold	def	false	propext
+FOL.Derives0	Derives₀.below.dne_schema	ctor	false	
+TheoryFramework.Theory	TheoryFramework.Theory.mk.noConfusion	def	false	
+FOL.Rename	_private.FOL.Rename.0.getAt?.match_4.eq_1	thm	false	propext
+FOL.Derives2	FOL.Derives2.eq_substTerm	thm	false	propext
+FOL.Theorems.Quantifiers	_private.FOL.Theorems.Quantifiers.0.instReprFormulaG.repr.match_1.eq_3	thm	false	
+FOL.Derives2	FOL.Derives2.eq_substFormula	thm	false	propext,Quot.sound
+FOL.FOL	FormulaG.noConfusion	def	false	
+FOL.Lindenbaum0	_private.FOL.Lindenbaum0.0.FOL.Lindenbaum0.LindenbaumStep.match_1.eq_1	thm	false	
+FOL.Lindenbaum0	FOL.Lindenbaum0.IsMaximalConsistent₀	def	false	
+FOL.Rename	FOL.Rename.rename_liftTerm._f	def	false	propext
+FOL.Eigenvariable	_private.FOL.Eigenvariable.0.instReprPos.repr.match_1.splitter	def	false	
+FOL.Interpolation0	FOL.Interpolation0.lkp_allL_list.match_1_1	def	false	
+FOL.Semantics	_private.FOL.Semantics.0.instReprTermG.repr.match_1.eq_2	thm	false	
+FOL.Hauptsatz0	FOL.Hauptsatz0.liftTerm_subst_le._proof_12	thm	false	propext,Quot.sound
+FOL.Propositional0	FOL.Propositional0.upd_self	thm	false	propext
+FOL.HerbrandBlock0	FOL.HerbrandBlock0.subst_exBlock.match_1_1	def	false	
+FOL.Finitary0	FOL.Finitary0.lk0_empty	thm	false	propext,Quot.sound
+FOL.Semantics	FOL.Metamath.Semantics.ModelG.casesOn	def	false	
+FOL.PrenexNF0	FOL.PrenexNF0.mergeAndR._sparseCasesOn_1	def	false	propext
+FOL.Semantics	_private.FOL.Semantics.0.getAt?.match_4.splitter	def	false	propext
+FOL.SequentSound0	FOL.SequentSound0.lkc_sound	thm	false	propext,Classical.choice,Quot.sound
+FOL.Semantics	getAt?.eq_3	thm	false	propext
+FOL.FOL	FormulaG.or.elim	def	false	
+FOL.QFDecide0	_private.FOL.QFDecide0.0.FOL.QFDecide0.eqTerms.match_1	def	false	propext
+FOL.Hauptsatz0	_private.FOL.Hauptsatz0.0.FOL.Hauptsatz0.deg.match_1.eq_2	thm	false	
+FOL.Semantics	FOL.Metamath.Semantics.eval_substTerms_ext._f	def	false	
+FOL.DecEq	instDecidableEqFormulaG.decEq._proof_9	thm	false	
+FOL.QFDecide0	FOL.QFDecide0.memB	def	false	
+FOL.FOL	instReprPos.repr._sunfold	def	false	
+FOL.Theorems.Eq	_private.FOL.Theorems.Eq.0.instReprFormulaG.repr.match_1.splitter	def	false	
+FOL.FOL	substFormula	def	false	
+FOL.FOL	Formula.noConfusion	thm	false	
+FOL.MetaRules	FOL.MetaRules.mp	def	false	propext
+FOL.Eigenvariable	_private.FOL.Eigenvariable.0.FOL.Eigenvariable.posDepth.match_1.splitter	def	false	
+FOL.QFDecide0	FOL.QFDecide0.pick._f	def	false	
+FOL.FOL	_aux_FOL_FOL___unexpand_FormulaG_impl_1	def	false	
+FOL.Sequent0	LK₀.below.rec	rec	false	
+FOL.Lift0	FOL.Lift0.substTerm_lift_var	thm	false	propext,Quot.sound
+FOL.HenkinLimit0	FOL.HenkinLimit0.hidx_ge_of_le	thm	false	propext,Classical.choice,Quot.sound
+FOL.Eigenvariable	_private.FOL.Eigenvariable.0.FOL.Eigenvariable.absFormula'.match_1.eq_4	thm	false	
+FOL.Canonical0	FOL.Canonical0.model_existence_lemma₀	thm	false	propext,Classical.choice,Quot.sound
+FOL.Sequent0	LKc.below.andR	ctor	false	
+FOL.HenkinLimit0	FOL.HenkinLimit0.bnd_spec	thm	false	propext,Classical.choice,Quot.sound
+FOL.Theorems.Neg	FOL.Theorems.Neg.double_neg_elim	thm	false	propext
+TheoryFramework.MetaTheorems	TheoryFramework.consistent_of_le	thm	false	
+FOL.Theorems.Quantifiers	FOL.Theorems.Quantifiers.substTerms_lift_cancel_var._f	def	false	
+FOL.SkolemNF0	FOL.SkolemNF0.skolemizeF_shape._proof_1_3	thm	false	propext,Quot.sound
+FOL.FOL	TermG	ind	false	
+FOL.Craig0	FOL.Craig0.cov_nil	thm	false	
+FOL.Sequent0	LK₀	ind	false	
+FOL.Tactics	_aux_FOL_Tactics___macroRules_tacticDerive_raa_1	def	false	
+FOL.FOL	liftTerm._f	def	false	
+FOL.MetaRules	FOL.MetaRules.iff_mp	def	false	propext
+FOL.Hauptsatz0	FOL.Hauptsatz0.map_lift_subst	thm	false	propext,Quot.sound
+FOL.FOL	TermG.below	def	false	
+FOL.Herbrand0	FOL.Herbrand0.eqSymmAx	def	false	
+FOL.QFDecide0	FOL.QFDecide0.evIs_append.match_1_1	def	false	
+FOL.Eigenvariable	FOL.Eigenvariable.absTerm_eq_lift	thm	false	propext
+FOL.Eigenvariable	FOL.Eigenvariable.occursFormula._sunfold	def	false	
+FOL.Enumeration	_private.FOL.Enumeration.0.FOL.Metamath.Enumeration.unpair.match_3.eq_1	thm	false	
+FOL.Sequent0	LK₀.below.botL	ctor	false	
+FOL.HenkinLimit0	FOL.HenkinLimit0.hidx	def	true	propext,Classical.choice,Quot.sound
+FOL.Rename	_private.FOL.Rename.0.instReprTermG.repr.match_1.eq_1	thm	false	
+FOL.FOL	Pos.casesOn	def	false	
+FOL.Craig0	FOL.Craig0.LKp.below.implR	ctor	false	
+FOL.Compacity0	FOL.Compacity0.not_hasLargeModels_one	thm	false	
+FOL.Propositional0	FOL.Propositional0.elim_atoms._f	def	false	propext,Quot.sound
+FOL.DecEq	FOL.DecEq.decEqTerm._proof_1	thm	false	
+FOL.Craig0	FOL.Craig0.split_tail	thm	false	
+FOL.QFDecide0	FOL.QFDecide0.subTs_closed.match_1	def	false	
+FOL.Inconsistencia	neg.eq_1	thm	false	
+FOL.Theorems.Quantifiers	_private.FOL.Theorems.Quantifiers.0.instReprFormulaG.repr.match_1.eq_8	thm	false	
+FOL.Semantics	_private.FOL.Semantics.0.liftTerms.match_1.splitter	def	false	
+FOL.QFDecide0	FOL.QFDecide0.evIs	def	false	
+FOL.FOL	Derives.recOn	def	false	propext
+FOL.FOL	Pos.left.injEq	thm	false	propext
+FOL.Hauptsatz0	FOL.Hauptsatz0.substTerm_subst_le._proof_7	thm	false	propext,Quot.sound
+FOL.DecEq	instDecidableEqFormulaG.decEq._sunfold	def	false	
+FOL.Craig0	FOL.Craig0.LKp.exR	ctor	false	
+FOL.Lift0	FOL.Lift0.lift_replaceAt	thm	false	propext,Quot.sound
+FOL.Derives1	Derives₁.below.elim_impl	ctor	false	
+FOL.Derives2	Derives₂.below.intro_and	ctor	false	
+FOL.Enumeration	FOL.Metamath.Enumeration.unpair_fst_le	thm	false	propext,Quot.sound
+TheoryFramework.Logic	TheoryFramework.SoundLogic.mk._flat_ctor	def	false	
+FOL.QFDecide0	FOL.QFDecide0.derives0_qf_iff_bounded	thm	false	propext,Quot.sound
+FOL.Derives1	Derives₁.recOn	def	false	
+FOL.DecEq	instDecidableEqFormulaG.decEq._unsafe_rec	def	false	
+FOL.Lindenbaum0	_private.FOL.Lindenbaum0.0.FOL.Lindenbaum0.LindenbaumStep.match_1.eq_2	thm	false	
+FOL.Derives1	Derives₁.elim_or	ctor	false	
+FOL.Derives2	Derives₂.below.casesOn	def	false	
+FOL.Semantics	_private.FOL.Semantics.0.getAt?.match_4.eq_3	thm	false	propext
+FOL.QFDecide0	FOL.QFDecide0.evI_S._f	def	false	propext,Quot.sound
+FOL.FOL	Derives.gen_rule	ctor	false	
+FOL.Propositional0	FOL.Propositional0.implChain._f	def	false	
+FOL.Complexity	FOL.Complexity.complexity_substFormula	thm	false	propext
+FOL.Propositional0	FOL.Propositional0.derives0_of_implChain._f	def	false	
+FOL.Theorems.Eq	FOL.substTerm_subst_lift_gen._f	def	false	propext,Quot.sound
+FOL.PrenexNF0	FOL.PrenexNF0.mergeOrR_prenex	thm	false	propext
+FOL.Theorems.Impl	FOL.Theorems.Impl.k_impl	thm	false	propext
+FOL.Theorems.Neg	FOL.Theorems.Neg.double_neg_intro	thm	false	propext
+FOL.Hauptsatz0	FOL.Hauptsatz0.substTerm_subst_le._proof_15	thm	false	propext,Quot.sound
+FOL.Hauptsatz0	FOL.Hauptsatz0.leftPrin_lift.match_1_1	def	false	propext
+FOL.Eigenvariable	FOL.Eigenvariable.absTerm'_eq_lift	thm	false	propext
+FOL.Rename	FOL.Rename.rename_localRule	thm	false	
+FOL.PrenexNF0	FOL.PrenexNF0.mergeImplR_iff	thm	false	propext,Quot.sound
+FOL.Semantics	FOL.Metamath.Semantics.updateEnv_zero	thm	false	propext
+FOL.Derives1	Derives₁.below.intro_ex	ctor	false	
+FOL.SkolemN0	FOL.SkolemN0.eval_allBlock_envPush.match_1_1	def	false	
+FOL.Rename	FOL.Rename.map_rename_lift	thm	false	propext
+FOL.Sequent0	LK₀.below.implL	ctor	false	
+TheoryFramework.Theory	TheoryFramework.Theory.models	def	false	
+FOL.Eigenvariable	FOL.Eigenvariable.absTerm'_func_nil	thm	false	
+FOL.QFDecide0	_private.FOL.QFDecide0.0.FOL.QFDecide0.cd	def	false	
+FOL.Rename	FOL.Rename.rename_rename_term	thm	false	propext
+FOL.Fresh0	FOL.Fresh0.not_occurs_shiftFormula	thm	false	propext,Classical.choice,Quot.sound
+FOL.Eigenvariable	FOL.Eigenvariable.abs_getAt?	thm	false	propext
+FOL.Theorems.Eq	FOL.substTerm_subst_comm_succ._proof_5	thm	false	propext,Quot.sound
+FOL.Eigenvariable	FOL.Eigenvariable.absTerm'_subst._proof_5	thm	false	propext,Quot.sound
+FOL.FOL	instReprTermG.repr	opaque	false	
+FOL.Finitary0	FOL.Finitary0.allTrue_cons	thm	false	
+FOL.FOL	formula_ejemplo	def	false	
+FOL.Rename	_private.FOL.Rename.0.instReprTermG.repr.match_1.eq_2	thm	false	
+TheoryFramework.Logic	TheoryFramework.LogicSystem.EntailsSet	def	false	
+FOL.FOL	Derives.intro_or_l	ctor	false	
+FOL.Derives1	Derives₁.bot_elim	ctor	false	
+FOL.Semantics	FOL.Metamath.Semantics.eval_liftTerm_ext	thm	false	propext,Quot.sound
+FOL.Complexity	FOL.Complexity.formulaComplexity	def	false	
+FOL.FOL	«_aux_FOL_FOL___macroRules_term_⇒__1»	def	false	
+FOL.Herbrand0	FOL.Herbrand0.pcheck_sound._f	def	false	propext
+FOL.Propositional0	FOL.Propositional0.upd	def	false	
+FOL.Semantics	getAt?.eq_1	thm	false	propext
+FOL.BlockExtraction0	FOL.BlockExtraction0.instB_nil	thm	false	
+FOL.SymClasses	FOL.EnumSym.noConfusion	def	false	
+FOL.FOL	instReprTermG.repr.match_1	def	false	
+FOL.Sequent0	LKc.casesOn	def	false	
+FOL.Enumeration	_private.FOL.Enumeration.0.FOL.Metamath.Enumeration.termsSize.match_1.eq_2	thm	false	
+FOL.FOL	TermG._sizeOf_2	def	false	
+FOL.PrenexNF0	FOL.PrenexNF0.mergeOr._f	def	false	propext
+FOL.PrenexNF0	FOL.PrenexNF0.mergeAndR_iff	thm	false	propext,Quot.sound
+FOL.Theorems.Eq	_private.FOL.Theorems.Eq.0.liftTerms.match_1.eq_2	thm	false	
+FOL.Inconsistencia	FOL.Inconsistencia.derives0_no_disjunction_property	thm	false	propext,Classical.choice,Quot.sound
+FOL.FOL	FormulaG.ex	ctor	false	
+FOL.Sequent0	LKc.cut	ctor	false	
+FOL.Prenex0	FOL.Prenex0.prenex_of_quantFree	thm	false	
+FOL.SkolemNF0	FOL.SkolemNF0.skolemizeF	def	false	propext
+FOL.Hauptsatz0	LKh.below.eqAx	ctor	false	
+FOL.Derives0	Derives₀.dne_rule	ctor	false	
+FOL.Fresh0	FOL.Fresh0.cst._sunfold	def	false	propext
+FOL.Enumeration	FOL.Metamath.Enumeration.formulaSize._sunfold	def	false	
+FOL.FOL	Derives.below.hyp	ctor	false	propext
+FOL.FOL	FormulaG.and	ctor	false	
+FOL.Complexity	_private.FOL.Complexity.0.FOL.Complexity.formulaComplexity.match_1.eq_8	thm	false	
+FOL.HerbrandBlock0	FOL.HerbrandBlock0.herbrand_block_iff.match_1_1	def	false	
+FOL.QFDecide0	_private.FOL.QFDecide0.0.FOL.QFDecide0.pick.match_1.eq_2	thm	false	
+FOL.FOL	Derives.elim_forall	ctor	false	
+FOL.Eigenvariable	FOL.Eigenvariable.absFormula'.eq_5	thm	false	
+FOL.Enumeration	FOL.Metamath.Enumeration.termSize._f	def	false	
+FOL.FOL	Derives.below.elim_forall	ctor	false	propext
+FOL.QFDecide0	FOL.QFDecide0.atom_mem	thm	false	propext,Quot.sound
+FOL.Enumeration	FOL.Metamath.Enumeration.term_surj_aux._proof_1_13	thm	false	propext,Quot.sound
+FOL.PrenexNF0	FOL.PrenexNF0.mergeImplR._f	def	false	propext
+FOL.FOL	Derives.forall_not_ex_not	ctor	false	
+FOL.Derives0	Derives₀.below.rewrite_at	ctor	false	propext
+FOL.PrenexNF0	FOL.PrenexNF0.mergeAnd._unsafe_rec	def	false	propext
+FOL.Finitary0	FOL.Finitary0.tval.eq_7	thm	false	
+FOL.Skolem0	FOL.Skolem0.evalTerm_newT	thm	false	
+FOL.HenkinLimit0	FOL.HenkinLimit0.hidx_step	thm	false	propext,Classical.choice,Quot.sound
+FOL.Theorems.Eq	FOL.substFormula_lift_comm	thm	false	propext,Quot.sound
+FOL.Enumeration	FOL.Metamath.Enumeration.unpair._sunfold	def	false	
+FOL.Theorems.Quantifiers	liftFormula.eq_2	thm	false	
+FOL.Lindenbaum0	FOL.Lindenbaum0.lindenbaum_lemma₀	thm	false	propext,Classical.choice,Quot.sound
+FOL.Hauptsatz0	LKh.botL	ctor	false	
+FOL.Skolem0	FOL.Skolem0.skolem_conservative₀	thm	false	propext,Classical.choice,Quot.sound
+FOL.FOL	«term_⇔_»	def	false	
+FOL.FOL	FormulaG.bottom	ctor	false	
+FOL.Hauptsatz0	_private.FOL.Hauptsatz0.0.FOL.Hauptsatz0.deg.match_1.eq_6	thm	false	
+FOL.Semantics	FOL.Metamath.Semantics.evalTerms.match_1	def	false	
+FOL.PrenexNF0	FOL.PrenexNF0.mergeAnd_prenex	thm	false	propext
+FOL.SkolemNF0	FOL.SkolemNF0.skolem_conservative_listF.match_1_1	def	false	propext
+FOL.PrenexNF0	FOL.PrenexNF0.mergeOrR_iff._f	def	false	propext,Quot.sound
+FOL.Theorems.Quantifiers	_private.FOL.Theorems.Quantifiers.0.instReprTermG.repr.match_1.splitter	def	false	
+FOL.Semantics	FOL.Metamath.Semantics.eval_liftTerms_ext._f	def	false	
+FOL.Derives2	Derives₂.below.weakening	ctor	false	
+FOL.HerbrandBlock0	FOL.HerbrandBlock0.instB._unsafe_rec	def	false	
+FOL.Semantics	FOL.Metamath.Semantics.eval_substTerm_ext._proof_3	thm	false	propext,Quot.sound
+FOL.QFDecide0	FOL.QFDecide0.atomT.match_1	def	false	propext
+FOL.Derives0	Derives₀.elim_ex	ctor	false	
+FOL.Rename	FOL.Rename.renameTerm.match_1	def	false	
+FOL.HerbrandBlock0	FOL.HerbrandBlock0.exBlock.match_1	def	false	
+FOL.DecEq	instDecidableEqFormulaG.decEq._proof_24	thm	false	
+FOL.Derives2	Derives₂.intro_or_l	ctor	false	
+FOL.Semantics	FOL.Metamath.Semantics.rule_soundness	thm	false	
+FOL.FOL	Formula.ex.inj	thm	false	propext
+FOL.QFDecide0	FOL.QFDecide0.Pw.rec	rec	false	
+FOL.Soundness0	FOL.Metamath.Soundness0.Mfalse	def	false	
+FOL.Fresh0	FOL.Fresh0.cst_bound_sym	thm	false	propext,Classical.choice,Quot.sound
+FOL.Enumeration	FOL.Metamath.Enumeration.natToList	def	false	propext,Quot.sound
+FOL.PrenexNF0	FOL.PrenexNF0.mergeAnd.match_1	def	false	propext
+FOL.Prenex0	FOL.Prenex0.Prenex	def	false	
+FOL.Theorems.Quantifiers	_private.FOL.Theorems.Quantifiers.0.liftTerms.match_1.eq_2	thm	false	
+FOL.Sequent0	LKc.below.implR	ctor	false	
+FOL.Derives0	Derives₀.rec	rec	false	propext
+FOL.Hauptsatz0	FOL.Hauptsatz0.map_lift_subst._f	def	false	propext,Quot.sound
+FOL.Craig0	FOL.Craig0.PredSub	def	false	
+FOL.Eigenvariable	_private.FOL.Eigenvariable.0.getAt?.match_1.eq_4	thm	false	propext
+FOL.Enumeration	FOL.Metamath.Enumeration.formula_surj_aux._proof_1_13	thm	false	propext,Quot.sound
+FOL.Semantics	FOL.Metamath.Semantics.evalTerms	def	false	
+FOL.QFDecide0	FOL.QFDecide0.splits	def	false	
+FOL.Derives2	Derives₂.casesOn	def	false	
+FOL.FOL	Pos.body.elim	def	false	
+FOL.Craig0	FOL.Craig0.craigₚ	thm	false	propext,Quot.sound
+FOL.Craig0	FOL.Craig0.LKp.below.ax	ctor	false	
+FOL.Prenex0	FOL.Prenex0.impl_ex_left	thm	false	propext,Quot.sound
+FOL.Derives0	Derives₀.rewrite_at	ctor	false	propext
+FOL.Inconsistencia	FOL.Inconsistencia.inconsistencia_de_cualquier_solidez	thm	false	propext,FOL.MetaRules.raa
+FOL.Semantics	FOL.Metamath.Semantics.evalTerm._sunfold	def	false	
+FOL.SkolemN0	FOL.SkolemN0.allBlock._f	def	false	
+FOL.QFDecide0	_private.FOL.QFDecide0.0.FOL.QFDecide0.funcInsts.match_1.eq_2	thm	false	
+FOL.PrenexNF0	FOL.PrenexNF0.mergeImplR._sunfold	def	false	propext
+FOL.HerbrandBlock0	FOL.HerbrandBlock0.instB._f	def	false	
+FOL.PrenexNF0	FOL.PrenexNF0.mergeImpl_iff	thm	false	propext,Quot.sound
+FOL.FOL	TermG.brecOn.go	def	false	
+FOL.Propositional0	FOL.Propositional0.patoms	def	false	
+FOL.SequentSound0	FOL.SequentSound0.eval_disjOf_of_mem._f	def	false	
+FOL.QFDecide0	FOL.QFDecide0.mem_splits.match_1_1	def	false	
+FOL.Theorems.Eq	FOL.derive_eq_trans	thm	false	propext,Quot.sound
+FOL.Finitary0	FOL.Finitary0.allTrue	def	false	
+FOL.SkolemNF0	FOL.SkolemNF0.skolem_conservative_nf₀	thm	false	propext,Classical.choice,Quot.sound
+FOL.Craig0	FOL.Craig0.split_map	thm	false	propext,Quot.sound
+FOL.Canonical0	FOL.Canonical0.eval_pullback_term.match_1	def	false	
+FOL.Derives1	Derives₁.below.dne_rule	ctor	false	
+FOL.Hauptsatz0	LKh.below.implL	ctor	false	
+TheoryFramework.MetaTheorems	TheoryFramework.proves_iff_models	thm	false	
+FOL.SkolemNF0	FOL.SkolemNF0.skolem_conservative_listF._proof_1_3	thm	false	propext,Quot.sound
+FOL.Theorems.Quantifiers	substFormula.eq_6	thm	false	
+FOL.SequentSound0	FOL.SequentSound0.eqInstance_valid	thm	false	
+FOL.Sequent0	LKc.below.exL	ctor	false	
+FOL.Finitary0	FOL.Finitary0.lkc_not_empty_fin	thm	false	propext,Quot.sound
+FOL.Semantics	FOL.Metamath.Semantics.ModelG	ind	false	
+FOL.HenkinLimit0	FOL.HenkinLimit0.hen_fresh_at	thm	false	propext,Classical.choice,Quot.sound
+FOL.Enumeration	FOL.Metamath.Enumeration.natToTerms.eq_1	thm	false	propext,Quot.sound
+FOL.Craig0	FOL.Craig0.LKp.below.orR	ctor	false	
+FOL.QFDecide0	FOL.QFDecide0.dedup_sub.match_1_1	def	false	
+FOL.Derives2	Derives₂.below.elim_and_r	ctor	false	
+FOL.Rename	_private.FOL.Rename.0.FOL.Rename.renameFormula.match_1.eq_8	thm	false	
+FOL.FOL	_aux_FOL_FOL___unexpand_iff_1	def	false	
+FOL.SequentSound0	FOL.SequentSound0.lk0_to_derives0	thm	false	propext,Classical.choice,Quot.sound
+FOL.FOL	Derives.below.forall_not_ex_not	ctor	false	propext
+FOL.FOL	TermG.brecOn.eq	thm	false	
+FOL.Eigenvariable	FOL.Eigenvariable.absTerm'._f	def	false	
+FOL.Skolem0	FOL.Skolem0.evalTerm_updateFunc	thm	false	
+FOL.Theorems.Eq	FOL.liftTerms_comm_zero	thm	false	propext,Quot.sound
+FOL.Craig0	FOL.Craig0.LKp.andR	ctor	false	
+FOL.Semantics	getAt?._sparseCasesOn_1.else_eq	thm	false	propext
+FOL.Hauptsatz0	FOL.Hauptsatz0.liftTerm_subst_le._proof_11	thm	false	propext,Quot.sound
+FOL.Derives1	Derives₁.weakening	ctor	false	
+FOL.Semantics	_private.FOL.Semantics.0.FOL.Metamath.Semantics.evalTerm.match_1.eq_2	thm	false	
+FOL.FOL	Pos._sizeOf_inst	def	false	
+FOL.Interpolation0	FOL.Interpolation0.sub_front	thm	false	propext
+FOL.Finitary0	FOL.Finitary0.derives0_not_P_fin	thm	false	propext,Quot.sound
+FOL.Lift0	FOL.Lift0.substTerm_lift_var._proof_2	thm	false	propext,Quot.sound
+FOL.Canonical0	FOL.Canonical0.derives0_complete_iff	thm	false	propext,Classical.choice,Quot.sound
+FOL.QFDecide0	FOL.QFDecide0.evIs_append._f	def	false	
+FOL.QFDecide0	FOL.QFDecide0.mixT	def	false	propext
+FOL.Derives2	FOL.Derives2.PwEq₂.below	ind	false	
+FOL.HerbrandBlock0	FOL.HerbrandBlock0.liftN._f	def	false	
+FOL.Sequent0	LKc.brecOn	thm	false	
+FOL.HenkinLimit0	FOL.HenkinLimit0.not_occurs_substTerms._f	def	false	
+FOL.Derives1	FOL.Derives1.rewrite_equiv.match_1_1	def	false	propext
+FOL.PrenexNF0	FOL.PrenexNF0.IffAll₀	def	false	
+FOL.Enumeration	FOL.Metamath.Enumeration.natToFormula._proof_3	thm	false	propext,Quot.sound
+FOL.DecEq	instDecidableEqFormulaG.decEq._proof_8	thm	false	
+FOL.Craig0	FOL.Craig0.LKp.ax	ctor	false	
+FOL.QFDecide0	FOL.QFDecide0.decideDerives0QF	def	false	propext,Quot.sound
+FOL.PrenexNF0	FOL.PrenexNF0.mergeOrR	def	false	propext
+FOL.Hauptsatz0	FOL.Hauptsatz0.deg_subst	thm	false	propext
+FOL.Hauptsatz0	FOL.Hauptsatz0.CutAt₀	def	false	
+FOL.Enumeration	FOL.Metamath.Enumeration.unpair_sum_le._proof_1_4	thm	false	propext,Quot.sound
+FOL.Soundness0	FOL.Metamath.Soundness0.P	def	false	
+FOL.Lindenbaum0	_private.FOL.Lindenbaum0.0.FOL.Lindenbaum0.LindenbaumStep.match_1.splitter	def	false	
+FOL.HenkinLimit0	FOL.HenkinLimit0.not_occurs_henkinAx	thm	false	
+FOL.FOL	Pos.below	def	false	
+FOL.FOL	instBEqTermG.beq._unsafe_rec	def	false	propext
+FOL.QFDecide0	FOL.QFDecide0.subT_closed._f	def	false	propext
+FOL.QFDecide0	FOL.QFDecide0.evI._unsafe_rec	def	false	
+FOL.FOL	Derives.below.rec	rec	false	propext
+FOL.DecEq	instDecidableEqFormulaG.decEq._proof_25	thm	false	
+FOL.Canonical0	FOL.Canonical0.max_cons_forall	thm	false	propext,Classical.choice,Quot.sound
+FOL.Fresh0	FOL.Fresh0.cst_bound_term	thm	false	propext,Classical.choice,Quot.sound
+FOL.QFDecide0	FOL.QFDecide0.topT.match_1	def	false	propext
+FOL.Enumeration	FOL.Metamath.Enumeration.formulaSize.eq_5	thm	false	
+FOL.Prenex0	FOL.Prenex0.impl_forall_left	thm	false	propext,Quot.sound
+FOL.PrenexNF0	FOL.PrenexNF0.prenex_lift._f	def	false	
+FOL.Derives1	FOL.Derives1.rewrite_equiv	thm	false	propext,Quot.sound
+FOL.Hauptsatz0	FOL.Hauptsatz0.substTerm_subst_le._proof_8	thm	false	propext,Quot.sound
+FOL.Enumeration	_private.FOL.Enumeration.0.FOL.Metamath.Enumeration.unpair.match_3.splitter	def	false	
+FOL.Sequent0	LK₀.below.andL	ctor	false	
+FOL.Enumeration	FOL.Metamath.Enumeration.natToTerm._mutual._proof_2	thm	false	propext,Quot.sound
+FOL.Eigenvariable	FOL.Eigenvariable.abs'_localRule	thm	false	
+FOL.Craig0	FOL.Craig0.predF_lift	thm	false	
+FOL.FOL	Derives.intro_or_r	ctor	false	
+FOL.Compacity0	FOL.Compacity0.countable_of_shift	thm	false	propext
+FOL.Semantics	replaceAt.eq_1	thm	false	propext
+FOL.Propositional0	FOL.Propositional0.peval.eq_8	thm	false	
+FOL.Hauptsatz0	LKh.below.exL	ctor	false	
+FOL.Enumeration	_private.FOL.Enumeration.0.FOL.Metamath.Enumeration.formulaSize.match_1.splitter	def	false	
+FOL.Lift0	FOL.Lift0.substTerms_lift_var._f	def	false	propext
+FOL.DecEq	instDecidableEqFormulaG.decEq.match_1	def	false	
+FOL.Derives2	FOL.Derives2.eq_func_pw	thm	false	propext
+FOL.Derives1	Derives₁.refl	ctor	false	
+FOL.Sequent0	FOL.Sequent0.NDtoLK₀	def	false	
+FOL.Tactics	tryMem._proof_1	thm	false	propext,Quot.sound
+FOL.Enumeration	FOL.Metamath.Enumeration.natToTerm	def	false	propext,Quot.sound
+FOL.Compacity0	FOL.Compacity0.consistency_of_satisfiable₀	thm	false	propext,Classical.choice,Quot.sound
+FOL.Theorems.Derived	FOL.Theorems.Derived.de_morgan_1_rev	thm	false	propext
+FOL.Prenex0	FOL.Prenex0.and_ex	thm	false	propext,Quot.sound
+FOL.QFDecide0	FOL.QFDecide0.dedup._unsafe_rec	def	false	
+FOL.Eigenvariable	_private.FOL.Eigenvariable.0.getAt?.match_1.eq_1	thm	false	propext
+FOL.SkolemN0	FOL.SkolemN0.envPush._f	def	false	
+FOL.Interpolation0	FOL.Interpolation0.predF_em	thm	false	
+FOL.FOL	replaceAt._unsafe_rec	def	false	propext
+FOL.SkolemNF0	FOL.SkolemNF0.skolemizeF.match_1	def	false	propext
+FOL.PrenexNF0	FOL.PrenexNF0.prenex.match_1	def	false	
+FOL.Propositional0	FOL.Propositional0.derives0_cases	thm	false	
+FOL.Semantics	_private.FOL.Semantics.0.instReprFormulaG.repr.match_1.eq_3	thm	false	
+FOL.Hauptsatz0	FOL.Hauptsatz0.cutAll	thm	false	propext,Quot.sound
+FOL.Semantics	replaceAt.eq_11	thm	false	propext
+FOL.DecEq	instDecidableEqFormulaG.decEq._proof_33	thm	false	
+FOL.Canonical0	FOL.Canonical0.termEqv_symm	thm	false	propext,Classical.choice,Quot.sound
+FOL.SequentSound0	FOL.SequentSound0.evalTerms_append.match_1_1	def	false	
+FOL.QFDecide0	FOL.QFDecide0.pick.eq_def	thm	false	
+FOL.Theorems.Eq	FOL.substTerms_lift_comm	thm	false	propext,Quot.sound
+FOL.Derives2	FOL.Derives2.derives2_to_derives1	thm	false	propext,Quot.sound
+FOL.SkolemNF0	FOL.SkolemNF0.skolem_conservative_listF._proof_1_4	thm	false	propext,Quot.sound
+FOL.Theorems.Quantifiers	substFormula.eq_1	thm	false	
+FOL.Hauptsatz0	FOL.Hauptsatz0.liftTerm_subst_le.match_1	def	false	
+FOL.Theorems.Eq	FOL.substTerm_subst_comm_succ._proof_17	thm	false	propext,Quot.sound
+FOL.Derives0	Derives₀.below.hyp	ctor	false	
+FOL.Propositional0	FOL.Propositional0.lit	def	false	
+FOL.Hauptsatz0	FOL.Hauptsatz0.leftPrin_close.match_1_1	def	false	propext
+FOL.FOL	liftFormula._unsafe_rec	def	false	
+FOL.Semantics	FOL.Metamath.Semantics.evalFormula.eq_6	thm	false	
+FOL.Semantics	_private.FOL.Semantics.0.getAt?.match_1.splitter	def	false	propext
+FOL.Enumeration	FOL.Metamath.Enumeration.natToTerm._mutual	def	false	propext,Quot.sound
+FOL.FOL	getAt?._unsafe_rec	def	false	propext
+FOL.Eigenvariable	FOL.Eigenvariable.abs'_replaceAt._proof_1_29	thm	false	propext,Quot.sound
+FOL.Semantics	FOL.Metamath.Semantics.ModelG.ctorIdx	def	false	
+FOL.Derives1	Derives₁.hyp	ctor	false	
+FOL.Finitary0	_private.FOL.Finitary0.0.FOL.Finitary0.tval.match_1.eq_6	thm	false	
+FOL.DecEq	instDecidableEqFormulaG.decEq._proof_30	thm	false	
+FOL.Propositional0	_private.FOL.Propositional0.0.FOL.Propositional0.elim_step	thm	false	propext,Quot.sound
+FOL.Eigenvariable	_private.FOL.Eigenvariable.0.FOL.Eigenvariable.absTerm'.match_1.eq_1	thm	false	
+FOL.Derives1	FOL.Derives1.forall_congr	thm	false	propext,Quot.sound
+FOL.PrenexNF0	FOL.PrenexNF0.iffAll_or	thm	false	propext,Quot.sound
+FOL.Hauptsatz0	FOL.Hauptsatz0.leftPrin_lift	thm	false	propext,Quot.sound
+FOL.Fresh0	FOL.Fresh0.cst_ne_shift	thm	false	propext,Classical.choice,Quot.sound
+FOL.FOL	FormulaG.forall.noConfusion	def	false	
+FOL.DecEq	FOL.DecEq.decEqTerm._f	def	false	
+FOL.PrenexNF0	FOL.PrenexNF0.iffR	thm	false	
+FOL.Canonical0	FOL.Canonical0.derivesSet0_map2	thm	false	propext
+FOL.Eigenvariable	FOL.Eigenvariable.absTerm'.match_1	def	false	
+FOL.FOL	Derives.below.elim_or	ctor	false	propext
+TheoryFramework.Logic	TheoryFramework.LogicSystem.neg	def	false	
+FOL.Enumeration	FOL.Metamath.Enumeration.instEnumSymString	def	false	propext,Classical.choice,Quot.sound
+FOL.PrenexNF0	FOL.PrenexNF0.impAll_refl	thm	false	
+FOL.Interpolation0	FOL.Interpolation0.derives0_of_disjOf_single	thm	false	
+FOL.Herbrand0	FOL.Herbrand0.ptaut_of_check	thm	false	propext
+FOL.Hauptsatz0	FOL.Hauptsatz0.substTerm_subst_le._proof_3	thm	false	propext,Quot.sound
+FOL.QFDecide0	FOL.QFDecide0.self_mem_mixL.match_1_1	def	false	
+FOL.SkolemN0	FOL.SkolemN0.evalTerms_lift_shift	thm	false	propext,Quot.sound
+FOL.Hauptsatz0	FOL.Hauptsatz0.peval_true_eqInstance	thm	false	
+FOL.Rename	FOL.Rename.rename_liftFormula	thm	false	propext
+TheoryFramework.Relations	TheoryFramework.TheoryEquivalent	def	false	
+FOL.Derives2	_aux_FOL_Derives2___unexpand_Derives₂_1	def	false	
+FOL.Eigenvariable	FOL.Eigenvariable.absFormula'.eq_6	thm	false	
+FOL.FOL	TermG.brecOn_1.eq	thm	false	
+FOL.Henkin0	FOL.Henkin0.henkinAx	def	false	
+FOL.Lindenbaum0	_private.FOL.Lindenbaum0.0.FOL.Lindenbaum0.«_aux_FOL_Lindenbaum0___macroRules__private_FOL_Lindenbaum0_0_FOL_Lindenbaum0_term_⊢₀*__1»	def	false	
+FOL.Enumeration	FOL.Metamath.Enumeration.unpair_snd_le	thm	false	propext,Quot.sound
+FOL.Lift0	FOL.Lift0.substTerm_lift_var._proof_1	thm	false	propext,Quot.sound
+FOL.Derives1	Derives₁.below.weakening	ctor	false	
+FOL.Derives2	FOL.Derives2.PwEq₂.brecOn	thm	false	
+FOL.FOL	instBEqFormulaG.beq._f	def	false	propext
+FOL.HenkinLimit0	_private.FOL.HenkinLimit0.0.FOL.HenkinLimit0.«term_⊢₀*_»	def	false	
+FOL.Compacity0	FOL.Compacity0.neqAx	def	false	propext
+FOL.DecEq	FOL.DecEq.decEqTerms._proof_1	thm	false	
+FOL.Rename	_private.FOL.Rename.0.getAt?.match_1.eq_4	thm	false	propext
+TheoryFramework.Relations	TheoryFramework.instLETheory	def	false	
+FOL.DecEq	FOL.DecEq.decEqTerm._proof_7	thm	false	
+FOL.Finitary0	FOL.Finitary0.lk0_no_bot	thm	false	propext,Quot.sound
+FOL.Complexity	FOL.Complexity.formulaComplexity.eq_7	thm	false	
+TheoryFramework.Logic	TheoryFramework.CompleteLogic.mk._flat_ctor	def	false	
+FOL.Herbrand0	FOL.Herbrand0.derives0_ex_of_cert	thm	false	propext,Quot.sound
+FOL.Derives0	Derives₀.below.intro_ex	ctor	false	
+FOL.Canonical0	FOL.Canonical0.PointwiseEqv.brecOn	thm	false	
+FOL.HerbrandBlock0	FOL.HerbrandBlock0.derives0_exBlock_of_inst._f	def	false	propext,Quot.sound
+FOL.Interpolation0	FOL.Interpolation0.derives0_disjOf_of_refute.match_1_1	def	false	
+FOL.Compacity0	FOL.Compacity0.hasLargeModels_shift	thm	false	propext,Classical.choice,Quot.sound
+FOL.BlockExtraction0	FOL.BlockExtraction0.lk0_herbrand_block	thm	false	propext,Quot.sound
+FOL.Rename	_private.FOL.Rename.0.FOL.Rename.renameFormula.match_1.eq_7	thm	false	
+FOL.SkolemNF0	FOL.SkolemNF0.qdepth._sunfold	def	false	propext
+FOL.SkolemNF0	FOL.SkolemNF0.occurs_mergeAnd.match_1_1	def	false	propext
+FOL.Theorems.Neg	FOL.Theorems.Neg.contrapositive_1	thm	false	propext
+FOL.SkolemHerbrand0	FOL.SkolemHerbrand0.impAll_neg_allBlock._f	def	false	propext,Quot.sound
+FOL.FOL	«term_≐_»	def	false	
+FOL.Enumeration	FOL.Metamath.Enumeration.natToList_surj	thm	false	propext,Quot.sound
+FOL.FOL	top	def	false	
+FOL.Semantics	_private.FOL.Semantics.0.instReprFormulaG.repr.match_1.eq_4	thm	false	
+FOL.Sequent0	LKc.exL	ctor	false	
+FOL.Semantics	FOL.Metamath.Semantics.eval_substFormula_ext	thm	false	propext,Quot.sound
+FOL.Theorems.Quantifiers	FOL.Theorems.Quantifiers.exists_not_impl_forall_not	thm	false	propext,Quot.sound
+FOL.Theorems.Eq	FOL.substTerm_liftLift._proof_1	thm	false	propext,Quot.sound
+FOL.PrenexNF0	FOL.PrenexNF0.mergeImplR_prenex	thm	false	propext
+FOL.Derives2	FOL.Derives2.derives1_eq_trans	thm	false	propext,Quot.sound
+FOL.Derives1	FOL.Derives1.impl_congr_r	thm	false	
+FOL.Enumeration	FOL.Metamath.Enumeration.natToTerms_surj._proof_1_1	thm	false	propext,Quot.sound
+FOL.SkolemNF0	FOL.SkolemNF0.occurs_allBlock.match_1_1	def	false	
+FOL.Herbrand0	FOL.Herbrand0.herbrand_iff.match_1_1	def	false	
+FOL.QFDecide0	FOL.QFDecide0.instsOf	def	false	propext
+FOL.Herbrand0	_private.FOL.Herbrand0.0.FOL.Herbrand0.Px	def	false	
+FOL.DecEq	instDecidableEqFormulaG.decEq._proof_76	thm	false	
+FOL.Prenex0	FOL.Prenex0.Prenex._sunfold	def	false	
+FOL.DecEq	FOL.DecEq.decEqTerms._f	def	false	
+FOL.Enumeration	_private.FOL.Enumeration.0.FOL.Metamath.Enumeration.termsSize.match_1.eq_1	thm	false	
+FOL.Eigenvariable	_private.FOL.Eigenvariable.0.FOL.Eigenvariable.absFormula'.match_1.eq_1	thm	false	
+FOL.Semantics	_private.FOL.Semantics.0.FOL.Metamath.Semantics.evalFormula.match_1.eq_4	thm	false	
+FOL.Eigenvariable	FOL.Eigenvariable.absTerm'_subst._proof_8	thm	false	propext,Quot.sound
+FOL.Theorems.Eq	_private.FOL.Theorems.Eq.0.instReprFormulaG.repr.match_1.eq_3	thm	false	
+FOL.PrenexNF0	FOL.PrenexNF0.impAll_trans	thm	false	
+FOL.Sequent0	FOL.Sequent0.herbrandExtraction_of	thm	false	propext,Quot.sound
+FOL.PrenexNF0	FOL.PrenexNF0.mergeOrR._sunfold	def	false	propext
+FOL.Semantics	getAt?.eq_2	thm	false	propext
+FOL.Propositional0	FOL.Propositional0.peval.eq_5	thm	false	
+FOL.Enumeration	FOL.Metamath.Enumeration.termSize.eq_1	thm	false	
+FOL.SkolemHerbrand0	FOL.SkolemHerbrand0.impAll_exBlock_neg.match_1_1	def	false	
+FOL.Theorems.Quantifiers	_private.FOL.Theorems.Quantifiers.0.instReprFormulaG.repr.match_1.eq_7	thm	false	
+FOL.QFDecide0	FOL.QFDecide0.mem_subT_self	thm	false	
+TheoryFramework.Relations	TheoryFramework.intersection_le_left.match_1_1	def	false	
+FOL.Canonical0	FOL.Canonical0.canonicalModel	def	true	propext,Classical.choice,Quot.sound
+FOL.Eigenvariable	FOL.Eigenvariable.absTerm'_subst._proof_4	thm	false	propext,Quot.sound
+FOL.FOL	Pos.body.noConfusion	def	false	
+FOL.FOL	Derives.intro_ex	ctor	false	
+FOL.Rename	_private.FOL.Rename.0.liftTerms.match_1.splitter	def	false	
+FOL.Fresh0	FOL.Fresh0.shiftTheory	def	false	propext
+FOL.Theorems.Quantifiers	liftTerms.eq_2	thm	false	
+FOL.HerbrandBlock0	FOL.HerbrandBlock0.HerbrandCertBlock	def	false	
+FOL.FOL	instBEqFormulaG.beq._sparseCasesOn_5	def	false	propext
+FOL.Sequent0	LK₀.below.andR	ctor	false	
+FOL.Theorems.Eq	FOL.substTerms_subst_lift_gen	thm	false	propext,Quot.sound
+FOL.Eigenvariable	FOL.Eigenvariable.absFormula'._unsafe_rec	def	false	
+FOL.Theorems.Eq	FOL.substTerm_subst_comm_succ._f	def	false	propext,Classical.choice,Quot.sound
+FOL.Semantics	_private.FOL.Semantics.0.FOL.Metamath.Semantics.evalTerms.match_1.eq_1	thm	false	
+FOL.QFDecide0	FOL.QFDecide0.memB.congr_simp	thm	false	Quot.sound
+FOL.SkolemN0	FOL.SkolemN0.evalTerms_vars._f	def	false	propext,Quot.sound
+FOL.DecEq	instDecidableEqFormulaG.decEq._proof_53	thm	false	
+FOL.QFDecide0	FOL.QFDecide0.Good.rfl'	thm	false	propext,Quot.sound
+FOL.FOL	formula_simplificada	def	false	propext
+FOL.FOL	«term_⇒_»	def	false	
+FOL.SkolemNF0	FOL.SkolemNF0.qdepth	def	false	propext
+FOL.PrenexNF0	FOL.PrenexNF0.prenex_iff._f	def	false	propext,Quot.sound
+FOL.DecEq	instDecidableEqFormulaG.decEq._proof_35	thm	false	
+FOL.Craig0	FOL.Craig0.LKp.below.andR	ctor	false	
+FOL.Propositional0	FOL.Propositional0.elim_atoms.match_1_1	def	false	
+FOL.Herbrand0	FOL.Herbrand0.derives0_discharge	thm	false	
+FOL.Theorems.Eq	FOL.subst_subst_lift_gen	thm	false	propext,Quot.sound
+FOL.Craig0	FOL.Craig0.LKp.recOn	def	false	
+FOL.Rename	_private.FOL.Rename.0.FOL.Rename.renameTerms.match_1.splitter	def	false	
+FOL.Eigenvariable	FOL.Eigenvariable.absTerm'._sunfold	def	false	
+FOL.SkolemNF0	FOL.SkolemNF0.derives0_of_skolemNF	thm	false	propext,Classical.choice,Quot.sound
+FOL.SymClasses	FOL.EnumSym.mk	ctor	false	
+FOL.DecEq	instDecidableEqFormulaG.decEq._proof_64	thm	false	
+FOL.DecEq	instDecidableEqFormulaG.decEq._proof_48	thm	false	
+FOL.Semantics	FOL.Metamath.Semantics.Model	def	false	
+FOL.QFDecide0	FOL.QFDecide0.Good.mk	ctor	false	propext
+FOL.Derives2	Derives₂.dne_rule	ctor	false	
+FOL.Enumeration	FOL.Metamath.Enumeration.natToFormula._proof_2	thm	false	propext,Quot.sound
+FOL.Hauptsatz0	LKh.andL	ctor	false	
+FOL.Craig0	FOL.Craig0.LKp.andL	ctor	false	
+FOL.Rename	FOL.Rename.renameTerm.eq_def	thm	false	
+FOL.SkolemHerbrand0	FOL.SkolemHerbrand0.herbrand_validity_ctx₀	thm	false	propext,Classical.choice,Quot.sound
+FOL.Theorems.Derived	FOL.Theorems.Derived.de_morgan_1_fwd	thm	false	propext
+FOL.Theorems.Quantifiers	substFormula.eq_4	thm	false	
+FOL.Sequent0	LKc.below.andL	ctor	false	
+FOL.Derives1	Derives₁.below.refl	ctor	false	
+FOL.Eigenvariable	FOL.Eigenvariable.absTerms'_lift	thm	false	propext,Quot.sound
+FOL.FOL	FormulaG.atom.injEq	thm	false	propext
+FOL.Canonical0	FOL.Canonical0.satisfiable_of_shift	thm	false	propext
+FOL.Eigenvariable	_private.FOL.Eigenvariable.0.FOL.Eigenvariable.absFormula'.match_1.eq_6	thm	false	
+FOL.Sequent0	LKc.implR	ctor	false	
+FOL.Sequent0	FOL.Sequent0.swap_cons	thm	false	
+FOL.PrenexNF0	FOL.PrenexNF0.mergeOrR_prenex.match_1_1	def	false	
+FOL.Propositional0	FOL.Propositional0.implChain	def	false	
+FOL.Eigenvariable	_private.FOL.Eigenvariable.0.getAt?.match_1.eq_3	thm	false	propext
+FOL.Craig0	FOL.Craig0.cov_cons	thm	false	
+FOL.Theorems.Eq	FOL.substTerm_subst_comm_succ._proof_11	thm	false	propext,Quot.sound
+FOL.Craig0	FOL.Craig0.LKp.below.struct	ctor	false	
+FOL.Interpolation0	FOL.Interpolation0.derives0_discharge_ctx	thm	false	
+FOL.Derives1	Derives₁.intro_or_l	ctor	false	
+FOL.Semantics	FOL.Metamath.Semantics.evalTerm.eq_1	thm	false	
+FOL.PrenexNF0	FOL.PrenexNF0.mergeAndR._unsafe_rec	def	false	propext
+FOL.Hauptsatz0	_private.FOL.Hauptsatz0.0.FOL.Hauptsatz0.deg.match_1.eq_3	thm	false	
+FOL.Eigenvariable	_private.FOL.Eigenvariable.0.getAt?.match_4.eq_3	thm	false	propext
+FOL.Enumeration	FOL.Metamath.Enumeration.unpair_step_down	thm	false	propext
+FOL.Derives2	Derives₂.refl	ctor	false	
+FOL.SymClasses	FOL.EnumSym.enum_surj	thm	false	
+FOL.Sequent0	LK₀.brecOn	thm	false	
+FOL.Interpolation0	FOL.Interpolation0.EqGen	ind	false	
+FOL.SkolemHerbrand0	FOL.SkolemHerbrand0.not_occurs_implChain.match_1_1	def	false	
+FOL.PrenexNF0	FOL.PrenexNF0.prenex_isPrenex.match_1_1	def	false	
+FOL.Derives0	Derives₀.elim_and_r	ctor	false	
+FOL.Propositional0	FOL.Propositional0.peval.match_1	def	false	
+FOL.Craig0	FOL.Craig0.LKp.below.orL	ctor	false	
+FOL.Theorems.Eq	FOL.substTerm_lift_comm._proof_1	thm	false	propext,Quot.sound
+FOL.Theorems.Quantifiers	liftFormula.eq_7	thm	false	
+FOL.SkolemNF0	FOL.SkolemNF0.skolemAxiomsF._unsafe_rec	def	false	propext
+FOL.QFDecide0	_private.FOL.QFDecide0.0.FOL.QFDecide0.funcInsts.match_1.splitter	def	false	
+FOL.SkolemNF0	FOL.SkolemNF0.occurs_mergeImplR.match_1_1	def	false	propext
+FOL.Fresh0	FOL.Fresh0.derivesSet0_shift_inv	thm	false	propext,Classical.choice,Quot.sound
+FOL.DecEq	FOL.DecEq.decEqTerm._proof_4	thm	false	
+FOL.Theorems.Eq	FOL.substTerm_liftLift	thm	false	propext,Quot.sound
+FOL.Soundness0	FOL.Metamath.Soundness0.Mtrue	def	false	
+FOL.PrenexNF0	FOL.PrenexNF0.prenex_iff	thm	false	propext,Quot.sound
+FOL.Semantics	_private.FOL.Semantics.0.instReprPos.repr.match_1.eq_3	thm	false	
+FOL.Derives2	FOL.Derives2.derives1_atom_congr	thm	false	propext,Quot.sound
+FOL.SkolemNF0	FOL.SkolemNF0.prenex_subst	thm	false	
+FOL.QFDecide0	_private.FOL.QFDecide0.0.FOL.QFDecide0.atomInsts.match_1.eq_2	thm	false	propext
+FOL.Complexity	_private.FOL.Complexity.0.FOL.Complexity.formulaComplexity.match_1.eq_3	thm	false	
+FOL.PrenexNF0	FOL.PrenexNF0.mergeImpl_prenex.match_1_1	def	false	
+FOL.Derives1	Derives₁.elim_ex	ctor	false	
+FOL.Canonical0	FOL.Canonical0.truth_lemma_lt	thm	false	propext,Classical.choice,Quot.sound
+FOL.Propositional0	FOL.Propositional0.peval.eq_7	thm	false	
+FOL.DecEq	FOL.DecEq.decEqTerm	def	false	
+FOL.Eigenvariable	_private.FOL.Eigenvariable.0.FOL.Eigenvariable.absFormula'.match_1.eq_5	thm	false	
+FOL.Eigenvariable	_private.FOL.Eigenvariable.0.instReprFormulaG.repr.match_1.eq_4	thm	false	
+FOL.Propositional0	FOL.Propositional0.derives0_of_ptaut	thm	false	propext,Quot.sound
+FOL.Eigenvariable	_private.FOL.Eigenvariable.0.instReprFormulaG.repr.match_1.eq_8	thm	false	
+FOL.Craig0	FOL.Craig0.LKp.allL	ctor	false	
+FOL.Canonical0	FOL.Canonical0.PointwiseEqv.below.nil	ctor	false	
+FOL.Hauptsatz0	LKh.recOn	def	false	
+FOL.Sequent0	FOL.Sequent0.not_quantFree_ex	thm	false	
+FOL.Complexity	_private.FOL.Complexity.0.instReprFormulaG.repr.match_1.eq_5	thm	false	
+FOL.Theorems.Quantifiers	_private.FOL.Theorems.Quantifiers.0.liftTerms.match_1.eq_1	thm	false	
+FOL.Derives0	Derives₀.below.rec	rec	false	propext
+FOL.Derives0	Derives₀.intro_and	ctor	false	
+FOL.Theorems.Eq	FOL.substTerm_subst_lift_gen	thm	false	propext,Quot.sound
+FOL.Hauptsatz0	FOL.Hauptsatz0.CutBelow₀	def	false	
+FOL.PrenexNF0	FOL.PrenexNF0.prenex._sunfold	def	false	propext
+FOL.Sequent0	LKc.below.orL	ctor	false	
+FOL.Hauptsatz0	FOL.Hauptsatz0.substTerm_subst_le._proof_4	thm	false	propext,Quot.sound
+FOL.FOL	Pos.root	ctor	false	
+FOL.QFDecide0	FOL.QFDecide0.mem_qfA_mix	thm	false	propext,Quot.sound
+FOL.Rename	FOL.Rename.rename_substTerms._f	def	false	propext
+FOL.Enumeration	FOL.Metamath.Enumeration.instEnumSymListChar._proof_1	thm	false	propext,Quot.sound
+FOL.Sequent0	FOL.Sequent0.lk0_to_lkc	thm	false	
+FOL.Herbrand0	FOL.Herbrand0.derives0_discharge.match_1_1	def	false	
+FOL.Derives2	Derives₂.below.elim_and_l	ctor	false	
+FOL.FOL	substTerm._unsafe_rec	def	false	
+FOL.DecEq	FOL.DecEq.decEqTerms.match_1	def	false	
+FOL.Sequent0	FOL.Sequent0.HerbrandOut	def	false	
+FOL.SkolemHerbrand0	FOL.SkolemHerbrand0.not_occurs_implChain	thm	false	
+FOL.Theorems.Eq	FOL.substTerm_subst_comm_succ._proof_1	thm	false	propext,Quot.sound
+FOL.Propositional0	FOL.Propositional0.patoms._unsafe_rec	def	false	
+FOL.PrenexNF0	FOL.PrenexNF0.mergeOrR_prenex._f	def	false	propext
+FOL.FOL	TermG.ctorElim	def	false	
+FOL.FOL	FormulaG.below	def	false	
+FOL.SkolemNF0	FOL.SkolemNF0.impAll_intro_ex	thm	false	
+FOL.Eigenvariable	FOL.Eigenvariable.absTerms'.eq_2	thm	false	
+FOL.HenkinLimit0	FOL.HenkinLimit0.henLimit_witness	thm	false	propext,Classical.choice,Quot.sound
+FOL.SymClasses	FOL.instFreshSymListChar._proof_1	thm	false	
+FOL.Lindenbaum0	FOL.Lindenbaum0.LindenbaumStep.match_1	def	false	
+FOL.Enumeration	_private.FOL.Enumeration.0.FOL.Metamath.Enumeration.termSize.match_1.eq_1	thm	false	
+FOL.QFDecide0	FOL.QFDecide0.subTs._unsafe_rec	def	false	
+FOL.DecEq	FOL.DecEq.decEqTerms._proof_2	thm	false	
+FOL.QFDecide0	FOL.QFDecide0.trans_mem	thm	false	propext,Quot.sound
+FOL.FOL	FormulaG.impl.elim	def	false	
+FOL.Hauptsatz0	FOL.Hauptsatz0.liftTerm_subst_le._proof_8	thm	false	propext,Quot.sound
+FOL.Theorems.Quantifiers	liftTerm.eq_2	thm	false	
+FOL.Theorems.Eq	FOL.substTerm_lift_comm._proof_3	thm	false	propext,Quot.sound
+FOL.FOL	FormulaG.ctorElimType	def	false	
+FOL.FOL	«_aux_FOL_FOL___macroRules_term_∧__1_1»	def	false	
+FOL.Hauptsatz0	FOL.Hauptsatz0.cutPrinAux._proof_1_2	thm	false	propext,Quot.sound
+FOL.Compacity0	FOL.Compacity0.evalFormula_updateCsts	thm	false	propext
+FOL.Eigenvariable	_private.FOL.Eigenvariable.0.instReprFormulaG.repr.match_1.eq_7	thm	false	
+FOL.FOL	FormulaG.eq.noConfusion	def	false	
+FOL.DecEq	FOL.DecEq.decEqTerms._sunfold	def	false	
+FOL.Inversion0	FOL.Inversion0.inv_andR_r	thm	false	propext,Quot.sound
+FOL.Theorems.Eq	FOL.substTerm_subst_lift_gen._proof_2	thm	false	propext,Quot.sound
+FOL.Rename	FOL.Rename.renameFormula._f	def	false	
+FOL.Hauptsatz0	LKh.below.botL	ctor	false	
+FOL.FOL	instReprPos.repr._f	def	false	
+TheoryFramework.Theory	TheoryFramework.Theory.ctorIdx	def	false	
+FOL.FOL	instBEqFormulaG.beq._sparseCasesOn_7	def	false	propext
+FOL.Semantics	FOL.Metamath.Semantics.evalFormula.eq_1	thm	false	
+FOL.Inversion0	FOL.Inversion0.inv_andL	thm	false	propext,Quot.sound
+FOL.Derives1	Derives₁.below.bot_elim	ctor	false	
+FOL.Theorems.Neg	FOL.Theorems.Neg.contrapositive_2	thm	false	propext
+FOL.Herbrand0	FOL.Herbrand0.EqInstance.rec	rec	false	
+FOL.HenkinLimit0	FOL.HenkinLimit0.occursTerms_lift	thm	false	
+FOL.FOL	instReprPos.repr	def	false	
+FOL.Theorems.Quantifiers	liftFormula.eq_5	thm	false	
+FOL.Hauptsatz0	LKh.eqAx	ctor	false	
+FOL.Semantics	_private.FOL.Semantics.0.FOL.Metamath.Semantics.evalTerm.match_1.splitter	def	false	
+FOL.Derives0	Derives₀.elim_or	ctor	false	
+FOL.Tactics	tacticDerive_weaken_	def	false	
+FOL.Complexity	_private.FOL.Complexity.0.FOL.Complexity.formulaComplexity.match_1.eq_1	thm	false	
+FOL.Finitary0	FOL.Finitary0.tval.eq_2	thm	false	
+FOL.DecEq	instDecidableEqFormulaG.decEq._proof_4	thm	false	
+FOL.Derives0	Derives₀.below.intro_impl	ctor	false	
+FOL.FOL	substTerm	def	false	
+FOL.Eigenvariable	FOL.Eigenvariable.absTerm'_subst._proof_6	thm	false	propext,Quot.sound
+FOL.Derives0	Derives₀.subst	ctor	false	
+FOL.Propositional0	_private.FOL.Propositional0.0.FOL.Propositional0.peval.match_1.splitter	def	false	
+FOL.Semantics	FOL.Metamath.Semantics.ModelG._sizeOf_1	def	false	
+FOL.DecEq	instDecidableEqFormulaG	def	false	
+FOL.Canonical0	FOL.Canonical0.evalTerm_canonical	thm	false	propext,Classical.choice,Quot.sound
+FOL.Enumeration	FOL.Metamath.Enumeration.natToTerm._unsafe_rec	def	false	propext,Quot.sound
+FOL.Hauptsatz0	LKh.allL	ctor	false	
+FOL.Eigenvariable	FOL.Eigenvariable.absFormula	def	false	
+FOL.Rename	FOL.Rename.renameTerm	def	false	
+FOL.Herbrand0	FOL.Herbrand0.ptautCheck	def	false	
+FOL.Derives2	Derives₂.intro_ex	ctor	false	
+FOL.Lift0	FOL.Lift0.liftTerms_lift	thm	false	propext,Quot.sound
+FOL.Hauptsatz0	LKh.casesOn	def	false	
+FOL.BlockExtraction0	FOL.BlockExtraction0.disjB_or_allFalse.match_1_1	def	false	
+FOL.Semantics	_private.FOL.Semantics.0.getAt?.match_4.splitter._sparseCasesOn_3	def	false	propext
+FOL.Semantics	FOL.Metamath.Semantics.evalTerm._f	def	false	
+FOL.FOL	TermG.rec	rec	false	
+FOL.Theorems.Eq	FOL.liftTerm_comm_zero._f	def	false	propext,Quot.sound
+FOL.SkolemNF0	FOL.SkolemNF0.occurs_mergeOrR	thm	false	propext
+FOL.Eigenvariable	FOL.Eigenvariable.occursFormula._unsafe_rec	def	false	
+FOL.QFDecide0	FOL.QFDecide0.subTs._sunfold	def	false	
+FOL.Derives2	FOL.Derives2.derives2_lift	thm	false	propext,Quot.sound
+FOL.Enumeration	FOL.Metamath.Enumeration.termSize.eq_2	thm	false	
+FOL.FOL	instBEqFormulaG.beq._sparseCasesOn_4	def	false	propext
+FOL.Prenex0	FOL.Prenex0.Prenex.match_1	def	false	
+FOL.QFDecide0	FOL.QFDecide0.memB.eq_def	thm	false	
+FOL.BlockExtraction0	FOL.BlockExtraction0.herbrandExtractionBlock_of	thm	false	propext,Quot.sound
+FOL.Interpolation0	FOL.Interpolation0.EqGen.brecOn	thm	false	
+FOL.FOL	TermG.brecOn	def	false	
+FOL.Hauptsatz0	FOL.Hauptsatz0.cutLeftAux._proof_1_1	thm	false	propext,Quot.sound
+FOL.Eigenvariable	_private.FOL.Eigenvariable.0.FOL.Eigenvariable.absTerm'.match_1.eq_2	thm	false	
+FOL.PrenexNF0	FOL.PrenexNF0.prenex_iff.match_1_1	def	false	
+FOL.Semantics	FOL.Metamath.Semantics.eval_substFormula_zero._simp_1	thm	false	propext,Quot.sound
+FOL.BlockExtraction0	FOL.BlockExtraction0.disjB_or_allFalse._f	def	false	propext
+FOL.Rename	_private.FOL.Rename.0.liftTerms.match_1.eq_1	thm	false	
+FOL.Semantics	_private.FOL.Semantics.0.getAt?.match_4.eq_2	thm	false	propext
+FOL.Complexity	FOL.Complexity.formulaComplexity.eq_5	thm	false	
+FOL.Hauptsatz0	FOL.Hauptsatz0.liftTerms_subst_le.match_1	def	false	
+FOL.Propositional0	FOL.Propositional0.derives0_of_ptaut_ctx	thm	false	propext,Quot.sound
+FOL.SkolemN0	FOL.SkolemN0.allBlock	def	false	
+FOL.MetaRules	FOL.MetaRules.iff_mpr	def	false	propext
+FOL.QFDecide0	FOL.QFDecide0.subT_closed.match_1	def	false	
+FOL.Theorems.Eq	FOL.substTerm_subst_comm_succ._proof_15	thm	false	propext,Quot.sound
+FOL.QFDecide0	FOL.QFDecide0.pw_of_cls	thm	false	propext,Quot.sound
+FOL.Canonical0	FOL.Canonical0.PointwiseEqv.below	ind	false	
+FOL.Derives0	Derives₀.below.intro_or_l	ctor	false	
+FOL.Semantics	_private.FOL.Semantics.0.instReprPos.repr.match_1.eq_2	thm	false	
+FOL.QFDecide0	FOL.QFDecide0.atomVal.match_1	def	false	
+FOL.FOL	_aux_FOL_FOL___unexpand_FormulaG_ex_1	def	false	
+FOL.QFDecide0	FOL.QFDecide0.subTs._f	def	false	
+FOL.BlockExtraction0	FOL.BlockExtraction0.herbrand_extraction_block₀	thm	false	propext,Quot.sound
+FOL.FOL	LocalRule.casesOn	def	false	
+FOL.HenkinLimit0	FOL.HenkinLimit0.not_occurs_substTerm._f	def	false	
+FOL.Compacity0	FOL.Compacity0.updateCsts._f	def	false	propext
+FOL.Henkin0	_private.FOL.Henkin0.0.FOL.Henkin0._aux_FOL_Henkin0___unexpand_FOL_Henkin0_DerivesSet₀_1	def	false	
+FOL.PrenexNF0	FOL.PrenexNF0.impAll_impl_r	thm	false	propext,Quot.sound
+FOL.Eigenvariable	FOL.Eigenvariable.absFormula'_lift._proof_1_19	thm	false	propext,Quot.sound
+FOL.Rename	_private.FOL.Rename.0.getAt?.match_4.eq_2	thm	false	propext
+FOL.DecEq	instDecidableEqFormulaG.decEq._proof_26	thm	false	
+FOL.Rename	FOL.Rename.renameFormula.eq_8	thm	false	
+FOL.Theorems.Quantifiers	substTerms.eq_1	thm	false	
+FOL.Prenex0	FOL.Prenex0.Prenex._unsafe_rec	def	false	
+FOL.Interpolation0	FOL.Interpolation0.derives0_discharge_ctx._f	def	false	
+FOL.Craig0	FOL.Craig0.Split	def	false	
+FOL.HenkinLimit0	FOL.HenkinLimit0.hidx_mono._f	def	false	propext,Classical.choice,Quot.sound
+FOL.PrenexNF0	FOL.PrenexNF0.mergeOr._sunfold	def	false	propext
+FOL.Enumeration	FOL.Metamath.Enumeration.natToFormula._proof_5	thm	false	propext,Quot.sound
+FOL.FOL	TermG.noConfusionType	def	false	
+FOL.FOL	liftFormula._sunfold	def	false	
+FOL.Finitary0	FOL.Finitary0.tval.eq_8	thm	false	
+TheoryFramework.MetaTheorems	TheoryFramework.inconsistent_upward	thm	false	
+FOL.Sequent0	FOL.Sequent0.not_quantFree_all	thm	false	
+FOL.Lindenbaum0	FOL.Lindenbaum0.derivesSet0_elim_impl	thm	false	propext
+FOL.Fresh0	FOL.Fresh0.not_occurs_shiftTerms._f	def	false	propext
+FOL.DecEq	instDecidableEqFormulaG.decEq._proof_22	thm	false	
+FOL.Eigenvariable	FOL.Eigenvariable.absFormula'.eq_3	thm	false	
+FOL.Canonical0	_private.FOL.Canonical0.0.FOL.Canonical0._aux_FOL_Canonical0___unexpand_FOL_Metamath_Semantics_satisfies_1	def	false	
+FOL.SkolemHerbrand0	FOL.SkolemHerbrand0.quantFree_neg	thm	false	
+FOL.Craig0	FOL.Craig0.LKp.below	ind	false	
+FOL.Derives2	Derives₂.recOn	def	false	
+FOL.Inversion0	FOL.Inversion0.inv_andR_l	thm	false	propext,Quot.sound
+FOL.Semantics	FOL.Metamath.Semantics.ModelG.noConfusion	def	false	
+FOL.Hauptsatz0	FOL.Hauptsatz0.substTerm_subst_le._proof_22	thm	false	propext,Quot.sound
+FOL.Sequent0	FOL.Sequent0.disj_or_allFalse._f	def	false	propext
+FOL.Derives0	Derives₀.below.weakening	ctor	false	
+FOL.FOL	FormulaG.or.sizeOf_spec	thm	false	
+FOL.FOL	liftTerms	def	false	
+FOL.Enumeration	FOL.Metamath.Enumeration.unpair_snd_le._proof_1_1	thm	false	propext,Quot.sound
+FOL.Eigenvariable	FOL.Eigenvariable.absTerms	def	false	
+FOL.Derives2	FOL.Derives2.PwEq₂	ind	false	
+FOL.Eigenvariable	FOL.Eigenvariable.absTerm'.eq_def	thm	false	
+FOL.DecEq	instDecidableEqFormulaG.decEq._proof_45	thm	false	
+FOL.Semantics	FOL.Metamath.Semantics.ModelG.noConfusionType	def	false	
+FOL.Derives0	Derives₀.below.elim_forall	ctor	false	
+FOL.QFDecide0	FOL.QFDecide0.self_mem_mixL	thm	false	
+FOL.Lift0	FOL.Lift0.absTerm'_none	thm	false	propext
+FOL.Fresh0	FOL.Fresh0.cst._unsafe_rec	def	false	propext
+FOL.Interpolation0	FOL.Interpolation0.sub_catL	thm	false	propext
+FOL.SkolemN0	FOL.SkolemN0.skF	def	true	propext,Classical.choice,Quot.sound
+FOL.Theorems.Eq	FOL.substTerms_lift_comm_zero._f	def	false	
+FOL.Enumeration	FOL.Metamath.Enumeration.natToTerms_surj	thm	false	propext,Classical.choice,Quot.sound
+FOL.Rename	_private.FOL.Rename.0.instReprFormulaG.repr.match_1.eq_3	thm	false	
+FOL.HenkinLimit0	FOL.HenkinLimit0.hidx_mono.match_1_1	def	false	
+FOL.Herbrand0	FOL.Herbrand0.pcheck.match_1	def	false	
+FOL.Derives0	Derives₀.brecOn	thm	false	propext
+FOL.Enumeration	FOL.Metamath.Enumeration.unpair.match_1	def	false	
+FOL.Canonical0	FOL.Canonical0.max_cons_impl_iff	thm	false	propext,Classical.choice,Quot.sound
+FOL.Derives2	Derives₂.rec	rec	false	
+FOL.PrenexNF0	FOL.PrenexNF0.mergeAndR_prenex._f	def	false	propext
+FOL.Theorems.Impl	FOL.Theorems.Impl.syllogism_impl	thm	false	propext
+FOL.DecEq	FOL.DecEq.decEqTerm._unsafe_rec	def	false	
+FOL.SkolemNF0	FOL.SkolemNF0.skolemAxiomsF._f	def	false	propext
+FOL.Herbrand0	FOL.Herbrand0.derives0_ex_of_disj	thm	false	
+FOL.Eigenvariable	FOL.Eigenvariable.absFormula'_eq_lift	thm	false	propext
+FOL.Prenex0	FOL.Prenex0.Prenex._f	def	false	
+FOL.Herbrand0	FOL.Herbrand0.eqTransAx	def	false	
+FOL.Craig0	FOL.Craig0.predF_lift._f	def	false	
+FOL.Interpolation0	FOL.Interpolation0.eqGen_side	thm	false	
+FOL.DecEq	instDecidableEqFormulaG.decEq._proof_29	thm	false	
+FOL.Derives2	Derives₂.elim_and_r	ctor	false	
+FOL.Semantics	FOL.Metamath.Semantics.evalFormula.eq_5	thm	false	
+FOL.Derives2	Derives₂.below.elim_ex	ctor	false	
+FOL.HerbrandBlock0	FOL.Herbrand0.eqReflAx.eq_1	thm	false	
+FOL.Interpolation0	FOL.Interpolation0.lkp_allL_list._f	def	false	propext,Quot.sound
+FOL.QFDecide0	FOL.QFDecide0.Pw.below.casesOn	def	false	
+FOL.Theorems.Eq	FOL.substTerm_subst_comm_succ._proof_14	thm	false	propext,Quot.sound
+FOL.Hauptsatz0	FOL.Hauptsatz0.derives0_qf_iff.match_1_1	def	false	
+FOL.Eigenvariable	_private.FOL.Eigenvariable.0.FOL.Eigenvariable.absFormula'.match_1.eq_3	thm	false	
+FOL.SkolemNF0	FOL.SkolemNF0.skolem_conservative_listF._f	def	false	propext,Classical.choice,Quot.sound
+FOL.Rename	FOL.Rename.renameFormula.eq_2	thm	false	
+TheoryFramework.Logic	TheoryFramework.LogicSystem	ind	false	
+FOL.Hauptsatz0	LKh.below.exR	ctor	false	
+FOL.FOL	substFormula._unsafe_rec	def	false	
+FOL.QFDecide0	FOL.QFDecide0.mixA.match_1	def	false	propext
+FOL.Enumeration	FOL.Metamath.Enumeration.natToTerms	def	false	propext,Quot.sound
+FOL.Rename	FOL.Rename.renameTerm.eq_2	thm	false	
+FOL.SymClasses	FOL.FreshSym.recOn	def	false	
+FOL.Semantics	FOL.Metamath.Semantics.shiftEnv.eq_2	thm	false	
+FOL.Eigenvariable	FOL.Eigenvariable.absTerms'_eq_lift._f	def	false	propext
+FOL.QFDecide0	FOL.QFDecide0.subT._sunfold	def	false	
+FOL.Craig0	FOL.Craig0.Cov	def	false	
+FOL.FOL	_aux_FOL_FOL___unexpand_Derives_1	def	false	
+FOL.QFDecide0	FOL.QFDecide0.pick_congr.match_1_1	def	false	
+FOL.Eigenvariable	FOL.Eigenvariable.absTerms_eq_lift	thm	false	propext
+FOL.Henkin0	FOL.Henkin0.IsConsistent₀	def	false	
+TheoryFramework.Relations	TheoryFramework.intersection_le_right	thm	false	
+FOL.Herbrand0	FOL.Herbrand0.herbrand_iff	thm	false	propext,Quot.sound
+FOL.DecEq	instDecidableEqFormulaG.decEq._proof_47	thm	false	
+FOL.FOL	FormulaG.ex.inj	thm	false	
+FOL.Semantics	FOL.Metamath.Semantics.evalFormula._sunfold	def	false	
+FOL.SkolemNF0	FOL.SkolemNF0.skolemAxiomsF._sunfold	def	false	propext
+FOL.Sequent0	LK₀.exL	ctor	false	
+FOL.FOL	Derives.below.elim_ex	ctor	false	propext
+FOL.Enumeration	_private.FOL.Enumeration.0.FOL.Metamath.Enumeration.formulaSize.match_1.eq_6	thm	false	
+FOL.Theorems.Eq	FOL.substTerm_subst_lift_gen._proof_4	thm	false	propext,Quot.sound
+FOL.Fresh0	FOL.Fresh0.cst_bound_list.match_1_1	def	false	
+FOL.Rename	FOL.Rename.renameFormula.match_1	def	false	
+FOL.SkolemNF0	FOL.SkolemNF0.skolemizeF_shape	thm	false	propext,Quot.sound
+FOL.HenkinLimit0	FOL.HenkinLimit0.hen_fresh.match_1_1	def	false	propext,Classical.choice,Quot.sound
+FOL.Interpolation0	FOL.Interpolation0.em_or2	thm	false	
+FOL.HerbrandBlock0	FOL.HerbrandBlock0.derives0_exBlock_of_disj._f	def	false	propext,Quot.sound
+FOL.FOL	instBEqFormulaG.beq._sparseCasesOn_2	def	false	propext
+FOL.Derives1	Derives₁.below.intro_impl	ctor	false	
+FOL.Lindenbaum0	_private.FOL.Lindenbaum0.0.FOL.Lindenbaum0.«term_⊢₀*_»	def	false	
+FOL.FOL	FormulaG.or.inj	thm	false	
+FOL.MetaRules	FOL.MetaRules.and_elim_left	def	false	propext
+FOL.HenkinLimit0	FOL.HenkinLimit0.not_occurs_substTerm	thm	false	
+FOL.SkolemN0	FOL.SkolemN0.not_occurs_vars._f	def	false	
+FOL.Lindenbaum0	FOL.Lindenbaum0.LindenbaumStep	def	true	propext,Classical.choice,Quot.sound
+FOL.Sequent0	LK₀.below.orL	ctor	false	
+FOL.Enumeration	FOL.Metamath.Enumeration.unpair_fst_le._proof_1_1	thm	false	propext,Quot.sound
+FOL.Interpolation0	FOL.Interpolation0.lkp_allL_list	thm	false	propext,Quot.sound
+FOL.QFDecide0	FOL.QFDecide0.pick.match_1	def	false	
+FOL.Fresh0	FOL.Fresh0.cst_bound_list	thm	false	propext,Classical.choice,Quot.sound
+FOL.Craig0	FOL.Craig0.predSub_of_cov	thm	false	
+FOL.Finitary0	FOL.Finitary0.tval._unsafe_rec	def	false	
+FOL.Propositional0	FOL.Propositional0.derives0_em_prop	thm	false	propext,Quot.sound
+FOL.DecEq	instDecidableEqFormulaG.decEq._proof_31	thm	false	
+FOL.Derives1	Derives₁.below.intro_forall	ctor	false	
+FOL.Sequent0	LKc.ax	ctor	false	
+FOL.Herbrand0	FOL.Herbrand0.HerbrandExtraction₀	def	false	
+FOL.QFDecide0	FOL.QFDecide0.topT._f	def	false	propext
+FOL.SkolemNF0	FOL.SkolemNF0.occurs_allBlock._f	def	false	
+FOL.Eigenvariable	FOL.Eigenvariable.absTerms'.eq_def	thm	false	
+FOL.Herbrand0	FOL.Herbrand0.derives0_discharge._f	def	false	
+FOL.Eigenvariable	_private.FOL.Eigenvariable.0.FOL.Eigenvariable.absFormula'.match_1.splitter	def	false	
+FOL.PrenexNF0	FOL.PrenexNF0.mergeImplR_prenex._f	def	false	propext
+FOL.FOL	Pos.left.sizeOf_spec	thm	false	
+FOL.Semantics	_private.FOL.Semantics.0.FOL.Metamath.Semantics.evalFormula.match_1.eq_7	thm	false	
+FOL.FOL	FormulaG.forall.inj	thm	false	
+FOL.Sequent0	LKc.rec	rec	false	
+FOL.Eigenvariable	FOL.Eigenvariable.absTerms_lift	thm	false	propext,Quot.sound
+FOL.Derives2	FOL.Derives2.eq_substTerms._f	def	false	
+FOL.Herbrand0	FOL.Herbrand0.disjOf._sunfold	def	false	
+FOL.HerbrandBlock0	FOL.HerbrandBlock0.exBlock	def	false	
+FOL.Skolem0	FOL.Skolem0.evalTerm_updateFunc.match_1	def	false	
+FOL.Semantics	FOL.Metamath.Semantics.evalFormula.eq_def	thm	false	
+FOL.Canonical0	FOL.Canonical0.evalTerm_canonical._f	def	false	propext,Classical.choice,Quot.sound
+FOL.BlockExtraction0	FOL.BlockExtraction0.instB_nil.match_1_1	def	false	
+FOL.PrenexNF0	FOL.PrenexNF0.mergeImplR._unsafe_rec	def	false	propext
+FOL.Theorems.Eq	FOL.substTerm_lift_comm_zero	thm	false	propext,Quot.sound
+FOL.Enumeration	_private.FOL.Enumeration.0.PSum.casesOn._arg_pusher	thm	false	
+FOL.PrenexNF0	FOL.PrenexNF0.prenex_isPrenex._f	def	false	propext
+FOL.QFDecide0	FOL.QFDecide0.mixL._unsafe_rec	def	false	
+FOL.Derives1	Derives₁.elim_impl	ctor	false	
+FOL.Hauptsatz0	LKh.struct	ctor	false	
+FOL.Hauptsatz0	LKh.below.implR	ctor	false	
+FOL.DecEq	FOL.DecEq.decEqTerms._proof_4	thm	false	
+FOL.Eigenvariable	FOL.Eigenvariable.absTerms'._f	def	false	
+FOL.Propositional0	FOL.Propositional0.implChain._sunfold	def	false	
+FOL.QFDecide0	FOL.QFDecide0.qfS	def	false	propext
+FOL.Herbrand0	FOL.Herbrand0.EqInstance.recOn	def	false	
+FOL.Sequent0	LKc.below.allL	ctor	false	
+FOL.Lindenbaum0	FOL.Lindenbaum0.max_cons_contains	thm	false	propext,Classical.choice,Quot.sound
+TheoryFramework.Theory	TheoryFramework.Theory.empty	def	false	
+FOL.Enumeration	FOL.Metamath.Enumeration.unpair_sum_le._proof_1_5	thm	false	propext,Quot.sound
+FOL.Enumeration	FOL.Metamath.Enumeration.unpair_surj	thm	false	propext,Quot.sound
+FOL.PrenexNF0	FOL.PrenexNF0.mergeImplR_prenex.match_1_1	def	false	
+FOL.Theorems.Eq	FOL.derive_eq_func_congr	thm	false	propext,Quot.sound
+FOL.Derives0	Derives₀.below.intro_forall	ctor	false	
+FOL.PrenexNF0	FOL.PrenexNF0.prenex_lift	thm	false	
+FOL.FOL	instReprPos.repr.match_1	def	false	
+FOL.Compacity0	FOL.Compacity0.infinite_model_of_large_fresh	thm	false	propext,Classical.choice,Quot.sound
+FOL.FOL	Pos	ind	false	
+FOL.SkolemNF0	FOL.SkolemNF0.skolemAxioms	def	false	propext
+FOL.BlockExtraction0	FOL.BlockExtraction0.disjB_or_allFalse	thm	false	propext
+FOL.QFDecide0	FOL.QFDecide0.pick_some.match_1_1	def	false	
+FOL.Canonical0	FOL.Canonical0.canonicalModel.eq_1	thm	false	propext,Classical.choice,Quot.sound
+TheoryFramework.Theory	TheoryFramework.Theory.mk.sizeOf_spec	thm	false	
+FOL.PrenexNF0	FOL.PrenexNF0.mergeOrR._unsafe_rec	def	false	propext
+FOL.Finitary0	_private.FOL.Finitary0.0.FOL.Finitary0.tval.match_1.eq_5	thm	false	
+FOL.SequentSound0	FOL.SequentSound0.evalTerms_append._f	def	false	
+FOL.FOL	TermG.var.inj	thm	false	
+FOL.Derives1	Derives₁.elim_and_l	ctor	false	
+FOL.Hauptsatz0	FOL.Hauptsatz0.substTerm_subst_le._proof_18	thm	false	propext,Quot.sound
+FOL.SkolemNF0	FOL.SkolemNF0.occurs_mergeImplR._f	def	false	propext
+FOL.Semantics	FOL.Metamath.Semantics.ModelG.recOn	def	false	
+FOL.Hauptsatz0	FOL.Hauptsatz0.substTerm_subst_le._proof_6	thm	false	propext,Quot.sound
+FOL.FOL	TermG._sizeOf_1	def	false	
+FOL.FOL	TermG.recOn	def	false	
+FOL.DecEq	instDecidableEqFormulaG.decEq._proof_5	thm	false	
+FOL.Derives2	Derives₂	ind	false	
+FOL.Theorems.Eq	FOL.substTerm_liftTerm._proof_2	thm	false	propext,Quot.sound
+FOL.QFDecide0	_private.FOL.QFDecide0.0.FOL.QFDecide0.r0	def	false	
+FOL.QFDecide0	_private.FOL.QFDecide0.0.FOL.QFDecide0.pick.match_1.splitter	def	false	
+FOL.FOL	FormulaG.impl.injEq	thm	false	propext
+FOL.Derives1	Derives₁.below.intro_and	ctor	false	
+FOL.Sequent0	FOL.Sequent0.disj_or_allFalse.match_1_1	def	false	
+FOL.Lindenbaum0	FOL.Lindenbaum0.lindenbaum_step_consistent	thm	false	propext,Classical.choice,Quot.sound
+FOL.Canonical0	FOL.Canonical0.derivesSet0_map	thm	false	
+FOL.Rename	FOL.Rename.derives0_rename_inv	thm	false	propext,Quot.sound
+FOL.HenkinLimit0	FOL.HenkinLimit0.shiftTheory_sub_henLimit	thm	false	propext,Classical.choice,Quot.sound
+FOL.QFDecide0	FOL.QFDecide0.topT	def	false	propext
+FOL.Craig0	FOL.Craig0.LKp.struct	ctor	false	
+FOL.PrenexNF0	FOL.PrenexNF0.quantFree_lift.match_1_1	def	false	
+FOL.Hauptsatz0	FOL.Hauptsatz0.cutPrinAux._proof_1_1	thm	false	propext,Quot.sound
+FOL.Craig0	FOL.Craig0.cov_sub	thm	false	
+FOL.FOL	FormulaG.noConfusionType	def	false	
+FOL.Inconsistencia	FOL.Inconsistencia.DisjunctionProperty₀	def	false	
+FOL.Eigenvariable	FOL.Eigenvariable.absTerm'._unsafe_rec	def	false	
+FOL.FOL	FormulaG.impl.sizeOf_spec	thm	false	
+FOL.Enumeration	FOL.Metamath.Enumeration.formulaSize.eq_4	thm	false	
+FOL.DecEq	instDecidableEqFormulaG.decEq._proof_14	thm	false	
+FOL.SkolemNF0	FOL.SkolemNF0.skolemizeF_impAll._f	def	false	propext,Quot.sound
+FOL.Theorems.Derived	FOL.Theorems.Derived.and_comm	thm	false	propext
+FOL.PrenexNF0	FOL.PrenexNF0.and_commA	thm	false	
+FOL.NDtoLK0	FOL.NDtoLK0.ndToLK	thm	false	propext,Quot.sound
+FOL.Rename	FOL.Rename.rename_rename_terms	thm	false	propext
+FOL.FOL	Pos._sizeOf_1	def	false	
+FOL.Canonical0	FOL.Canonical0.termEqv_refl	thm	false	propext,Classical.choice,Quot.sound
+FOL.Derives0	Derives₀.below.intro_and	ctor	false	
+FOL.Fresh0	FOL.Fresh0.instFreshSymString	def	false	propext,Classical.choice,Quot.sound
+TheoryFramework.Logic	TheoryFramework.LogicSystem.mk	ctor	false	
+FOL.NDtoLK0	FOL.NDtoLK0.fnenL	thm	false	propext,Quot.sound
+FOL.Theorems.Eq	FOL.substTerm_subst_comm_succ._proof_7	thm	false	propext,Quot.sound
+FOL.Compacity0	FOL.Compacity0.compactness	thm	false	propext,Classical.choice,Quot.sound
+FOL.Enumeration	FOL.Metamath.Enumeration.termsSize._f	def	false	
+FOL.DecEq	instDecidableEqFormulaG.decEq._proof_75	thm	false	
+FOL.SkolemNF0	FOL.SkolemNF0.occurs_mergeOr._f	def	false	propext
+FOL.Enumeration	FOL.Metamath.Enumeration.termsSize.eq_2	thm	false	
+FOL.FOL	Derives.rec	rec	false	propext
+FOL.Canonical0	FOL.Canonical0.max_cons_ex	thm	false	propext,Classical.choice,Quot.sound
+FOL.FOL	FormulaG.forall.injEq	thm	false	propext
+FOL.FOL	instBEqFormulaG.beq	def	false	propext
+FOL.SkolemNF0	FOL.SkolemNF0.derives0_skolemizeF	thm	false	propext,Quot.sound
+FOL.Sequent0	LKc.below.allR	ctor	false	
+FOL.DecEq	instDecidableEqFormulaG.decEq._proof_37	thm	false	
+FOL.Rename	_private.FOL.Rename.0.instReprFormulaG.repr.match_1.eq_8	thm	false	
+FOL.Derives2	Derives₂.below.eq_eq_congr	ctor	false	
+FOL.QFDecide0	FOL.QFDecide0.splits._sunfold	def	false	
+FOL.Craig0	FOL.Craig0.maeharaₚ	thm	false	propext,Quot.sound
+FOL.Eigenvariable	FOL.Eigenvariable.posDepth	def	false	
+FOL.Canonical0	FOL.Canonical0.PointwiseEqv.nil	ctor	false	
+FOL.SkolemN0	FOL.SkolemN0.vars._sunfold	def	false	
+FOL.Derives2	Derives₂.elim_and_l	ctor	false	
+FOL.Tactics	tryMem	opaque	false	propext,Classical.choice,Quot.sound
+FOL.FOL	_aux_FOL_FOL___unexpand_FormulaG_bottom_1	def	false	
+FOL.Rename	FOL.Rename.renameTerms.match_1	def	false	
+FOL.Derives2	Derives₂.below.hyp	ctor	false	
+FOL.FOL	«_aux_FOL_FOL___macroRules_term_≐__1»	def	false	
+FOL.SkolemNF0	FOL.SkolemNF0.derives0_skolemizeF.match_1_1	def	false	propext
+TheoryFramework.Properties	TheoryFramework.IsMaximalConsistent	def	false	
+FOL.FOL	instBEqFormulaG	def	false	propext
+FOL.Derives1	Derives₁.casesOn	def	false	
+FOL.DecEq	FOL.DecEq.decEqTerm._proof_6	thm	false	
+FOL.FOL	instReprFormulaG	def	false	propext
+FOL.Hauptsatz0	LKh.ax	ctor	false	
+FOL.Semantics	FOL.Metamath.Semantics.satisfies	def	false	
+FOL.Hauptsatz0	FOL.Hauptsatz0.substTerm_subst_le._proof_17	thm	false	propext,Quot.sound
+FOL.QFDecide0	FOL.QFDecide0.mixA._sparseCasesOn_1.else_eq	thm	false	propext
+FOL.Semantics	_private.FOL.Semantics.0.instReprPos.repr.match_1.eq_1	thm	false	
+FOL.PrenexNF0	FOL.PrenexNF0.quantFree_lift._f	def	false	
+FOL.Semantics	FOL.Metamath.Semantics.eval_liftFormula_zero	thm	false	propext,Quot.sound
+FOL.Eigenvariable	FOL.Eigenvariable.absFormula'	def	false	
+FOL.Theorems.Quantifiers	substTerms.eq_2	thm	false	
+FOL.FOL	iff	def	false	
+TheoryFramework.Logic	TheoryFramework.SoundLogic	ind	false	
+FOL.FOL	FormulaG.and.sizeOf_spec	thm	false	
+FOL.PrenexNF0	FOL.PrenexNF0.mergeImpl_prenex._f	def	false	propext
+FOL.Rename	FOL.Rename.renameTerm.eq_1	thm	false	
+FOL.Eigenvariable	FOL.Eigenvariable.absTerm'.eq_2	thm	false	
+FOL.Herbrand0	FOL.Herbrand0.EqInstance.casesOn	def	false	
+FOL.Enumeration	FOL.Metamath.Enumeration.natToString.eq_1	thm	false	propext,Quot.sound
+FOL.Rename	FOL.Rename.invOf_spec	thm	false	propext,Classical.choice,Quot.sound
+FOL.Theorems.Quantifiers	liftTerms.eq_def	thm	false	
+FOL.Hauptsatz0	FOL.Hauptsatz0.lkh_subst	thm	false	propext,Quot.sound
+FOL.Enumeration	FOL.Metamath.Enumeration.termSize.eq_def	thm	false	
+FOL.Sequent0	_private.FOL.Sequent0.0.FOL.Sequent0.nilEq	thm	false	
+FOL.Interpolation0	FOL.Interpolation0.lk0_to_lkp	thm	false	propext,Quot.sound
+FOL.Hauptsatz0	FOL.Hauptsatz0.substTerm_subst_le._proof_11	thm	false	propext,Quot.sound
+FOL.Theorems.Eq	FOL.substTerm_liftLift._proof_2	thm	false	propext,Quot.sound
+FOL.FOL	instReprFormulaG.repr.match_1	def	false	
+FOL.Henkin0	FOL.Henkin0.henkin_step_consistent₀	thm	false	propext,Classical.choice,Quot.sound
+FOL.FOL	FormulaG.ctorIdx	def	false	
+FOL.Enumeration	FOL.Metamath.Enumeration.unpair._f	def	false	
+FOL.FOL	Derives.refl	ctor	false	
+FOL.SymClasses	FOL.EnumSym.noConfusionType	def	false	
+TheoryFramework.Theory	TheoryFramework.Theory.proves	def	false	
+FOL.Eigenvariable	FOL.Eigenvariable.absTerm'_lift._proof_9	thm	false	propext,Quot.sound
+FOL.BlockExtraction0	FOL.BlockExtraction0.HerbrandOutB	def	false	
+FOL.Semantics	FOL.Metamath.Semantics.eval_liftTerm_ext._proof_8	thm	false	propext,Quot.sound
+FOL.Theorems.Eq	_private.FOL.Theorems.Eq.0.liftTerms.match_1.splitter	def	false	
+FOL.FOL	_aux_FOL_FOL___unexpand_FormulaG_forall_1	def	false	
+FOL.BlockExtraction0	FOL.BlockExtraction0.quantFree_of_blockInv	thm	false	propext,Quot.sound
+FOL.Compacity0	FOL.Compacity0.infTheory_finSat	thm	false	propext,Classical.choice,Quot.sound
+FOL.FOL	«term¬__1»	def	false	
+FOL.Fresh0	FOL.Fresh0.not_occurs_shiftTerms	thm	false	propext,Classical.choice,Quot.sound
+FOL.Canonical0	FOL.Canonical0.PointwiseEqv	ind	false	
+FOL.Hauptsatz0	FOL.Hauptsatz0.substTerms_subst_le._f	def	false	
+FOL.PrenexNF0	FOL.PrenexNF0.mergeAnd_iff	thm	false	propext,Quot.sound
+FOL.Semantics	_private.FOL.Semantics.0.liftTerms.match_1.eq_2	thm	false	
+FOL.Propositional0	_private.FOL.Propositional0.0.FOL.Propositional0.kalmar_atom	thm	false	propext
+FOL.Rename	_private.FOL.Rename.0.instReprPos.repr.match_1.eq_3	thm	false	
+FOL.Lift0	FOL.Lift0.substFormula_lift_var	thm	false	propext,Quot.sound
+FOL.Compacity0	FOL.Compacity0.InfiniteDom	def	false	
+FOL.Derives1	FOL.Derives1.or_congr_r	thm	false	
+FOL.Theorems.Eq	_private.FOL.Theorems.Eq.0.instReprTermG.repr.match_1.eq_1	thm	false	
+FOL.Eigenvariable	_private.FOL.Eigenvariable.0.instReprTermG.repr.match_1.splitter	def	false	
+FOL.Herbrand0	FOL.Herbrand0.disjOf._unsafe_rec	def	false	
+FOL.Herbrand0	FOL.Herbrand0.pcheck._sunfold	def	false	
+FOL.SkolemNF0	FOL.SkolemNF0.occurs_mergeImpl.match_1_1	def	false	propext
+FOL.FOL	«_aux_FOL_FOL___macroRules_term∃.__1»	def	false	
+FOL.Rename	FOL.Rename.rename_getAt?	thm	false	propext
+FOL.Semantics	FOL.Metamath.Semantics.replaceAt_soundness.match_1_40	def	false	propext
+FOL.Canonical0	FOL.Canonical0.max_cons_and	thm	false	propext,Classical.choice,Quot.sound
+FOL.FOL	Derives.elim_and_r	ctor	false	
+FOL.Semantics	FOL.Metamath.Semantics.evalFormula._unsafe_rec	def	false	
+FOL.Theorems.Eq	_private.FOL.Theorems.Eq.0.instReprTermG.repr.match_1.splitter	def	false	
+FOL.Semantics	replaceAt.eq_9	thm	false	propext
+FOL.Hauptsatz0	LKh.below.casesOn	def	false	
+FOL.Eigenvariable	FOL.Eigenvariable.absTerm'_lift._proof_12	thm	false	propext,Quot.sound
+FOL.FOL	FormulaG.and.noConfusion	def	false	
+FOL.Theorems.Quantifiers	substFormula.eq_5	thm	false	
+FOL.FOL	Derives.below.intro_and	ctor	false	propext
+FOL.PrenexNF0	FOL.PrenexNF0.prenex	def	false	propext
+FOL.MetaRules	FOL.MetaRules.or_elim	axiom	false	propext,FOL.MetaRules.or_elim
+FOL.FOL	Pos.ctorElim	def	false	
+FOL.Propositional0	FOL.Propositional0.implChain._unsafe_rec	def	false	
+FOL.Hauptsatz0	FOL.Hauptsatz0.eqInstance_subst	thm	false	
+FOL.QFDecide0	FOL.QFDecide0.evIs._f	def	false	
+TheoryFramework.Theory	TheoryFramework.Theory._sizeOf_inst	def	false	
+FOL.Propositional0	FOL.Propositional0.derives0_peirce_prop	thm	false	propext,Quot.sound
+FOL.Semantics	FOL.Metamath.Semantics.evalTerms._f	def	false	
+FOL.Theorems.Eq	FOL.substTerm_subst_lift_gen._proof_1	thm	false	propext,Quot.sound
+FOL.Rename	_private.FOL.Rename.0.FOL.Rename.renameFormula.match_1.eq_6	thm	false	
+FOL.Hauptsatz0	FOL.Hauptsatz0.deg._sunfold	def	false	
+FOL.SkolemN0	FOL.SkolemN0.envPush	def	false	
+FOL.Hauptsatz0	LKh.allR	ctor	false	
+FOL.Semantics	getAt?.eq_6	thm	false	propext
+FOL.Compacity0	FOL.Compacity0.updateCsts	def	false	propext
+FOL.PrenexNF0	FOL.PrenexNF0.iffAll_symm	thm	false	
+FOL.QFDecide0	FOL.QFDecide0.mixT._sparseCasesOn_1	def	false	propext
+FOL.PrenexNF0	FOL.PrenexNF0.iffAll_impl	thm	false	propext,Quot.sound
+FOL.Hauptsatz0	FOL.Hauptsatz0.lkh_lift	thm	false	propext,Quot.sound
+FOL.Semantics	_private.FOL.Semantics.0.getAt?.match_1.eq_2	thm	false	propext
+FOL.SkolemNF0	FOL.SkolemNF0.occursFormula_lift	thm	false	
+TheoryFramework.MetaTheorems	TheoryFramework.proves_iff_models.match_1_1	def	false	
+FOL.Finitary0	FOL.Finitary0.lkc_tval	thm	false	propext,Quot.sound
+FOL.DecEq	FOL.DecEq.decEqTerms._proof_3	thm	false	
+FOL.Enumeration	_private.FOL.Enumeration.0.FOL.Metamath.Enumeration.formulaSize.match_1.eq_4	thm	false	
+FOL.Inversion0	FOL.Inversion0.inv_implL_l	thm	false	propext,Quot.sound
+FOL.SkolemNF0	FOL.SkolemNF0.derives0_allBlock_mp.match_1_1	def	false	
+FOL.QFDecide0	FOL.QFDecide0.ctxT	def	false	propext
+FOL.Hauptsatz0	FOL.Hauptsatz0.leftPrin_mono.match_1_1	def	false	propext
+FOL.Derives1	FOL.Derives1.derives1_to_derives0	thm	false	
+FOL.Sequent0	FOL.Sequent0.sub_drop	thm	false	
+FOL.SymClasses	FOL.FreshSym.casesOn	def	false	
+FOL.QFDecide0	FOL.QFDecide0.mem_of_memB	thm	false	propext
+FOL.Interpolation0	FOL.Interpolation0.sub_app	thm	false	propext
+FOL.Complexity	_private.FOL.Complexity.0.instReprFormulaG.repr.match_1.eq_1	thm	false	
+FOL.DecEq	FOL.DecEq.instDecidableEqTerm	def	false	
+FOL.Interpolation0	FOL.Interpolation0.predL_em	thm	false	
+FOL.Inversion0	FOL.Inversion0.inv_orR	thm	false	propext,Quot.sound
+FOL.QFDecide0	FOL.QFDecide0.dedup_sub	thm	false	
+FOL.DecEq	instDecidableEqFormulaG.decEq._proof_59	thm	false	
+FOL.DecEq	instDecidableEqFormulaG.decEq._proof_20	thm	false	
+FOL.Theorems.Quantifiers	liftFormula.eq_6	thm	false	
+FOL.Theorems.Quantifiers	liftTerm.eq_1	thm	false	
+FOL.SkolemN0	FOL.SkolemN0.allBlock.match_1	def	false	
+FOL.Interpolation0	FOL.Interpolation0.EqGen.below.casesOn	def	false	
+FOL.QFDecide0	FOL.QFDecide0.headA.eq_2	thm	false	propext
+FOL.PrenexNF0	FOL.PrenexNF0.mergeAndR_prenex.match_1_1	def	false	
+FOL.Theorems.Quantifiers	liftFormula.eq_3	thm	false	
+FOL.Lindenbaum0	FOL.Lindenbaum0.derivesSet0_hyp	thm	false	
+FOL.Compacity0	FOL.Compacity0.updateCsts._sunfold	def	false	propext
+FOL.Derives0	«term_⊢₀_»	def	false	
+FOL.Craig0	FOL.Craig0.LKp.botL	ctor	false	
+FOL.Finitary0	FOL.Finitary0.tval.eq_5	thm	false	
+FOL.FOL	Derives.below.intro_impl	ctor	false	propext
+FOL.NDtoLK0	FOL.NDtoLK0.ndToLK_prop	thm	false	propext,Quot.sound
+FOL.QFDecide0	FOL.QFDecide0.atomT._sparseCasesOn_1	def	false	propext
+FOL.Eigenvariable	FOL.Eigenvariable.absTerms'._unsafe_rec	def	false	
+FOL.FOL	«_aux_FOL_FOL___macroRules_term⊤_1»	def	false	
+FOL.Derives2	FOL.Derives2.PwEq₂.rec	rec	false	
+FOL.Propositional0	FOL.Propositional0.peval_implChain	thm	false	propext
+FOL.FOL	«_aux_FOL_FOL___macroRules_term#__1»	def	false	
+FOL.Propositional0	_private.FOL.Propositional0.0.FOL.Propositional0.peval.match_1.eq_2	thm	false	
+FOL.DecEq	instDecidableEqFormulaG.decEq._proof_54	thm	false	
+FOL.FOL	LocalRule	ind	false	
+FOL.FOL	Pos.ctorIdx	def	false	
+FOL.HenkinLimit0	FOL.HenkinLimit0.hidx._sunfold	def	false	propext,Classical.choice,Quot.sound
+FOL.Eigenvariable	_private.FOL.Eigenvariable.0.getAt?.match_4.splitter._sparseCasesOn_3	def	false	propext
+FOL.Eigenvariable	FOL.Eigenvariable.absFormula_eq_lift	thm	false	propext
+FOL.Eigenvariable	_private.FOL.Eigenvariable.0.getAt?.match_4.splitter	def	false	propext
+FOL.FOL	posicion_Q	def	false	
+FOL.SkolemHerbrand0	FOL.SkolemHerbrand0.derives0_neg_allBlock_iff	thm	false	propext,Quot.sound
+FOL.HerbrandBlock0	FOL.HerbrandBlock0.herbrandDisjBlock	def	false	
+FOL.Lindenbaum0	FOL.Lindenbaum0.lindenbaum_limit_bound	thm	false	propext,Classical.choice,Quot.sound
+FOL.Canonical0	FOL.Canonical0.pullback	def	false	
+FOL.Semantics	getAt?._sparseCasesOn_4.else_eq	thm	false	propext
+FOL.Canonical0	FOL.Canonical0.pointwiseEqv_symm	thm	false	propext,Classical.choice,Quot.sound
+FOL.SkolemHerbrand0	FOL.SkolemHerbrand0.not_occurs_implChain._f	def	false	
+FOL.SymClasses	FOL.instFreshSymListChar	def	false	propext
+FOL.Enumeration	FOL.Metamath.Enumeration.map_ofNat_toNat	thm	false	propext
+FOL.Derives0	Derives₀.intro_impl	ctor	false	
+FOL.FOL	instBEqFormulaG.beq._unsafe_rec	def	false	propext
+FOL.Theorems.Neg	FOL.Theorems.Neg.explosion_impl	thm	false	propext
+FOL.QFDecide0	FOL.QFDecide0.mixL	def	false	
+FOL.Semantics	FOL.Metamath.Semantics.contextSatisfies	def	false	
+FOL.QFDecide0	FOL.QFDecide0.headF	def	false	
+FOL.HerbrandBlock0	FOL.HerbrandBlock0.derives0_exBlock_of_disj.match_1_1	def	false	
+FOL.Rename	FOL.Rename.rename_replaceAt	thm	false	propext
+FOL.Interpolation0	FOL.Interpolation0.EqGen.recOn	def	false	
+FOL.SkolemHerbrand0	FOL.SkolemHerbrand0.impAll_exBlock_neg._f	def	false	propext,Quot.sound
+FOL.QFDecide0	FOL.QFDecide0.atomT	def	false	propext
+FOL.Derives2	Derives₂.below.eq_func_congr	ctor	false	
+FOL.SkolemNF0	FOL.SkolemNF0.occurs_prenex._f	def	false	propext
+FOL.Interpolation0	FOL.Interpolation0.EqGen.casesOn	def	false	
+FOL.QFDecide0	FOL.QFDecide0.cls	def	false	
+FOL.Derives2	Derives₂.below.intro_or_l	ctor	false	
+FOL.Derives1	FOL.Derives1.ex_congr	thm	false	propext,Quot.sound
+FOL.FOL	FormulaG.and.injEq	thm	false	propext
+FOL.DecEq	instDecidableEqFormulaG.decEq._proof_51	thm	false	
+FOL.Lindenbaum0	FOL.Lindenbaum0.lindenbaum_step_consistent.match_1_1	def	false	
+FOL.Theorems.Quantifiers	FOL.Theorems.Quantifiers.forall_and_impl_and_forall	thm	false	propext,Quot.sound
+FOL.HerbrandBlock0	FOL.HerbrandBlock0.HerbrandExtractionBlock₀	def	false	
+FOL.Complexity	_private.FOL.Complexity.0.instReprFormulaG.repr.match_1.eq_8	thm	false	
+FOL.Semantics	FOL.Metamath.Semantics.evalFormula._f	def	false	
+TheoryFramework.Logic	TheoryFramework.SoundLogic.sound	thm	false	
+FOL.Rename	_private.FOL.Rename.0.getAt?.match_4.splitter._sparseCasesOn_3	def	false	propext
+FOL.PrenexNF0	FOL.PrenexNF0.impAll_and_l	thm	false	propext,Quot.sound
+FOL.MetaRules	FOL.MetaRules.ex_elim	axiom	false	propext,FOL.MetaRules.ex_elim
+FOL.Skolem0	FOL.Skolem0.evalTerm_new	thm	false	
+FOL.Hauptsatz0	FOL.Herbrand0.eqFuncAx.eq_1	thm	false	
+FOL.SymClasses	FOL.FreshSym.cst	def	false	
+FOL.Semantics	_private.FOL.Semantics.0.getAt?.match_1.eq_1	thm	false	propext
+FOL.FOL	Pos.left.noConfusion	def	false	
+FOL.Derives2	Derives₂.eq_eq_congr	ctor	false	
+FOL.QFDecide0	FOL.QFDecide0.mem_subT_self.match_1_1	def	false	
+FOL.BlockExtraction0	FOL.BlockExtraction0.lk0_herbrand_block._proof_1_3	thm	false	propext,Quot.sound
+FOL.FOL	Derives.below.elim_impl	ctor	false	propext
+FOL.QFDecide0	_private.FOL.QFDecide0.0.FOL.QFDecide0.Γx	def	false	
+FOL.Sequent0	FOL.Sequent0.sub_wk	thm	false	
+FOL.Enumeration	FOL.Metamath.Enumeration.termsSize.match_1	def	false	
+FOL.Semantics	FOL.Metamath.Semantics.ModelG.mk.noConfusion	def	false	
+FOL.Canonical0	FOL.Canonical0.max_cons_neg	thm	false	propext,Classical.choice,Quot.sound
+FOL.HerbrandBlock0	FOL.HerbrandBlock0.derives0_exBlock_of_disj	thm	false	propext,Quot.sound
+FOL.FOL	FormulaG._sizeOf_inst	def	false	
+FOL.Finitary0	FOL.Finitary0.tval.match_1	def	false	
+FOL.Enumeration	_private.FOL.Enumeration.0.FOL.Metamath.Enumeration.unpair.match_1.splitter	def	false	
+FOL.Craig0	FOL.Craig0.LKp.casesOn	def	false	
+FOL.Derives1	Derives₁.forall_not_ex_not	ctor	false	
+FOL.PrenexNF0	FOL.PrenexNF0.impAll_impl_l	thm	false	propext,Quot.sound
+FOL.Canonical0	_private.FOL.Canonical0.0.FOL.Canonical0.«_aux_FOL_Canonical0___macroRules__private_FOL_Canonical0_0_FOL_Canonical0_term_⊨__1»	def	false	
+FOL.Semantics	FOL.Metamath.Semantics.replaceAt_soundness	thm	false	propext
+FOL.PrenexNF0	FOL.PrenexNF0.prenex._unsafe_rec	def	false	propext
+FOL.Rename	FOL.Rename.renameTerms._sunfold	def	false	
+FOL.Craig0	FOL.Craig0.predF._f	def	false	
+FOL.Eigenvariable	_private.FOL.Eigenvariable.0.instReprFormulaG.repr.match_1.splitter	def	false	
+FOL.Enumeration	FOL.Metamath.Enumeration.formulaSize._unsafe_rec	def	false	
+FOL.PrenexNF0	FOL.PrenexNF0.mergeAnd._sunfold	def	false	propext
+FOL.Theorems.Quantifiers	_private.FOL.Theorems.Quantifiers.0.instReprTermG.repr.match_1.eq_2	thm	false	
+FOL.Theorems.Quantifiers	liftFormula.eq_4	thm	false	
+FOL.Rename	FOL.Rename.rename_rename_term._f	def	false	
+FOL.Hauptsatz0	FOL.Hauptsatz0.substTerm_subst_le._proof_16	thm	false	propext,Quot.sound
+FOL.QFDecide0	FOL.QFDecide0.Pw.recOn	def	false	
+TheoryFramework.MetaTheorems	TheoryFramework.models_monotone	thm	false	
+FOL.FOL	FormulaG.atom	ctor	false	
+FOL.QFDecide0	FOL.QFDecide0.evIs_S	thm	false	propext,Quot.sound
+FOL.Propositional0	_private.FOL.Propositional0.0.FOL.Propositional0.peval.match_1.eq_6	thm	false	
+FOL.PrenexNF0	_private.FOL.PrenexNF0.0.FOL.PrenexNF0.up	thm	false	propext,Quot.sound
+FOL.HerbrandBlock0	FOL.HerbrandBlock0.derives0_exBlock_of_inst	thm	false	propext,Quot.sound
+FOL.HenkinLimit0	FOL.HenkinLimit0.hen_fresh	thm	false	propext,Classical.choice,Quot.sound
+FOL.Fresh0	_private.FOL.Fresh0.0.FOL.Fresh0.bound_pair	thm	false	propext
+FOL.QFDecide0	FOL.QFDecide0.mem_subTs_of_mem.match_1_1	def	false	
+FOL.DecEq	instDecidableEqFormulaG.decEq._proof_3	thm	false	
+FOL.Canonical0	FOL.Canonical0.termEqv_trans	thm	false	propext,Classical.choice,Quot.sound
+FOL.Eigenvariable	FOL.Eigenvariable.absFormula'.eq_def	thm	false	
+TheoryFramework.Logic	TheoryFramework.LogicSystem.DerivesSet	def	false	
+FOL.Fresh0	FOL.Fresh0.not_occurs_shiftTerm	thm	false	propext,Classical.choice,Quot.sound
+FOL.QFDecide0	FOL.QFDecide0.pick_congr	thm	false	
+FOL.Semantics	_private.FOL.Semantics.0.FOL.Metamath.Semantics.evalFormula.match_1.eq_5	thm	false	
+FOL.FOL	FormulaG.and.elim	def	false	
+FOL.Herbrand0	FOL.Herbrand0.eqAtomAx	def	false	
+FOL.PrenexNF0	FOL.PrenexNF0.mergeAndR_iff.match_1_1	def	false	
+FOL.Tactics	tacticDerive_raa	def	false	
+FOL.Derives0	Derives₀.below.intro_or_r	ctor	false	
+FOL.PrenexNF0	FOL.PrenexNF0.mergeImpl	def	false	propext
+TheoryFramework.Relations	TheoryFramework.le_union_left	thm	false	
+FOL.HenkinLimit0	FOL.HenkinLimit0.occursTerm_lift	thm	false	
+FOL.Semantics	replaceAt.eq_8	thm	false	propext
+FOL.Prenex0	FOL.Prenex0.impl_forall_right	thm	false	propext,Quot.sound
+FOL.Fresh0	FOL.Fresh0.not_occurs_shiftTerm._f	def	false	propext,Classical.choice,Quot.sound
+FOL.QFDecide0	FOL.QFDecide0.eqPropCert_prune	thm	false	propext,Quot.sound
+FOL.HerbrandBlock0	FOL.HerbrandBlock0.exBlock._sunfold	def	false	
+FOL.Eigenvariable	_private.FOL.Eigenvariable.0.instReprFormulaG.repr.match_1.eq_5	thm	false	
+FOL.Theorems.Eq	FOL.substTerm_subst_comm_succ._proof_6	thm	false	propext,Quot.sound
+FOL.Enumeration	FOL.Metamath.Enumeration.natToTerm._mutual._proof_1	thm	false	propext,Quot.sound
+FOL.QFDecide0	FOL.QFDecide0.decideDerives0QF._proof_2	thm	false	propext,Quot.sound
+FOL.Interpolation0	FOL.Interpolation0.lk0_to_derives0_fin	thm	false	propext,Quot.sound
+FOL.Complexity	FOL.Complexity.formulaComplexity._sunfold	def	false	
+FOL.Sequent0	LKc.below.ax	ctor	false	
+FOL.QFDecide0	FOL.QFDecide0.Good.casesOn	def	false	propext
+FOL.Eigenvariable	_private.FOL.Eigenvariable.0.instReprPos.repr.match_1.eq_4	thm	false	
+FOL.Derives2	FOL.Derives2.derives1_eq_func_congr	thm	false	propext,Quot.sound
+FOL.QFDecide0	FOL.QFDecide0.evIs_S.match_1	def	false	
+FOL.PrenexNF0	FOL.PrenexNF0.iffL	thm	false	
+FOL.FOL	Pos.root.sizeOf_spec	thm	false	
+FOL.Derives1	Derives₁.rec	rec	false	
+FOL.Theorems.Eq	FOL.substTerm_liftTerm._proof_9	thm	false	propext,Quot.sound
+FOL.Complexity	FOL.Complexity.formulaComplexity._f	def	false	
+FOL.DecEq	instDecidableEqFormulaG.decEq._proof_49	thm	false	
+FOL.HerbrandBlock0	FOL.HerbrandBlock0.quantFree_instB.match_1_1	def	false	
+FOL.Lindenbaum0	FOL.Lindenbaum0.lindenbaum_limit_bound._f	def	false	propext,Classical.choice,Quot.sound
+FOL.Propositional0	FOL.Propositional0.peval._unsafe_rec	def	false	
+FOL.PrenexNF0	FOL.PrenexNF0.mergeOrR._f	def	false	propext
+FOL.Semantics	FOL.Metamath.Semantics.replaceAt_soundness.match_1_48	def	false	
+FOL.FOL	Pos.right.elim	def	false	
+FOL.Semantics	FOL.Metamath.Semantics.eval_liftTerms_ext	thm	false	propext,Quot.sound
+FOL.Derives0	Derives₀.bot_elim	ctor	false	
+FOL.Rename	FOL.Rename.renameTerms.eq_def	thm	false	
+FOL.DecEq	instDecidableEqFormulaG.decEq._proof_50	thm	false	
+FOL.Derives1	«_aux_FOL_Derives1___macroRules_term_⊢₁__1»	def	false	
+FOL.Interpolation0	FOL.Interpolation0.EqGen.below.rec	rec	false	
+FOL.Eigenvariable	FOL.Eigenvariable.absTerm'.eq_3	thm	false	
+FOL.DecEq	instDecidableEqFormulaG.decEq	def	false	
+FOL.Canonical0	FOL.Canonical0.termSetoid	def	false	propext,Classical.choice,Quot.sound
+FOL.Theorems.Quantifiers	_private.FOL.Theorems.Quantifiers.0.instReprFormulaG.repr.match_1.splitter	def	false	
+FOL.FOL	«term∃._»	def	false	
+FOL.Sequent0	LK₀.below	ind	false	
+FOL.Compacity0	FOL.Compacity0.model_existence_countable₀	thm	false	propext,Classical.choice,Quot.sound
+FOL.DecEq	instDecidableEqFormulaG.decEq._proof_61	thm	false	
+FOL.Theorems.Eq	_private.FOL.Theorems.Eq.0.instReprFormulaG.repr.match_1.eq_4	thm	false	
+FOL.Enumeration	FOL.Metamath.Enumeration.term_surj_aux._proof_1_6	thm	false	propext,Quot.sound
+FOL.Enumeration	FOL.Metamath.Enumeration.formulaSize.eq_8	thm	false	
+FOL.Derives2	FOL.Derives2.liftTerms_append.match_1_1	def	false	
+FOL.FOL	instReprFormulaG.repr._unsafe_rec	def	false	propext
+FOL.Enumeration	_private.FOL.Enumeration.0.FOL.Metamath.Enumeration.termSize.match_1.splitter	def	false	
+FOL.SkolemHerbrand0	FOL.SkolemHerbrand0.derives0_neg_iff_neg_skolemNF	thm	false	propext,Classical.choice,Quot.sound
+FOL.Hauptsatz0	FOL.Hauptsatz0.substTerm_subst_le._proof_12	thm	false	propext,Quot.sound
+FOL.FOL	TermG.func.inj	thm	false	
+FOL.NDtoLK0	FOL.NDtoLK0.dneL	thm	false	
+FOL.Eigenvariable	FOL.Eigenvariable.absTerm'_lift	thm	false	propext,Quot.sound
+FOL.Hauptsatz0	LKh.below.ax	ctor	false	
+FOL.Craig0	FOL.Craig0.LKp.below.allR	ctor	false	
+TheoryFramework.Relations	TheoryFramework.IsConservativeExtension	def	false	
+FOL.FOL	replaceAt._sunfold	def	false	propext
+FOL.PrenexNF0	FOL.PrenexNF0.mergeImpl._f	def	false	propext
+FOL.Semantics	_private.FOL.Semantics.0.liftTerms.match_1.eq_1	thm	false	
+FOL.Sequent0	LK₀.orR	ctor	false	
+FOL.Theorems.Eq	FOL.substTerm_liftTerm._f	def	false	propext,Quot.sound
+FOL.BlockExtraction0	_private.FOL.BlockExtraction0.0.FOL.BlockExtraction0.nilEq	thm	false	
+FOL.QFDecide0	FOL.QFDecide0.func_mem	thm	false	propext,Quot.sound
+FOL.SkolemHerbrand0	FOL.SkolemHerbrand0.herbrand_validity₀	thm	false	propext,Classical.choice,Quot.sound
+FOL.Rename	FOL.Rename.renameFormula.eq_4	thm	false	
+FOL.Enumeration	FOL.Metamath.Enumeration.natToTerm.eq_1	thm	false	propext,Quot.sound
+FOL.FOL	«term⊤»	def	false	
+FOL.Prenex0	FOL.Prenex0.impl_ex_right	thm	false	propext,Quot.sound
+FOL.Derives2	Derives₂.weakening	ctor	false	
+FOL.Hauptsatz0	FOL.Hauptsatz0.liftTerm_subst_le._f	def	false	propext,Quot.sound
+FOL.Inversion0	FOL.Inversion0.inv_allR	thm	false	propext,Quot.sound
+FOL.Eigenvariable	FOL.Eigenvariable.absTerm'_subst._proof_7	thm	false	propext,Quot.sound
+FOL.Propositional0	FOL.Propositional0.patoms._sunfold	def	false	
+FOL.DecEq	instDecidableEqFormulaG.decEq._proof_60	thm	false	
+FOL.Semantics	_private.FOL.Semantics.0.FOL.Metamath.Semantics.evalFormula.match_1.eq_3	thm	false	
+FOL.FOL	replaceAt	def	false	propext
+TheoryFramework.Theory	TheoryFramework.Theory.casesOn	def	false	
+FOL.SymClasses	FOL.FreshSym.mk._flat_ctor	def	false	
+FOL.Hauptsatz0	_private.FOL.Hauptsatz0.0.FOL.Hauptsatz0.deg.match_1.eq_5	thm	false	
+FOL.Theorems.Eq	_private.FOL.Theorems.Eq.0.instReprFormulaG.repr.match_1.eq_6	thm	false	
+FOL.HerbrandBlock0	FOL.HerbrandBlock0.exBlock._f	def	false	
+FOL.Enumeration	_private.FOL.Enumeration.0.FOL.Metamath.Enumeration.termsSize.match_1.splitter	def	false	
+FOL.QFDecide0	FOL.QFDecide0.subT._unsafe_rec	def	false	
+FOL.QFDecide0	FOL.QFDecide0.qfA	def	false	propext
+FOL.Enumeration	FOL.Metamath.Enumeration.formulaSize.eq_6	thm	false	
+FOL.PrenexNF0	FOL.PrenexNF0.mergeAnd	def	false	propext
+FOL.SkolemHerbrand0	FOL.SkolemHerbrand0.impAll_neg_allBlock	thm	false	propext,Quot.sound
+FOL.QFDecide0	FOL.QFDecide0.subT._f	def	false	
+FOL.FOL	TermG.ctorIdx	def	false	
+FOL.Lift0	FOL.Lift0.map_lift_lift	thm	false	propext,Quot.sound
+FOL.Rename	_private.FOL.Rename.0.getAt?.match_1.eq_3	thm	false	propext
+FOL.PrenexNF0	FOL.PrenexNF0.mergeImpl_prenex	thm	false	propext
+FOL.QFDecide0	FOL.QFDecide0.Good.func	thm	false	propext,Quot.sound
+FOL.Interpolation0	FOL.Interpolation0.derives0_of_eqGen	thm	false	propext,Quot.sound
+FOL.SequentSound0	FOL.SequentSound0.lk0_to_derives2	thm	false	propext,Classical.choice,Quot.sound
+FOL.Semantics	FOL.Metamath.Semantics.eval_substTerms_ext	thm	false	propext,Quot.sound
+FOL.QFDecide0	FOL.QFDecide0.node	def	false	
+FOL.PrenexNF0	FOL.PrenexNF0.mergeImplR	def	false	propext
+FOL.MetaRules	FOL.MetaRules.gen	thm	false	propext
+FOL.Propositional0	_private.FOL.Propositional0.0.FOL.Propositional0.peval.match_1.eq_8	thm	false	
+FOL.Hauptsatz0	FOL.Hauptsatz0.substTerm_subst_le._proof_5	thm	false	propext,Quot.sound
+FOL.FOL	_aux_FOL_FOL___unexpand_neg_1	def	false	
+FOL.SkolemN0	FOL.SkolemN0.skF_spec	thm	false	propext,Classical.choice,Quot.sound
+FOL.FOL	Derives.subst	ctor	false	
+FOL.Craig0	FOL.Craig0.sub_rot3'	thm	false	
+FOL.Semantics	_private.FOL.Semantics.0.instReprFormulaG.repr.match_1.splitter	def	false	
+FOL.Skolem0	FOL.Skolem0.henkin_conservative₀	thm	false	propext,Classical.choice,Quot.sound
+FOL.Theorems.Eq	_private.FOL.Theorems.Eq.0.instReprFormulaG.repr.match_1.eq_7	thm	false	
+FOL.Propositional0	FOL.Propositional0.peval.eq_def	thm	false	
+FOL.QFDecide0	FOL.QFDecide0.Pw.cons	ctor	false	
+FOL.PrenexNF0	FOL.PrenexNF0.mergeAnd_prenex._f	def	false	propext
+FOL.Complexity	_private.FOL.Complexity.0.FOL.Complexity.formulaComplexity.match_1.eq_7	thm	false	
+FOL.Semantics	_private.FOL.Semantics.0.instReprFormulaG.repr.match_1.eq_7	thm	false	
+FOL.Derives0	_aux_FOL_Derives0___unexpand_Derives₀_1	def	false	
+TheoryFramework.Theory	TheoryFramework.Theory.noConfusionType	def	false	
+FOL.Propositional0	FOL.Propositional0.peval._sunfold	def	false	
+FOL.QFDecide0	_private.FOL.QFDecide0.0.FOL.QFDecide0.cc	def	false	
+FOL.FOL	Derives.below.elim_and_r	ctor	false	propext
+FOL.QFDecide0	FOL.QFDecide0.Pw.brecOn	thm	false	
+FOL.SkolemNF0	FOL.SkolemNF0.skolemAxiomsF	def	false	propext
+FOL.DecEq	instDecidableEqFormulaG.decEq._proof_27	thm	false	
+FOL.FOL	Derives.elim_and_l	ctor	false	
+FOL.Canonical0	FOL.Canonical0.completeness₀	thm	false	propext,Classical.choice,Quot.sound
+FOL.FOL	liftTerm._unsafe_rec	def	false	
+FOL.DecEq	instDecidableEqFormulaG.decEq._proof_43	thm	false	
+FOL.Theorems.Quantifiers	FOL.Theorems.Quantifiers.distrib_forall_and	thm	false	propext,Quot.sound
+FOL.PrenexNF0	FOL.PrenexNF0.mergeAndR.match_1	def	false	propext
+FOL.Derives2	FOL.Derives2.derives1_eq_symm	thm	false	propext,Quot.sound
+FOL.FOL	liftTerm	def	false	
+FOL.PrenexNF0	FOL.PrenexNF0.mergeImpl_iff._f	def	false	propext,Quot.sound
+FOL.Propositional0	FOL.Propositional0.peval._f	def	false	
+FOL.Canonical0	FOL.Canonical0.pointwiseEqv_out_mk	thm	false	propext,Classical.choice,Quot.sound
+FOL.SkolemHerbrand0	FOL.SkolemHerbrand0.implChain_of_derives0._f	def	false	propext
+FOL.SkolemNF0	FOL.SkolemNF0.derives0_skolemizeF._f	def	false	propext,Quot.sound
+FOL.QFDecide0	FOL.QFDecide0.Good.recOn	def	false	propext
+FOL.QFDecide0	FOL.QFDecide0.mixL._sunfold	def	false	
+FOL.FOL	instReprFormulaG.repr._sunfold	def	false	propext
+FOL.Eigenvariable	FOL.Eigenvariable.absFormula'.eq_1	thm	false	
+FOL.Hauptsatz0	FOL.Hauptsatz0.map_subst_lift.match_1_1	def	false	
+FOL.FOL	«term∀._»	def	false	
+FOL.Semantics	FOL.Metamath.Semantics.evalFormula.eq_8	thm	false	
+FOL.QFDecide0	FOL.QFDecide0.refl_mem	thm	false	propext,Quot.sound
+FOL.Derives1	Derives₁.below.elim_or	ctor	false	
+TheoryFramework.Theory	TheoryFramework.Theory.noConfusion	def	false	
+FOL.Semantics	FOL.Metamath.Semantics.eval_liftTerm_ext._proof_9	thm	false	propext,Quot.sound
+FOL.Theorems.Eq	FOL.substTerm_lift_comm._proof_2	thm	false	propext,Quot.sound
+FOL.BlockExtraction0	FOL.BlockExtraction0.lk0_herbrand_block._proof_1_1	thm	false	propext,Quot.sound
+FOL.Derives0	Derives₀.elim_and_l	ctor	false	
+TheoryFramework.MetaTheorems	TheoryFramework.proves_iff_models.match_1_3	def	false	
+FOL.DecEq	instDecidableEqFormulaG.decEq._proof_69	thm	false	
+FOL.Hauptsatz0	FOL.Hauptsatz0.deg._unsafe_rec	def	false	
+FOL.Semantics	FOL.Metamath.Semantics.evalFormula.eq_2	thm	false	
+FOL.Derives1	Derives₁.intro_impl	ctor	false	
+FOL.Derives0	Derives₀.intro_or_l	ctor	false	
+FOL.Sequent0	LK₀.implL	ctor	false	
+FOL.Rename	_private.FOL.Rename.0.getAt?.match_4.eq_3	thm	false	propext
+FOL.Rename	_private.FOL.Rename.0.instReprTermG.repr.match_1.splitter	def	false	
+FOL.Derives0	Derives₀.elim_impl	ctor	false	
+FOL.Derives1	Derives₁.below.elim_ex	ctor	false	
+FOL.Derives1	FOL.Derives1.derives0_to_derives1	thm	false	propext,Quot.sound
+FOL.QFDecide0	FOL.QFDecide0.evIs._unsafe_rec	def	false	
+FOL.QFDecide0	FOL.QFDecide0.pick_congr._f	def	false	
+FOL.SkolemNF0	FOL.SkolemNF0.skolemizeF_shape._f	def	false	propext,Quot.sound
+FOL.Henkin0	FOL.Eigenvariable.absTerm.eq_1	thm	false	
+FOL.Semantics	FOL.Metamath.Semantics.ModelG.mk._flat_ctor	def	false	
+FOL.Semantics	_private.FOL.Semantics.0.instReprFormulaG.repr.match_1.eq_1	thm	false	
+FOL.SequentSound0	FOL.SequentSound0.evalTerms_append	thm	false	
+FOL.SymClasses	FOL.FreshSym.noConfusionType	def	false	
+FOL.QFDecide0	FOL.QFDecide0.Good.trans	thm	false	propext,Quot.sound
+FOL.SkolemNF0	FOL.SkolemNF0.occurs_prenex	thm	false	propext
+FOL.SkolemN0	FOL.SkolemN0.envPush._sunfold	def	false	
+FOL.Propositional0	FOL.Propositional0.derives0_of_implChain.match_1_1	def	false	
+FOL.Complexity	_private.FOL.Complexity.0.instReprFormulaG.repr.match_1.eq_7	thm	false	
+FOL.FOL	FormulaG.brecOn.eq	thm	false	
+FOL.DecEq	instDecidableEqFormulaG.decEq._proof_62	thm	false	
+FOL.Hauptsatz0	FOL.Hauptsatz0.herbrand₀	thm	false	propext,Quot.sound
+FOL.MetaRules	FOL.MetaRules.dne	thm	false	propext
+FOL.QFDecide0	FOL.QFDecide0.evI_S	thm	false	propext,Quot.sound
+FOL.MetaRules	FOL.MetaRules.imp_intro	axiom	false	propext,FOL.MetaRules.imp_intro
+FOL.Derives1	Derives₁.below.rec	rec	false	
+FOL.QFDecide0	FOL.QFDecide0.cls_eq_of	thm	false	propext,Quot.sound
+FOL.Eigenvariable	FOL.Eigenvariable.map_abs_lift	thm	false	propext,Quot.sound
+FOL.Enumeration	FOL.Metamath.Enumeration.natToTerm.eq_2	thm	false	propext,Quot.sound
+FOL.Semantics	_private.FOL.Semantics.0.getAt?.match_1.eq_3	thm	false	propext
+FOL.Lindenbaum0	_private.FOL.Lindenbaum0.0.FOL.Lindenbaum0._aux_FOL_Lindenbaum0___unexpand_FOL_Henkin0_DerivesSet₀_1	def	false	
+FOL.HerbrandBlock0	FOL.HerbrandBlock0.derives0_exBlock_of_cert	thm	false	propext,Quot.sound
+FOL.Rename	_private.FOL.Rename.0.instReprFormulaG.repr.match_1.splitter	def	false	
+FOL.Semantics	_private.FOL.Semantics.0.FOL.Metamath.Semantics.evalFormula.match_1.splitter	def	false	
+FOL.Semantics	_private.FOL.Semantics.0.instReprPos.repr.match_1.eq_4	thm	false	
+FOL.FOL	Pos.right.injEq	thm	false	propext
+FOL.Derives2	Derives₂.intro_forall	ctor	false	
+FOL.Derives2	FOL.Derives2.PwEq₂.cons	ctor	false	
+FOL.Sequent0	LKc.exR	ctor	false	
+FOL.Enumeration	_private.FOL.Enumeration.0.FOL.Metamath.Enumeration.unpair.match_3.eq_2	thm	false	
+FOL.Finitary0	FOL.Finitary0.tval.eq_1	thm	false	
+FOL.Rename	_private.FOL.Rename.0.FOL.Rename.renameFormula.match_1.eq_5	thm	false	
+FOL.SkolemNF0	FOL.SkolemNF0.skolem_conservative_listF	thm	false	propext,Classical.choice,Quot.sound
+FOL.Enumeration	FOL.Metamath.Enumeration.term_surj_aux	thm	false	propext,Classical.choice,Quot.sound
+FOL.SkolemNF0	FOL.SkolemNF0.derives0_skolemize_iff	thm	false	propext,Quot.sound
+FOL.FOL	TermG.rec_1	rec	false	
+FOL.Hauptsatz0	FOL.Hauptsatz0.substTerm_subst_le._proof_21	thm	false	propext,Quot.sound
+FOL.QFDecide0	FOL.QFDecide0.ctxA	def	false	
+FOL.Eigenvariable	_private.FOL.Eigenvariable.0.FOL.Eigenvariable.absTerms'.match_1.eq_1	thm	false	
+FOL.BlockExtraction0	FOL.BlockExtraction0.instB_snoc.match_1_1	def	false	
+FOL.QFDecide0	FOL.QFDecide0.topT._sparseCasesOn_1	def	false	propext
+FOL.Craig0	FOL.Craig0.craig_implₚ	thm	false	propext,Quot.sound
+FOL.Hauptsatz0	FOL.Hauptsatz0.deg.eq_8	thm	false	
+FOL.Craig0	FOL.Craig0.LKp.below.rec	rec	false	
+FOL.Derives2	Derives₂.dne_schema	ctor	false	
+FOL.Semantics	FOL.Metamath.Semantics.eval_substTerm_ext._proof_2	thm	false	propext,Quot.sound
+FOL.FOL	TermG.func	ctor	false	
+FOL.SkolemNF0	FOL.SkolemNF0.allBlock_forall.match_1_1	def	false	
+FOL.Eigenvariable	FOL.Eigenvariable.occursTerms._unsafe_rec	def	false	
+FOL.Hauptsatz0	FOL.Hauptsatz0.liftTerms_subst_le	thm	false	propext,Quot.sound
+FOL.Propositional0	FOL.Propositional0.peval.eq_2	thm	false	
+FOL.Rename	FOL.Rename.renameFormula.eq_7	thm	false	
+FOL.Skolem0	FOL.Skolem0.evalTerm_updateFunc._f	def	false	
+FOL.Theorems.Quantifiers	_private.FOL.Theorems.Quantifiers.0.instReprFormulaG.repr.match_1.eq_6	thm	false	
+FOL.Compacity0	FOL.Compacity0.not_infiniteDom_unit	thm	false	
+FOL.Canonical0	FOL.Canonical0.eval_pullback_terms._f	def	false	
+FOL.FOL	Derives.below.subst	ctor	false	propext
+FOL.Rename	FOL.Rename.rename_neg	thm	false	
+FOL.QFDecide0	FOL.QFDecide0.pick	def	false	
+FOL.Propositional0	FOL.Propositional0.peval_implChain._f	def	false	propext
+FOL.Inversion0	FOL.Inversion0.inv_implL_r	thm	false	propext,Quot.sound
+FOL.Semantics	getAt?.eq_11	thm	false	propext
+FOL.QFDecide0	FOL.QFDecide0.atom_congr	thm	false	propext,Quot.sound
+FOL.Eigenvariable	FOL.Eigenvariable.absFormula'.eq_8	thm	false	
+FOL.Henkin0	_private.FOL.Henkin0.0.FOL.Henkin0.«term_⊢₀*_»	def	false	
+FOL.Canonical0	FOL.Canonical0.truth_lemma₀	thm	false	propext,Classical.choice,Quot.sound
+FOL.SymClasses	FOL.FreshSym.shift_inj	thm	false	
+FOL.Enumeration	FOL.Metamath.Enumeration.formulaSize.eq_1	thm	false	
+FOL.PrenexNF0	FOL.PrenexNF0.mergeOr_prenex	thm	false	propext
+FOL.Hauptsatz0	FOL.Hauptsatz0.cutLeftAux	thm	false	propext,Quot.sound
+FOL.Eigenvariable	FOL.Eigenvariable.absDerives'	thm	false	propext,Quot.sound
+FOL.Theorems.Derived	FOL.Theorems.Derived.de_morgan_2_rev	thm	false	propext
+FOL.Canonical0	FOL.Canonical0.quotientOut_eq	thm	false	Classical.choice
+FOL.Semantics	replaceAt.eq_7	thm	false	propext
+FOL.Semantics	FOL.Metamath.Semantics.shift_updateEnv_comm	thm	false	propext,Quot.sound
+FOL.Theorems.Eq	FOL.substTerms_liftTerms._f	def	false	propext
+FOL.PrenexNF0	FOL.PrenexNF0.impAll_forall	thm	false	propext,Quot.sound
+FOL.Eigenvariable	FOL.Eigenvariable.abs_localRule	thm	false	
+FOL.Hauptsatz0	FOL.Hauptsatz0.liftTerms_subst_le._f	def	false	
+FOL.FOL	TermG.brecOn_1.go	def	false	
+FOL.Rename	FOL.Rename.renameFormula	def	false	
+FOL.Rename	_private.FOL.Rename.0.FOL.Rename.renameTerm.match_1.eq_1	thm	false	
+FOL.DecEq	instDecidableEqFormulaG.decEq._proof_42	thm	false	
+FOL.FOL	«_aux_FOL_FOL___macroRules_term_⊢__1»	def	false	
+FOL.Rename	FOL.Rename.renameTerms	def	false	
+FOL.QFDecide0	FOL.QFDecide0.Good.inst	thm	false	propext
+FOL.Eigenvariable	FOL.Eigenvariable.absFormula'.match_1	def	false	
+FOL.Interpolation0	FOL.Interpolation0.lk0_refute	thm	false	propext,Quot.sound
+FOL.Prenex0	FOL.Prenex0.prenex_of_quantFree.match_1_1	def	false	
+FOL.Sequent0	FOL.Sequent0.sub_cons	thm	false	
+FOL.Derives1	FOL.Derives1.commute_impl_fwd	thm	false	
+FOL.QFDecide0	FOL.QFDecide0.chainA	thm	false	propext,Quot.sound
+FOL.QFDecide0	FOL.QFDecide0.chainF	thm	false	propext,Quot.sound
+FOL.Interpolation0	FOL.Interpolation0.EqGen.rec	rec	false	
+FOL.Fresh0	FOL.Fresh0.cst._f	def	false	propext
+TheoryFramework.Logic	TheoryFramework.LogicSystem.noConfusion	def	false	
+FOL.Theorems.Eq	FOL.substTerm_liftTerm._proof_10	thm	false	propext,Quot.sound
+FOL.DecEq	instDecidableEqFormulaG.decEq._proof_16	thm	false	
+FOL.Derives0	Derives₀.intro_or_r	ctor	false	
+FOL.Derives2	Derives₂.bot_elim	ctor	false	
+FOL.Derives2	Derives₂.below.elim_or	ctor	false	
+FOL.FOL	Derives.elim_ex	ctor	false	
+FOL.Hauptsatz0	FOL.Hauptsatz0.substTerm_subst_le._proof_14	thm	false	propext,Quot.sound
+FOL.HenkinLimit0	FOL.HenkinLimit0.hidx_ge	thm	false	propext,Classical.choice,Quot.sound
+FOL.Complexity	FOL.Complexity.formulaComplexity.eq_2	thm	false	
+FOL.SkolemNF0	FOL.SkolemNF0.occurs_mergeAndR	thm	false	propext
+FOL.Hauptsatz0	FOL.Hauptsatz0.deg.eq_1	thm	false	
+FOL.SkolemN0	FOL.SkolemN0.not_occurs_vars.match_1_1	def	false	
+FOL.Theorems.Eq	FOL.substTerms_liftLift._f	def	false	propext
+FOL.Eigenvariable	FOL.Eigenvariable.absTerm'_eq_lift._f	def	false	propext
+FOL.Craig0	FOL.Craig0.LKp.orL	ctor	false	
+FOL.FOL	Derives.elim_or	ctor	false	
+FOL.Rename	FOL.Rename.rename_substTerms	thm	false	propext
+FOL.Hauptsatz0	FOL.Hauptsatz0.lkh_to_lk0	thm	false	
+FOL.Theorems.Quantifiers	_private.FOL.Theorems.Quantifiers.0.instReprFormulaG.repr.match_1.eq_1	thm	false	
+FOL.Herbrand0	FOL.Herbrand0.pcheck._f	def	false	
+FOL.Finitary0	FOL.Finitary0.tval_eqInstance	thm	false	
+FOL.Enumeration	FOL.Metamath.Enumeration.natToTerms.eq_2	thm	false	propext,Quot.sound
+FOL.Rename	FOL.Rename.derives0_rename_conservative	thm	false	propext,Classical.choice,Quot.sound
+FOL.Fresh0	FOL.Fresh0.derivesSet0_shift	thm	false	propext,Quot.sound
+FOL.Inversion0	FOL.Inversion0.inv_orL_r	thm	false	propext,Quot.sound
+FOL.Semantics	_private.FOL.Semantics.0.getAt?.match_1.eq_4	thm	false	propext
+FOL.FOL	FormulaG.atom.sizeOf_spec	thm	false	
+FOL.Semantics	FOL.Metamath.Semantics.eval_substTerm_ext._f	def	false	propext,Quot.sound
+TheoryFramework.Logic	TheoryFramework.SoundLogic.mk	ctor	false	
+FOL.Derives0	Derives₀.below.casesOn	def	false	propext
+FOL.Herbrand0	FOL.Herbrand0.derives0_of_eqInstance	thm	false	propext,Quot.sound
+FOL.SymClasses	FOL.EnumSym.recOn	def	false	
+FOL.Eigenvariable	_private.FOL.Eigenvariable.0.getAt?.match_1.splitter	def	false	propext
+FOL.Finitary0	FOL.Finitary0.lk0_tval	thm	false	propext,Quot.sound
+FOL.Theorems.Derived	FOL.Theorems.Derived.and_intro	thm	false	propext
+FOL.Skolem0	FOL.Skolem0.evalTerms_updateFunc	thm	false	
+FOL.FOL	Derives.intro_impl	ctor	false	
+FOL.FOL	liftFormula	def	false	
+FOL.SkolemNF0	FOL.SkolemNF0.skolemizeF_shape.match_1_1	def	false	propext
+FOL.Craig0	FOL.Craig0.LKp.below.exR	ctor	false	
+FOL.Derives0	Derives₀.below.elim_or	ctor	false	
+FOL.Sequent0	LKc.below.botL	ctor	false	
+FOL.FOL	TermG.func.sizeOf_spec	thm	false	
+FOL.Derives2	Derives₂.intro_or_r	ctor	false	
+FOL.QFDecide0	FOL.QFDecide0.Good.mk._flat_ctor	def	false	propext
+FOL.Craig0	FOL.Craig0.LKp.allR	ctor	false	
+FOL.Derives2	Derives₂.below.eq_atom_congr	ctor	false	
+FOL.Enumeration	FOL.Metamath.Enumeration.natToTerms._unsafe_rec	def	false	propext,Quot.sound
+FOL.Herbrand0	FOL.Herbrand0.pcheck_sound	thm	false	propext
+FOL.SymClasses	FOL.EnumSym.rec	rec	false	
+FOL.QFDecide0	FOL.QFDecide0.pick._unsafe_rec	def	false	
+FOL.Compacity0	FOL.Compacity0.evalFormula_updateCsts._f	def	false	propext
+FOL.Craig0	FOL.Craig0.lkp_to_lk0	thm	false	
+FOL.Semantics	_private.FOL.Semantics.0.instReprFormulaG.repr.match_1.eq_5	thm	false	
+FOL.Sequent0	LK₀.struct	ctor	false	
+FOL.Eigenvariable	_private.FOL.Eigenvariable.0.liftTerms.match_1.splitter	def	false	
+FOL.FOL	«term_∧__1»	def	false	
+FOL.Sequent0	LK₀.andR	ctor	false	
+FOL.Rename	FOL.Rename.renameFormula.eq_1	thm	false	
+FOL.Sequent0	LKc	ind	false	
+FOL.Hauptsatz0	FOL.Hauptsatz0.herbrand_extraction₀	thm	false	propext,Quot.sound
+FOL.Propositional0	FOL.Propositional0.PVal	def	false	
+FOL.QFDecide0	FOL.QFDecide0.memB._f	def	false	
+FOL.Derives1	Derives₁.below.subst	ctor	false	
+FOL.Eigenvariable	FOL.Eigenvariable.absTerm'_subst._proof_11	thm	false	propext,Quot.sound
+FOL.Fresh0	_private.FOL.Fresh0.0.FOL.Fresh0.«term_⊢₀*_»	def	false	
+FOL.Rename	_private.FOL.Rename.0.instReprFormulaG.repr.match_1.eq_5	thm	false	
+FOL.Sequent0	LKc.orR	ctor	false	
+FOL.Semantics	getAt?.eq_5	thm	false	propext
+FOL.QFDecide0	FOL.QFDecide0.funcInsts	def	false	
+FOL.PrenexNF0	FOL.PrenexNF0.or_forall_r	thm	false	propext,Quot.sound
+FOL.MetaRules	FOL.MetaRules.or_intro_right	def	false	propext
+FOL.Theorems.Eq	FOL.substTerm_subst_comm_succ._proof_8	thm	false	propext,Quot.sound
+TheoryFramework.Logic	TheoryFramework.SoundLogic.rec	rec	false	
+FOL.Rename	_private.FOL.Rename.0.getAt?.match_1.eq_2	thm	false	propext
+FOL.Sequent0	LK₀.below.exR	ctor	false	
+FOL.Propositional0	_private.FOL.Propositional0.0.FOL.Propositional0.peval.match_1.eq_5	thm	false	
+FOL.Interpolation0	FOL.Interpolation0.gen_nil	thm	false	
+FOL.Herbrand0	FOL.Herbrand0.QuantFree._unsafe_rec	def	false	
+FOL.Theorems.Derived	FOL.Theorems.Derived.de_morgan_1	thm	false	propext
+FOL.FOL	substTerms._f	def	false	
+FOL.Propositional0	_private.FOL.Propositional0.0.FOL.Propositional0.wk1	thm	false	
+FOL.QFDecide0	FOL.QFDecide0.Pw.nil	ctor	false	
+FOL.Hauptsatz0	LKh.below.orL	ctor	false	
+FOL.QFDecide0	FOL.QFDecide0.mem_qfT_mix	thm	false	propext,Quot.sound
+FOL.Hauptsatz0	FOL.Hauptsatz0.deg.eq_7	thm	false	
+FOL.Enumeration	FOL.Metamath.Enumeration.natToFormula_surj._proof_1_1	thm	false	propext,Quot.sound
+FOL.QFDecide0	FOL.QFDecide0.Good.atom	thm	false	propext,Quot.sound
+FOL.Semantics	_private.FOL.Semantics.0.FOL.Metamath.Semantics.evalTerms.match_1.splitter	def	false	
+FOL.Rename	FOL.Rename.invOf	def	true	propext,Classical.choice,Quot.sound
+FOL.SkolemNF0	FOL.SkolemNF0.occurs_mergeAnd	thm	false	propext
+FOL.Hauptsatz0	FOL.Hauptsatz0.substTerm_subst_le._proof_19	thm	false	propext,Quot.sound
+FOL.Derives1	FOL.Derives1.and_congr_r	thm	false	
+FOL.QFDecide0	FOL.QFDecide0.headA	def	false	propext
+FOL.PrenexNF0	FOL.PrenexNF0.mergeOrR_iff.match_1_1	def	false	
+FOL.QFDecide0	FOL.QFDecide0.funcInsts.match_1	def	false	
+FOL.QFDecide0	FOL.QFDecide0.dedup.eq_def	thm	false	
+FOL.DecEq	instDecidableEqFormulaG.decEq._proof_15	thm	false	
+FOL.Interpolation0	FOL.Interpolation0.gen_map_all	thm	false	propext,Quot.sound
+FOL.Craig0	FOL.Craig0.LKp.rec	rec	false	
+FOL.Fresh0	FOL.Fresh0.cst_zero_ne	thm	false	propext,Classical.choice,Quot.sound
+FOL.Derives1	Derives₁.subst	ctor	false	
+FOL.Enumeration	FOL.Metamath.Enumeration.unpair_step_next	thm	false	propext
+FOL.Sequent0	LK₀.ax	ctor	false	
+FOL.SymClasses	FOL.EnumSym.casesOn	def	false	
+FOL.Craig0	FOL.Craig0.LKp.below.implL	ctor	false	
+FOL.Derives1	Derives₁.intro_and	ctor	false	
+FOL.Soundness0	FOL.Metamath.Soundness0.derives0_not_complete	thm	false	propext,Classical.choice,Quot.sound
+FOL.Interpolation0	FOL.Interpolation0.predF_em._f	def	false	
+FOL.DecEq	instDecidableEqFormulaG.decEq._proof_46	thm	false	
+FOL.Lindenbaum0	FOL.Lindenbaum0.max_cons_impl	thm	false	propext,Classical.choice,Quot.sound
+FOL.FOL	TermG._sizeOf_2_eq	thm	false	
+FOL.MetaRules	FOL.MetaRules.false_elim	def	false	propext
+FOL.Semantics	FOL.Metamath.Semantics.ModelG.mk	ctor	false	
+FOL.FOL	«term_⊢_»	def	false	
+FOL.FOL	instBEqFormulaG.beq._sparseCasesOn_3	def	false	propext
+FOL.Theorems.Quantifiers	liftFormula.eq_8	thm	false	
+FOL.QFDecide0	FOL.QFDecide0.mem_subTs_of_mem	thm	false	propext
+FOL.Tactics	_aux_FOL_Tactics___macroRules_tacticDerive_rewrite_At__1	def	false	
+FOL.PrenexNF0	FOL.PrenexNF0.mergeAndR._f	def	false	propext
+FOL.PrenexNF0	FOL.PrenexNF0.prenex_lift.match_1_1	def	false	
+FOL.Theorems.Eq	FOL.liftTerm_comm_zero._proof_1	thm	false	propext,Quot.sound
+TheoryFramework.Logic	TheoryFramework.LogicSystem.mk.noConfusion	def	false	
+FOL.Sequent0	LKc.below.cut	ctor	false	
+FOL.Semantics	getAt?.eq_8	thm	false	propext
+FOL.PrenexNF0	FOL.PrenexNF0.mergeOr	def	false	propext
+FOL.SkolemNF0	FOL.SkolemNF0.derives0_under_forall	thm	false	propext,Quot.sound
+FOL.HerbrandBlock0	FOL.HerbrandBlock0.subst_exBlock._f	def	false	propext,Quot.sound
+FOL.DecEq	instDecidableEqFormulaG.decEq._proof_13	thm	false	
+FOL.Eigenvariable	FOL.Eigenvariable.absTerm'_lift._proof_10	thm	false	propext,Quot.sound
+FOL.Sequent0	LKc.below.eqAx	ctor	false	
+FOL.Enumeration	_private.FOL.Enumeration.0.FOL.Metamath.Enumeration.termSize.match_1.eq_2	thm	false	
+FOL.FOL	instReprTermG	def	false	
+FOL.Rename	FOL.Rename.rename_substFormula	thm	false	propext
+FOL.Semantics	FOL.Metamath.Semantics.eval_liftFormula_zero._simp_1	thm	false	propext,Quot.sound
+FOL.PrenexNF0	FOL.PrenexNF0.ImpAll₀	def	false	
+FOL.Enumeration	FOL.Metamath.Enumeration.natToFormula._proof_7	thm	false	propext,Quot.sound
+FOL.QFDecide0	FOL.QFDecide0.Good.closed	thm	false	propext
+FOL.Hauptsatz0	FOL.Hauptsatz0.LeftPrin₀.match_1	def	false	propext
+FOL.QFDecide0	_private.FOL.QFDecide0.0.FOL.QFDecide0.eqTerms	def	false	propext
+FOL.Hauptsatz0	FOL.Hauptsatz0.deg	def	false	
+FOL.SymClasses	FOL.instFreshSymListChar._proof_2	thm	false	propext
+FOL.DecEq	FOL.DecEq.decEqTerm.match_1	def	false	
+FOL.Propositional0	FOL.Propositional0.PTaut	def	false	
+FOL.QFDecide0	FOL.QFDecide0.atomInsts	def	false	propext
+FOL.Hauptsatz0	FOL.Hauptsatz0.liftFormula_subst_le	thm	false	propext,Quot.sound
+FOL.Theorems.Eq	FOL.substTerms_lift_comm_zero	thm	false	propext,Quot.sound
+FOL.Lindenbaum0	FOL.Lindenbaum0.LindenbaumStep._f	def	false	propext,Classical.choice,Quot.sound
+FOL.Derives1	Derives₁	ind	false	
+FOL.FOL	Derives.below.elim_and_l	ctor	false	propext
+FOL.HenkinLimit0	FOL.HenkinLimit0.henLimit_finite.match_1_1	def	false	propext,Classical.choice,Quot.sound
+TheoryFramework.MetaTheorems	TheoryFramework.TheoryEquivalent.symm	thm	false	
+FOL.Canonical0	FOL.Canonical0.eval_pullback_term._f	def	false	
+FOL.Theorems.Quantifiers	liftTerms.eq_1	thm	false	
+FOL.FOL	TermG.func.noConfusion	def	false	
+FOL.QFDecide0	_private.FOL.QFDecide0.0.FOL.QFDecide0.atomInsts.match_1.eq_1	thm	false	propext
+FOL.Herbrand0	FOL.Herbrand0.EqInstance.trans	ctor	false	
+FOL.Canonical0	FOL.Canonical0.PointwiseEqv.below.cons	ctor	false	
+FOL.Lindenbaum0	FOL.Lindenbaum0.LindenbaumLimit	def	false	propext,Classical.choice,Quot.sound
+FOL.Enumeration	FOL.Metamath.Enumeration.unpair.eq_1	thm	false	
+FOL.Complexity	_private.FOL.Complexity.0.instReprFormulaG.repr.match_1.eq_2	thm	false	
+FOL.Finitary0	FOL.Finitary0.tval.eq_6	thm	false	
+FOL.Lift0	FOL.Lift0.derives0_lift	thm	false	propext,Quot.sound
+FOL.Eigenvariable	FOL.Eigenvariable.absTerm'	def	false	
+FOL.Semantics	FOL.Metamath.Semantics.replaceAt_soundness.match_1_42	def	false	propext
+FOL.Eigenvariable	_private.FOL.Eigenvariable.0.getAt?.match_4.eq_2	thm	false	propext
+FOL.Theorems.Eq	FOL.substTerm_subst_comm_succ._proof_4	thm	false	propext,Quot.sound
+FOL.FOL	«_aux_FOL_FOL___macroRules_term_⇔__1»	def	false	
+FOL.HerbrandBlock0	FOL.HerbrandBlock0.instB.match_1	def	false	
+FOL.Semantics	FOL.Metamath.Semantics.eval_liftTerm_ext.match_1	def	false	
+FOL.Hauptsatz0	FOL.Hauptsatz0.substTerm_subst_le._f	def	false	propext,Quot.sound
+FOL.SkolemNF0	FOL.SkolemNF0.occurs_mergeAndR.match_1_1	def	false	propext
+TheoryFramework.Theory	TheoryFramework.Theory	ind	false	
+FOL.FOL	instReprFormulaG.repr	def	false	propext
+FOL.Semantics	FOL.Metamath.Semantics.replaceAt_soundness.match_1_46	def	false	propext
+FOL.HenkinLimit0	FOL.HenkinLimit0.henLimit	def	false	propext,Classical.choice,Quot.sound
+FOL.QFDecide0	FOL.QFDecide0.mem_dedup._f	def	false	propext
+FOL.Craig0	FOL.Craig0.LKp.implL	ctor	false	
+FOL.Lindenbaum0	FOL.Lindenbaum0.lindenbaum_step_subset	thm	false	propext,Classical.choice,Quot.sound
+FOL.Semantics	replaceAt.eq_12	thm	false	propext
+FOL.SkolemN0	FOL.SkolemN0.eval_allBlock_envPush._proof_1_3	thm	false	propext,Quot.sound
+FOL.QFDecide0	FOL.QFDecide0.subTs.match_1	def	false	
+FOL.Theorems.Quantifiers	FOL.Theorems.Quantifiers.forall_dni	thm	false	propext,Quot.sound
+FOL.Complexity	FOL.Complexity.formulaComplexity.match_1	def	false	
+FOL.Derives1	«term_⊢₁_»	def	false	
+FOL.Semantics	FOL.Metamath.Semantics.evalTerm.match_1	def	false	
+FOL.FOL	liftTerm._sunfold	def	false	
+FOL.Hauptsatz0	FOL.Hauptsatz0.LeftPrin₀	def	false	propext
+FOL.FOL	getAt?._sparseCasesOn_1	def	false	propext
+FOL.Enumeration	_private.FOL.Enumeration.0.FOL.Metamath.Enumeration.unpair.match_1.eq_2	thm	false	
+FOL.SkolemN0	FOL.SkolemN0.eval_allBlock_envPush	thm	false	propext,Quot.sound
+FOL.Finitary0	FOL.Finitary0.someTrue_unlift	thm	false	propext,Quot.sound
+FOL.Lindenbaum0	FOL.Lindenbaum0.IsHenkin	def	false	
+FOL.Sequent0	LKc.andR	ctor	false	
+FOL.Hauptsatz0	FOL.Hauptsatz0.deg_lift	thm	false	propext
+FOL.HenkinLimit0	FOL.HenkinLimit0.occursTerms_lift._f	def	false	
+FOL.Derives1	Derives₁.below.elim_and_l	ctor	false	
+FOL.Hauptsatz0	FOL.Hauptsatz0.deg.eq_def	thm	false	
+FOL.Theorems.Quantifiers	FOL.Theorems.Quantifiers.lift_distrib_and	thm	false	
+FOL.FOL	Pos.right.sizeOf_spec	thm	false	
+FOL.Interpolation0	FOL.Interpolation0.craig₀_example	thm	false	propext,Quot.sound
+FOL.Theorems.Eq	FOL.substTerm_lift_comm_zero._proof_3	thm	false	propext,Quot.sound
+FOL.PrenexNF0	FOL.PrenexNF0.iffAll_forall	thm	false	propext,Quot.sound
+FOL.DecEq	FOL.DecEq.decEqTerm._sunfold	def	false	
+FOL.Lindenbaum0	FOL.Lindenbaum0.max_cons_bot	thm	false	
+FOL.Semantics	getAt?.eq_12	thm	false	propext
+FOL.FOL	Pos.body.injEq	thm	false	propext
+FOL.Rename	_private.FOL.Rename.0.liftTerms.match_1.eq_2	thm	false	
+FOL.Hauptsatz0	FOL.Hauptsatz0.deg.eq_4	thm	false	
+FOL.Semantics	FOL.Metamath.Semantics.eval_substTerm_ext	thm	false	propext,Quot.sound
+FOL.Enumeration	FOL.Metamath.Enumeration.termsSize._sunfold	def	false	
+FOL.Soundness0	FOL.Metamath.Soundness0.derives0_not_derives_P	thm	false	propext,Classical.choice,Quot.sound
+FOL.Herbrand0	FOL.Herbrand0.pcheck_complete.match_1_1	def	false	
+TheoryFramework.Relations	TheoryFramework.TheoryExtension	def	false	
+FOL.Rename	_private.FOL.Rename.0.FOL.Rename.renameFormula.match_1.eq_4	thm	false	
+FOL.Canonical0	FOL.Canonical0.termEqv_rel_congr	thm	false	propext,Classical.choice,Quot.sound
+FOL.FOL	_aux_FOL_FOL___unexpand_FormulaG_eq_1	def	false	
+FOL.Eigenvariable	_private.FOL.Eigenvariable.0.instReprTermG.repr.match_1.eq_2	thm	false	
+FOL.Enumeration	_private.FOL.Enumeration.0.FOL.Metamath.Enumeration.formulaSize.match_1.eq_7	thm	false	
+FOL.HenkinLimit0	FOL.HenkinLimit0.occursTerm_lift.match_1	def	false	
+FOL.FOL	«_aux_FOL_FOL___macroRules_term_∨__1_1»	def	false	
+FOL.Enumeration	FOL.Metamath.Enumeration.termSize.match_1	def	false	
+FOL.Enumeration	FOL.Metamath.Enumeration.formulaSize.eq_def	thm	false	
+FOL.QFDecide0	FOL.QFDecide0.evI_S.match_1	def	false	
+FOL.Theorems.Eq	FOL.substTerm_subst_comm_succ	thm	false	propext,Classical.choice,Quot.sound
+FOL.Derives0	Derives₀.below.bot_elim	ctor	false	
+FOL.DecEq	instDecidableEqFormulaG.decEq._f	def	false	
+FOL.Compacity0	FOL.Compacity0.not_infiniteDom_unit.match_1_1	def	false	
+FOL.Enumeration	FOL.Metamath.Enumeration.natToTerm_surj._proof_1_1	thm	false	propext,Quot.sound
+FOL.FOL	«_aux_FOL_FOL___macroRules_term¬__1_1»	def	false	
+FOL.Lindenbaum0	FOL.Lindenbaum0.lindenbaum_step_mono	thm	false	propext,Classical.choice,Quot.sound
+FOL.DecEq	instDecidableEqFormulaG.decEq._proof_19	thm	false	
+FOL.Theorems.Impl	FOL.Theorems.Impl.id_impl	thm	false	propext
+FOL.Derives0	Derives₀.below.elim_impl	ctor	false	propext
+FOL.QFDecide0	FOL.QFDecide0.splits._unsafe_rec	def	false	
+FOL.Propositional0	FOL.Propositional0.upd_other	thm	false	propext
+FOL.Theorems.Eq	FOL.substTerms_lift_comm._f	def	false	propext
+FOL.SkolemNF0	FOL.SkolemNF0.qdepth_subst	thm	false	propext
+FOL.Rename	_private.FOL.Rename.0.FOL.Rename.renameTerms.match_1.eq_2	thm	false	
+FOL.PrenexNF0	FOL.PrenexNF0.mergeImpl_iff.match_1_1	def	false	
+FOL.Lift0	FOL.Lift0.absFormula'_none	thm	false	propext
+FOL.Henkin0	FOL.Henkin0.neg_impl_right	thm	false	
+FOL.Eq0	FOL.Eq0.derives0_eq_func_congr	thm	false	propext,Quot.sound
+TheoryFramework.MetaTheorems	TheoryFramework.proves_monotone	thm	false	
+FOL.FOL	TermG.brecOn_1	def	false	
+FOL.Sequent0	LKc.below.exR	ctor	false	
+FOL.Compacity0	FOL.Compacity0.infTheory	def	false	propext
+FOL.PrenexNF0	FOL.PrenexNF0.mergeImpl._unsafe_rec	def	false	propext
+FOL.Hauptsatz0	FOL.Hauptsatz0.liftTerm_subst_le._proof_4	thm	false	propext,Quot.sound
+FOL.Hauptsatz0	LKh.implL	ctor	false	
+TheoryFramework.Relations	TheoryFramework.TheoryIntersection	def	false	
+FOL.Craig0	FOL.Craig0.LKp.orR	ctor	false	
+FOL.SkolemNF0	FOL.SkolemNF0.qdepth._unsafe_rec	def	false	propext
+FOL.SkolemNF0	FOL.SkolemNF0.qdepth._sparseCasesOn_1	def	false	propext
+FOL.SkolemNF0	FOL.SkolemNF0.prenex_subst._f	def	false	
+FOL.FOL	TermG.var	ctor	false	
+FOL.Theorems.Eq	FOL.substTerms_subst_lift_gen._f	def	false	
+FOL.SkolemNF0	FOL.SkolemNF0.occursFormula_lift._f	def	false	
+FOL.Derives2	Derives₂.hyp	ctor	false	
+FOL.Hauptsatz0	LKh.below.orR	ctor	false	
+FOL.Herbrand0	FOL.Herbrand0.QuantFree._sunfold	def	false	
+FOL.SkolemN0	FOL.SkolemN0.skolemAxN	def	false	
+FOL.SkolemHerbrand0	FOL.SkolemHerbrand0.derives0_iff_neg_neg	thm	false	
+FOL.SkolemNF0	FOL.SkolemNF0.occurs_mergeOr.match_1_1	def	false	propext
+FOL.QFDecide0	FOL.QFDecide0.evIs_hole	thm	false	
+FOL.DecEq	instDecidableEqFormulaG.decEq._proof_44	thm	false	
+FOL.Sequent0	LKc.allL	ctor	false	
+FOL.Theorems.Quantifiers	_private.FOL.Theorems.Quantifiers.0.instReprTermG.repr.match_1.eq_1	thm	false	
+FOL.FOL	instReprFormulaG.repr._f	def	false	propext
+FOL.PrenexNF0	FOL.PrenexNF0.iffAll_trans	thm	false	
+FOL.DecEq	FOL.DecEq.decEqTerms._proof_5	thm	false	
+FOL.Semantics	_private.FOL.Semantics.0.instReprFormulaG.repr.match_1.eq_2	thm	false	
+FOL.Finitary0	FOL.Finitary0.tval.eq_def	thm	false	
+FOL.PrenexNF0	FOL.PrenexNF0.mergeOr_iff._f	def	false	propext,Quot.sound
+FOL.Sequent0	LK₀.below.ax	ctor	false	
+FOL.Tactics	tryMem._unsafe_rec	def	false	propext,Classical.choice,Quot.sound
+FOL.DecEq	instDecidableEqFormulaG.decEq._proof_34	thm	false	
+FOL.Canonical0	_private.FOL.Canonical0.0.FOL.Canonical0.«term_⊨_»	def	false	
+FOL.Theorems.Derived	FOL.Theorems.Derived.or_elim	thm	false	propext
+FOL.FOL	TermG.noConfusion	def	false	
+FOL.Lift0	FOL.Lift0.liftFormula_lift	thm	false	propext,Quot.sound
+FOL.Derives1	Derives₁.below.elim_forall	ctor	false	
+FOL.Theorems.Derived	FOL.Theorems.Derived.and_elim_right	thm	false	propext
+FOL.Rename	FOL.Rename.renameFormula._unsafe_rec	def	false	
+FOL.Theorems.Quantifiers	FOL.Theorems.Quantifiers.substTerm_lift_cancel_var	thm	false	propext,Quot.sound
+FOL.Finitary0	FOL.Finitary0.lkc_no_bot	thm	false	propext,Quot.sound
+FOL.Finitary0	_private.FOL.Finitary0.0.FOL.Finitary0.tval.match_1.eq_7	thm	false	
+FOL.HenkinLimit0	FOL.HenkinLimit0.bnd	def	true	propext,Classical.choice,Quot.sound
+FOL.Eigenvariable	FOL.Eigenvariable.absTerm'_subst._proof_13	thm	false	propext,Quot.sound
+FOL.Derives2	Derives₂.elim_impl	ctor	false	
+FOL.Derives2	FOL.Derives2.eq_substTerm._f	def	false	propext
+TheoryFramework.Logic	TheoryFramework.LogicSystem.noConfusionType	def	false	
+FOL.Rename	_private.FOL.Rename.0.FOL.Rename.renameFormula.match_1.eq_1	thm	false	
+FOL.Sequent0	_private.FOL.Sequent0.0.FOL.Sequent0.appEq	thm	false	propext
+FOL.SequentSound0	FOL.SequentSound0.evalTerms_hole	thm	false	
+FOL.Hauptsatz0	LKh.below	ind	false	
+FOL.Lindenbaum0	FOL.Lindenbaum0.LindenbaumStep.eq_2	thm	false	propext,Classical.choice,Quot.sound
+FOL.Hauptsatz0	FOL.Hauptsatz0.eqPropCert_of_derives0	thm	false	propext,Quot.sound
+FOL.Lift0	FOL.Lift0.lift_getAt?	thm	false	propext
+FOL.QFDecide0	FOL.QFDecide0.evI._f	def	false	
+FOL.Hauptsatz0	LKh.exL	ctor	false	
+FOL.Semantics	FOL.Metamath.Semantics.shift_updateEnv_comm._proof_1_3	thm	false	propext,Quot.sound
+FOL.Skolem0	FOL.Skolem0.skolemAxT	def	false	
+FOL.BlockExtraction0	FOL.BlockExtraction0.lk0_herbrand_block._proof_1_2	thm	false	propext,Quot.sound
+FOL.Derives1	Derives₁.elim_forall	ctor	false	
+FOL.QFDecide0	FOL.QFDecide0.Pw.below	ind	false	
+FOL.DecEq	instDecidableEqFormulaG.decEq._proof_2	thm	false	
+FOL.DecEq	FOL.DecEq.decEqTerm.match_3	def	false	
+TheoryFramework.Theory	TheoryFramework.Theory.singleton	def	false	
+FOL.Derives1	Derives₁.elim_and_r	ctor	false	
+FOL.Enumeration	FOL.Metamath.Enumeration.termsSize.eq_1	thm	false	
+FOL.FOL	Pos.brecOn	def	false	
+FOL.FOL	instBEqTermG.beq.match_1	def	false	propext
+FOL.Rename	FOL.Rename.renameFormula.eq_5	thm	false	
+FOL.Eigenvariable	FOL.Eigenvariable.abs_replaceAt	thm	false	propext,Quot.sound
+FOL.Enumeration	_private.FOL.Enumeration.0.FOL.Metamath.Enumeration.formulaSize.match_1.eq_8	thm	false	
+FOL.Henkin0	FOL.Henkin0.neg_impl_left	thm	false	
+FOL.QFDecide0	_private.FOL.QFDecide0.0.FOL.QFDecide0.funcInsts.match_1.eq_1	thm	false	
+FOL.Hauptsatz0	LKh.andR	ctor	false	
+FOL.Eigenvariable	_private.FOL.Eigenvariable.0.instReprPos.repr.match_1.eq_2	thm	false	
+FOL.Rename	_private.FOL.Rename.0.instReprFormulaG.repr.match_1.eq_6	thm	false	
+FOL.Semantics	_private.FOL.Semantics.0.instReprFormulaG.repr.match_1.eq_6	thm	false	
+FOL.FOL	FormulaG.impl.noConfusion	def	false	
+FOL.Sequent0	LK₀.allR	ctor	false	
+FOL.Enumeration	FOL.Metamath.Enumeration.formula_surj_aux	thm	false	propext,Classical.choice,Quot.sound
+FOL.Finitary0	FOL.Finitary0.allTrue_lift	thm	false	propext,Quot.sound
+FOL.SkolemNF0	FOL.SkolemNF0.occurs_allBlock	thm	false	
+FOL.Derives2	FOL.Derives2.liftTerms_append._f	def	false	
+FOL.Lindenbaum0	FOL.Lindenbaum0.LindenbaumStep.eq_def	thm	false	propext,Classical.choice,Quot.sound
+FOL.FOL	«_aux_FOL_FOL___macroRules_term∀.__1»	def	false	
+FOL.QFDecide0	FOL.QFDecide0.evIs_append	thm	false	
+FOL.Enumeration	FOL.Metamath.Enumeration.unpair_reach._proof_1_1	thm	false	propext,Quot.sound
+FOL.Interpolation0	FOL.Interpolation0.derives0_cut	thm	false	
+FOL.Semantics	getAt?.eq_4	thm	false	propext
+FOL.Complexity	_private.FOL.Complexity.0.instReprFormulaG.repr.match_1.eq_4	thm	false	
+FOL.Hauptsatz0	FOL.Hauptsatz0.deg.eq_3	thm	false	
+FOL.QFDecide0	FOL.QFDecide0.qfCheck	def	false	
+FOL.SkolemNF0	FOL.SkolemNF0.qdepth_subst._f	def	false	propext
+FOL.Hauptsatz0	FOL.Hauptsatz0.substTerm_subst_le.match_1	def	false	
+FOL.QFDecide0	FOL.QFDecide0.pick._sunfold	def	false	
+FOL.Rename	FOL.Rename.renameTerm._unsafe_rec	def	false	
+FOL.Eq0	FOL.Eq0.derives0_atom_congr	thm	false	propext,Quot.sound
+FOL.Derives2	Derives₂.below.dne_rule	ctor	false	
+FOL.Lift0	FOL.Lift0.absTerms'_none	thm	false	propext
+FOL.Soundness0	_private.FOL.Soundness0.0.FOL.Metamath.Soundness0.«_aux_FOL_Soundness0___macroRules__private_FOL_Soundness0_0_FOL_Metamath_Soundness0_term_⊨__1»	def	false	
+FOL.SkolemNF0	FOL.SkolemNF0.not_occurs_prenex	thm	false	propext
+FOL.Hauptsatz0	FOL.Hauptsatz0.mem_tl	thm	false	
+FOL.FOL	TermG.func.injEq	thm	false	propext
+FOL.DecEq	instDecidableEqFormulaG.decEq._proof_1	thm	false	
+FOL.PrenexNF0	FOL.PrenexNF0.and_ex_r	thm	false	propext,Quot.sound
+FOL.Eigenvariable	_private.FOL.Eigenvariable.0.FOL.Eigenvariable.absTerm'.match_1.splitter	def	false	
+FOL.Canonical0	FOL.Canonical0.termSetoid._proof_1	thm	false	propext,Classical.choice,Quot.sound
+FOL.Complexity	_private.FOL.Complexity.0.FOL.Complexity.formulaComplexity.match_1.eq_6	thm	false	
+FOL.Propositional0	FOL.Propositional0.peval.eq_4	thm	false	
+FOL.FOL	Pos.right.noConfusion	def	false	
+FOL.BlockExtraction0	_private.FOL.BlockExtraction0.0.FOL.BlockExtraction0.appLen	thm	false	propext
+FOL.Hauptsatz0	FOL.Hauptsatz0.derives0_of_eqPropCert	thm	false	propext,Quot.sound
+FOL.Hauptsatz0	LKh.below.andR	ctor	false	
+FOL.Enumeration	FOL.Metamath.Enumeration.unpair_reach	thm	false	propext,Quot.sound
+FOL.Sequent0	LK₀.below.orR	ctor	false	
+FOL.Henkin0	FOL.Henkin0.abs_neg_witness	thm	false	propext,Quot.sound
+FOL.FOL	FormulaG.or.injEq	thm	false	propext
+FOL.Theorems.Eq	FOL.substTerm_lift_comm_zero._proof_1	thm	false	propext,Quot.sound
+FOL.Hauptsatz0	FOL.Hauptsatz0.substTerms_subst_le.match_1	def	false	
+FOL.FOL	Derives.below.intro_or_r	ctor	false	propext
+FOL.Theorems.Quantifiers	FOL.Theorems.Quantifiers.forall_not_impl_exists_not	thm	false	propext
+FOL.Eigenvariable	FOL.Eigenvariable.absTerms'_lift._f	def	false	propext
+FOL.FOL	Pos.noConfusion	def	false	
+FOL.FOL	Pos.left	ctor	false	
+FOL.Hauptsatz0	FOL.Hauptsatz0.deg.match_1	def	false	
+FOL.FOL	Derives.brecOn	thm	false	propext
+FOL.Derives1	Derives₁.below.forall_not_ex_not	ctor	false	
+FOL.Propositional0	_private.FOL.Propositional0.0.FOL.Propositional0.peval.match_1.eq_7	thm	false	
+FOL.Eigenvariable	FOL.Eigenvariable.map_abs_eq_map_lift	thm	false	propext
+FOL.Enumeration	FOL.Metamath.Enumeration.formula_surj_aux._proof_1_12	thm	false	propext,Quot.sound
+FOL.FOL	Term.noConfusion	thm	false	
+FOL.FOL	FormulaG.and.inj	thm	false	
+FOL.Interpolation0	FOL.Interpolation0.derives0_by_contra	thm	false	
+FOL.Theorems.Eq	FOL.substTerm_subst_comm_succ._proof_3	thm	false	propext,Quot.sound
+FOL.Hauptsatz0	FOL.Hauptsatz0.cutElim_of	thm	false	
+FOL.NDtoLK0	FOL.NDtoLK0.cutOn	thm	false	
+FOL.FOL	Pos.rec	rec	false	
+FOL.Hauptsatz0	_private.FOL.Hauptsatz0.0.FOL.Hauptsatz0.deg.match_1.eq_4	thm	false	
+FOL.Craig0	FOL.Craig0.predF_subst._f	def	false	
+FOL.Semantics	FOL.Metamath.Semantics.ModelG.rec	rec	false	
+FOL.Eigenvariable	FOL.Eigenvariable.occursTerm._f	def	false	
+FOL.Propositional0	_private.FOL.Propositional0.0.FOL.Propositional0.peval.match_1.eq_3	thm	false	
+FOL.Complexity	_private.FOL.Complexity.0.instReprFormulaG.repr.match_1.eq_3	thm	false	
+FOL.Theorems.Quantifiers	_private.FOL.Theorems.Quantifiers.0.instReprFormulaG.repr.match_1.eq_4	thm	false	
+FOL.Interpolation0	FOL.Interpolation0.craig_ctx₀	thm	false	propext,Quot.sound
+FOL.QFDecide0	FOL.QFDecide0.ext_agree	thm	false	propext,Quot.sound
+FOL.Fresh0	FOL.Fresh0.not_occurs_shiftTerm.match_1	def	false	
+FOL.Theorems.Eq	_private.FOL.Theorems.Eq.0.instReprFormulaG.repr.match_1.eq_2	thm	false	
+FOL.Hauptsatz0	FOL.Hauptsatz0.lk0_to_lkh	thm	false	propext
+FOL.Compacity0	FOL.Compacity0.model_existence_iff₀	thm	false	propext,Classical.choice,Quot.sound
+FOL.Enumeration	_private.FOL.Enumeration.0.FOL.Metamath.Enumeration.formulaSize.match_1.eq_3	thm	false	
+FOL.Eigenvariable	_private.FOL.Eigenvariable.0.FOL.Eigenvariable.absFormula'.match_1.eq_7	thm	false	
+FOL.Eigenvariable	FOL.Eigenvariable.posDepth.eq_1	thm	false	
+FOL.Derives2	FOL.Derives2.eq_trans	thm	false	
+FOL.Canonical0	FOL.Canonical0.termEqv_func_congr	thm	false	propext,Classical.choice,Quot.sound
+FOL.PrenexNF0	FOL.PrenexNF0.mergeAnd_iff._f	def	false	propext,Quot.sound
+FOL.Lift0	FOL.Lift0.map_absFormula'_none	thm	false	propext
+FOL.Derives2	Derives₂.below.forall_not_ex_not	ctor	false	
+FOL.Canonical0	_private.FOL.Canonical0.0.FOL.Canonical0._aux_FOL_Canonical0___unexpand_FOL_Henkin0_DerivesSet₀_1	def	false	
+FOL.Herbrand0	FOL.Herbrand0.instDecidablePTaut	def	false	propext
+FOL.Enumeration	_private.FOL.Enumeration.0.FOL.Metamath.Enumeration.formulaSize.match_1.eq_2	thm	false	
+TheoryFramework.Relations	TheoryFramework.le_refl	thm	false	
+FOL.Rename	_private.FOL.Rename.0.getAt?.match_1.splitter	def	false	propext
+FOL.DecEq	instDecidableEqFormulaG.decEq._proof_12	thm	false	
+FOL.Theorems.Neg	FOL.Theorems.Neg.derived_raa	thm	false	propext
+FOL.Eq0	FOL.Eq0.derives0_eq_trans	thm	false	propext,Quot.sound
+FOL.Hauptsatz0	FOL.Hauptsatz0.subA_cons	thm	false	
+FOL.FOL	Derives.below.intro_or_l	ctor	false	propext
+FOL.Propositional0	_private.FOL.Propositional0.0.FOL.Propositional0.peval.match_1.eq_4	thm	false	
+FOL.DecEq	instDecidableEqFormulaG.decEq._proof_11	thm	false	
+FOL.Finitary0	FOL.Finitary0.lk0_empty_of_no_bot	thm	false	
+FOL.FOL	Pos.body	ctor	false	
+FOL.Theorems.Quantifiers	FOL.Theorems.Quantifiers.substTerms_lift_cancel_var	thm	false	propext,Quot.sound
+FOL.QFDecide0	FOL.QFDecide0.mem_ctxA_right	thm	false	propext
+FOL.FOL	Derives.hyp	ctor	false	
+FOL.Canonical0	FOL.Canonical0.IsSatisfiable	def	false	
+FOL.Derives2	FOL.Derives2.PwEq₂.nil	ctor	false	
+FOL.Hauptsatz0	FOL.Hauptsatz0.cutPrinAux	thm	false	propext,Quot.sound
+FOL.QFDecide0	FOL.QFDecide0.atomVal	def	false	propext
+FOL.Derives1	Derives₁.dne_rule	ctor	false	
+FOL.QFDecide0	FOL.QFDecide0.subT_closed	thm	false	propext
+FOL.QFDecide0	FOL.QFDecide0.Pw.below.nil	ctor	false	
+FOL.Semantics	_private.FOL.Semantics.0.FOL.Metamath.Semantics.shiftEnv.match_1.eq_2	thm	false	
+FOL.PrenexNF0	FOL.PrenexNF0.mergeOr_iff.match_1_1	def	false	
+FOL.QFDecide0	_private.FOL.QFDecide0.0.FOL.QFDecide0.inR	thm	false	propext
+FOL.QFDecide0	FOL.QFDecide0.mixA._sparseCasesOn_1	def	false	propext
+FOL.Enumeration	FOL.Metamath.Enumeration.natToList.eq_1	thm	false	propext,Quot.sound
+FOL.Canonical0	FOL.Canonical0.canonicalEnv	def	false	propext,Classical.choice,Quot.sound
+FOL.PrenexNF0	FOL.PrenexNF0.mergeOr._unsafe_rec	def	false	propext
+FOL.FOL	FormulaG.or	ctor	false	
+FOL.Theorems.Quantifiers	substFormula.eq_8	thm	false	
+FOL.Theorems.Quantifiers	FOL.Theorems.Quantifiers.substTerm_lift_cancel_var._proof_9	thm	false	propext,Quot.sound
+FOL.Eigenvariable	FOL.Eigenvariable.posDepth.match_1	def	false	
+FOL.HenkinLimit0	FOL.HenkinLimit0.hen_fresh._f	def	false	propext,Classical.choice,Quot.sound
+FOL.FOL	TermG.var.noConfusion	def	false	
+FOL.Craig0	FOL.Craig0.predF_subst.match_1_1	def	false	
+FOL.HerbrandBlock0	_private.FOL.HerbrandBlock0.0.FOL.HerbrandBlock0.c	def	false	
+FOL.Hauptsatz0	FOL.Hauptsatz0.eqInstance_lift	thm	false	
+FOL.Herbrand0	FOL.Herbrand0.ex_igualdad	thm	false	propext,Quot.sound
+FOL.Eigenvariable	_private.FOL.Eigenvariable.0.instReprFormulaG.repr.match_1.eq_6	thm	false	
+TheoryFramework.Relations	TheoryFramework.intersection_le_right.match_1_1	def	false	
+FOL.Theorems.Quantifiers	FOL.Theorems.Quantifiers.substTerm_lift_cancel_var._proof_7	thm	false	propext,Quot.sound
+FOL.Sequent0	LK₀.exR	ctor	false	
+FOL.QFDecide0	FOL.QFDecide0.mixA	def	false	propext
+FOL.FOL	substFormula._f	def	false	
+FOL.Finitary0	FOL.Finitary0.tval._sunfold	def	false	
+FOL.Rename	_private.FOL.Rename.0.FOL.Rename.renameTerm.match_1.eq_2	thm	false	
+FOL.HenkinLimit0	FOL.HenkinLimit0.henLimit_consistent₀	thm	false	propext,Classical.choice,Quot.sound
+FOL.Lift0	FOL.Lift0.liftFormula_subst	thm	false	propext,Quot.sound
+FOL.Theorems.Eq	FOL.substTerm_lift_comm._proof_4	thm	false	propext,Quot.sound
+FOL.Rename	_private.FOL.Rename.0.FOL.Rename.renameFormula.match_1.eq_2	thm	false	
+FOL.Herbrand0	FOL.Herbrand0.pcheck_complete	thm	false	propext
+FOL.Eigenvariable	FOL.Eigenvariable.posDepth._unsafe_rec	def	false	
+FOL.Canonical0	FOL.Canonical0.eval_pullback_formula	thm	false	
+FOL.Semantics	FOL.Metamath.Semantics.ModelG._sizeOf_inst	def	false	
+FOL.Hauptsatz0	FOL.Hauptsatz0.substFormula_subst_le	thm	false	propext,Quot.sound
+FOL.QFDecide0	FOL.QFDecide0.decideDerives0QF._proof_1	thm	false	propext,Quot.sound
+FOL.HenkinLimit0	FOL.HenkinLimit0.hen._f	def	false	propext,Classical.choice,Quot.sound
+FOL.Hauptsatz0	FOL.Hauptsatz0.deg.eq_6	thm	false	
+FOL.QFDecide0	FOL.QFDecide0.node.match_1	def	false	
+FOL.FOL	Pos.brecOn.eq	thm	false	
+FOL.QFDecide0	FOL.QFDecide0.topT._unsafe_rec	def	false	propext
+FOL.Herbrand0	FOL.Herbrand0.pcheck_complete._f	def	false	propext
+FOL.Craig0	FOL.Craig0.LKp.below.casesOn	def	false	
+FOL.Craig0	FOL.Craig0.split_consR	thm	false	
+FOL.FOL	Pos.right.inj	thm	false	
+FOL.FOL	instBEqTermG.beq._sparseCasesOn_1	def	false	propext
+FOL.Theorems.Eq	_private.FOL.Theorems.Eq.0.instReprFormulaG.repr.match_1.eq_1	thm	false	
+FOL.HenkinLimit0	FOL.HenkinLimit0.not_occurs_substTerms.match_1	def	false	
+FOL.FOL	Formula	def	false	
+FOL.SkolemNF0	FOL.SkolemNF0.skolemizeF._unsafe_rec	def	false	propext
+FOL.Derives0	Derives₀.below.dne_rule	ctor	false	
+FOL.Theorems.Neg	FOL.Theorems.Neg.dne	thm	false	propext
+FOL.Canonical0	FOL.Canonical0.PointwiseEqv.casesOn	def	false	
+FOL.Sequent0	LK₀.implR	ctor	false	
+FOL.HenkinLimit0	FOL.HenkinLimit0.henLimit_finite	thm	false	propext,Classical.choice,Quot.sound
+FOL.Derives1	FOL.Derives1.impl_congr_l	thm	false	
+FOL.Theorems.Eq	FOL.substTerm_lift_comm._proof_6	thm	false	propext,Quot.sound
+FOL.PrenexNF0	FOL.PrenexNF0.mergeAndR._sunfold	def	false	propext
+FOL.DecEq	FOL.DecEq.instDecidableEqTermG	def	false	
+FOL.QFDecide0	FOL.QFDecide0.Pw.below.cons	ctor	false	
+FOL.QFDecide0	_private.FOL.QFDecide0.0.FOL.QFDecide0.φx	def	false	
+FOL.Enumeration	FOL.Metamath.Enumeration.formulaSize.eq_3	thm	false	
+FOL.Enumeration	FOL.Metamath.Enumeration.unpair.match_3	def	false	
+FOL.DecEq	instDecidableEqFormulaG.decEq._proof_63	thm	false	
+FOL.Interpolation0	FOL.Interpolation0.EqGen.below.inst	ctor	false	
+FOL.Herbrand0	FOL.Herbrand0.derives0_ex_of_disj.match_1_1	def	false	
+FOL.Interpolation0	FOL.Interpolation0.EqGen.below	ind	false	
+FOL.FOL	TermG.var.sizeOf_spec	thm	false	
+FOL.SymClasses	FOL.EnumSym.enum	def	false	
+FOL.FOL	FormulaG.ctorElim	def	false	
+FOL.Eigenvariable	FOL.Eigenvariable.absTerm'_subst	thm	false	propext,Quot.sound
+FOL.Theorems.Eq	FOL.liftTerms_comm_zero._f	def	false	
+FOL.Semantics	FOL.Metamath.Semantics.eval_liftTerm_ext._f	def	false	propext,Quot.sound
+TheoryFramework.Theory	TheoryFramework.Theory.mk.injEq	thm	false	propext
+FOL.FOL	FormulaG.forall.sizeOf_spec	thm	false	
+FOL.MetaRules	FOL.MetaRules.ex_intro	def	false	propext
+FOL.Hauptsatz0	FOL.Hauptsatz0.derives0_qf_iff	thm	false	propext,Quot.sound
+FOL.Eigenvariable	FOL.Eigenvariable.absTerm'_lift._proof_17	thm	false	propext,Quot.sound
+FOL.Herbrand0	FOL.Herbrand0.instDecidablePTaut._proof_1	thm	false	propext
+FOL.Sequent0	LK₀.below.eqAx	ctor	false	
+FOL.SkolemN0	FOL.SkolemN0.eval_allBlock_envPush._f	def	false	propext,Quot.sound
+FOL.Herbrand0	FOL.Herbrand0.peval_congr	thm	false	propext
+FOL.Finitary0	FOL.Finitary0.allTrue_hd	thm	false	
+FOL.Hauptsatz0	FOL.Hauptsatz0.liftTerm_subst_le._proof_6	thm	false	propext,Quot.sound
+FOL.QFDecide0	FOL.QFDecide0.pw_of_cls.match_1_1	def	false	
+FOL.Derives1	FOL.Derives1.rewrite_at_admissible	thm	false	propext,Quot.sound
+FOL.Craig0	FOL.Craig0.split_consL	thm	false	
+FOL.Rename	FOL.Rename.rename_liftTerms._f	def	false	propext
+FOL.FOL	_aux_FOL_FOL___unexpand_top_1	def	false	
+FOL.PrenexNF0	FOL.PrenexNF0.mergeAndR_iff._f	def	false	propext,Quot.sound
+FOL.Theorems.Quantifiers	FOL.Theorems.Quantifiers.and_forall_impl_forall_and	thm	false	propext,Quot.sound
+FOL.QFDecide0	_private.FOL.QFDecide0.0.FOL.QFDecide0.pick.match_1.eq_1	thm	false	
+FOL.PrenexNF0	FOL.PrenexNF0.iffAll_ex	thm	false	propext,Quot.sound
+FOL.Rename	FOL.Rename.renameTerms.eq_1	thm	false	
+FOL.Enumeration	FOL.Metamath.Enumeration.formulaSize	def	false	
+FOL.SkolemNF0	FOL.SkolemNF0.skolemizeF._f	def	false	propext
+FOL.PrenexNF0	FOL.PrenexNF0.impAll_and_r	thm	false	propext,Quot.sound
+FOL.Eigenvariable	_private.FOL.Eigenvariable.0.FOL.Eigenvariable.absTerms'.match_1.eq_2	thm	false	
+FOL.Derives0	Derives₀.hyp	ctor	false	
+FOL.Fresh0	FOL.Fresh0.cst_inj._f	def	false	propext,Classical.choice,Quot.sound
+FOL.QFDecide0	FOL.QFDecide0.evI	def	false	
+FOL.Eigenvariable	FOL.Eigenvariable.absTerms'.match_1	def	false	
+FOL.Semantics	_private.FOL.Semantics.0.FOL.Metamath.Semantics.evalFormula.match_1.eq_6	thm	false	
+FOL.Eigenvariable	FOL.Eigenvariable.absFormula'._f	def	false	
+FOL.HenkinLimit0	FOL.HenkinLimit0.hidx.match_1	def	false	
+FOL.SkolemN0	FOL.SkolemN0.allBlock._sunfold	def	false	
+FOL.Semantics	_private.FOL.Semantics.0.FOL.Metamath.Semantics.shiftEnv.match_1.splitter	def	false	
+FOL.QFDecide0	FOL.QFDecide0.Good.rec	rec	false	propext
+FOL.Canonical0	FOL.Canonical0.evalTerms_canonical._f	def	false	propext,Classical.choice,Quot.sound
+FOL.Hauptsatz0	FOL.Hauptsatz0.substTerm_subst_le._proof_13	thm	false	propext,Quot.sound
+FOL.Fresh0	FOL.Fresh0.cst_bound_terms._f	def	false	propext
+FOL.Hauptsatz0	FOL.Hauptsatz0.map_subst_lift	thm	false	propext,Quot.sound
+FOL.Compacity0	FOL.Compacity0.evalTerm_updateCsts	thm	false	propext,Classical.choice,Quot.sound
+FOL.QFDecide0	FOL.QFDecide0.mem_of_memB._f	def	false	propext
+FOL.Sequent0	LKc.struct	ctor	false	
+FOL.Theorems.Eq	FOL.subst_subst_comm_succ	thm	false	propext,Classical.choice,Quot.sound
+FOL.Lindenbaum0	FOL.Lindenbaum0.derivesSet0_weakening	thm	false	
+FOL.Theorems.Quantifiers	FOL.Theorems.Quantifiers.substTerm_lift_cancel_var._f	def	false	propext,Quot.sound
+FOL.Sequent0	LKc.recOn	def	false	
+FOL.SkolemNF0	FOL.SkolemNF0.derives0_of_skolemizeF	thm	false	propext,Quot.sound
+FOL.Eigenvariable	_private.FOL.Eigenvariable.0.instReprFormulaG.repr.match_1.eq_2	thm	false	
+FOL.Eigenvariable	FOL.Eigenvariable.absTerms'.eq_1	thm	false	
+FOL.QFDecide0	FOL.QFDecide0.pick_exists.match_1_1	def	false	
+FOL.Semantics	replaceAt.eq_5	thm	false	propext
+FOL.SymClasses	FOL.FreshSym.rec	rec	false	
+FOL.SymClasses	FOL.FreshSym.mk.noConfusion	def	false	
+FOL.Inversion0	FOL.Inversion0.inv_implR	thm	false	propext,Quot.sound
+FOL.Theorems.Eq	FOL.substTerms_append	thm	false	
+FOL.FOL	Pos.brecOn.go	def	false	
+FOL.Rename	FOL.Rename.rename_liftTerms	thm	false	propext
+FOL.DecEq	instDecidableEqFormulaG.decEq._proof_38	thm	false	
+FOL.QFDecide0	FOL.QFDecide0.peval_implChain_inv	thm	false	
+FOL.Derives0	Derives₀.below.refl	ctor	false	
+FOL.Eigenvariable	_private.FOL.Eigenvariable.0.getAt?.match_1.eq_2	thm	false	propext
+FOL.Canonical0	FOL.Canonical0.truth_lemma_lt._proof_1_1	thm	false	propext,Quot.sound
+FOL.Finitary0	_private.FOL.Finitary0.0.FOL.Finitary0.tval.match_1.eq_1	thm	false	
+FOL.Semantics	FOL.Metamath.Semantics.shift_updateEnv_comm._proof_1_1	thm	false	propext,Quot.sound
+FOL.Rename	FOL.Rename.rename_substTerm	thm	false	propext
+FOL.FOL	Derives.below.bot_elim	ctor	false	propext
+FOL.Enumeration	FOL.Metamath.Enumeration.unpair_sum_le	thm	false	propext,Quot.sound
+TheoryFramework.Logic	TheoryFramework.LogicSystem.recOn	def	false	
+FOL.Propositional0	FOL.Propositional0.upd.eq_1	thm	false	
+FOL.FOL	FormulaG.brecOn.go	def	false	
+FOL.Theorems.Eq	FOL.derive_eq_symm	thm	false	propext,Quot.sound
+FOL.Eigenvariable	_private.FOL.Eigenvariable.0.instReprFormulaG.repr.match_1.eq_1	thm	false	
+FOL.SkolemN0	FOL.SkolemN0.envPush._unsafe_rec	def	false	
+FOL.Derives2	Derives₂.eq_func_congr	ctor	false	
+FOL.SkolemNF0	FOL.SkolemNF0.quantFree_of_qdepth_zero.match_1_1	def	false	propext
+FOL.Canonical0	FOL.Canonical0.eval_pullback_term	thm	false	
+FOL.Hauptsatz0	FOL.Hauptsatz0.cutAll._proof_1_1	thm	false	propext,Quot.sound
+FOL.BlockExtraction0	FOL.BlockExtraction0.instB_snoc._f	def	false	propext,Quot.sound
+FOL.Theorems.Quantifiers	liftTerm.eq_def	thm	false	
+FOL.DecEq	instDecidableEqFormulaG.decEq._proof_10	thm	false	
+FOL.Rename	_private.FOL.Rename.0.FOL.Rename.renameTerm.match_1.splitter	def	false	
+FOL.FOL	FormulaG.recOn	def	false	
+FOL.Enumeration	FOL.Metamath.Enumeration.termSize._sunfold	def	false	
+FOL.Eigenvariable	FOL.Eigenvariable.map_abs'_lift	thm	false	propext,Quot.sound
+FOL.Derives2	FOL.Derives2.PwEq₂.below.nil	ctor	false	
+FOL.Enumeration	FOL.Metamath.Enumeration.unpair_surj._proof_1_2	thm	false	propext,Quot.sound
+FOL.Derives1	Derives₁.below	ind	false	
+FOL.DecEq	instDecidableEqFormulaG.decEq._proof_58	thm	false	
+FOL.Derives1	FOL.Derives1.and_congr_l	thm	false	
+FOL.Compacity0	FOL.Compacity0.updateCsts.match_1	def	false	
+FOL.SkolemNF0	FOL.SkolemNF0.occursFormula_lift.match_1_1	def	false	
+FOL.Rename	FOL.Rename.renameFormula.eq_def	thm	false	
+FOL.SkolemN0	FOL.SkolemN0.vars.match_1	def	false	
+FOL.Craig0	FOL.Craig0.sub_rot3	thm	false	
+FOL.Derives0	Derives₀.below.subst	ctor	false	

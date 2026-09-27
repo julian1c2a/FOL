@@ -56,6 +56,12 @@ conservatividad:
 * 🏁 `skolem_conservative_nf₀` — los axiomas de Skolem **se retiran todos**, iterando
   `FOL.SkolemN0.skolem_conservative_n₀` sobre la lista con la frescura correcta.
 
+📏 Sólo tres constantes del módulo llevan `Classical.choice` (medido el 2026‑09‑27):
+`skolem_conservative_listF`, `skolem_conservative_nf₀` y `derives0_of_skolemNF`, y lo heredan
+de `skolem_conservative_n₀`, cuya ruta es semántica: la completitud (el lema de la verdad sobre un
+maximal arbitrario y el `byContradiction` final), la solidez de Tarski y `skF`. El resto del módulo
+no lo lleva.
+
 🏁 **Y la dirección `φ → skolemize φ` también** (§8, ADR‑065): exigía empujar el axioma bajo el
 prefijo `∀ⁿ` — la regla K iterada — y resultó ser **un solo lema**, porque `allBlock n (∀A)` y
 `allBlock (n+1) A` son la MISMA fórmula. 📏 Las dos mitades, **sin `Classical.choice`**.
@@ -592,8 +598,10 @@ theorem derives0_skolemize (k : Nat) (f : Formula) (Γ : List Formula)
   derives0_skolemizeF (qdepth f) k 0 f Γ hax h
 
 /-- 🏁🏁 **LAS DOS DIRECCIONES**: con los axiomas de Skolem en el contexto, la fórmula y su forma
-normal son **interderivables**. 📏 Y las dos mitades **sin `Classical.choice`** — el WKL entra
-sólo al RETIRAR los axiomas (§5), no al usarlos. -/
+normal son **interderivables**. 📏 Y las dos mitades **sin `Classical.choice`**: éste entra sólo al
+RETIRAR los axiomas (§5, por la ruta semántica de `skolem_conservative_n₀`), no al usarlos.
+⚠️ Rectificado el 2026‑09‑27: decía «el WKL entra sólo al RETIRAR los axiomas»; lo que entra es
+el `Classical.choice` de esa ruta, que en Lean no es el WKL (auditoría de constructividad). -/
 theorem derives0_skolemize_iff (k : Nat) (f : Formula) (Γ : List Formula)
     (hax : ∀ g, g ∈ skolemAxioms k f → g ∈ Γ) : Iff (Γ ⊢₀ f) (Γ ⊢₀ skolemize k f) :=
   ⟨derives0_skolemize k f Γ hax, derives0_of_skolemizeF _ _ _ _ Γ⟩

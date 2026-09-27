@@ -77,6 +77,11 @@ Herbrand (H3), no por esto.
 `lk0_to_derives0`, **que es `completeness₀`**. Es decir: la consistencia
 del cálculo de secuentes se compra hoy **con el teorema de completitud**, y arrastra con él el
 `Classical.choice` que ADR‑041 identificó como el **WKL**.
+⚠️ **Rectificado el 2026‑09‑27** (auditoría de constructividad): ese `Classical.choice` no es el
+WKL en Lean. `lindenbaum_lemma₀` es `[propext, Quot.sound]`; lo que `lk0_not_empty` arrastra es la
+semántica de Tarski en `Prop` (`lkc_sound`, `derives0_soundness`), el lema de la verdad sobre un
+maximal arbitrario y el `byContradiction` final de `completeness₀`. El WKL es la fuerza lógica de la
+completitud sobre RCA₀, no el sitio del `choice`.
 ⇒ `lk0_empty` y `lkc_empty` lo sustituyen con `[propext, Quot.sound]`, y `lk0_no_bot`/`lkc_no_bot` son **más fuertes**:
 `¬ LK₀ [] [⊥]` implica `¬ LK₀ [] []` por `struct`, no al revés.
 
@@ -418,9 +423,9 @@ theorem lkc_empty_of_no_bot (h : Not (LKc [] [Formula.bottom])) : Not (LKc [] []
     (fun _ hx => hx) (fun _ hx => absurd hx List.not_mem_nil))
 
 /-- 🏁 **El enunciado que `FOL.SequentSound0.lk0_not_empty` publica, con footprint
-ESTRICTAMENTE MENOR.** Allí se compra con `completeness₀` y arrastra el **WKL**
-(`[propext, Classical.choice, Quot.sound]`); aquí sale del modelo booleano de un punto y mide
-`[propext, Quot.sound]`.
+ESTRICTAMENTE MENOR.** Allí se compra con `completeness₀` y arrastra su `Classical.choice`
+(`[propext, Classical.choice, Quot.sound]`; decía «el **WKL**», rectificado el 2026‑09‑27: ver la
+cabecera); aquí sale del modelo booleano de un punto y mide `[propext, Quot.sound]`.
 
 ⚠️ Y se deriva del **fuerte**, no al revés: es `lk0_no_bot` quien hace el trabajo. -/
 theorem lk0_not_empty_fin : Not (LK₀ [] []) := lk0_empty_of_no_bot lk0_no_bot
@@ -433,7 +438,10 @@ theorem lkc_not_empty_fin : Not (LKc [] []) := lkc_empty_of_no_bot lkc_no_bot
 theorem derives0_consistent_fin : Not (([] : List Formula) ⊢₀ Formula.bottom) := fun h =>
   lkc_no_bot (FOL.NDtoLK0.ndToLK (FOL.Derives2.derives0_iff_derives2.mp h))
 
-/-- ⭐ Y con la valuación `false`, que `Derives₀` tampoco prueba un átomo. -/
+/-- ⭐ Y con la valuación `false`, que `Derives₀` tampoco prueba un átomo.
+⭐ Desde el 2026‑09‑27 lo consume `Inconsistencia.derives0_not_complete_fin`, con su gemelo
+`derives0_not_negP_fin` (valuación `true`): así la propiedad de disyunción cae sin
+`Classical.choice`. -/
 theorem derives0_not_P_fin : Not (([] : List Formula) ⊢₀ Formula.atom "P" []) := by
   intro h
   have hc := FOL.NDtoLK0.ndToLK (FOL.Derives2.derives0_iff_derives2.mp h)

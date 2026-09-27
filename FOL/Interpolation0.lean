@@ -47,9 +47,11 @@ el lado donde no puede sobrevivir.*
 ## ⭐ El dividendo: `LK₀ → ⊢₀` sin completitud
 
 La única traducción `LK₀ → ⊢₀` del árbol era `SequentSound0.lk0_to_derives0`, que ES
-`completeness₀` (el WKL, `Classical.choice`). `lk0_refute` la da SINTÁCTICAMENTE, leyendo `Γ ⟹ Δ`
-como «`Γ` y las negaciones de `Δ` son contradictorias» con la lista por pertenencia; de ahí
-`lk0_to_derives0_fin`, mismo enunciado, `[propext, Quot.sound]`.
+`completeness₀` compuesta con `lk0_sound`, la solidez de Tarski de los secuentes (`Classical.choice`:
+la semántica en `Prop`, el lema de la verdad sobre un maximal arbitrario y el `byContradiction`
+final; decía «el WKL», rectificado el 2026‑09‑27 por la auditoría de constructividad). `lk0_refute`
+la da SINTÁCTICAMENTE, leyendo `Γ ⟹ Δ` como «`Γ` y las negaciones de `Δ` son contradictorias» con
+la lista por pertenencia; de ahí `lk0_to_derives0_fin`, mismo enunciado, `[propext, Quot.sound]`.
 
 ## ⚠️ Alcance, dicho con sus palabras
 

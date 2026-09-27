@@ -55,13 +55,24 @@ propiedades, una definición, sin invertir `cst`.
 🔑 *El enunciado correcto no era «el máximo índice usado» sino «a partir de cierto índice, todas
 valen». El primero obliga a leer los nombres; el segundo, no.*
 
+⚠️ **Rectificación, 2026‑09‑27** (auditoría de constructividad). `bnd` ya no es `Exists.choose`: se
+CALCULA por recursión sobre la fórmula —el mayor `utf8ByteSize` de sus símbolos de función—, y
+`bnd_spec` sale de contar bytes (`cst m` ocupa `m + 1`). O sea: la función `Formula → Nat` acabó
+escribiéndose, pero por otra razón —quitar el `Classical.choice`—, y con el enunciado de COTA, no de
+índice. El 🔑 de arriba sigue en pie: `bnd` **mide** los nombres, no los **lee** (no invierte `cst`
+ni averigua qué `cst m` aparece).
+
 ## Qué hace cada sección
 
 1. **§1** — las dos conmutaciones de `occursFormula` que faltaban: el **lift** no cambia los
    símbolos, y la **sustitución** sólo puede meter los del término sustituido. De ahí
    `not_occurs_henkinAx`: una constante distinta del testigo, y fresca en `A`, es fresca en
    `henkinAx d A`. ⭐ **Net‑0 puro** — no depende de ningún axioma.
-2. **§2** — `bnd` y `hidx`, con las dos propiedades.
+2. **§2** — la cota `bnd`, **calculada** por recursión (`bndTerm`, `bndTerms`: el mayor
+   `utf8ByteSize` de un símbolo de función), su especificación `bnd_spec` (vía `cst_ne_of_size`:
+   una cadena de `k` bytes no es `cst m` para ningún `m ≥ k`), y `hidx`, con las dos propiedades.
+   ⭐ Desde el 2026‑09‑27 `bnd`, `hidx` y `hen` son **computables** (hasta entonces
+   `noncomputable`): `hidx 5` se evalúa con `#eval`.
 3. **§3** — la cadena, su monotonía, su frescura y su **consistencia**, que es `henkin_step_consistent₀`
    (ADR‑037) aplicado `n` veces.
 4. **§4** — el límite. ⭐ Su consistencia sale **de la definición de `DerivesSet₀`**: una derivación
@@ -70,10 +81,29 @@ valen». El primero obliga a leer los nombres; el segundo, no.*
 
 ## 📏 Footprint
 
-`[propext, Classical.choice, Quot.sound]` y **cero axiomas del proyecto**. El `Classical.choice`
-entra por `Exists.choose` en `bnd` (§2), por `String` (§7 del plan) y por lo que ya traen
-`shiftTheory_consistent₀` (`Rename.invOf`) y `henkin_step_consistent₀`; ⚠️ **no** es el de la
-completitud — ése es el `if IsConsistent …` de Lindenbaum (§6.3), que entra después, en `FOL.Lindenbaum0`.
+⭐ **Ninguna constante de `FOL.HenkinLimit0` lleva `Classical.choice`, y ninguna es
+`noncomputable`** (auditoría de constructividad, 2026‑09‑27, medido sobre el entorno compilado:
+`auditoria/constructividad-2026-09-27/despues/`):
+
+* **ningún axioma**: §1 entero (`occursTerm_lift`, `occursTerms_lift`, `not_occurs_substTerm`,
+  `not_occurs_substTerms`, `not_occurs_substFormula`, `not_occurs_henkinAx`) y la cota `bndTerm`,
+  `bndTerms`, `bnd`;
+* `[propext, Quot.sound]`: todo lo demás —`cst_ne_of_size`, `bndTerm_spec`, `bndTerms_spec`,
+  `bnd_spec`, `hidx` y sus lemas, `hen`, `hen_mono`, `hen_fresh`, `hen_fresh_at`, `hen_consistent`,
+  `henLimit`, `shiftTheory_sub_henLimit`, `henLimit_finite`, `henLimit_consistent₀`,
+  `henLimit_witness`—.
+
+**Cero axiomas del proyecto.**
+
+⚠️⚠️ **Hasta el 2026‑09‑27 esta sección decía** `[propext, Classical.choice, Quot.sound]`, con el
+`Classical.choice` entrando «por `Exists.choose` en `bnd` (§2), por `String` (§7 del plan) y por lo
+que ya traen `shiftTheory_consistent₀` (`Rename.invOf`) y `henkin_step_consistent₀`», y que «no es
+el de la completitud — ése es el `if IsConsistent …` de Lindenbaum». Ninguna de esas vías era
+necesaria, y se retiraron: `bnd` calculada (§2); `Fresh0.unshift` en lugar de `invOf`; el
+`ctx_split` de `FOL.Henkin0` en lugar del `filter` bajo `open Classical`; `of_decide_eq_false` en
+`Fresh0.cst_zero_ne`/`cst_ne_shift` y `String.exists_eq_ofList` en la sobreyectividad de
+`FOL.Enumeration` (lo de `String` era DECODIFICAR UTF‑8). Y la segunda mitad también era falsa: la
+etapa de Lindenbaum ya no decide nada — ver `FOL.Lindenbaum0`.
 -/
 
 namespace FOL.HenkinLimit0
@@ -179,20 +209,77 @@ theorem not_occurs_henkinAx {c d : String} {A : Formula}
 -- §2 · El índice del testigo de cada turno
 -- ============================================================
 
-/-- La cota de `cst_bound_formula`, elegida. ⚠️ `noncomputable`: es `Exists.choose`, y ahí entra
-`Classical.choice`. No es evitable con este enunciado — y no importa, porque lo que se construye
-es una **teoría**, no un programa. -/
-noncomputable def bnd (f : Formula) : Nat := (cst_bound_formula f).choose
+/-- Una cadena de `k` bytes no es `cst m` para ningún `m ≥ k`: sólo contar bytes
+(`Fresh0.cst_utf8ByteSize`). -/
+theorem cst_ne_of_size {s : String} {m : Nat} (hm : s.utf8ByteSize ≤ m) : cst m ≠ s := by
+  intro h
+  have h1 : m + 1 = s.utf8ByteSize :=
+    (cst_utf8ByteSize m).symm.trans (congrArg String.utf8ByteSize h)
+  exact Nat.not_succ_le_self m (Nat.le_trans (Nat.le_of_eq h1) hm)
 
-theorem bnd_spec (f : Formula) : ∀ m, bnd f ≤ m → Not (occursFormula (cst m) f) :=
-  (cst_bound_formula f).choose_spec
+mutual
+/-- El mayor tamaño en bytes de un símbolo de función del término. -/
+def bndTerm : Term → Nat
+  | .var _ => 0
+  | .func s ts => max s.utf8ByteSize (bndTerms ts)
+
+def bndTerms : List Term → Nat
+  | [] => 0
+  | t :: ts => max (bndTerm t) (bndTerms ts)
+end
+
+/-- ⭐ **La cota, CALCULADA**: el mayor tamaño en bytes de un símbolo de función de la fórmula. A
+partir de ahí ninguna `cst m` aparece (`bnd_spec`). Hasta el 2026‑09‑27 era
+`(cst_bound_formula f).choose`, `noncomputable` y con `Classical.choice`; su docstring decía que
+«no es evitable con este enunciado»: lo era (auditoría de constructividad). -/
+def bnd : Formula → Nat
+  | .bottom => 0
+  | .atom _ ts => bndTerms ts
+  | .eq t u => max (bndTerm t) (bndTerm u)
+  | .impl a b => max (bnd a) (bnd b)
+  | .forall a => bnd a
+  | .and a b => max (bnd a) (bnd b)
+  | .or a b => max (bnd a) (bnd b)
+  | .ex a => bnd a
+
+mutual
+theorem bndTerm_spec : ∀ (t : Term) (m : Nat), bndTerm t ≤ m → Not (occursTerm (cst m) t)
+  | .var _, _, _ => fun h => h
+  | .func s ts, m, hm => fun h => by
+      cases h with
+      | inl he => exact cst_ne_of_size (Nat.le_trans (Nat.le_max_left _ _) hm) he.symm
+      | inr ht => exact bndTerms_spec ts m (Nat.le_trans (Nat.le_max_right _ _) hm) ht
+
+theorem bndTerms_spec : ∀ (ts : List Term) (m : Nat), bndTerms ts ≤ m →
+    Not (occursTerms (cst m) ts)
+  | [], _, _ => fun h => h
+  | t :: ts, m, hm => fun h => by
+      cases h with
+      | inl ht => exact bndTerm_spec t m (Nat.le_trans (Nat.le_max_left _ _) hm) ht
+      | inr hts => exact bndTerms_spec ts m (Nat.le_trans (Nat.le_max_right _ _) hm) hts
+end
+
+private theorem bnd_pair {P Q : Prop} {a b m : Nat} (h1 : a ≤ m → Not P) (h2 : b ≤ m → Not Q)
+    (hm : max a b ≤ m) : Not (Or P Q) := fun h =>
+  h.elim (h1 (Nat.le_trans (Nat.le_max_left _ _) hm)) (h2 (Nat.le_trans (Nat.le_max_right _ _) hm))
+
+theorem bnd_spec (f : Formula) : ∀ m, bnd f ≤ m → Not (occursFormula (cst m) f) := by
+  induction f with
+  | bottom => exact fun _ _ h => h
+  | atom _ ts => exact bndTerms_spec ts
+  | eq t u => exact fun m hm => bnd_pair (bndTerm_spec t m) (bndTerm_spec u m) hm
+  | impl _ _ iha ihb => exact fun m hm => bnd_pair (iha m) (ihb m) hm
+  | «forall» _ ih => exact ih
+  | and _ _ iha ihb => exact fun m hm => bnd_pair (iha m) (ihb m) hm
+  | or _ _ iha ihb => exact fun m hm => bnd_pair (iha m) (ihb m) hm
+  | ex _ ih => exact ih
 
 /-- El índice de la constante que atestigua `natToFormula n`.
 
 ⭐ Las dos propiedades que lo definen están en la definición misma: `hidx n + 1` fuerza el
 **crecimiento estricto** (⇒ testigos distintos), y `bnd (natToFormula (n+1))` fuerza que **domine
 la cota** (⇒ frescura en la fórmula del turno). -/
-noncomputable def hidx : Nat → Nat
+def hidx : Nat → Nat
   | 0 => bnd (natToFormula 0)
   | n + 1 => max (hidx n + 1) (bnd (natToFormula (n + 1)))
 
@@ -220,7 +307,7 @@ theorem hidx_ge_of_le {i n : Nat} (h : i ≤ n) : bnd (natToFormula i) ≤ hidx 
 -- ============================================================
 
 /-- `hen S n` es `shiftTheory S` más los `n` primeros axiomas de Henkin. -/
-noncomputable def hen (S : Formula → Prop) : Nat → Formula → Prop
+def hen (S : Formula → Prop) : Nat → Formula → Prop
   | 0 => shiftTheory S
   | n + 1 => fun x => Or (hen S n x) (x = henkinAx (cst (hidx n)) (natToFormula n))
 

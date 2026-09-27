@@ -82,24 +82,48 @@ no) y `HasLargeModels` (la teoría vacía sí, `∀x∀y. x ≐ y` no). Que la c
 se sigue de lo segundo, porque la conclusión implica `HasLargeModels S`; ese eslabón no estaba, a 2026‑09‑26,
 compilado.
 
-## 📏 Footprint
+## 📏 Footprint — medido el 2026‑09‑27
 
-Los titulares, `[propext, Classical.choice, Quot.sound]`. ⚠️ **Y el `Classical.choice` es el de
-siempre y está explicado**: viene de `model_existence_lemma₀` y de `derives0_soundness` (la
-semántica es clásica: `FOL.Soundness0`); el primero trae varias procedencias (las enumeran
-`FOL.Canonical0` y `FOL.Lindenbaum0`), y la que da la fuerza es el
-`if IsConsistent₀` Π⁰₁ de `FOL.Lindenbaum0` — el **WKL** (ADR‑041;
-`../ROBINSON_PlusPlus/doc/PLAN-COMPLETITUD-FINITISTA.md` §6.3). No se añade fuerza
-nueva. ⛔ Y por eso esto **no** es finitario, al revés que `FOL.Finitary0`: es vía W, no vía H.
-⚠️ **En §3 el `Classical.choice` NO viene sólo de la completitud**: `infTheory_finSat` y
-`evalTerm_updateCsts` lo llevan SIN pasar por `model_existence_lemma₀`. Es el de `FOL.Fresh0`
-(`cst_bound_list`, `cst_inj`; ver su §Footprint: el tercio excluso de `cst_bound_sym` y la
-implementación de `String` —descomponerlo, no compararlo—).
-`infinite_model_of_large` pasa por `Rename.invOf` también fuera de `model_existence_lemma₀` (vía
-`hasLargeModels_shift`). El conjunto
-de axiomas es el mismo; las procedencias son varias, y sólo una es el WKL.
-Excepciones de §3, medidas: `evalFormula_updateCsts` sólo `[propext]`, y los controles
-`hasLargeModels_empty` y `not_hasLargeModels_one`, **ningún axioma**.
+Los titulares que pasan por la completitud o por la solidez —todos los de §1 y §2 salvo
+`countable_of_shift`, y en §3 `infinite_model_of_large_fresh`, `infinite_model_of_large` y
+`countable_infinite_of_infinite`— miden `[propext, Classical.choice, Quot.sound]`, con cero axiomas
+del proyecto. ⚠️ El `Classical.choice` entra por DOS sitios, los dos esenciales y ninguno de este
+módulo:
+
+* **La solidez**, `derives0_soundness` (`FOL.Soundness0`): la semántica de Tarski vive en `Prop`, y
+  su enunciado implica `∀ P, ¬¬P → P`
+  (`auditoria/constructividad-2026-09-27/experimentos/exp-esencial/E1_Solidez.lean`). Por ella pasan
+  `consistency_of_satisfiable₀` y la vuelta de `compactness`. ⭐ Y el enunciado de
+  `consistency_of_satisfiable₀` ya es clásico por sí mismo: implica
+  `∀ P : Nat → Prop, ¬¬ ∀ n, P n ∨ ¬ P n` con sólo `[propext]` (`…/exp-esceptico/Esc2.lean`).
+* **El lema de la verdad sobre un maximal ARBITRARIO**, `truth_lemma₀` y la familia `max_cons_*`
+  (ver la cabecera de `FOL.Canonical0`). Por él pasan `model_existence_lemma₀` y
+  `model_existence_countable₀`. La construcción, `henkin_completion₀`, ya no lleva elección.
+
+Por los dos pasan `compactness`, `model_existence_iff₀` y `loewenheim_skolem_down`.
+⇒ En §3 el `Classical.choice` viene YA SÓLO de esos dos sitios, a través de `compactness` y de
+`loewenheim_skolem_down`, que son los que usa `infinite_model_of_large_fresh`. Sin él, medidos: en §2,
+`countable_of_shift`, `[propext]`; en §3, `infTheory_finSat`, `evalTerm_updateCsts` y
+`hasLargeModels_shift`, `[propext, Quot.sound]`, `evalFormula_updateCsts`, `[propext]`, y los
+cuatro controles (`infiniteDom_nat`, `not_infiniteDom_unit`, `hasLargeModels_empty`,
+`not_hasLargeModels_one`), **ningún axioma**.
+
+⚠️⚠️ **RECTIFICACIÓN (2026‑09‑27).** Esta sección decía otras tres cosas, y las tres han caído:
+1. Que la procedencia que da la fuerza era «el `if IsConsistent₀` Π⁰₁ de `FOL.Lindenbaum0` — el
+   **WKL**» (ADR‑041). Falso en Lean: la etapa de Lindenbaum es impredicativa y no decide nada.
+2. Que en §3 `infTheory_finSat` y `evalTerm_updateCsts` llevaban el `Classical.choice` de
+   `FOL.Fresh0`: el tercio excluso de `cst_bound_sym` y «la implementación de `String`
+   —descomponerlo, no compararlo—». Hoy `cst_bound_sym` calcula su cota en bytes, y las desigualdades entre
+   constantes se deciden con `String.decEq`. Y para §3 la frase estaba al revés: aquí la elección
+   la traía COMPARAR por `BEq`, con un `ReflBEq` sintetizado vía `String.instOrd`
+   (`…/exp-string/E9.lean`). Lo que en v4.31 lleva `Classical.choice` es DECODIFICAR UTF‑8, y
+   `String.instOrd` decodifica; la capa de bytes de `String` está limpia.
+3. Que `infinite_model_of_large` pasaba por `Rename.invOf`, una inversa elegida, vía
+   `hasLargeModels_shift`. Hoy la inversa es `Fresh0.unshift`, calculada.
+
+No se añade fuerza nueva: la compacidad tiene la de la completitud, la del **WKL** sobre RCA₀
+(Simpson IV.3.3). Es una afirmación de FUERZA lógica, no de dónde cae la elección en Lean.
+⛔ Y por eso esto **no** es finitario, al revés que `FOL.Finitary0`: es vía W, no vía H.
 -/
 
 namespace FOL.Compacity0
@@ -256,15 +280,17 @@ theorem infinite_model_of_large_fresh {S : Formula → Prop}
     fun f hf => hM f (Or.inl hf)⟩
   exact Decidable.byContradiction (fun hne => hM (neqAx i j) (Or.inr ⟨i, j, hne, rfl⟩) hij)
 
-/-- Un modelo de `S` con `≥ n` elementos da uno de `shiftTheory S` con el MISMO dominio. -/
+/-- Un modelo de `S` con `≥ n` elementos da uno de `shiftTheory S` con el MISMO dominio: el de
+`S` leído a través de la inversa CALCULADA `Fresh0.unshift` (hasta el 2026‑09‑27, `Rename.invOf`,
+elegida con `Classical.choice`). -/
 theorem hasLargeModels_shift {S : Formula → Prop} (h : HasLargeModels S) :
     HasLargeModels (shiftTheory S) := by
   intro n
   obtain ⟨D, M, v, hM, he⟩ := h n
-  refine ⟨D, pullback M (invOf shift), v, fun x hx => ?_, he⟩
+  refine ⟨D, pullback M unshift, v, fun x hx => ?_, he⟩
   obtain ⟨g, hg, rfl⟩ := hx
-  refine (eval_pullback_formula M (invOf shift) (renameFormula shift g) v).mpr ?_
-  rw [rename_rename_formula (invOf_spec shift_inj) g]
+  refine (eval_pullback_formula M unshift (renameFormula shift g) v).mpr ?_
+  rw [rename_rename_formula unshift_shift g]
   exact hM g hg
 
 /-- 🏁🏁🏁 **Modelos con al menos `n` elementos para TODO `n` ⇒ un modelo NUMERABLE e INFINITO**

@@ -1,0 +1,113 @@
+modulos: 54
+
+clases de footprint (todas las constantes, incl. generadas):
+   1878  (ninguno)
+    598  Quot.sound,propext
+    503  propext
+     84  Classical.choice,Quot.sound,propext
+      6  Quot.sound
+      2  FOL.MetaRules.raa,propext
+      1  FOL.MetaRules.or_elim,propext
+      1  FOL.MetaRules.ex_elim,propext
+      1  FOL.MetaRules.imp_intro,propext
+
+axiomas declarados en FOL: [('FOL.MetaRules', 'FOL.MetaRules.raa'), ('FOL.MetaRules', 'FOL.MetaRules.or_elim'), ('FOL.MetaRules', 'FOL.MetaRules.ex_elim'), ('FOL.MetaRules', 'FOL.MetaRules.imp_intro')]
+
+noncomputable: 1
+   ('FOL.SkolemN0', 'FOL.SkolemN0.skF', 'def', 'propext,Classical.choice,Quot.sound')
+
+FUENTES EXTERNAS de Classical.choice (constante externa usada directamente -> nº de constantes FOL que la usan):
+     7  Classical.byContradiction
+     5  Classical.propDecidable
+     3  Lean.Meta.MetaM
+     3  Exists.choose
+     2  Classical.em
+     2  Lean.Meta.Context
+     2  Lean.Meta.State
+     2  Lean.Core.CoreM
+     2  Lean.Exception
+     2  Lean.instMonadExceptOfExceptionCoreM
+     2  Exists.choose_spec
+     1  Classical.byCases
+     1  Lean.Elab.Tactic.Tactic
+     1  Lean.Elab.Tactic.TacticM
+     1  Lean.Elab.Tactic.instMonadTacticM
+     1  Lean.Elab.Term.TermElabM
+     1  Lean.Elab.Term.instMonadMacroAdapterTermElabM
+     1  Lean.Elab.Term.instMonadTermElabM
+     1  Lean.Elab.Tactic.evalTactic
+     1  Lean.Elab.Tactic.getMainGoal
+     1  Lean.Elab.Term.State
+     1  Lean.Elab.Term.Context
+     1  Lean.Elab.Tactic.setGoals
+     1  Lean.Elab.throwUnsupportedSyntax
+     1  Lean.Meta.instInhabitedMetaM
+     1  Lean.MonadError.toMonadExceptOf
+     1  Lean.MonadError.mk
+     1  Lean.Core.instMonadQuotationCoreM
+     1  Lean.instAddErrorMessageContextOfAddMessageContextOfMonad
+     1  Lean.Meta.instAddMessageContextMetaM
+     1  Lean.Meta.instMonadMetaM
+     1  Lean.Meta.mkConstWithFreshMVarLevels
+     1  Lean.MVarId.apply
+     1  Lean.MessageData
+     1  Lean.Core.instMonadCoreM
+     1  Lean.throwError
+     1  Lean.ToMessageData.toMessageData
+     1  Lean.instToMessageDataString
+
+por modulo (sin generadas): total / con choice / con MetaRules / sin axiomas
+  FOL.BlockExtraction0                       14    0    0    5
+  FOL.Canonical0                             48   31    0   15
+  FOL.Compacity0                             24    8    0    8
+  FOL.Complexity                              2    0    0    1
+  FOL.Craig0                                 39    0    0   32
+  FOL.DecEq                                   7    0    0    7
+  FOL.Deduction                               1    0    0    0
+  FOL.Derives0                               27    0    0   25
+  FOL.Derives1                               38    0    0   32
+  FOL.Derives2                               46    0    0   32
+  FOL.Eigenvariable                          46    0    0   14
+  FOL.Enumeration                            26    0    0    4
+  FOL.Eq0                                     4    0    0    0
+  FOL.FOL                                   115    0    0  106
+  FOL.Finitary0                              26    0    0   12
+  FOL.Fresh0                                 29    0    0    2
+  FOL.Hauptsatz0                             61    0    0   29
+  FOL.Henkin0                                11    0    0    8
+  FOL.HenkinLimit0                           31    0    0   11
+  FOL.Herbrand0                              33    0    0   22
+  FOL.HerbrandBlock0                         14    0    0    7
+  FOL.Inconsistencia                          6    0    1    2
+  FOL.Interpolation0                         30    0    0   13
+  FOL.Inversion0                             11    0    0    0
+  FOL.Lift0                                  19    0    0    0
+  FOL.Lindenbaum0                            23    2    0    9
+  FOL.MetaRules                              16    0    4    0
+  FOL.NDtoLK0                                11    0    0    7
+  FOL.Prenex0                                11    0    0    2
+  FOL.PrenexNF0                              55    0    0   14
+  FOL.Propositional0                         23    0    0   11
+  FOL.QFDecide0                             103    0    0   33
+  FOL.Rename                                 33    0    0   16
+  FOL.Semantics                              26    0    0   13
+  FOL.Sequent0                               49    0    0   45
+  FOL.SequentSound0                           9    5    0    4
+  FOL.Skolem0                                 9    1    0    7
+  FOL.SkolemHerbrand0                        14    4    0    3
+  FOL.SkolemN0                               13    5    0    5
+  FOL.SkolemNF0                              34    3    0    6
+  FOL.Soundness0                             10    5    0    5
+  FOL.SymClasses                             12    0    0   11
+  FOL.Tactics                                10    2    0    8
+  FOL.Theorems.Derived                       14    0    0    0
+  FOL.Theorems.Eq                            24    0    0    1
+  FOL.Theorems.Impl                           4    0    0    0
+  FOL.Theorems.Neg                            7    0    0    0
+  FOL.Theorems.Quantifiers                   11    0    0    2
+  TheoryFramework.Instances.FOL               4    3    0    1
+  TheoryFramework.Logic                      14    0    0   14
+  TheoryFramework.MetaTheorems                9    0    0    9
+  TheoryFramework.Properties                  6    0    0    6
+  TheoryFramework.Relations                  12    0    0   12
+  TheoryFramework.Theory                      8    0    0    8

@@ -18,14 +18,14 @@
 
 * **0** — `FOL.FOL`, `TF.Logic`
 * **1** — `Complexity`, `DecEq`, `Derives0`, `MetaRules`, `Semantics`, `SymClasses`, `Tactics`, `Thm.Eq`, `Thm.Neg`, `TF.Theory`
-* **2** — `Deduction`, `Eigenvariable`, `Enumeration`, `Eq0`, `Propositional0`, `Rename`, `Soundness0`, `Thm.Derived`, `Thm.Impl`, `TF.Instances.FOL`, `TF.Properties`, `TF.Relations`
-* **3** — `Herbrand0`, `Inconsistencia`, `Lift0`, `Thm.Quantifiers`, `TF.MetaTheorems`
+* **2** — `Deduction`, `Eigenvariable`, `Enumeration`, `Eq0`, `Propositional0`, `Rename`, `Soundness0`, `Thm.Derived`, `Thm.Impl`, `TF.Properties`, `TF.Relations`
+* **3** — `Herbrand0`, `Lift0`, `Thm.Quantifiers`, `TF.MetaTheorems`
 * **4** — `Core`, `Derives1`, `Henkin0`, `Prenex0`
 * **5** — `Derives2`, `Fresh0`, `PrenexNF0`
 * **6** — `HenkinLimit0`, `Sequent0`
 * **7** — `Craig0`, `HerbrandBlock0`, `Lindenbaum0`, `NDtoLK0`
 * **8** — `Canonical0`, `Finitary0`, `Hauptsatz0`
-* **9** — `BlockExtraction0`, `Interpolation0`, `Inversion0`, `QFDecide0`, `SequentSound0`, `Skolem0`
+* **9** — `BlockExtraction0`, `Inconsistencia`, `Interpolation0`, `Inversion0`, `QFDecide0`, `SequentSound0`, `Skolem0`, `TF.Instances.FOL`
 * **10** — `Compacity0`, `SkolemN0`
 * **11** — `SkolemNF0`
 * **12** — `SkolemHerbrand0`
@@ -80,6 +80,7 @@ graph BT
     Herbrand0["Herbrand0"] --> Propositional0["Propositional0"]
     HerbrandBlock0["HerbrandBlock0"] --> Sequent0["Sequent0"]
     Inconsistencia["Inconsistencia"] --> FOL_FOL["FOL.FOL"]
+    Inconsistencia["Inconsistencia"] --> Finitary0["Finitary0"]
     Inconsistencia["Inconsistencia"] --> MetaRules["MetaRules"]
     Inconsistencia["Inconsistencia"] --> Propositional0["Propositional0"]
     Inconsistencia["Inconsistencia"] --> Semantics["Semantics"]
@@ -125,9 +126,8 @@ graph BT
     Thm_Quantifiers["Thm.Quantifiers"] --> Thm_Derived["Thm.Derived"]
     Thm_Quantifiers["Thm.Quantifiers"] --> Thm_Impl["Thm.Impl"]
     Thm_Quantifiers["Thm.Quantifiers"] --> Thm_Neg["Thm.Neg"]
-    TF_Instances_FOL["TF.Instances.FOL"] --> FOL_FOL["FOL.FOL"]
-    TF_Instances_FOL["TF.Instances.FOL"] --> Semantics["Semantics"]
-    TF_Instances_FOL["TF.Instances.FOL"] --> TF_Logic["TF.Logic"]
+    TF_Instances_FOL["TF.Instances.FOL"] --> Canonical0["Canonical0"]
+    TF_Instances_FOL["TF.Instances.FOL"] --> TF_MetaTheorems["TF.MetaTheorems"]
     TF_MetaTheorems["TF.MetaTheorems"] --> TF_Properties["TF.Properties"]
     TF_MetaTheorems["TF.MetaTheorems"] --> TF_Relations["TF.Relations"]
     TF_Properties["TF.Properties"] --> TF_Theory["TF.Theory"]
@@ -139,13 +139,13 @@ graph BT
 
 | módulo | nivel | importa | lo importan |
 |---|---|---|---|
-| `FOL.FOL` | 0 | — | `Complexity`, `Core`, `DecEq`, `Deduction`, `Derives0`, `Enumeration`, `Inconsistencia`, `MetaRules`, `Semantics`, `SymClasses`, `Tactics`, `Thm.Derived`, `Thm.Eq`, `Thm.Impl`, `Thm.Neg`, `Thm.Quantifiers`, `TF.Instances.FOL` |
-| `TheoryFramework.Logic` | 0 | — | `TF.Instances.FOL`, `TF.Theory` |
+| `FOL.FOL` | 0 | — | `Complexity`, `Core`, `DecEq`, `Deduction`, `Derives0`, `Enumeration`, `Inconsistencia`, `MetaRules`, `Semantics`, `SymClasses`, `Tactics`, `Thm.Derived`, `Thm.Eq`, `Thm.Impl`, `Thm.Neg`, `Thm.Quantifiers` |
+| `TheoryFramework.Logic` | 0 | — | `TF.Theory` |
 | `FOL.Complexity` | 1 | `FOL.FOL` | `Canonical0` |
 | `FOL.DecEq` | 1 | `FOL.FOL` | `Propositional0` |
 | `FOL.Derives0` | 1 | `FOL.FOL` | `Eigenvariable`, `Eq0`, `Propositional0`, `Rename`, `Soundness0` |
 | `FOL.MetaRules` | 1 | `FOL.FOL` | `Core`, `Inconsistencia` |
-| `FOL.Semantics` | 1 | `FOL.FOL` | `Canonical0`, `Inconsistencia`, `Soundness0`, `TF.Instances.FOL` |
+| `FOL.Semantics` | 1 | `FOL.FOL` | `Canonical0`, `Inconsistencia`, `Soundness0` |
 | `FOL.SymClasses` | 1 | `FOL.FOL` | `Enumeration`, `Fresh0` |
 | `FOL.Tactics` | 1 | `FOL.FOL` · externo: `Lean` | `Core`, `Deduction`, `Thm.Impl` |
 | `FOL.Theorems.Eq` | 1 | `FOL.FOL` | `Core`, `Derives2`, `Eq0` |
@@ -160,14 +160,12 @@ graph BT
 | `FOL.Soundness0` | 2 | `Derives0`, `Semantics` | `Canonical0`, `Inconsistencia` |
 | `FOL.Theorems.Derived` | 2 | `FOL.FOL`, `Thm.Neg` | `Core`, `Thm.Quantifiers` |
 | `FOL.Theorems.Impl` | 2 | `FOL.FOL`, `Tactics` | `Core`, `Thm.Quantifiers` |
-| `TheoryFramework.Instances.FOL` | 2 | `FOL.FOL`, `Semantics`, `TF.Logic` | — |
 | `TheoryFramework.Properties` | 2 | `TF.Theory` | `TF.MetaTheorems` |
 | `TheoryFramework.Relations` | 2 | `TF.Theory` | `TF.MetaTheorems` |
 | `FOL.Herbrand0` | 3 | `Eq0`, `Propositional0` | `Prenex0`, `Sequent0` |
-| `FOL.Inconsistencia` | 3 | `FOL.FOL`, `MetaRules`, `Propositional0`, `Semantics`, `Soundness0` | — |
 | `FOL.Lift0` | 3 | `Eigenvariable` | `Craig0`, `Derives1`, `Henkin0`, `Prenex0` |
 | `FOL.Theorems.Quantifiers` | 3 | `FOL.FOL`, `Thm.Derived`, `Thm.Impl`, `Thm.Neg` | `Core` |
-| `TheoryFramework.MetaTheorems` | 3 | `TF.Properties`, `TF.Relations` | — |
+| `TheoryFramework.MetaTheorems` | 3 | `TF.Properties`, `TF.Relations` | `TF.Instances.FOL` |
 | `FOL.Core` | 4 | `Deduction`, `FOL.FOL`, `MetaRules`, `Tactics`, `Thm.Derived`, `Thm.Eq`, `Thm.Impl`, `Thm.Neg`, `Thm.Quantifiers` | — |
 | `FOL.Derives1` | 4 | `Lift0` | `Derives2`, `PrenexNF0` |
 | `FOL.Henkin0` | 4 | `Lift0` | `Fresh0` |
@@ -181,15 +179,17 @@ graph BT
 | `FOL.HerbrandBlock0` | 7 | `Sequent0` | `BlockExtraction0` |
 | `FOL.Lindenbaum0` | 7 | `HenkinLimit0` | `Canonical0` |
 | `FOL.NDtoLK0` | 7 | `Sequent0` | `Finitary0`, `Hauptsatz0` |
-| `FOL.Canonical0` | 8 | `Complexity`, `Eq0`, `Lindenbaum0`, `Semantics`, `Soundness0` | `Compacity0`, `SequentSound0`, `Skolem0` |
-| `FOL.Finitary0` | 8 | `NDtoLK0` | — |
+| `FOL.Canonical0` | 8 | `Complexity`, `Eq0`, `Lindenbaum0`, `Semantics`, `Soundness0` | `Compacity0`, `SequentSound0`, `Skolem0`, `TF.Instances.FOL` |
+| `FOL.Finitary0` | 8 | `NDtoLK0` | `Inconsistencia` |
 | `FOL.Hauptsatz0` | 8 | `NDtoLK0`, `Sequent0` | `BlockExtraction0`, `Interpolation0`, `Inversion0`, `QFDecide0` |
 | `FOL.BlockExtraction0` | 9 | `Hauptsatz0`, `HerbrandBlock0` | `SkolemHerbrand0` |
+| `FOL.Inconsistencia` | 9 | `FOL.FOL`, `Finitary0`, `MetaRules`, `Propositional0`, `Semantics`, `Soundness0` | — |
 | `FOL.Interpolation0` | 9 | `Craig0`, `Hauptsatz0` | — |
 | `FOL.Inversion0` | 9 | `Hauptsatz0` | — |
 | `FOL.QFDecide0` | 9 | `Hauptsatz0` | — |
 | `FOL.SequentSound0` | 9 | `Canonical0`, `Sequent0` | — |
 | `FOL.Skolem0` | 9 | `Canonical0` | `Compacity0`, `SkolemN0` |
+| `TheoryFramework.Instances.FOL` | 9 | `Canonical0`, `TF.MetaTheorems` | — |
 | `FOL.Compacity0` | 10 | `Canonical0`, `Skolem0` | — |
 | `FOL.SkolemN0` | 10 | `Skolem0` | `SkolemNF0` |
 | `FOL.SkolemNF0` | 11 | `PrenexNF0`, `Sequent0`, `SkolemN0` | `SkolemHerbrand0` |

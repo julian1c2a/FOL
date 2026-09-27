@@ -21,6 +21,9 @@ import FOL.FOL
 instancia `LawfulBEq`. Hasta ahora, cada vez que hacía falta decidir una igualdad de fórmulas
 —el `filter` de `FOL.Henkin0`, el de `FOL.Lindenbaum0`— se resolvía con `open Classical`, y eso
 mete `Classical.choice` en el footprint **por una razón que no es matemática**.
+(⚠️ 2026‑09‑27: esos dos `filter` ya no existen. No los sustituyó esta instancia sino algo mejor,
+`Henkin0.ctx_split`, que parte el contexto **sin decidir ninguna igualdad**; ver la rectificación
+del final.)
 
 Aquí está la instancia real, y es **net‑0 pura**: `#print axioms` no imprime nada.
 
@@ -60,6 +63,28 @@ sus `Decidable` siguen resolviéndose por `Classical.propDecidable`. Cambiarlo m
 de teoremas ya publicados y medidos, y el `Classical.choice` de `FOL.Lindenbaum0` **tiene que
 seguir ahí** por otra razón —el `if IsConsistent₀ …`, que es Π⁰₁ (ADR‑040 §2)—, así que no se
 ganaría nada y se perdería la trazabilidad.
+
+## ⚠️⚠️ RECTIFICACIÓN (2026‑09‑27): la conclusión se mantiene, las razones no
+
+* «sus `Decidable` siguen resolviéndose por `Classical.propDecidable`»: ya no queda ninguno. En la
+  frontera medida (`auditoria/constructividad-2026-09-27/despues/frontera.txt`) ni `FOL.Henkin0`
+  ni `FOL.Lindenbaum0` usan `Classical.propDecidable`; `max_cons_contains` usa
+  `Classical.byContradiction` directamente.
+* «el `Classical.choice` de `FOL.Lindenbaum0` tiene que seguir ahí por el `if IsConsistent₀ …`»:
+  **FALSO**. La etapa de Lindenbaum es ahora impredicativa: la condición va DENTRO del predicado y
+  no se decide. `lindenbaum_lemma₀` y `henkin_completion₀` miden `[propext, Quot.sound]`. Lo único
+  clásico que queda en `FOL.Lindenbaum0` es `max_cons_contains` (y `max_cons_impl`, que lo usa), y
+  no por decidir igualdades: es el `¬¬P → P` de un maximal arbitrario.
+* «cambiarlo movería el footprint de teoremas ya publicados»: se movió, a la baja y a propósito
+  (decisión D1 del propietario tras la auditoría de constructividad, 2026‑09‑27).
+
+La conclusión —no importar este módulo en `FOL.Henkin0` ni en `FOL.Lindenbaum0`— sigue en pie, por
+una razón nueva: **no les hace falta**. La auditoría midió las dos vías
+(`…/experimentos/exp-deceq/`). Con `import FOL.DecEq`, `henkin_step_consistent₀` y
+`derivesSet0_intro_impl` pierden el `Classical.choice`. Con `ctx_split` también, sin la instancia, y
+además `derivesSet0_intro_impl` queda sin NINGÚN axioma. Ninguno de los dos módulos abre ya
+`Classical`. 🔑 *Decidir una igualdad para partir una lista es un rodeo cuando la hipótesis ya dice
+de qué lado cae cada elemento.*
 -/
 
 namespace FOL.DecEq

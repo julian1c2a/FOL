@@ -22,6 +22,7 @@ import FOL.MetaRules
 import FOL.Semantics
 import FOL.Propositional0
 import FOL.Soundness0
+import FOL.Finitary0
 
 /-!
 # ⛔⛔ La EVIDENCIA COMPILADA: `Derives` no admite teorema de solidez
@@ -128,6 +129,13 @@ distancia, y nadie las había puesto juntas:
 🔑 *No era un objetivo difícil: era un objetivo imposible.* Y la refutación costaba cinco
 líneas con piezas que ya estaban compiladas — se habría encontrado **después** de abrir el frente.
 
+⭐ **2026‑09‑27 (decisión del propietario tras la auditoría de constructividad):** la mitad de la
+incompletitud ya no se toma de `Soundness0.derives0_not_complete` (modelos de Tarski en `Prop`, con
+`Classical.choice`), sino de su gemelo FINITARIO `derives0_not_complete_fin`, de este módulo:
+`Finitary0.derives0_not_P_fin` (valuación booleana `false`) y `derives0_not_negP_fin` (valuación
+`true`). ⇒ `derives0_no_disjunction_property` pasa a `[propext, Quot.sound]`. La de `Soundness0`
+se conserva (módulo congelado) como corolario de su ruta.
+
 ⭐ **Lo que SÍ es cierto** está probado en otro árbol: `PeanoRF/Calculus/Slash.lean`, por la barra
 de Kleene, sobre `Derivesᵢ` = `Derives₀` **menos los tres constructores clásicos** y sobre esta
 misma `Formula`. ⛔ No es importable desde aquí: su cadena baja a `ROBINSON_PlusPlus` y a `Peano`.
@@ -141,16 +149,37 @@ def DisjunctionProperty₀ : Prop :=
   ∀ A B : Formula, (([] : List Formula) ⊢₀ Formula.or A B) →
     Or (([] : List Formula) ⊢₀ A) (([] : List Formula) ⊢₀ B)
 
-/-- ⛔⛔ **Y es FALSA**, con el tercio excluso como contraejemplo. -/
+/-- `⊬₀ ¬P`, por la valuación BOOLEANA de `FOL.Finitary0` (`derives0_iff_derives2`, `ndToLK` y
+`lkc_tval` con la valuación `true`; **sin** el Hauptsatz, que `Finitary0` no importa), no por un
+modelo de Tarski: sin `Classical.choice`. -/
+theorem derives0_not_negP_fin : Not (([] : List Formula) ⊢₀ neg (Formula.atom "P" [])) := by
+  intro h
+  have hc := FOL.NDtoLK0.ndToLK (FOL.Derives2.derives0_iff_derives2.mp h)
+  rcases FOL.Finitary0.lkc_tval hc true
+    (by intro _ hx; exact absurd hx (List.not_mem_nil)) with ⟨x, hx, hv⟩
+  cases hx with
+  | head => exact absurd hv (by simp [FOL.Finitary0.tval, neg])
+  | tail _ hm => exact absurd hm (List.not_mem_nil)
+
+/-- `Derives₀` no decide `P`: el gemelo FINITARIO de `Soundness0.derives0_not_complete`. -/
+theorem derives0_not_complete_fin :
+    ∃ A : Formula, And (Not (([] : List Formula) ⊢₀ A)) (Not (([] : List Formula) ⊢₀ neg A)) :=
+  ⟨_, FOL.Finitary0.derives0_not_P_fin, derives0_not_negP_fin⟩
+
+/-- ⛔⛔ **Y es FALSA**, con el tercio excluso como contraejemplo. ⭐ Sin `Classical.choice` desde
+el 2026‑09‑27 (decisión del propietario): la incompletitud se toma de la vía finitaria
+(`derives0_not_complete_fin`) y no de la semántica de Tarski en `Prop`. -/
 theorem derives0_no_disjunction_property : Not DisjunctionProperty₀ := by
   intro hdp
-  obtain ⟨A, hA, hnA⟩ := FOL.Metamath.Soundness0.derives0_not_complete
+  obtain ⟨A, hA, hnA⟩ := derives0_not_complete_fin
   rcases hdp A (neg A) (FOL.Propositional0.derives0_em_ctx [] A) with h | h
   · exact hA h
   · exact hnA h
 
 end FOL.Inconsistencia
 
-/-! ## FOOTPRINT — sólo `raa` y los tres de Lean. Ni un axioma más. -/
+/-! ## FOOTPRINT (2026‑09‑27) — §1, `[propext, FOL.MetaRules.raa]`; §2, `[propext, Quot.sound]`.
+Ni `Classical.choice` ni otro axioma del proyecto. (Decía «sólo `raa` y los tres de Lean»: §1 no
+usa `Quot.sound`, y §2 llevó `Classical.choice` hasta el 2026‑09‑27.) -/
 #print axioms FOL.Inconsistencia.inconsistencia_de_cualquier_solidez
 #print axioms FOL.Inconsistencia.derives0_no_disjunction_property

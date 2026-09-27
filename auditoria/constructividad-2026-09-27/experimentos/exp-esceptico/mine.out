@@ -1,0 +1,23 @@
+titulares fila: 513 FOL: 252 con choice: 55
+base: constantes con choice 157; titulares libres 0; quedan 55
+A: constantes con choice 97; titulares libres 12; quedan 43
+A+B: constantes con choice 91; titulares libres 17; quedan 38
+A+B+C (sin Q): constantes con choice 75; titulares libres 19; quedan 36
+A+B+C+Q (Q = retirar quotientOut, _eq, pointwiseEqv_out_mk): constantes con choice 72; titulares libres 19; quedan 36
+A+B+C+T: constantes con choice 71; titulares libres 23; quedan 32
+A+B+C+T+G: constantes con choice 66; titulares libres 28; quedan 27
+A+B+C+T+G+Q: constantes con choice 63; titulares libres 28; quedan 27
+A+C (sin descongelar Rename): constantes con choice 81; titulares libres 14; quedan 41
+A+C+T (sin Rename; sin tocar congelados): constantes con choice 77; titulares libres 18; quedan 37
+modulos: Counter({'FOL.Canonical0': 28, 'FOL.Compacity0': 9, 'FOL.SkolemN0': 5, 'FOL.SkolemNF0': 4, 'FOL.SkolemHerbrand0': 4, 'FOL.Tactics': 3, 'FOL.Soundness0': 3, 'FOL.SequentSound0': 2, 'FOL.Rename': 2, 'FOL.Lindenbaum0': 2, 'FOL.Skolem0': 1})
+--- con unshiftC (inversa global de shift sin choice; exp-esceptico/U2.lean) ---
+A+Bu (sin descongelar Rename): constantes con choice 91; titulares libres 16; quedan 39
+A+Bu+C: constantes con choice 75; titulares libres 18; quedan 37
+A+Bu+C+T: constantes con choice 71; titulares libres 22; quedan 33
+A+Bu+C+T+G: constantes con choice 66; titulares libres 27; quedan 28
+A+Bu+B+C+T+G: constantes con choice 65; titulares libres 28; quedan 27
+A+Bu+B+C+T+G, retirando quotientOut/_eq/pointwiseEqv_out_mk e invOf/invOf_spec: constantes con choice 60; titulares libres 28; quedan 27
+Counter({'FOL.Canonical0': 28, 'FOL.Compacity0': 8, 'FOL.SkolemN0': 5, 'FOL.SkolemNF0': 4, 'FOL.SkolemHerbrand0': 4, 'FOL.Tactics': 3, 'FOL.Soundness0': 3, 'FOL.SequentSound0': 2, 'FOL.Lindenbaum0': 2, 'FOL.Skolem0': 1})
+  sigue con choice (por completitud): FOL.Compacity0.infinite_model_of_large_fresh
+  sigue con choice (por completitud): FOL.Compacity0.infinite_model_of_large
+  sigue con choice (por completitud): FOL.Compacity0.countable_infinite_of_infinite

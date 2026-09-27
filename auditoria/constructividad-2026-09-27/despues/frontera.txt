@@ -1,0 +1,17 @@
+# Constantes de FOL por las que Classical.choice ENTRA, tras D1 (2026-09-27)
+FOL.Canonical0	FOL.Canonical0.completeness₀	Classical.byContradiction
+FOL.Canonical0	FOL.Canonical0.derives0_em	Classical.em
+FOL.Canonical0	FOL.Canonical0.derives0_peirce	Classical.byCases
+FOL.Canonical0	FOL.Canonical0.max_cons_complete	Classical.em
+FOL.Canonical0	FOL.Canonical0.max_cons_forall	Classical.byContradiction
+FOL.Canonical0	FOL.Canonical0.max_cons_impl_iff	Classical.propDecidable, Classical.byContradiction
+FOL.Canonical0	FOL.Canonical0.max_cons_or	Classical.byContradiction
+FOL.Lindenbaum0	FOL.Lindenbaum0.max_cons_contains	Classical.byContradiction
+FOL.SequentSound0	FOL.SequentSound0.lkc_sound	Classical.propDecidable, Classical.byContradiction
+FOL.Skolem0	FOL.Skolem0.skolem_conservative₀	Classical.propDecidable, Exists.choose, Exists.choose_spec
+FOL.SkolemN0	FOL.SkolemN0.skF	Classical.propDecidable, Exists.choose
+FOL.SkolemN0	FOL.SkolemN0.skF_spec	Classical.propDecidable, Exists.choose, Exists.choose_spec
+FOL.Soundness0	FOL.Metamath.Soundness0.derives0_soundness	Classical.byContradiction
+FOL.Tactics	_aux_FOL_Tactics___elabRules_tacticDerive_hyp_1	Lean.Elab.Tactic.Tactic, Lean.Elab.Tactic.TacticM, Lean.Elab.Tactic.instMonadTacticM, Lean.Elab.Term.TermElabM, Lean.Elab.Term.instMonadMacroAdapterTermElabM, Lean.Elab.Term.instMonadTermElabM, Lean.Elab.Tactic.evalTactic, Lean.Elab.Tactic.getMainGoal, Lean.Meta.Context, Lean.Meta.State, Lean.Core.CoreM, Lean.Elab.Term.State, Lean.Meta.MetaM, Lean.Elab.Term.Context, Lean.Elab.Tactic.setGoals, Lean.Elab.throwUnsupportedSyntax, Lean.Exception, Lean.instMonadExceptOfExceptionCoreM
+FOL.Tactics	tryMem	Lean.Meta.MetaM, Lean.Meta.instInhabitedMetaM
+FOL.Tactics	tryMem._unsafe_rec	Lean.Meta.MetaM, Lean.Exception, Lean.MonadError.toMonadExceptOf, Lean.MonadError.mk, Lean.Meta.Context, Lean.Meta.State, Lean.Core.CoreM, Lean.instMonadExceptOfExceptionCoreM, Lean.Core.instMonadQuotationCoreM, Lean.instAddErrorMessageContextOfAddMessageContextOfMonad, Lean.Meta.instAddMessageContextMetaM, Lean.Meta.instMonadMetaM, Lean.Meta.mkConstWithFreshMVarLevels, Lean.MVarId.apply, Lean.MessageData, Lean.Core.instMonadCoreM, Lean.throwError, Lean.ToMessageData.toMessageData, Lean.instToMessageDataString

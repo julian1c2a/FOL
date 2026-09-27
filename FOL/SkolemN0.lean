@@ -56,6 +56,15 @@ lista**, sin más `funext` que el único de `evalTerms_lift_shift`.
   entorno acumulado tendría otra longitud).
 * `skF` usa `@dite` con `Classical.propDecidable` **explícito**: este fichero no abre `Classical`, y
   con la instancia implícita el binder de `dite` no llega a tipar.
+
+## 📏 Footprint (2026‑09‑27)
+
+`envPush`, `allBlock`, `vars`, `skolemAxN` y `not_occurs_vars`, **sin ningún axioma**;
+`eval_allBlock_envPush`, `evalTerms_lift_shift` y `evalTerms_vars`, `[propext, Quot.sound]`.
+`skF`, `skF_spec`, `eval_skolemAxN`, `skolem_conservative_n₀` y `skolem_conservative_n_zero`,
+`[propext, Classical.choice, Quot.sound]`. ⚠️ `skF` es, desde la auditoría de constructividad, la
+**única** `noncomputable` de FOL: elige un testigo en un modelo ARBITRARIO. Las procedencias del
+`Classical.choice` de la conservatividad, en su docstring.
 -/
 
 namespace FOL.SkolemN0
@@ -204,9 +213,17 @@ theorem eval_skolemAxN {D : Type} (M : Model D) (c : String) (n : Nat) (A : Form
 /-- 🏁🏁 **El axioma de Skolem bajo un prefijo `∀ⁿ` no inventa teoremas.** Si `c` es fresco para el
 contexto, el cuerpo y la conclusión, todo lo que se demuestra con él se demuestra sin él.
 
-⚠️ El `Classical.choice` del footprint **no es nuevo**: `completeness₀` ya lo trae (es el WKL). Lo
-que `skF` añade es la elección del testigo (`Classical.propDecidable` y `Exists.choose`), y
-`derives0_soundness` trae también el suyo; todo vive en la misma columna. -/
+⚠️ El `Classical.choice` del footprint tiene tres procedencias, y las tres son de la ruta
+SEMÁNTICA: `completeness₀` (el lema de la verdad sobre un maximal ARBITRARIO y su `byContradiction`
+final), `derives0_soundness` (la semántica de Tarski en `Prop`) y `skF` (`Classical.propDecidable` y
+`Exists.choose`); todo vive en la misma columna.
+⭐ El de `skF` es esencial para el enunciado SEMÁNTICO que `eval_skolemAxN` realiza: con `n = 1`
+implica AC, y AC implica el tercio excluso (auditoría de constructividad, 2026‑09‑27, medido). No lo
+es para éste, que es sintáctico: que admita prueba sin `Classical.choice` (Herbrand, o el segundo
+teorema ε de Hilbert–Bernays) es HIPÓTESIS.
+⚠️ Rectificado el 2026‑09‑27: decía que el de `completeness₀` «es el WKL». En Lean no lo es
+(`lindenbaum_lemma₀` es `[propext, Quot.sound]`); el WKL es la fuerza lógica de la completitud sobre
+RCA₀, no el sitio del `choice`. -/
 theorem skolem_conservative_n₀ {c : String} {n : Nat} {A φ : Formula} {Γ : List Formula}
     (hΓ : ∀ g, g ∈ Γ → Not (occursFormula c g))
     (hA : Not (occursFormula c A))
@@ -224,7 +241,8 @@ theorem skolem_conservative_n₀ {c : String} {n : Nat} {A φ : Formula} {Γ : L
     (FOL.Metamath.Soundness0.derives0_soundness h D (updateFunc M c (skF M A v (v 0))) v hM')
 
 /-- 🏁 El caso `n = 0` recupera la conservatividad del axioma de argumentos fijos con lista vacía —
-y por tanto la de Henkin. -/
+y por tanto la de Henkin. ⚠️ Por la ruta semántica y con `Classical.choice`; desde el 2026‑09‑27 la
+de Henkin tiene prueba sintáctica sin él (`Skolem0.henkin_conservative₀`, `[propext, Quot.sound]`). -/
 theorem skolem_conservative_n_zero {c : String} {A φ : Formula} {Γ : List Formula}
     (hΓ : ∀ g, g ∈ Γ → Not (occursFormula c g))
     (hA : Not (occursFormula c A))

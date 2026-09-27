@@ -12,9 +12,7 @@ import TheoryFramework.Theory
 import TheoryFramework.Properties
 import TheoryFramework.Relations
 import TheoryFramework.MetaTheorems
--- Instances are NOT imported here: FOLPure and FOL both define `Formula`
--- at root level, causing a conflict when imported together.
--- Users import whichever instance they need:
---   import TheoryFramework.Instances.PropLogic
---   import TheoryFramework.Instances.FOLPure
---   import TheoryFramework.Instances.FOL
+-- La instancia NO se importa aquí: `TheoryFramework.Instances.FOL` (la de `Derives₀`, declarada
+-- el 2026-09-27) importa `FOL.Canonical0`, toda la capa clásica, y el marco no la necesita. Quien
+-- la quiera: `import TheoryFramework.Instances.FOL` (la compila el `globs` del lakefile).
+-- (Las instancias `PropLogic` y `FOLPure` que se citaban aquí se retiraron el 2026-09-12.)
