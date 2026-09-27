@@ -28,7 +28,6 @@ FOL/Craig0.lean
 FOL/Derives1.lean
 FOL/Derives2.lean
 FOL/Fresh0.lean
-FOL/Hauptsatz0.lean
 FOL/Henkin0.lean
 FOL/HenkinLimit0.lean
 FOL/Herbrand0.lean

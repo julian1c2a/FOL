@@ -65,7 +65,9 @@ Decisiones de la criba, resueltas el mismo día: **P2** ✅ los 18 titulares ren
 subíndices (`hauptsatz₀`, `cut_elimination₀`, `herbrand₀`, `herbrand_block₀`, `truth_lemma₀`,
 `lindenbaum_lemma₀`, `skolem_conservative*₀`…; y `maeharaₚ`/`craigₚ` para `LKp`); **P3** ✅ los cinco
 `sub_*` deduplicados en `Sequent0`; **P4** ⬜ la OFERTA de `Hauptsatz0` (versión acotada de
-`derives0_qf_iff`): cotización en curso.
+`derives0_qf_iff`): **cotizada** (RPP‑106) — ~1000 líneas en un módulo hoja nuevo, sin reabrir nada;
+la cota ingenua por subtérminos es FALSA y la correcta usa «mezclas de prefijo»; decisor de juguete
+(2^átomos). ⬜ Decisión del propietario.
 
 ⬜ Siguiente: re‑correr la criba con refutación sobre los demás (P2 y P3 liberan su cono). Seguirán
 bloqueados hasta que la entrega de PeanoRF compile aquí los 15 de su cadena (`Complexity` incluido,

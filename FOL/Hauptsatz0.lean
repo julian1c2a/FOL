@@ -1273,12 +1273,13 @@ theorem eqPropCert_of_derives0 {Γ : List Formula} {φ : Formula}
 derivable sii su conclusión es consecuencia PROPOSICIONAL del contexto más una lista finita de
 instancias de la igualdad. Es la versión CIERTA de lo que es FALSO decir «decidible por tabla de
 verdad» (`c ≐ c` es derivable y no es `PTaut`).
-⚠️ Caracteriza, NO decide: el lado derecho es un `∃ E` sin cota (Σ₁ sólo informalmente: en el
-árbol no hay instancia `Decidable` ni de `EqInstance` ni de `EqPropCert Γ φ E`). La versión ACOTADA
-(Ackermann / cierre de congruencia sobre los subtérminos) NO está probada: la `E` que devuelve
-`lk0_herbrand` no sale acotada porque `eqAx` admite instancias con términos ajenos; con este
-teorema en la mano, acotarla sería un lema sobre `EqPropCert` (podar `E`), no sobre `LK₀`, y su
-coste no está medido. -/
+⚠️ Caracteriza; por sí solo NO decide: el lado derecho es un `∃ E` sin cota. Una cota con `S` =
+los subtérminos del secuente es FALSA con este `EqInstance` (`func` cambia UN argumento:
+`[a≐b, c≐d] ⟹ g(a,c) ≐ g(b,d)` es derivable y necesita `g(b,c)`, que no es subtérmino). La cota
+correcta cierra `S` por las «mezclas de prefijo» y SUSTITUYE `E` por todas las instancias sobre ese
+cierre, en vez de filtrarla. Esa versión —y con ella un decisor, de coste 2^(átomos)— no está en
+este módulo: ⬜ OFERTA al propietario, cotizada el 2026‑09‑27 en ~1000 líneas, con borradores
+compilados en aislado (RPP‑106). -/
 theorem derives0_qf_iff {Γ : List Formula} {φ : Formula}
     (hΓ : ∀ g, g ∈ Γ → QuantFree g) (hφ : QuantFree φ) :
     (Γ ⊢₀ φ) ↔ ∃ E, EqPropCert Γ φ E :=
