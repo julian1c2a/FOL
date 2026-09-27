@@ -99,7 +99,8 @@ vez que una regla `allR`/`exL` **del otro lado** obliga a levantar la derivació
 fórmula de corte.
 
 ⚠️ **Y el atajo semántico seguía sin existir**, como estaba escrito: `completeness₀` devuelve
-`Derives₀`, no `LK₀` sin corte. Esto se ha pagado **sintácticamente**, que era la única vía.
+`Derives₀`, no `LK₀` sin corte. Esto se ha pagado **sintácticamente**, que era la única vía con lo
+que había en el árbol.
 
 ## 📏 Footprint
 
@@ -151,7 +152,7 @@ end FOL.Hauptsatz0
 -- ⇒ `m + n` no decrece y la inducción NO está bien fundada.
 -- ⭐ Y no se pierde nada: el debilitamiento/contracción/intercambio «gratis» que
 -- evita la regla MIX no venía de la altura de `struct`, sino de que el enunciado
--- del corte pide PERTENENCIA (`x = A ∨ x ∈ Δ`) y no la forma `A :: Δ`. §7.
+-- del corte pide PERTENENCIA (`x = A ∨ x ∈ Δ`) y no la forma `A :: Δ`: `CutAt`, §8.4.
 inductive LKh : Nat → List Formula → List Formula → Prop where
   | ax : ∀ n Γ Δ A, A ∈ Γ → A ∈ Δ → LKh n Γ Δ
   | botL : ∀ n Γ Δ, Formula.bottom ∈ Γ → LKh n Γ Δ
@@ -705,8 +706,9 @@ theorem lkh_lift : ∀ {n : Nat} {Γ Δ : List Formula}, LKh n Γ Δ → ∀ (k 
 
 -- ── §8.1 · aritmética de pertenencia, que es lo que más se repite ────────────
 -- ⭐ `sub_refl`/`sub_wk`/`sub_cons`/`sub_drop`/`swap_cons` viven en `FOL.Sequent0` desde el
--- 2026-09-27: estaban duplicados literalmente aquí y en `Craig0` (P3). Aquí quedan los demás.
--- ⚠️ `Or` explícito en todo el fichero: `∨` se parsea como `Formula.or` (trampa §12).
+-- 2026-09-27: estaban duplicados literalmente aquí y en `Craig0` (P3, RPP‑105). Aquí quedan los demás.
+-- ⚠️ `Or` explícito en todo el fichero: `∨` se parsea como `Formula.or` (el `infixr` de
+-- `FOL.lean`; REFERENCE.md §5).
 theorem subA_cons {A : Formula} {Δ Δ' : List Formula} (b : Formula)
     (h : ∀ x, x ∈ Δ → Or (x = A) (x ∈ Δ')) :
     ∀ x, x ∈ b :: Δ → Or (x = A) (x ∈ b :: Δ') := by
@@ -850,8 +852,8 @@ theorem cutOf {d : Nat} (IHd : CutBelow d) (A : Formula) (hA : deg A < d)
 
 -- ── §8.5 · ⭐⭐⭐ EL CORTE PRINCIPAL: UNA sola pasada sobre `D2` ──────────────
 -- Inducción FUERTE sobre la altura `n` del lado derecho, no estructural: los
--- casos `exL` principal y los de levantamiento consumen `lkh_subst`/`lkh_lift`,
--- que devuelven otra derivación de la MISMA altura, no una subderivación.
+-- casos `exL` principales recurren sobre `lkh_subst F 0 t` (los de levantamiento, sobre `F`);
+-- `lkh_subst` devuelve otra derivación de la MISMA altura, no una subderivación.
 theorem cutPrinAux {d : Nat} (IHd : CutBelow d) :
     ∀ (k n : Nat), n < k → ∀ (Γ₂ Δ₂ : List Formula), LKh n Γ₂ Δ₂ →
       ∀ (A : Formula), deg A = d → ∀ (Γ Δ : List Formula),
@@ -1277,9 +1279,11 @@ instancias de la igualdad. Es la versión CIERTA de lo que es FALSO decir «deci
 verdad» (`c ≐ c` es derivable y no es `PTaut`).
 ⚠️ Caracteriza; por sí solo NO decide: el lado derecho es un `∃ E` sin cota. Una cota con `S` =
 los subtérminos del secuente es FALSA con este `EqInstance` (`func` cambia UN argumento:
-`[a≐b, c≐d] ⟹ g(a,c) ≐ g(b,d)` es derivable y necesita `g(b,c)`, que no es subtérmino). La cota
-correcta cierra `S` por las «mezclas de prefijo» y SUSTITUYE `E` por todas las instancias sobre ese
-cierre, en vez de filtrarla. Esa versión —y con ella un decisor, de coste 2^(átomos)— está en
+`[a≐b, c≐d] ⟹ g(a,c) ≐ g(b,d)` es derivable y la cadena `func`+`trans` pasa por `g(b,c)` o por
+`g(a,d)`, que no son subtérminos). La cota
+correcta añade a `S` sus «mezclas de prefijo» —un paso, no un cierre— y SUSTITUYE `E` por todas
+las instancias sobre ese conjunto, en vez de filtrarla. Esa versión —y con ella un decisor, de
+coste 2^(átomos)— está en
 `FOL.QFDecide0` (`derives0_qf_iff_bounded`, `decideDerives0QF`; RPP‑107), que importa este módulo
 sin tocarlo. -/
 theorem derives0_qf_iff {Γ : List Formula} {φ : Formula}

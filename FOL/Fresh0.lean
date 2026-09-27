@@ -54,7 +54,9 @@ El único punto clásico está en el **símbolo**: `∃ N, ∀ m ≥ N, cst m �
 
 ## 📏 Footprint
 
-`Classical.choice` entra, y **por dos vías distintas que conviene no confundir**:
+`Classical.choice` entra, y **por tres vías distintas que conviene no confundir**: `Rename.invOf`
+(la inversa de `shift`, fabricada con elección; la usa `derivesSet0_shift_inv`, ver
+`FOL/Rename.lean`), y estas dos:
 
 * la **matemática**: `cst_bound_sym` usa el tercio excluso sobre `∃ k, cst k = s` (§4);
 * la **implementación** de `String` en el núcleo (v4.31): DESCOMPONER un `String` arrastra choice;
@@ -281,7 +283,8 @@ theorem derivesSet0_shift_inv {S : Formula → Prop} {f : Formula}
   · have hr := derives0_rename (invOf shift) hD
     rwa [hcancel f] at hr
 
-/-- ⭐⭐ **Equiconsistencia.** Es lo que la iteración ω necesita para arrancar. -/
+/-- ⭐⭐ **Equiconsistencia**, en la dirección que la iteración ω necesita para arrancar (la otra
+sale de `derivesSet0_shift` con `f := ⊥` y no se enuncia). -/
 theorem shiftTheory_consistent {S : Formula → Prop} (hCons : IsConsistent₀ S) :
     IsConsistent₀ (shiftTheory S) := fun hbot => hCons (derivesSet0_shift_inv hbot)
 

@@ -21,7 +21,8 @@ import FOL.Hauptsatz0
     derives0_qf_iff_bounded : Γ, φ sin ∀/∃ → ((Γ ⊢₀ φ) ↔ EqPropCert Γ φ (qfInst Γ φ))
     decideDerives0QF        : Γ, φ sin ∀/∃ → Decidable (Γ ⊢₀ φ)
 
-La OFERTA de `FOL.Hauptsatz0` §9 (RPP‑106), aceptada por el propietario el 2026‑09‑27.
+La OFERTA de `FOL.Hauptsatz0` §9, cotizada en RPP‑106 y aceptada por el propietario el 2026‑09‑27
+(RPP‑107).
 `derives0_qf_iff` caracterizaba el fragmento («derivable sii consecuencia proposicional de `Γ` más
 una lista `E` de instancias de la igualdad») pero no lo decidía: `E` no tenía cota. Aquí la tiene.
 
@@ -29,9 +30,11 @@ una lista `E` de instancias de la igualdad») pero no lo decidía: `E` no tenía
 
 Acotar `E` a las instancias sobre los SUBTÉRMINOS del secuente no basta, porque `EqInstance.func`
 cambia UN argumento cada vez: `[a≐b, c≐d] ⟹ g(a,c) ≐ g(b,d)` es derivable y la cadena pasa por
-`g(b,c)`, que no es subtérmino. Está compilado abajo (§8): una valuación satisface TODAS las
-instancias ingenuas y `Γ`, y refuta `φ`. ⇒ `T` = los subtérminos cerrados por las **mezclas de
-prefijo** `f(y₁…yᵢ, xᵢ₊₁…xₙ)` de dos `f(xs), f(ys)` del conjunto (`|T| ≤ |S| + (k+1)|S|²`); y `E` se
+`g(b,c)` o `g(a,d)`: ninguno es subtérmino. Está compilado abajo (§8): una valuación satisface TODAS las
+instancias ingenuas y `Γ`, y refuta `φ`. ⇒ `T` = los subtérminos `S` MÁS las **mezclas de
+prefijo** `f(y₁…yᵢ, xᵢ₊₁…xₙ)` de cada par `f(xs)`, `g(ys)` de `S` —un solo paso, no un cierre; `mixT`
+no exige `g = f`— (`|T| ≤ |S| + (k+1)|S|²`, con `k` la aridad máxima en `S`: se lee de `qfT`/`mixL`,
+no se demuestra); y `E` se
 SUSTITUYE por todas las instancias sobre `T` (filtrar una `E` dada tampoco basta).
 
 ## ⭐⭐ La poda, por EXTENSIÓN de la valuación
@@ -52,7 +55,8 @@ práctico (cierre de congruencia con certificado) sería otra cosa.
 
 ## 📏 Footprint
 
-`[propext, Quot.sound]` en los titulares: **ni un `Classical.choice`**. Viene de dos borradores
+`[propext, Quot.sound]` en los titulares (`ext_eqInstance` y `qfCheck_iff`, sólo `[propext]`): **ni un
+`Classical.choice`**. Viene de dos borradores
 independientes que compilaron en aislado (RPP‑106); éste es el de la ruta «semántica».
 -/
 
@@ -64,7 +68,8 @@ open FOL.Herbrand0
 open FOL.Hauptsatz0
 
 -- ============================================================
--- §1 · Utillaje de listas (propio: `List.find?`/`eraseDups`/`∈`-decidable piden `LawfulBEq`,
+-- §1 · Utillaje de listas (propio: `eraseDups`/`∈`-decidable piden `LawfulBEq` —`pick` copia
+--      `List.find?`, que no lo pide, con sus lemas a mano—,
 --      y el `BEq` derivado de `Term` no lo es)
 -- ============================================================
 
@@ -282,11 +287,14 @@ theorem atomT_ctx {Γ : List Formula} {φ a : Formula} (ha : a ∈ ctxA Γ φ) :
 -- ============================================================
 
 -- ⛔ `EqInstance.func` cambia UN argumento. Para `f(a,c) ≐ f(b,d)` desde `a ≐ b`, `c ≐ d` hace falta
--- pasar por `f(b,c)`, que NO es subtérmino. Contraejemplo a la cota ingenua (instancias con todos
--- sus términos en los subtérminos): `Γ = [a≐b, c≐d]`, `φ = f(a,c) ≐ f(b,d)`. ⇒ `T` = subtérminos
--- MÁS las mezclas de prefijo `f(ys₁…yᵢ, xᵢ₊₁…xₙ)` de cada par `f(xs)`, `f(ys)` de `S`.
+-- pasar por `f(b,c)` o por `f(a,d)`, y ninguno es subtérmino. Contraejemplo a la cota ingenua
+-- (instancias con todos sus términos en los subtérminos):
+-- `Γ = [a≐b, c≐d]`, `φ = f(a,c) ≐ f(b,d)`. ⇒ `T` = subtérminos
+-- MÁS las mezclas de prefijo `f(y₁…yᵢ, xᵢ₊₁…xₙ)` de cada par `f(xs)`, `g(ys)` de `S` (`mixT` no
+-- exige `g = f`; un solo paso, no un cierre).
 
-/-- Las mezclas de prefijo de `xs` hacia `ys`: `xs`, `y₁::xs₂…`, …, `ys`. -/
+/-- Las mezclas de prefijo de `xs` hacia `ys`: `xs`, `y₁::xs₂…`, …, hasta agotar una de las dos;
+acaba en `ys` si tienen la misma longitud (`end_mem_mixL`). -/
 def mixL : List Term → List Term → List (List Term)
   | [], _ => [[]]
   | x :: xs, [] => [x :: xs]
@@ -361,7 +369,8 @@ def instsOf (T : List Term) (A : List Formula) : List Formula :=
   ++ T.flatMap (funcInsts T)
   ++ A.flatMap (atomInsts T)
 
-/-- ⭐ **`Inst(S)`**, finita y calculable. -/
+/-- ⭐ **`Inst(S)`**, finita y calculable: las instancias sobre `T = qfT S` (no sobre `S`: ésa es
+la cota ingenua, FALSA, §8); por eso §7 la llama también `Inst(T)`. -/
 def qfInst (Γ : List Formula) (φ : Formula) : List Formula :=
   instsOf (qfT (qfS Γ φ)) (qfA (ctxA Γ φ))
 
@@ -794,7 +803,7 @@ theorem eqPropCert_iff_ptaut {Γ : List Formula} {φ : Formula} {E : List Formul
      peval_implChain_inv v Γ φ (peval_implChain_inv v E _ (h v) hEv) hΓv⟩⟩
 
 /-- El verificador con los átomos SIN REPETIR (`ptautCheck` recorre `patoms` con repeticiones: con
-`Inst(S)` dentro, `2^(cientos)`). -/
+`Inst(S)` dentro, `2^36` filas ya para `[a≐b] ⟹ b≐a`, frente a `2^4`). -/
 def qfCheck (X : Formula) : Bool := pcheck (dedup (patoms X)) (fun _ => false) X
 
 theorem qfCheck_iff {X : Formula} : qfCheck X = true ↔ PTaut X :=

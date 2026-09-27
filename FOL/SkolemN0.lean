@@ -45,7 +45,7 @@ el binder va a producir.*
 
 Y por eso `vars` se escribe con `liftTerms 0` (y no con `List.map (liftTerm 0)`): así la conmutación
 semántica que hace falta **ya existe** (`eval_liftTerms_ext`), y `evalTerms_vars` va de **lista a
-lista**, sin un solo `funext`.
+lista**, sin más `funext` que el único de `evalTerms_lift_shift`.
 
 ## ⚠️ Tres detalles que NO son cosméticos
 
@@ -205,7 +205,8 @@ theorem eval_skolemAxN {D : Type} (M : Model D) (c : String) (n : Nat) (A : Form
 contexto, el cuerpo y la conclusión, todo lo que se demuestra con él se demuestra sin él.
 
 ⚠️ El `Classical.choice` del footprint **no es nuevo**: `completeness₀` ya lo trae (es el WKL). Lo
-que `skF` añade es el `Exists.choose` de la elección del testigo, que vive en la misma columna. -/
+que `skF` añade es la elección del testigo (`Classical.propDecidable` y `Exists.choose`), y
+`derives0_soundness` trae también el suyo; todo vive en la misma columna. -/
 theorem skolem_conservative_n₀ {c : String} {n : Nat} {A φ : Formula} {Γ : List Formula}
     (hΓ : ∀ g, g ∈ Γ → Not (occursFormula c g))
     (hA : Not (occursFormula c A))

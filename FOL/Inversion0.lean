@@ -32,7 +32,7 @@ import FOL.Hauptsatz0
 ## ⭐ Por qué esto es el primer dividendo del Hauptsatz fuera de Herbrand
 
 En un cálculo de secuentes **sin corte**, invertir una regla obliga a una inducción sobre la
-derivación, caso por caso. **Con el corte admisible** (`FOL.Hauptsatz0.hauptsatz₀ : CutAdm`) cada
+derivación, caso por caso. **Con el corte admisible** (`FOL.Hauptsatz0.hauptsatz₀`) cada
 inversión es **un solo corte**: la premisa dada, un secuente auxiliar que la regla **dual**
 deriva en un paso, y el corte sobre la fórmula principal.
 
@@ -45,11 +45,13 @@ Herbrand.
 Para invertir la regla que introduce `C` a la derecha:
 
 1. **premisa 1**: la dada, `Γ ⟹ C, Δ`, **debilitada** por `struct` hasta el contexto del objetivo;
-2. **premisa 2**: `C, Γ' ⟹ Δ'`, derivada con la regla **izquierda** de `C` sobre dos axiomas;
+2. **premisa 2**: `C, Γ' ⟹ Δ'`, derivada con la regla **izquierda** de `C` sobre axiomas (uno si
+   `C` es `∧`, dos si es `⇒` o `∨`);
 3. **corte** sobre `C`.
 
 Y simétricamente para las reglas izquierdas. Los helpers de pertenencia **ya estaban**
-(`sub_cons`, `sub_wk`, `sub_refl`, hoy en `FOL.Sequent0`): no se ha escrito ninguno.
+(`sub_cons`, `sub_wk`, `sub_refl`: el 2026‑09‑23, en `Hauptsatz0` §8.1; desde el 2026‑09‑27, en
+`FOL.Sequent0`): no se ha escrito ninguno.
 
 ## Los cuantificadores: `allR` y `exL` SÍ, `allL` y `exR` NO
 

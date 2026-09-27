@@ -55,10 +55,12 @@ como «`Γ` y las negaciones de `Δ` son contradictorias» con la lista por pert
 
 * La condición de lenguaje es **sólo sobre SÍMBOLOS DE RELACIÓN** (`predF`); `≐` es lógico. No hay
   condición sobre símbolos de función ni sobre variables libres: para fórmulas abiertas es más débil
-  que el Craig clásico; para sentencias, la de variables es vacua.
+  que el Craig clásico, y también para sentencias: no pide `C` cerrada ni excluye funciones ajenas
+  (ver `FOL.Craig0`, «Lo que este módulo NO da»).
 * El control `craig₀_example` usa lenguajes INCOMPARABLES y una igualdad necesaria (`P(c)`,
   `c ≐ d` ⊢ `P(d)`): el interpolante sólo puede mencionar `P`. No prueba el contenido de `craig₀` (un
-  interpolante se da a mano); prueba que la hipótesis se cumple en un caso NO degenerado.
+  interpolante podría darse a mano, `P(d)`, sin `craig₀`); prueba que la hipótesis se cumple en un
+  caso NO degenerado.
 
 ⚠️ Higiene contra `Classical.choice`: nada de `by_cases` sobre `predF`/pertenencia (la macro de core
 hace `open Classical in`; se usan `predF_em`/`predL_em`) y nada de `simp` sobre negaciones. (Los
@@ -638,7 +640,8 @@ theorem craig_impl₀ {A B : Formula} (h : [A] ⊢₀ B) :
 
 /-- `P(c) ∧ ((c ≐ d) ∧ Q) ⊢₀ P(d) ∨ R`: el interpolante sólo puede mencionar `P`, así que los
 testigos triviales `A` (tiene `Q`) y `B` (tiene `R`) quedan EXCLUIDOS.
-⚠️ No prueba «contenido» de `craig₀` (`C := P(d)` se da a mano): comprueba que la hipótesis se
+⚠️ No prueba «contenido» de `craig₀` (`C := P(d)` podría darse a mano, sin él; aquí sale de
+`craig₀`): comprueba que la hipótesis se
 cumple en un caso no degenerado. ⛔ NO usar como control `A := ⊤` ni un `B` sin predicados:
 ahí `C := ⊤` / `C := B` satisfacen la conclusión SIN `craig₀`. -/
 theorem craig₀_example :

@@ -23,7 +23,8 @@ El enunciado‑titular de la vía H, tal como el plan lo promete
     ⊢₀ ∃x̄ φ(x̄)  ⟺  ∃ t̄₁…t̄ₙ : ⊢ᵖʳᵒᵖ φ(t̄₁) ∨ … ∨ φ(t̄ₙ)      (φ sin cuantificadores)
 
 ⚠️ Y lo que había cuando se escribió esto (`FOL.Hauptsatz0.herbrand₀`, ADR‑052) era el caso **n = 1**:
-un solo `∃`. El bicondicional para bloques es hoy `FOL.BlockExtraction0.herbrand_block₀`.
+un solo `∃`. El bicondicional para bloques es `FOL.BlockExtraction0.herbrand_block₀` (ADR‑064,
+2026‑09‑18).
 Este módulo pone las tuplas.
 
 ## ⭐ La mitad que se paga aquí: ⟸, la que CONSUME el certificado
@@ -43,13 +44,13 @@ Todo depende de poder sustituir **a través** del bloque:
 ⚠️ Escrito `k + n`, el caso `k = 0` obliga a reescribir con `Nat.zero_add` en cada uso, porque
 `0 + n` **no** es `n` por definición (`Nat.add` recurre en el segundo argumento). Escrito `n + k`,
 `n + 0` **sí** reduce y el consumidor no paga nada. *El orden de una suma en un enunciado no es
-cosmético: decide si el consumidor reescribe o no.* Es otra trampa de notación del mismo tipo.
+cosmético: decide si el consumidor reescribe o no.* Es una trampa de notación.
 
 ## 🏁 La mitad ⟹ — **PAGADA el 2026‑09‑18** en `FOL.BlockExtraction0` (ADR‑064)
 
 ⭐⭐ Y la obstrucción de abajo era correcta en el QUÉ y falsa en el CUÁNTO: sí había que llevar
 la tupla parcial, pero **`instB` YA la lleva** — `instB n us φ` con `us` más corta que `n`
-devuelve el bloque PENDIENTE (`instB 2 [t] φ = exBlock 1 (φ[1 := t])`). No hubo que definir
+devuelve el bloque PENDIENTE (`instB 2 [t] φ = exBlock 1 (φ[1 := liftN 1 t])`). No hubo que definir
 ninguna función nueva.
 🔑 *Antes de construir el dato que falta, mirar si una función que ya existe lo devuelve en su
 caso degenerado.*
@@ -65,7 +66,8 @@ hubo `peelB` que escribir), no el total.
 altura ≥ 2 **no es** una fórmula sin cuantificadores, luego `herbrand₀` no aplica a él.
 
 ⚠️ Lo que haría falta, medido leyendo `FOL.Sequent0.lk0_herbrand`: **rehacer su inducción de 14
-casos con un invariante más rico**. Hoy el invariante es «todo `d ∈ Δ` es sin cuantificadores **o**
+casos con un invariante más rico**. El invariante, medido el 2026‑09‑17, es «todo `d ∈ Δ` es sin
+cuantificadores **o**
 es exactamente `Formula.ex φ`» (su hipótesis sobre `Δ`), y la salida lleva `ts : List Term`. Para
 bloques, el caso `exR` baja de `exBlock (m+1) ψ` a `exBlock m ψ'` —con `ψ'` sin cuantificadores por
 `quantFree_instB`, luego **el invariante SÍ se cierra**—, pero hay que llevar además la **tupla

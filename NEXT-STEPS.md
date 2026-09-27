@@ -19,7 +19,7 @@
 > **Fuentes:** `cuarentena/README.md` · `AXIOMS.md` ·
 > `../ROBINSON_PlusPlus/doc/AUDITORIA-FOL-2026-09-12.md`
 
-**Last updated:** 2026-09-27 — P4 hecha (`QFDecide0`). Antes, el mismo día: 🧊 cinco módulos congelados; P2 (18 renombres) y P3 (`sub_*` en `Sequent0`) hechas. Antes, el mismo día: W2, W3 y W4 hechas; la criba de congelación, pasada con refutación (1 congelable ya, 4 tras arreglos —aplicados—, 18 todavía no). Antes (2026-09-26): aviso reescrito y sección «Lo que queda» nueva; el plan de fases de abajo es HISTÓRICO (2026-05-16).
+**Last updated:** 2026-09-27 — la segunda criba con refutación: 71 correcciones, 10 congelables propuestos, decisiones N1‑N4. Antes, el mismo día: P4 hecha (`QFDecide0`). Antes, el mismo día: 🧊 cinco módulos congelados; P2 (18 renombres) y P3 (`sub_*` en `Sequent0`) hechas. Antes, el mismo día: W2, W3 y W4 hechas; la criba de congelación, pasada con refutación (1 congelable ya, 4 tras arreglos —aplicados—, 18 todavía no). Antes (2026-09-26): aviso reescrito y sección «Lo que queda» nueva; el plan de fases de abajo es HISTÓRICO (2026-05-16).
 **Autor**: Julián Calderón Almendros
 
 ## ⬜ Lo que queda para CERRAR FOL — 2026-09-26 (noche)
@@ -64,15 +64,29 @@ las decisiones D1, D2, D4, D5, D6 y D7 del propietario, **ejecutadas** el 2026-0
 Decisiones de la criba, resueltas el mismo día: **P2** ✅ los 18 titulares renombrados por la regla de
 subíndices (`hauptsatz₀`, `cut_elimination₀`, `herbrand₀`, `herbrand_block₀`, `truth_lemma₀`,
 `lindenbaum_lemma₀`, `skolem_conservative*₀`…; y `maeharaₚ`/`craigₚ` para `LKp`); **P3** ✅ los cinco
-`sub_*` deduplicados en `Sequent0`; **P4** ⬜ la OFERTA de `Hauptsatz0` (versión acotada de
-`derives0_qf_iff`): ✅ **HECHA** (propietario: «hacemos la versión acotada»; RPP‑107): `FOL/QFDecide0.lean`,
+`sub_*` deduplicados en `Sequent0`; **P4** ✅ la OFERTA de `Hauptsatz0` (versión acotada de
+`derives0_qf_iff`), **HECHA** (propietario: «hacemos la versión acotada»; RPP‑107): `FOL/QFDecide0.lean`,
 `derives0_qf_iff_bounded` y `decideDerives0QF`, `[propext, Quot.sound]`; la cota ingenua por subtérminos
-es FALSA y la correcta usa «mezclas de prefijo»; decisor de juguete (2^átomos).
+es FALSA y la correcta añade «mezclas de prefijo» (un paso, no un cierre); decisor de juguete (2^átomos).
 
-⬜ Siguiente: re‑correr la criba con refutación sobre los demás (P2 y P3 liberan su cono). Seguirán
-bloqueados hasta que la entrega de PeanoRF compile aquí los 15 de su cadena (`Complexity` incluido,
-que `Slash` importará al retirar `fdepth`), `Inconsistencia` (su §2 cambia con la entrega). La OFERTA de `Hauptsatz0` ya no retiene
-nada: se pagó en `QFDecide0`.
+**Segunda criba con refutación (2026‑09‑27, RPP‑108)**, sobre los 18 que deja pasar la parte medible:
+71 correcciones de comentarios y docstrings aplicadas (código idéntico; `CHANGELOG.md`). Veredicto:
+
+* ❄️ **Congelables**, ⬜ pendientes de confirmación del propietario (10): `Interpolation0` y `Craig0`
+  (se citan: en el mismo acto), `QFDecide0`, `Inversion0`, `Skolem0`, `SkolemN0`, `SkolemHerbrand0`,
+  `Canonical0`, `Compacity0`, `Henkin0`. ⚠️ El freeze fija también sus nombres auxiliares
+  (`craig₀_example` con la marca en medio, `craig_example`, `truth_lemma_lt`…): §9 los permite.
+* ⬜ **Retenidos por decisiones nuevas del propietario**:
+
+| # | pregunta | retiene | recomendación de la criba |
+|---|---|---|---|
+| N1 | La regla 1 de §9 (definiciones POR DERIVABILIDAD llevan subíndice) la contradicen once definiciones sin marca: `CutAdm`, `CutAt`, `CutBelow`, `LeftPrin` (`Hauptsatz0`), `HerbrandExtractionBlock` (`HerbrandBlock0`), `HerbrandExtraction` (`Herbrand0`), `CutElim`, `NDtoLK` (`Sequent0`), `PwEq` (`Derives2`) y `ImpAll`/`IffAll` (`PrenexNF0`, 🧊). ¿Excepción escrita o renombre? | `Hauptsatz0`, `HerbrandBlock0`, `BlockExtraction0` | (b) excepción escrita en §9: la marca la lleva el titular que paga la obligación (`hauptsatz₀ : CutAdm`); es lo único compatible con el freeze de `PrenexNF0` |
+| N2 | `henLimit_consistent` (`HenkinLimit0`) y `shiftTheory_consistent` (`Fresh0`) dependen de `⊢₀`, se imprimen y no llevan marca, mientras su gemelo `henkin_step_consistent₀` sí (P2). ¿Titulares (→ `…₀`) o auxiliares? | `HenkinLimit0`, `Lindenbaum0`, `Fresh0` | decisión de nomenclatura pura: la criba no recomienda |
+| N3 | `quantFree_subst` está duplicado, mismo nombre y enunciado, en `SkolemNF0` y `Sequent0`. ¿Deduplicar (como P3) o aceptarlo por escrito? | `SkolemNF0` | deduplicar: `SkolemNF0` importa `FOL.Sequent0` y borra su copia (sólo cambia `SkolemNF0`) |
+| N4 | `Mfalse`/`Mtrue`/`P` de `Inconsistencia` repiten las de `Soundness0` (🧊). ¿Deduplicar o aceptarlo? | `Inconsistencia` (que retiene además X1) | contestar con la entrega de PeanoRF |
+
+* Siguen fuera los 15 de la cadena de PeanoRF (`Complexity` incluido, que `Slash` importará al
+  retirar `fdepth`), hasta que la entrega compile aquí; e `Inconsistencia` (su §2 cambia con ella).
 
 ⛔ **Fuera de alcance, con su motivo**: LS↑ (ver `Compacity0` §3); un decisor PRÁCTICO del fragmento sin cuantificadores
 (cierre de congruencia con certificado: el de `QFDecide0` es de juguete); Beth y Robinson (el puente `LK₀`→`LKp`

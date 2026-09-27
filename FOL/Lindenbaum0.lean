@@ -52,7 +52,8 @@ y por eso el entregable de la vía W **no es un footprint limpio** sino un `Clas
 **explicado**: ≡ completitud sobre RCA₀, y WKL₀ es Π⁰₂‑conservativo sobre PRA.
 
 ⚠️ Los `Classical.choice` de `FOL.Fresh0` y `FOL.HenkinLimit0` **no eran** éste: eran
-`Exists.choose`, el tercio excluso de `cst_bound_sym` y `String`. Éste sí.
+`Exists.choose`, el tercio excluso de `cst_bound_sym`, `Rename.invOf`, lo que ya traía
+`henkin_step_consistent₀` y `String`. Éste sí.
 
 🔑 **Un `Classical.choice` explicado vale más que un `Classical.choice` escondido.**
 
@@ -202,7 +203,7 @@ theorem max_cons_bot {S : Formula → Prop} (hMax : IsMaximalConsistent₀ S) :
     Not (S Formula.bottom) := fun h => hMax.1 (derivesSet0_hyp h)
 
 /-- ⭐ **Un maximal consistente está CERRADO por derivación.** ⚠️ Sin Mathlib no hay `by_contra`:
-se usa `Classical.byContradiction` (trampa §13). -/
+se usa `Classical.byContradiction`. -/
 theorem max_cons_contains {S : Formula → Prop} (hMax : IsMaximalConsistent₀ S) {f : Formula}
     (h : S ⊢₀* f) : S f := by
   refine Classical.byContradiction (fun hNot => ?_)

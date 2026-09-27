@@ -5,7 +5,8 @@ License: MIT
 
 > ## ⭐⭐ 2026‑09‑23 · ESTE MÓDULO SUBE AL BUILD (decisión E3 del cierre)
 >
-> Vivía en `cuarentena/`, que **no se compila**. Y `cuarentena/README.md` §7 decía, con esas
+> Vivía en `cuarentena/`, que **no se compila**. Y `cuarentena/README.md` —en su nota de cabecera,
+> que atribuye la lección a su §7— dice, casi con esas
 > palabras, que un directorio no compilado es **cómo un `axiom` falso sobrevivió ochenta días**.
 > ⇒ la **evidencia** de que la solidez de `Derives` es falsa **no la verificaba ningún build**.
 >
@@ -32,7 +33,8 @@ nada porque el teorema es **condicional**. Su footprint lo vigila
 
 ## Qué se demuestra aquí
 
-No es «la prueba de `cuarentena/Soundness.lean` tenía un fallo». Es más fuerte:
+No es «la prueba de `cuarentena/Soundness.lean` (borrado el 2026‑09‑23, `62dc2d5`) tenía un
+fallo». Es más fuerte:
 
 > **CUALQUIER función de tipo `∀ {Γ f}, (Γ ⊢ f) → satisfies Γ f` demuestra `False`.**
 
@@ -57,13 +59,16 @@ algún modelo de `Γ`. Y con `Γ = []` bastan **dos modelos triviales sobre `Uni
 
 ## Qué NO dice
 
-* ⚠️ **No dice que `ROBINSON_PlusPlus` sea inconsistente.** Medido: RPP **no importa** `FOL.Soundness`
+* ⚠️ **No dice que `ROBINSON_PlusPlus` sea inconsistente.** Medido el 2026‑09‑27: la librería de
+  RPP **no importa** este módulo (el `FOL.Soundness` que aquí se citaba ya no existe)
   ni el barrel raíz `FOL`; sólo `FOL.FOL`, `FOL.MetaRules`, `FOL.Tactics`, `FOL.Deduction` y
-  `FOL.Theorems.*`. Su árbol de 131 módulos y la cadena de Gödel no están en contexto inconsistente.
+  `FOL.Theorems.*`. Su árbol entero y la cadena de Gödel no están en contexto inconsistente.
 * ⚠️ **No dice que `FOL/Semantics.lean` esté mal.** Está bien, y es útil: es lo que permitió probar
-  `prfI_soundness` en `ROBINSON_PlusPlus/sondeos/AnclaSoundness.lean`.
+  `prfI_soundness` en `../ROBINSON_PlusPlus/sondeos/AnclaSoundness.lean` (un sondeo, fuera del
+  build de RPP).
 * ⚠️ **No dice que las meta‑reglas estén mal.** Dicen lo que dicen: `⊢` es una noción metateórica de
-  verdad, no una relación de derivabilidad. `Meta/OmegaStrength.lean` mide la otra cara —`⊢` decide
+  verdad, no una relación de derivabilidad.
+  `../ROBINSON_PlusPlus/ROBINSON_PlusPlus/Meta/OmegaStrength.lean` mide la otra cara —`⊢` decide
   toda sentencia— y de ahí que **no sea r.e.**
 
 ## La salida buena

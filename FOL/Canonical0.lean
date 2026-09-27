@@ -123,8 +123,9 @@ theorem max_cons_and {S : Formula → Prop} (hMax : IsMaximalConsistent₀ S) {A
       (derivesSet0_map2 (fun Γ h1 h2 => Derives₀.intro_and Γ A B h1 h2)
         (derivesSet0_hyp h.1) (derivesSet0_hyp h.2))
 
-/-- ⭐ **La negación, en un maximal consistente, es la ausencia.** Falta en la familia `max_cons_*`,
-y es la única conectiva que faltaba: `neg f` es `f ⇒ ⊥` por definición (`FOL/FOL.lean`), así que
+/-- ⭐ **La negación, en un maximal consistente, es la ausencia.** Faltaba en la familia `max_cons_*`
+(hasta el 2026‑09‑23),
+y era la única conectiva que faltaba: `neg f` es `f ⇒ ⊥` por definición (`FOL/FOL.lean`), así que
 sale de `max_cons_impl_iff` y `max_cons_bot` sin más. -/
 theorem max_cons_neg {S : Formula → Prop} (hMax : IsMaximalConsistent₀ S) {f : Formula} :
     S (neg f) ↔ Not (S f) :=
@@ -332,7 +333,8 @@ end
 -- ============================================================
 
 -- ⭐ `formulaComplexity` y `complexity_substFormula` **bajaron a `FOL.Complexity`**
--- el 2026‑09‑23 (encargo de PeanoRF §3): son puramente sintácticos y estaban detrás de
+-- el 2026‑09‑23 (encargo de PeanoRF §3, `../Peano-from-ROB-n-FOL/doc/ENCARGO-FOL-2026-09-17.md`):
+-- son puramente sintácticos y estaban detrás de
 -- toda la cadena clásica de completitud. Los nombres NO cambian — entran por el `open`.
 
 theorem max_cons_ex {S : Formula → Prop} (hMax : IsMaximalConsistent₀ S) (hHenkin : IsHenkin S)
@@ -572,7 +574,8 @@ theorem model_existence_lemma₀ {S : Formula → Prop} (hCons : IsConsistent₀
 
 /-- ⭐⭐⭐ **EL TEOREMA DE COMPLETITUD** para `Derives₀`.
 
-⛔ Su `Classical.choice` es el `if IsConsistent₀ …` de `FOL.Lindenbaum0` (Π⁰₁) — es el **WKL**, y
+⛔ Lo que su `Classical.choice` tiene de no finitario es el `if IsConsistent₀ …` de `FOL.Lindenbaum0`
+(Π⁰₁) — es el **WKL**, y
 va explicado en la cabecera de este módulo y en ADR‑040 §2. -/
 theorem completeness₀ {Γ : List Formula} {f : Formula} (h : Γ ⊨ f) : Γ ⊢₀ f := by
   refine Classical.byContradiction (fun hNot => ?_)
@@ -607,7 +610,8 @@ theorem derives0_em (A : Formula) : [] ⊢₀ Formula.or A (neg A) :=
   completeness₀ (fun _ _ _ _ => Classical.em _)
 
 /-- ⭐ **Peirce**, ídem: es el ejemplo canónico de tautología clásica que la lógica intuicionista
-no demuestra. Si `completeness₀` fuera vacua, esto no compilaría. -/
+no demuestra. Que compile sólo muestra que la hipótesis de `completeness₀` se satisface aquí;
+que su consecuente no es trivial lo dice `derives0_consistent` (ver el comentario de §9). -/
 theorem derives0_peirce (A B : Formula) :
     [] ⊢₀ Formula.impl (Formula.impl (Formula.impl A B) A) A := by
   refine completeness₀ (fun _ _ _ _ h => ?_)

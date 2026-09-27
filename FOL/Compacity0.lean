@@ -85,14 +85,18 @@ compilado.
 ## 📏 Footprint
 
 Los titulares, `[propext, Classical.choice, Quot.sound]`. ⚠️ **Y el `Classical.choice` es el de
-siempre y está explicado**: viene de `completeness₀` a través de `model_existence_lemma₀`, y es el
-`if IsConsistent₀` Π⁰₁ de `FOL.Lindenbaum0` — el **WKL** (ADR‑041, plan §6.3). No se añade fuerza
+siempre y está explicado**: viene de `model_existence_lemma₀` y de `derives0_soundness` (la
+semántica es clásica: `FOL.Soundness0`); el primero trae varias procedencias (las enumeran
+`FOL.Canonical0` y `FOL.Lindenbaum0`), y la que da la fuerza es el
+`if IsConsistent₀` Π⁰₁ de `FOL.Lindenbaum0` — el **WKL** (ADR‑041;
+`../ROBINSON_PlusPlus/doc/PLAN-COMPLETITUD-FINITISTA.md` §6.3). No se añade fuerza
 nueva. ⛔ Y por eso esto **no** es finitario, al revés que `FOL.Finitary0`: es vía W, no vía H.
 ⚠️ **En §3 el `Classical.choice` NO viene sólo de la completitud**: `infTheory_finSat` y
 `evalTerm_updateCsts` lo llevan SIN pasar por `model_existence_lemma₀`. Es el de `FOL.Fresh0`
 (`cst_bound_list`, `cst_inj`; ver su §Footprint: el tercio excluso de `cst_bound_sym` y la
 implementación de `String` —descomponerlo, no compararlo—).
-`infinite_model_of_large` pasa además por `Rename.invOf` (vía `hasLargeModels_shift`). El conjunto
+`infinite_model_of_large` pasa por `Rename.invOf` también fuera de `model_existence_lemma₀` (vía
+`hasLargeModels_shift`). El conjunto
 de axiomas es el mismo; las procedencias son varias, y sólo una es el WKL.
 Excepciones de §3, medidas: `evalFormula_updateCsts` sólo `[propext]`, y los controles
 `hasLargeModels_empty` y `not_hasLargeModels_one`, **ningún axioma**.

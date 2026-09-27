@@ -22,11 +22,13 @@ import FOL.BlockExtraction0
     herbrand_of_skolemNF₀      : ∃ m ψ, QuantFree ψ ∧
                                  ( [] ⊢₀ ¬(skolemize k (prenex φ))
                                    ↔ ∃ tss E, HerbrandCertBlock m (¬ψ) tss E )
-    herbrand_validity₀        : ([] ⊢₀ φ) ↔ ∃ tss E, HerbrandCertBlock m (¬ψ) tss E,
+    herbrand_validity₀        : cst k, cst (k+1), … frescas en φ →
+                                 ([] ⊢₀ φ) ↔ ∃ tss E, HerbrandCertBlock m (¬ψ) tss E,
                                  con skolemize k (prenex ¬φ) = ∀ᵐ ψ          (§3, D3)
     herbrand_validity_ctx₀    : (Γ ⊢₀ φ)  ↔ … la misma, para Γ ⇒ φ            (§3, D3)
 
-📏 §1‑§2: `[propext, Quot.sound]`, **ni un `Classical.choice`**. §3 (volver a `φ`): los titulares
+📏 Lo anterior a §3 (el puente y el enchufe): `[propext, Quot.sound]`, **ni un `Classical.choice`**.
+§3 (volver a `φ`): los titulares
 (`derives0_neg_iff_neg_skolemNF`, `herbrand_refutation₀`, `herbrand_validity₀`, `herbrand_validity_ctx₀`;
 no los auxiliares `derives0_iff_neg_neg`, sin axiomas, ni `implChain_of_derives0`/`derives0_iff_implChain`,
 `[propext]`)

@@ -19,7 +19,7 @@ import FOL.Hauptsatz0
 # `FOL.BlockExtraction0` — 🏁 la mitad ⟹ de HERBRAND DE BLOQUE, pagada
 
     herbrand_extraction_block₀ : HerbrandExtractionBlock
-    herbrand_block₀ : ([] ⊢₀ exBlock n φ) ↔ ∃ tss E, HerbrandCertBlock n φ tss E
+    herbrand_block₀ : QuantFree φ → (([] ⊢₀ exBlock n φ) ↔ ∃ tss E, HerbrandCertBlock n φ tss E)
 
 📏 `[propext, Quot.sound]` en todo el módulo (`instB_nil`, ninguno): **ni un `Classical.choice`** — como toda la vía H.
 
@@ -33,7 +33,7 @@ pieza cara: no hubo que definir nada.
 El caso que parecía basura de `instB` **no lo es**:
 
     instB (n+1) [] φ = exBlock (n+1) φ        -- el bloque que queda PENDIENTE
-    instB 2 [t] φ    = exBlock 1 (φ[1 := t])  -- resto tras consumir UNA componente
+    instB 2 [t] φ    = exBlock 1 (φ[1 := liftN 1 t])  -- resto tras consumir UNA componente
 
 ⇒ `instB n us φ` con `us` **más corta que `n`** ya es el resto parcial, y la tupla parcial **es**
 `us`. No hubo que definir ninguna función nueva: el invariante del consecuente es
@@ -499,7 +499,7 @@ theorem herbrandExtractionBlock_of (hcut : CutElim) (htr : NDtoLK) :
                 exact Bool.noConfusion htrue
             | tail _ h2 => exact absurd h2 List.not_mem_nil
 
-/-- 🏁🏁 **LA MITAD ⟹ DE E, PAGADA.** -/
+/-- 🏁🏁 **LA MITAD ⟹ DE HERBRAND DE BLOQUE («E» del catálogo de RPP‑064), PAGADA.** -/
 theorem herbrand_extraction_block₀ : HerbrandExtractionBlock :=
   herbrandExtractionBlock_of FOL.Hauptsatz0.cut_elimination₀ FOL.NDtoLK0.ndToLK_prop
 

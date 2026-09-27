@@ -18,7 +18,7 @@ import FOL.PrenexNF0
 /-!
 # `FOL.SkolemNF0` — 🏁 la FORMA NORMAL DE SKOLEM
 
-    skolemize k f     : Formula          -- ∀ᵐ ψ, con ψ SIN cuantificadores
+    skolemize k f     : Formula          -- ∀ᵐ ψ, con ψ SIN cuantificadores, si `f` es prenexa
     skolemAxioms k f  : List Formula     -- los axiomas de Skolem que consume
 
     skolemize_shape       : Prenex f → ∃ m ψ, skolemize k f = allBlock m ψ ∧ QuantFree ψ

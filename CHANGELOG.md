@@ -19,6 +19,28 @@ All notable changes to this project will be documented in this file.
 Format based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## 2026-09-27 (4) — La segunda criba de congelación, con refutación
+
+* 🔎 Sobre los **18** que deja pasar `criba-congelacion.py` (liberados por P2, P3 y P4): cuatro lentes
+  de VERDAD por grupos, dos de ESTABILIDAD (nomenclatura; consumidores y decisiones), un juez y dos
+  escépticos (uno contra el veredicto, otro contra las ediciones). Resultados en RPP‑108.
+* ✏️ **71 correcciones** de comentarios y docstrings en los 18, más `Finitary0` (código IDÉNTICO,
+  comprobado token a token; `[G.2]` intacto). Las de más peso:
+  - `Craig0` e `Interpolation0` decían que, para sentencias, la condición de variables «es vacua»:
+    FALSO. El enunciado no da `C` cerrada; sobre `∀xP(x) ⟹ ∃xP(x)` Maehara devuelve `C = P(x₀)`.
+  - Las firmas de cabecera de `herbrand_block₀` (`BlockExtraction0`) y `herbrand_validity₀`
+    (`SkolemHerbrand0`) omitían una hipótesis (`QuantFree φ`; constantes de Skolem frescas) sin la
+    que el bicondicional es falso.
+  - `QFDecide0`: `qfT` da UN paso de mezclas, no un cierre; `List.find?` no pide `LawfulBEq`; el
+    footprint de `ext_eqInstance`/`qfCheck_iff` es `[propext]`.
+  - Procedencias de `Classical.choice` incompletas o invertidas (`Fresh0`, `Henkin0`, `Compacity0`,
+    `Canonical0`, `Skolem0`, `SkolemN0`, `Lindenbaum0`, `HenkinLimit0`); cuatro citas a memorias
+    privadas (`trampa §12/§13`); prosa temporal sin fecha.
+* ❄️ **Veredicto**: 10 congelables, ⬜ pendientes de confirmación del propietario (`Interpolation0`,
+  `Craig0`, `QFDecide0`, `Inversion0`, `Skolem0`, `SkolemN0`, `SkolemHerbrand0`, `Canonical0`,
+  `Compacity0`, `Henkin0`); 7 retenidos por tres decisiones nuevas (N1, N2, N3: ver
+  `NEXT-STEPS.md`) y `Inconsistencia` por la entrega de PeanoRF.
+
 ## 2026-09-27 (3) — P4: el fragmento sin cuantificadores, ACOTADO y DECIDIDO
 
 * 🏁🏁 **`FOL/QFDecide0.lean`** (módulo nuevo ⇒ **55 módulos**): `derives0_qf_iff_bounded` —
@@ -27,8 +49,8 @@ this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
   DECIDIBILIDAD del proyecto. **`[propext, Quot.sound]`**, calculable en el kernel. Compiló a la
   primera en el árbol (portado del borrador «semántico» de RPP‑106).
 * ⛔ **La cota ingenua (subtérminos) es FALSA** y el módulo lo compila como control: `EqInstance.func`
-  cambia un argumento, y `[a≐b, c≐d] ⟹ g(a,c) ≐ g(b,d)` pasa por `g(b,c)`. La correcta cierra por las
-  **mezclas de prefijo** y SUSTITUYE `E`.
+  cambia un argumento, y `[a≐b, c≐d] ⟹ g(a,c) ≐ g(b,d)` pasa por `g(b,c)` o por `g(a,d)`. La
+  correcta añade a los subtérminos sus **mezclas de prefijo** (un paso, no un cierre) y SUSTITUYE `E`.
 * ⭐ **La poda** (`eqPropCert_prune`) extiende la valuación con un núcleo de congruencia composicional:
   no usa el Hauptsatz ni `QuantFree`.
 * ⚠️ **El decisor es de juguete**: tabla de verdad de `2^(átomos distintos)`.

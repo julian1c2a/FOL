@@ -106,7 +106,8 @@ def tval (a : Bool) : Formula → Bool
   | .forall f => tval a f
   | .ex f => tval a f
 
--- ⚠️ `And`/`Or` explícitos: `∧`/`∨` se parsean como `Formula.and`/`Formula.or` (trampa §12).
+-- ⚠️ `And`/`Or` explícitos: `∧`/`∨` se parsean como `Formula.and`/`Formula.or` (el `infixr` de
+-- `FOL.lean`; REFERENCE.md §5).
 def allTrue (a : Bool) (Γ : List Formula) : Prop := ∀ x, x ∈ Γ → tval a x = true
 def someTrue (a : Bool) (Δ : List Formula) : Prop := ∃ x, And (x ∈ Δ) (tval a x = true)
 

@@ -35,7 +35,8 @@ ADR‑056 §5 dijo que faltaba «suministro de símbolos frescos **n‑arios**»
 este árbol `Term.func` toma un `String` y una lista de **cualquier** longitud, así que **la aridad
 no está en el tipo**; y `occursFormula c f` mira el **nombre**, no la aridad. ⇒ `cst : Nat → String`
 (`FOL/Fresh0.lean`) ya da infinitos símbolos de Skolem de cualquier aridad.
-⚠️ Van **cuatro** obstrucciones mías declaradas y luego refutadas en dos días.
+⚠️ Van **cuatro** obstrucciones mías declaradas y luego refutadas en dos días (cuenta del
+2026‑09‑17, ADR‑059).
 
 ## ⭐⭐ El puente que NO existía, y era el bloqueo medido
 
@@ -78,8 +79,9 @@ una hace un trabajo distinto: en Γ para transportar el contexto, en A para eleg
 
 `updateFunc`, `evalTerm_updateFunc` y `evalFormula_updateFunc` **sin ningún axioma**.
 `skolem_conservative₀` y `henkin_conservative₀`, `[propext, Classical.choice, Quot.sound]` — el
-`Classical.choice` es el de `completeness₀`, el **WKL** de siempre (plan §6.3), más la elección del
-testigo. ⛔ Vía W, no vía H.
+`Classical.choice` es el de `completeness₀`, el **WKL** de siempre
+(`../ROBINSON_PlusPlus/doc/PLAN-COMPLETITUD-FINITISTA.md` §6.3), más la elección del
+testigo y el de `derives0_soundness` (`FOL.Soundness0`: la semántica es clásica). ⛔ Vía W, no vía H.
 
 ## 🏁 El axioma bajo un PREFIJO de universales — **HECHO en `FOL.SkolemN0`**
 
@@ -109,7 +111,8 @@ open FOL.Henkin0
 
 /-- Reinterpretar UN símbolo de función, dejando todo lo demás igual.
 ⚠️ El `if f = c` usa `String.decEq`, que **no** trae `Classical.choice`: lo que lo trae es
-DESCOMPONER un `String`, no compararlo (plan §7). -/
+DESCOMPONER un `String`, no compararlo
+(`../ROBINSON_PlusPlus/doc/PLAN-COMPLETITUD-FINITISTA.md` §7). -/
 def updateFunc {D : Type} (M : Model D) (c : String) (F : List D → D) : Model D where
   func := fun f ds => if f = c then F ds else M.func f ds
   rel := M.rel

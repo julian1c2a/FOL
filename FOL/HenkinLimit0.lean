@@ -71,7 +71,8 @@ valen». El primero obliga a leer los nombres; el segundo, no.*
 ## 📏 Footprint
 
 `[propext, Classical.choice, Quot.sound]` y **cero axiomas del proyecto**. El `Classical.choice`
-entra por `Exists.choose` en `bnd` (§2) y por `String` (§7 del plan); ⚠️ **no** es el de la
+entra por `Exists.choose` en `bnd` (§2), por `String` (§7 del plan) y por lo que ya traen
+`shiftTheory_consistent` (`Rename.invOf`) y `henkin_step_consistent₀`; ⚠️ **no** es el de la
 completitud — ése es el `if IsConsistent …` de Lindenbaum (§6.3), que entra después, en `FOL.Lindenbaum0`.
 -/
 

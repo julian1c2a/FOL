@@ -63,7 +63,8 @@ la CABEZA, y de `Γ₁ ++ Γ₂ = A :: Γ'` no se sigue en cuál de los dos cay�
 cambio, basta preguntarle a la hipótesis dónde fue la fórmula principal — dos casos por regla.
 ⭐ Lo que lo autoriza es `struct`: reordena, contrae y debilita **por pertenencia**, así que el
 secuente se comporta como un CONJUNTO. Y es también lo que permite **absorber** la fórmula
-principal al final de cada caso (`sub_drop`), que es el paso que cierra los 26.
+principal al final de cada caso de las diez reglas lógicas (`sub_drop`, dos usos por regla;
+`ax`, `botL` y `struct` no introducen fórmula principal).
 
 ## ⭐⭐⭐ Los cuatro casos de eigenvariable NO necesitan des‑levantar nada
 
@@ -91,11 +92,14 @@ entonces las dos mitades salen de los CONSTRUCTORES más `substFormula_lift_var`
   (D3a, 2026‑09‑26): `lk0_to_lkp` deja en el antecedente las instancias de igualdad que `eqAx`
   usaba, cerradas con `∀`, y `craig₀` interpola lo que `Derives₀` deriva. Hasta entonces, consumir
   `craigₚ` exigía exhibir una derivación de `LKp` a mano.
-* ⚠️ **Este módulo, solo, no es interpolación para FOLᐟ**: `LKp` no tiene los axiomas de la
+* ⚠️ **Este módulo, solo, no es interpolación para FOL⁼**: `LKp` no tiene los axiomas de la
   igualdad. La versión con igualdad es `Interpolation0.craig₀`.
 * ⚠️ **No incluye la condición sobre VARIABLES LIBRES** de la interpolación de Craig clásica, sólo
-  la de símbolos de relación. Para **sentencias** (fórmulas cerradas) esa condición es vacua y el
-  enunciado de aquí es el completo; para fórmulas abiertas, es estrictamente más débil, y se dice.
+  la de símbolos de relación. Y para **sentencias** (fórmulas cerradas) el enunciado tampoco es el
+  completo: ahí esa condición pide un `C` CERRADO, y no lo da; sobre `∀xP(x) ⟹ ∃xP(x)`, derivado
+  con `allL`/`exR` en `x₀`, la construcción de Maehara devuelve `C = P(x₀)` (el caso `ax` entrega la
+  fórmula del axioma). Y falta además la de símbolos de FUNCIÓN (ver «⛔⛔ Y la condición va sobre
+  los símbolos de RELACIÓN»).
 * ⚠️ `Formula.eq` se cuenta como símbolo **lógico** (no aporta predicado). En `LKp` no hay `eqAx`,
   así que `=` no tiene axiomas; contarlo fuera **debilita** el enunciado, no lo falsea.
 -/
@@ -214,7 +218,8 @@ theorem predF_subst (p : String) : ∀ (f : Formula) (k : Nat) (t : Term),
   | .forall a, k, t => predF_subst p a (k + 1) (liftTerm 0 t)
   | .ex a, k, t => predF_subst p a (k + 1) (liftTerm 0 t)
 
--- ⚠️ Trampa §12: `∧` se parsea como `Formula.and`. Va `And` de Lean, explícito.
+-- ⚠️ Trampa de notación (el `infixr` de `FOL.lean`, REFERENCE.md §5): `∧` se parsea como
+-- `Formula.and`. Va `And` de Lean, explícito.
 def PredSub (C : Formula) (L : List Formula) : Prop :=
   ∀ p, predF p C → ∃ g, And (g ∈ L) (predF p g)
 

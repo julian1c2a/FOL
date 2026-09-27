@@ -48,7 +48,8 @@ Este módulo da el **paso**. La **extensión completa** está construida en los 
 vienen encima:
 
 * `FOL.Fresh0` — el **suministro de constantes frescas** (`shiftTheory`, `cst`, `exists_fresh`);
-* `FOL.HenkinLimit0` — la **iteración ω** y el límite (`henLimit_consistent`, `henLimit_witness`).
+* `FOL.HenkinLimit0` — la **iteración ω** y el límite: consistente si `S` lo es, y con un testigo
+  para cada fórmula.
 
 ⚠️⚠️ **Y aquí decía algo que la medición refutó.** El texto anterior era:
 
@@ -59,11 +60,13 @@ vienen encima:
 >
 > 🔑 La parte **matemática** está aquí y es finitaria; lo que falta es **combinatoria de nombres**.
 
-Lo del sublenguaje era correcto. Lo de **descomponer cadenas, no**: la construcción no descompone
+Lo del sublenguaje era correcto. Lo de **descomponer cadenas, a medias**: la construcción no descompone
 ninguna — la conservatividad del renombrado se obtiene **mapeando con la inversa** (`invOf`), y el
-`Classical.choice` que aparece viene de ahí y de `Exists.choose`, no de leer `String`. Y no era
+`Classical.choice` que aparece viene de ahí, de `Exists.choose`, del tercio excluso de
+`cst_bound_sym` y de los lemas de `String` del núcleo tras `shift_inj`/`cst_inj`
+(`String.append_right_inj`; `FOL.Fresh0` §Footprint, ADR‑069 §4). Y no era
 «combinatoria de nombres»: son **dos** propiedades de `cst` (inyectividad y estar fuera de la
-imagen del desplazamiento), tres líneas cada una.
+imagen del desplazamiento), de tres a cinco líneas cada una.
 -/
 
 namespace FOL.Henkin0
