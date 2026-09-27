@@ -39,3 +39,7 @@ FOL/Skolem0.lean
 FOL/SkolemHerbrand0.lean
 FOL/SkolemN0.lean
 FOL/SkolemNF0.lean
+FOL/QFDecide0.lean
+FOL/Hauptsatz0.lean
+FOL/Herbrand0.lean
+FOL.lean
