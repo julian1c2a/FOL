@@ -40,3 +40,9 @@ TheoryFramework/Instances/FOL.lean
 TheoryFramework/Logic.lean
 TheoryFramework/MetaTheorems.lean
 FOL/HenkinLimit0.lean
+FOL/Lindenbaum0.lean
+FOL/SkolemNF0.lean
+FOL/SkolemHerbrand0.lean
+FOL/DecEq.lean
+FOL/Enumeration.lean
+AXIOMS.md
