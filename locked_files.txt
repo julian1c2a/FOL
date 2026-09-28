@@ -44,3 +44,5 @@ FOL/SkolemNF0.lean
 FOL/SkolemHerbrand0.lean
 FOL/DecEq.lean
 FOL/Enumeration.lean
+FOL/SequentSound0.lean
+AXIOMS.md

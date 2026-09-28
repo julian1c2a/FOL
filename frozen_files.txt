@@ -20,3 +20,4 @@ FOL/SkolemHerbrand0.lean
 FOL/Hauptsatz0.lean
 FOL/HerbrandBlock0.lean
 FOL/BlockExtraction0.lean
+FOL/SequentSound0.lean
