@@ -26,13 +26,13 @@ La comprobación que ADR‑046 §5 dejó declarada como **no hecha**:
     lk0_not_empty   : ¬ LK₀ [] []                     -- ⭐ y la consistencia del molde
 
 ⚠⚠ **De `lk0_not_empty` hay hoy una versión MEJOR fuera de aquí**: `FOL.Finitary0.lk0_not_empty_fin`,
-mismo enunciado con `[propext, Quot.sound]` en vez del **WKL**, y derivada del estrictamente más
+mismo enunciado con `[propext, Quot.sound]` en vez de `[propext, Classical.choice, Quot.sound]`, y derivada del estrictamente más
 fuerte `lk0_no_bot`. Ver el docstring de `lk0_not_empty` abajo para por qué la prueba de aquí **no**
 se sustituye (ADR‑061).
 
 ⚠⚠ **Y de `lk0_to_derives0` hay, desde el 2026‑09‑26, una versión MEJOR fuera de aquí**:
-`FOL.Interpolation0.lk0_to_derives0_fin`, mismo enunciado, con `[propext, Quot.sound]` en vez del
-**WKL**, por la vía SINTÁCTICA (`lk0_refute`) y sin `completeness₀`. La de aquí se queda por el mismo
+`FOL.Interpolation0.lk0_to_derives0_fin`, mismo enunciado, con `[propext, Quot.sound]` en vez de
+`[propext, Classical.choice, Quot.sound]`, por la vía SINTÁCTICA (`lk0_refute`) y sin `completeness₀`. La de aquí se queda por el mismo
 motivo (ADR‑061): el footprint de un corolario dice la verdad del módulo en que vive.
 
 ⚠️ **Por qué importa y no es adorno**: `LK₀` es el cálculo sobre el que se enuncia y
@@ -316,7 +316,9 @@ theorem lk0_to_derives2 {Γ Δ : List Formula} (h : LK₀ Γ Δ) :
 
 ⚠⚠ **NO CITAR ESTE. Usar `FOL.Finitary0.lk0_not_empty_fin`**, que es el **mismo enunciado** con
 footprint **estrictamente menor**: aquí la prueba pasa por `lk0_to_derives0`, que **es
-`completeness₀`**, y arrastra con él el `Classical.choice` que ADR‑041 identificó como el **WKL**;
+`completeness₀`**, y arrastra con él su `Classical.choice` —el del lema de la verdad sobre un
+maximal arbitrario y el del `byContradiction` final, **no** un «WKL de Lindenbaum», que no decide
+nada y es `[propext, Quot.sound]` (`AXIOMS.md` §4.5)—;
 allí sale del modelo booleano de un punto y mide `[propext, Quot.sound]`.
 ⭐ Y allí además se deriva del **estrictamente más fuerte** `lk0_no_bot` (`¬ LK₀ [] [⊥]`), vía
 `lk0_empty_of_no_bot`.

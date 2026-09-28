@@ -420,12 +420,13 @@ DENTRO, sin decidirla, y `lindenbaum_lemma₀` y `henkin_completion₀` son hoy 
 * Regla de redacción (D2, opción b): se corrige toda afirmación de LOCALIZACIÓN («el choice de X es
   el WKL», «aquí está toda la no‑finitud», «el WKL de Lindenbaum»); «el WKL» puede quedar como apodo
   de la FUERZA lógica: *la completitud tiene la fuerza del WKL sobre RCA₀*.
-* 🧊 ⚠️ **Lo que la regla no ha alcanzado (2026‑09‑27): `FOL/SequentSound0.lean`, CONGELADO.** Su
-  cabecera dice dos veces que las versiones de `Finitary0`/`Interpolation0` miden
-  `[propext, Quot.sound]` «en vez del **WKL**», y el docstring de `lk0_not_empty`, que arrastra «el
-  `Classical.choice` que ADR‑041 identificó como el **WKL**». Son localizaciones que D2 corrige, pero
-  un fichero congelado no se toca sin `thaw` autorizado: se rectifican en su próximo deshielo. Los
-  otros 22 congelados (23 con el tercer lote) no lo LOCALIZAN: o no lo nombran, o lo citan para rectificarlo o como apodo de la FUERZA (medido con `grep WKL`, 2026‑09‑27).
+* 🧊 ✅ **Rectificado el 2026‑09‑28 en `FOL/SequentSound0.lean`**, el único congelado al que la regla
+  no había llegado: su cabecera decía dos veces que las versiones de `Finitary0`/`Interpolation0`
+  miden `[propext, Quot.sound]` «en vez del **WKL**», y el docstring de `lk0_not_empty`, que arrastra
+  «el `Classical.choice` que ADR‑041 identificó como el **WKL**». `thaw --confirm` autorizado por el
+  propietario, tres correcciones de texto (código idéntico) y congelado de nuevo en el mismo ciclo. Los
+  otros 22 congelados no lo LOCALIZAN: o no lo nombran, o lo citan para rectificarlo o como apodo de la
+  FUERZA (medido con `grep WKL`, 2026‑09‑27).
 
 ### 4.6 · Lo que esta sección NO dice
 

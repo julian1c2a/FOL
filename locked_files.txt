@@ -12,7 +12,6 @@ FOL/Derives1.lean
 FOL/Inversion0.lean
 FOL/QFDecide0.lean
 FOL/PrenexNF0.lean
-FOL/SequentSound0.lean
 FOL/Derives2.lean
 FOL/Herbrand0.lean
 FOL/NDtoLK0.lean
@@ -45,4 +44,3 @@ FOL/SkolemNF0.lean
 FOL/SkolemHerbrand0.lean
 FOL/DecEq.lean
 FOL/Enumeration.lean
-AXIOMS.md
