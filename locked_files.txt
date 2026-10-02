@@ -36,3 +36,12 @@ FOL/SkolemHerbrand0.lean
 FOL/DecEq.lean
 FOL/Enumeration.lean
 FOL/SequentSound0.lean
+FOL/Core.lean
+FOL/Inconsistencia.lean
+FOL.lean
+FOL/FOL.lean
+FOL/Derives0.lean
+TheoryFramework/Logic.lean
+TheoryFramework/MetaTheorems.lean
+cuarentena/README.md
+AXIOMS.md
