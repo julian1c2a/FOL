@@ -27,10 +27,15 @@ deben serlo.**
 
 Ser un sistema lógico **no incluye** ser sólido ni completo: son **propiedades** que un
 sistema puede tener o no. Al exigirlos como campos, el marco **POSTULABA la solidez de cada
-instancia** — y para `FOL` sobre la herramienta `Derives` ese campo es **indemostrable**:
-`soundness` es FALSO en presencia
-de `FOL/MetaRules.lean` (ver `cuarentena/README.md`). La instancia `folSystem` lo rellenaba
-con ese teorema, y se autodescribía «fully complete and verified».
+instancia** — y para `FOL` sobre la herramienta `Derives` ese campo era **DEMOSTRABLE** —por
+inducción, como hoy—; con `FOL/MetaRules.lean` en el entorno (hasta ADR‑115 de RPP,
+2026‑10‑02), esa prueba junto al `raa` postulado daba `False`, y se leyó que la solidez era
+FALSA (ver `cuarentena/README.md`). La instancia `folSystem` rellenaba el campo con esa prueba,
+y se autodescribía «fully complete and verified». 🗑️ Borrado `FOL/MetaRules.lean` (ADR‑115 de
+RPP), la solidez sigue siendo un teorema (`FOL.Inconsistencia.derives_soundness`) y el entorno
+ya no da `False`: lo falso era `raa`, no la solidez. La decisión A‑6 no cambia por eso: ser
+sólido sigue siendo una propiedad que cada instancia tiene que demostrar, no un campo que el
+marco postule.
 
 ⇒ Ahora la solidez y la completitud viven en **clases aparte** (`SoundLogic`,
 `CompleteLogic`), y todo lo que dependa de ellas es **explícitamente condicional** — que es
@@ -44,11 +49,13 @@ class LogicSystem (F : Type) where
 
 /-- **Solidez** — una PROPIEDAD, no parte de «ser un sistema lógico».
 
-⛔ La herramienta `Derives` (`⊢`) **no puede habitarla** (`Derives₀` sí: `Instances.fol0Sound`,
-2026‑09‑27): con las meta‑reglas de `FOL/MetaRules.lean`, un testigo de
-este campo demuestra `False` (`FOL/Inconsistencia.lean`, compilado). Cálculos del ecosistema con
-solidez probada: `Derives₀` (`Soundness0.derives0_soundness`), `LK₀`/`LKc` (`SequentSound0`) y `Prfᵢ`
-(`../ROBINSON_PlusPlus/sondeos/AnclaSoundness.lean`). -/
+`Derives₀` la habita: `Instances.fol0Sound` (2026‑09‑27). Hasta ADR‑115 de RPP (2026‑10‑02)
+también existía un testigo de este campo para `Derives` (la misma inducción), y con las
+meta‑reglas de `FOL/MetaRules.lean` en el entorno daba `False` junto a `raa`. Hoy el testigo es
+`FOL.Inconsistencia.derives_soundness`, aunque no hay instancia `LogicSystem` sobre `⊢`
+(`folSystem` se retiró el 2026‑09‑23). Cálculos del ecosistema con solidez probada: `Derives₀`
+(`Soundness0.derives0_soundness`), `Derives` sin meta‑reglas (`Inconsistencia.derives_soundness`),
+`LK₀`/`LKc` (`SequentSound0`) y `Prfᵢ` (`../ROBINSON_PlusPlus/sondeos/AnclaSoundness.lean`). -/
 class SoundLogic (F : Type) [LogicSystem F] : Prop where
   sound : ∀ {Γ : List F} {f : F},
     LogicSystem.derives Γ f → LogicSystem.semanticEntails Γ f

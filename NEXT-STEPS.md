@@ -1,6 +1,6 @@
 # Próximos Pasos — FOL
 
-> # ⛔⛔ AVISO DE ESTADO — 2026-09-26 (reescrito: el del 2026-09-12 había quedado FALSO). LEER ANTES QUE NADA
+> # ⛔⛔ AVISO DE ESTADO — 2026-09-26, retocado el 2026-10-02 (reescrito: el del 2026-09-12 había quedado FALSO). LEER ANTES QUE NADA
 >
 > **Este documento estaba fechado en mayo de 2026 y publicaba como hitos demostrados cosas que
 > hoy están medidas FALSAS.** Se corrigen abajo las afirmaciones concretas; el resto del texto
@@ -8,26 +8,63 @@
 >
 > | lo que decía | lo medido |
 > |---|---|
-> | «Teorema de Corrección (Soundness): `Γ ⊢ A → Γ ⊨ A`» ✅ | 🏁 **Sí, sobre `Derives₀`** (2026-09-14): `derives0_soundness : Γ ⊢₀ f → Γ ⊨ f` (`FOL/Soundness0.lean`), y con ella `derives0_consistent`. ⛔ La de **`Derives`** sigue siendo **FALSA** en presencia de `FOL/MetaRules.lean`: `FOL/Inconsistencia.lean`, hoy **en el build** |
+> | «Teorema de Corrección (Soundness): `Γ ⊢ A → Γ ⊨ A`» ✅ | 🏁 **Sí, sobre `Derives₀`** (2026-09-14): `derives0_soundness : Γ ⊢₀ f → Γ ⊨ f` (`FOL/Soundness0.lean`), y con ella `derives0_consistent`. 🏁 **Y sobre `Derives`**, el enunciado de la columna izquierda, desde el 2026-10-02: `derives_soundness : Γ ⊢ f → Γ ⊨ f` (`FOL/Inconsistencia.lean` §1), porque sin meta‑reglas `Derives` se traduce a `Derives₀` (`derives_to_derives0`: `gen_rule` es admisible). Hasta ese día esta celda decía que la de `Derives` era «FALSA en presencia de `FOL/MetaRules.lean`»: lo falso era `raa` (`raa_refutable`, §3), y el módulo se borró (ADR‑115 de RPP) |
 > | «Compacidad» ✅ | 🏁 `compactness`, `loewenheim_skolem_down` y el modelo infinito `infinite_model_of_large`, en `FOL/Compacity0.lean`. El `Compacity.lean` vacuo **se borró** el 2026-09-23 |
 > | «Completitud» ✅ / «1 sorry» | 🏁 `completeness₀ : Γ ⊨ f → Γ ⊢₀ f` (`FOL/Canonical0.lean`, 2026-09-16), con **cero axiomas del proyecto**: `[propext, Classical.choice, Quot.sound]`. Ese `Classical.choice` viene del lema de la verdad sobre un maximal arbitrario (`max_cons_*`) y del `byContradiction` final de `completeness₀`; **no** del `if` de `Lindenbaum0`, que ya no decide nada (`lindenbaum_lemma₀` es `[propext, Quot.sound]`). Hasta el 2026-09-27 esta celda decía que era «el WKL de `Lindenbaum0`» (ADR-041): refutado, ADR-110 y `AXIOMS.md` §4. `Completeness.lean` y su último postulado, `henkin_extension_lemma`, **se borraron** el 2026-09-23. Ver **`AXIOMS.md`** |
-> | «4 `lean_lib`, ~43 módulos, 1 sorry, v4.28.0» | **2 `lean_lib`** (`FOL`, `TheoryFramework`) · **4 `axiom`**, los de `MetaRules` que el kernel obliga, y ninguno más fuera de las librerías retiradas · **0 sorry** · **v4.31.0**. `FOLPure`, `PropLogic` y `FOL_poli` **retiradas** el 2026-09-12 a `cuarentena/librerias-retiradas/` |
+> | «4 `lean_lib`, ~43 módulos, 1 sorry, v4.28.0» | **2 `lean_lib`** (`FOL`, `TheoryFramework`) · **0 `axiom`**: los cuatro de `FOL/MetaRules.lean` (`imp_intro`, `raa`, `or_elim`, `ex_elim`), refutables sin usarlos (`FOL/Inconsistencia.lean` §3), se borraron con el módulo el 2026-10-02 (ADR‑115 de RPP). Esta celda decía «4 `axiom`, los de `MetaRules` que el kernel obliga»: el kernel sólo impedía que fueran constructores (premisa‑función, ocurrencia no positiva), no obligaba a tenerlos · **0 sorry** · **v4.31.0**. `FOLPure`, `PropLogic` y `FOL_poli` **retiradas** el 2026-09-12 a `cuarentena/librerias-retiradas/` |
 >
 > ⭐ **Los seis teoremas del cierre (T1 a T6, 2026-09-23 y 2026-09-26) están en el árbol**, sobre `Derives₀`; el catálogo, en `CURRENT-STATUS-PROJECT.md` («Estado vigente») y `REFERENCE.md` §6. ⛔ Y lo que NO hay: la propiedad de disyunción para `Derives₀` es **FALSA** (`derives0_no_disjunction_property`).
 > (Este aviso decía que «lo único sólido MEDIDO» era `prf0_soundness` (hoy `prfI_soundness`), en RPP: dejó de serlo el 2026-09-14.)
+> ⚠️ **2026-10-02 · deuda declarada**: cinco módulos 🧊 congelados (`Soundness0`, `Canonical0`, `Compacity0`, `Rename`, `TheoryFramework/Instances/FOL`) conservan el texto anterior al borrado de `FOL/MetaRules.lean` («la solidez de `Derives` es FALSA», M‑11) y esperan un `thaw` autorizado por el propietario: detalle por línea, abajo, en «Lo que queda».
 >
 > **Fuentes:** `cuarentena/README.md` · `AXIOMS.md` ·
-> `../ROBINSON_PlusPlus/doc/AUDITORIA-FOL-2026-09-12.md`
+> `../ROBINSON_PlusPlus/doc/AUDITORIA-FOL-2026-09-12.md` · ADR‑114 y ADR‑115 de `../ROBINSON_PlusPlus/DECISIONS.md` (2026-10-02)
 
-**Last updated:** 2026-09-27 — N5 y N7, resueltas por el propietario (N5: los nombres técnicos son auxiliares, regla escrita en `NAMING-CONVENTIONS.md` §9; N7: `herbrand_of_skolemNF₀` reforzado con la ecuación); 🧊 tercer lote congelado (8 módulos: 23 en total; de los 19 de la tercera criba sólo queda fuera `Inconsistencia`, por X1). Antes, el mismo día: 🧊 segundo lote congelado (10 módulos: 15 en total); quedan N5, N7 y X1. Antes, el mismo día: la tercera criba con refutación: 10 congelables (4 ya, 6 con sus correcciones aplicadas), decisiones N5 y N7; N6 aplicada. Antes, el mismo día: la auditoría de constructividad y las decisiones D1‑D8 del propietario, ejecutadas (`Classical.choice` 157 → 84 constantes; Lindenbaum y Henkin sin él; la tesis del WKL, rectificada; la instancia de `TheoryFramework`, declarada; `Rename` descongelado para retirar `invOf`); los 17 candidatos, sólo bloqueados. Antes, el mismo día: N1‑N4 resueltas y aplicadas (13 renombres, dos duplicados retirados; `PrenexNF0`/`SequentSound0` descongelados y re‑congelados); los 10 congelables, sólo bloqueados. Antes, el mismo día: la segunda criba con refutación (71 correcciones). Antes, el mismo día: P4 hecha (`QFDecide0`). Antes, el mismo día: 🧊 cinco módulos congelados; P2 (18 renombres) y P3 (`sub_*` en `Sequent0`) hechas. Antes, el mismo día: W2, W3 y W4 hechas; la criba de congelación, pasada con refutación (1 congelable ya, 4 tras arreglos —aplicados—, 18 todavía no). Antes (2026-09-26): aviso reescrito y sección «Lo que queda» nueva; el plan de fases de abajo es HISTÓRICO (2026-05-16).
+**Last updated:** 2026-10-02 — 🗑️ `FOL/MetaRules.lean` borrado (ADR‑115 de RPP: sus cuatro `axiom` eran refutables): aviso, sección nueva al principio de «Lo que queda» con la deuda de cinco módulos 🧊 que esperan un `thaw` autorizado, y la fila X1 (PeanoRF cae: importa `FOL.MetaRules`). Antes (2026-09-27): N5 y N7, resueltas por el propietario (N5: los nombres técnicos son auxiliares, regla escrita en `NAMING-CONVENTIONS.md` §9; N7: `herbrand_of_skolemNF₀` reforzado con la ecuación); 🧊 tercer lote congelado (8 módulos: 23 en total; de los 19 de la tercera criba sólo queda fuera `Inconsistencia`, por X1). Antes, el mismo día: 🧊 segundo lote congelado (10 módulos: 15 en total); quedan N5, N7 y X1. Antes, el mismo día: la tercera criba con refutación: 10 congelables (4 ya, 6 con sus correcciones aplicadas), decisiones N5 y N7; N6 aplicada. Antes, el mismo día: la auditoría de constructividad y las decisiones D1‑D8 del propietario, ejecutadas (`Classical.choice` 157 → 84 constantes; Lindenbaum y Henkin sin él; la tesis del WKL, rectificada; la instancia de `TheoryFramework`, declarada; `Rename` descongelado para retirar `invOf`); los 17 candidatos, sólo bloqueados. Antes, el mismo día: N1‑N4 resueltas y aplicadas (13 renombres, dos duplicados retirados; `PrenexNF0`/`SequentSound0` descongelados y re‑congelados); los 10 congelables, sólo bloqueados. Antes, el mismo día: la segunda criba con refutación (71 correcciones). Antes, el mismo día: P4 hecha (`QFDecide0`). Antes, el mismo día: 🧊 cinco módulos congelados; P2 (18 renombres) y P3 (`sub_*` en `Sequent0`) hechas. Antes, el mismo día: W2, W3 y W4 hechas; la criba de congelación, pasada con refutación (1 congelable ya, 4 tras arreglos —aplicados—, 18 todavía no). Antes (2026-09-26): aviso reescrito y sección «Lo que queda» nueva; el plan de fases de abajo es HISTÓRICO (2026-05-16).
 **Autor**: Julián Calderón Almendros
 
-## ⬜ Lo que queda para CERRAR FOL — 2026-09-26 (noche)
+## ⬜ Lo que queda para CERRAR FOL — 2026-09-26 (noche); al día el 2026-10-02
 
 **Hecho**: los seis teoremas del catálogo del cierre (T1-T6) más `inv_allR`/`inv_exL` (RPP-100), y
 las decisiones D1, D2, D4, D5, D6 y D7 del propietario, **ejecutadas** el 2026-09-26 (RPP-101, RPP-102;
 `CHANGELOG.md`); y las D1‑D8 de la auditoría de constructividad, el 2026‑09‑27 (RPP‑110; abajo, en ❄️).
 El estado vigente, en `CURRENT-STATUS-PROJECT.md`. Lo que queda:
+
+### 🗑️ 2026-10-02 · `FOL/MetaRules.lean` BORRADO (ADR‑115 de RPP) — y la deuda que deja
+
+Decisión del propietario (ADR‑114 §4, punto 2, de RPP: «no hacemos uso de herramientas que no sean
+verdaderas»), ejecutada en RPP como ADR‑115 y en FOL el mismo día:
+
+| qué | estado |
+|---|---|
+| `FOL/MetaRules.lean` y sus cuatro `axiom` (`imp_intro`, `raa`, `or_elim`, `ex_elim`) | 🗑️ **borrados**: eran REFUTABLES sin usarlos. `FOL.Core` ya no lo importa |
+| `FOL/Inconsistencia.lean` | ✅ **reescrito**: §1 `derives_to_derives0` (`gen_rule` es admisible) y `derives_soundness`; §2, la propiedad de disyunción, sin cambios; §3, los enunciados `ImpIntro`, `Raa`, `OrElim`, `ExElim` y sus refutaciones. `inconsistencia_de_cualquier_solidez` **se borró**: su enunciado era FALSO (sólo se «demostraba» con `raa`). Sigue fuera de la congelación (X1) |
+| censo | `axiom` de Lean: 4 → **0** (`check-axioms.bash`, `ESPERADO_FOL=0`) · módulos activos: 55 → **54** (`FOL/`: 44 → 43) |
+| ⬜ **DEUDA: cinco módulos 🧊 CONGELADOS** con textos que el borrado volvió FALSOS | **esperan un `thaw` autorizado por el propietario**; sin él no se tocan. La lista, debajo |
+| PeanoRF (X1) | ⛔ cae `PeanoRF/Prelim.lean` (importa `FOL.MetaRules`) y lo que lo importa; los módulos de `Calculus/`, no (fila X1). El propietario lo previó por escrito al bloquearlo; PeanoRF está bloqueado y no se toca |
+| RPP, en el push que sigue a éste | `check-estratos` (`Derives` 22 · 0), las filas `FOL.Inconsistencia.*` de `check-footprints.bash` y el prefijo de la caché de la CI (ADR‑115 §7) |
+
+La deuda, por fichero (citas de los textos congelados, sin su negrita; las líneas son estables mientras sigan 🧊):
+
+* `FOL/Soundness0.lean` — l. 27‑30 («La solidez de `Derives` es FALSA», con footprint
+  `[propext, FOL.MetaRules.raa]` y la causa en M‑11), l. 45‑48 y 228‑231 («`Derives` es sintácticamente
+  completo» porque `raa` toma una función de Lean), l. 56‑60 («lo que la invalidaba era el tipo sobre el
+  que inducía»; «Cuando un teorema cae por M‑11 … lo que hay que cambiar es el sujeto») y l. 208 («Para
+  `Derives` esto no se puede: su solidez es falsa»).
+* `FOL/Canonical0.lean` — l. 31‑32 («sobre `Derives` no puede haberlas: su solidez es FALSA … y
+  `axioms ⊢` es sintácticamente completo»).
+* `FOL/Compacity0.lean` — l. 31 («la solidez de `Derives` es falsa (M‑11)»).
+* `FOL/Rename.lean` — l. 33 («Sobre `Derives` es ilegítimo (M‑11: cuatro axiomas lo habitan)») y l. 279
+  («Sobre `Derives` esto sería M‑11 en estado puro»).
+* `TheoryFramework/Instances/FOL.lean` — l. 29‑30 («`FOL.Metamath.Soundness.soundness` (FALSA: con las
+  meta‑reglas, cualquier testigo suyo da `False`, `FOL/Inconsistencia.lean`)»), l. 33‑34 («el cálculo
+  CONTAMINADO … `SoundLogic` (inhabitable)») y l. 40 («La herramienta `Derives` sigue SIN instancia, y es
+  correcto: su solidez es falsa»).
+
+Lo que es verdad hoy, contra lo que habrá que contrastarlos en el `thaw`: sin meta‑reglas, `Derives` es
+`Derives₀` más una regla admisible; es **sólido** (`derives_soundness`), **no** es sintácticamente
+completo (`⊬ P` y `⊬ ¬P`: `derives_not_P`, `derives_not_negP`) y la inducción sobre él es legítima. Lo
+falso eran las meta‑reglas, no la solidez.
 
 ### Decisiones del propietario
 
@@ -46,7 +83,7 @@ El estado vigente, en `CURRENT-STATUS-PROJECT.md`. Lo que queda:
 | # | qué |
 |---|---|
 | X0 | ⛔ **Condición del propietario, no negociable: FOL no depende de nada más allá de sí mismo.** ✅ Comunicada: `RESPUESTA-PEANORF-2026-09-26.md` (lo que hoy la incumple, con file:line: los siete importan `PeanoRF.Prelim`, que trae RPP y Peano; `Collapse`/`Eq` usan `zero`/`succ` de RPP; `Eq` recibe `FOL.substTerm_liftTerm` a través de RPP; y el parámetro de `collapseT` tiene que ser un SÍMBOLO, no «un término cerrado») |
-| X1 | **PeanoRF**, propuesta (C): los siete módulos, sin entregar. Al recibirlos: namespace de FOL, los renombres de D6 en `Slash` (`derivesI_…`), `fdepth` fuera, filas de footprint, `[G.2]`, proyección, y `lock` para `Eq`/`Collapse`/`Slash`. 📨 **D8 (2026‑09‑27)**: no responde desde el 2026‑09‑23; sin plazo fijado: la información va en una carta que se deja en su repositorio (`../Peano-from-ROB-n-FOL/`), y el propietario se la pasa |
+| X1 | **PeanoRF**, propuesta (C): los siete módulos de `Calculus/`, hechos por PeanoRF según su `BLOQUEO-2026-10-01.md` («ya está hecha por vuestra parte (PRF‑050)») y sin integrar en FOL. Al recibirlos: namespace de FOL, los renombres de D6 en `Slash` (`derivesI_…`), `fdepth` fuera, filas de footprint, `[G.2]`, proyección, y `lock` para `Eq`/`Collapse`/`Slash`. 📨 **D8 (2026‑09‑27)**: no responde desde el 2026‑09‑23; sin plazo fijado: la información va en una carta que se deja en su repositorio (`../Peano-from-ROB-n-FOL/`), y el propietario se la pasa. ⛔ **2026‑10‑02**: `PeanoRF/Prelim.lean` importa `FOL.MetaRules`, borrado (ADR‑115 de RPP), y `Omega/Basic.lean` crea alias de sus axiomas ⇒ cae el build de PeanoRF (`Prelim` y lo que lo importa: la raíz `PeanoRF.lean`, `Omega/Basic`, `Meta/AxiomCheck`, `_template`). Los módulos de `Calculus/` NO caen por esto: no importan `Prelim` ni `FOL.Core`/`FOL.MetaRules` (medido el 2026‑10‑02, sólo lectura). El propietario previó la rotura por escrito al bloquearlo (`../Peano-from-ROB-n-FOL/BLOQUEO-2026-10-01.md`); PeanoRF sigue bloqueado y no se toca. |
 
 ### Trabajo
 
@@ -87,7 +124,7 @@ es FALSA y la correcta añade «mezclas de prefijo» (un paso, no un cierre); de
 | N1 | once definiciones POR DERIVABILIDAD sin marca, contra la regla 1 de §9 | **renombrar** (no escribir excepción) | ✅ `CutAdm₀`, `CutAt₀`, `CutBelow₀`, `LeftPrin₀`, `CutElim₀`, `NDtoLK₀`, `HerbrandExtraction₀`, `HerbrandExtractionBlock₀`, `ImpAll₀`, `IffAll₀`, `PwEq₂`. `PrenexNF0` (define `ImpAll₀`/`IffAll₀`) y `SequentSound0` (cita `CutElim₀`) se **descongelaron** (`thaw --confirm`, autorizado) y se volvieron a congelar en el mismo ciclo |
 | N2 | `henLimit_consistent`, `shiftTheory_consistent`: ¿titulares? | **titulares** | ✅ `henLimit_consistent₀`, `shiftTheory_consistent₀` (y sus filas de footprint) |
 | N3 | `quantFree_subst` duplicado en `SkolemNF0` y `Sequent0` | **se retira** el duplicado | ✅ `SkolemNF0` usa el de `FOL.Sequent0` |
-| N4 | `Mfalse`/`Mtrue`/`P` de `Inconsistencia` repiten los de `Soundness0` | a criterio (se deduplica, como P3 y N3) | ✅ `Inconsistencia` usa los de `Soundness0` |
+| N4 | `Mfalse`/`Mtrue`/`P` de `Inconsistencia` repiten los de `Soundness0` | a criterio (se deduplica, como P3 y N3) | ✅ `Inconsistencia` usaba los de `Soundness0`; desde su reescritura (2026‑10‑02, ADR‑115 de RPP) no los necesita |
 
 * 🔒 **Los 10 congelables quedan BLOQUEADOS, no congelados** (propietario: «sólo bloqueo»). Con
   N1‑N3 resueltas, `Hauptsatz0`, `HerbrandBlock0`, `BlockExtraction0`, `HenkinLimit0`,
@@ -154,7 +191,7 @@ núcleo y se retiró. Veredicto:
 | N7 | **(B)**, reforzar el enunciado | ✅ `herbrand_of_skolemNF₀ : ∃ m ψ, skolemize k (prenex φ) = allBlock m ψ ∧ QuantFree ψ ∧ ([] ⊢₀ ¬(skolemize k (prenex φ)) ↔ ∃ tss E, HerbrandCertBlock m (¬ψ) tss E)`. Misma prueba, mismo footprint (`[propext, Quot.sound]`); sin consumidores |
 
 * 🧊 **CONGELADOS** (tercer lote, RPP‑112): los siete que retenía N5 —`Henkin0`, `Skolem0`, `Lindenbaum0`, `SkolemNF0`, `Hauptsatz0`, `HerbrandBlock0`, `BlockExtraction0`— y `SkolemHerbrand0`, que retenía N7. ⇒ **23 congelados**: los 17 candidatos, `TheoryFramework/Instances/FOL` y los cinco del primer lote.
-* Sigue retenida por X1 `Inconsistencia` (su §2 cambia con la entrega de PeanoRF).
+* Sigue retenida por X1 `Inconsistencia` (su §2 cambia con la entrega de PeanoRF). El 2026‑10‑02 se reescribieron sus §1 y §3, al borrarse `FOL/MetaRules.lean` (ADR‑115 de RPP; arriba, al principio de «Lo que queda»).
 
 ⛔ **Fuera de alcance, con su motivo**: LS↑ (ver `Compacity0` §3); un decisor PRÁCTICO del fragmento sin cuantificadores
 (cierre de congruencia con certificado: el de `QFDecide0` es de juguete); Beth y Robinson (el puente `LK₀`→`LKp`

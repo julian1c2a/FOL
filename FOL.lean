@@ -50,13 +50,16 @@ import FOL.SkolemHerbrand0
 ⭐ **D-4 (2026‑09‑12): este barrel se PARTIÓ.**
 
 * **`FOL.Core`** — sintaxis, derivación, tácticas y teoremas lógicos. Es **exactamente** lo que
-  ROBINSON_PlusPlus importa (medido: nueve módulos; nunca importa este barrel).
+  ROBINSON_PlusPlus importa (medido el 2026‑10‑02: ocho módulos —eran nueve con `FOL.MetaRules`,
+  🗑️ borrado con ADR‑115 de RPP—; nunca importa este barrel).
 * **`FOL`** (este fichero) — `FOL.Core` **más** `Semantics`, `Enumeration` y **toda la capa `₀`** (`Derives0` … `SkolemHerbrand0`: la lista son los `import` de arriba).
 
 ⭐⭐ **`FOL.Derives0` entró el 2026‑09‑14** — es el **Paso 0** de
-`../ROBINSON_PlusPlus/doc/PLAN-COMPLETITUD-FINITISTA.md`: `Derives₀`, los 21 constructores de
-`Derives` **menos la ω‑regla** y **sin los cuatro axiomas de `MetaRules`**, con **cero
-habitantes‑axioma** ⇒ **se puede inducir sobre él** (M‑11 no aplica). Más el encaje
+`../ROBINSON_PlusPlus/doc/PLAN-COMPLETITUD-FINITISTA.md`: `Derives₀`, los constructores de
+`Derives` **menos la ω‑regla** (21 de 22), con **cero habitantes‑axioma** ⇒ **se puede inducir
+sobre él**. Aquel día `Derives` cargaba además los cuatro axiomas de `MetaRules`, y M‑11 prohibía
+inducir sobre él; 🗑️ los cuatro, refutables, se borraron con `FOL/MetaRules.lean` el 2026‑10‑02
+(ADR‑115 de RPP), y desde entonces M‑11 tampoco aplica a `Derives`. Más el encaje
 `derives0_to_derives : Γ ⊢₀ f → Γ ⊢ f`, que es **él mismo** una inducción sobre `Derives₀` y por
 tanto la prueba de que el paso funciona. ⚠️ **No toca a ROBINSON_PlusPlus**: es un objeto nuevo, y
 este barrel RPP no lo importa.
@@ -65,12 +68,17 @@ este barrel RPP no lo importa.
 `derives0_soundness : Γ ⊢₀ f → Γ ⊨ f`, **demostrada**, y con ella
 **`derives0_consistent : ¬ ([] ⊢₀ ⊥)`** —la primera consistencia de un cálculo de FOL⁼ aquí— y
 ⭐⭐ **`derives0_not_complete`**: `Derives₀` **no decide toda fórmula**, que es exactamente la
-patología de la que `Derives` sí padece. ⛔ Recuérdese que **la solidez de `Derives` es FALSA**
-(`FOL/Inconsistencia.lean`, en el build desde el 2026-09-23).
+patología de la que `Derives` padecía mientras `raa` estuvo postulado sobre él (hasta ADR‑115 de
+RPP). ⛔ Del 2026‑09‑11 al 2026‑10‑02 se leyó que **la solidez de `Derives` era FALSA**
+(`FOL/Inconsistencia.lean`, en el build desde el 2026-09-23). Era al revés: lo falso era `raa`.
+🗑️ Borrado `FOL/MetaRules.lean` (ADR‑115 de RPP), esa solidez es un teorema del mismo módulo,
+reescrito (`FOL.Inconsistencia.derives_soundness`), y `Derives` tampoco decide toda fórmula
+(`derives_not_P`, `derives_not_negP`).
 
 ⭐ **`FOL.Rename`, también el 2026‑09‑14**: `derives0_rename` — `Derives₀` respeta el renombrado
 de símbolos de función, footprint **`[propext, Quot.sound]`** (ni `Classical.choice`). Es la pieza
-que la **extensión de Henkin** necesitaba y que sobre `Derives` estaba prohibida por M‑11.
+que la **extensión de Henkin** necesitaba y que sobre `Derives` estaba prohibida por M‑11 (hasta
+ADR‑115 de RPP).
 
 ⭐⭐ **`FOL.Eigenvariable`, la otra mitad**: `derives0_gen_fresh` — de `Γ ⊢₀ φ` con la constante
 `c` **fresca en el contexto** se concluye `Γ ⊢₀ ∀ (absFormula c 0 φ)`. Footprint
@@ -107,8 +115,8 @@ consumidor no usaba.
 
 | módulo | desde | razón |
 |---|---|---|
-| `FOL.Soundness` | 2026‑09‑11 | ⛔ **su teorema es FALSO**: con `raa` demuestra `False` sin hipótesis |
-| `FOL.Compacity` | 2026‑09‑11 | su prueba pasaba por `soundness` ⇒ **vacua** |
+| `FOL.Soundness` | 2026‑09‑11 | ⛔ se leyó que **su teorema era FALSO**: con `raa` postulado demostraba `False` sin hipótesis. Era al revés: lo falso era `raa`. 🗑️ Borrado `FOL/MetaRules.lean` (ADR‑115 de RPP, 2026‑10‑02), su enunciado es un teorema: `FOL.Inconsistencia.derives_soundness` |
+| `FOL.Compacity` | 2026‑09‑11 | su prueba pasaba por `soundness` ⇒ se declaró **vacua** (razón de entonces, que ya no vale: ese enunciado es hoy un teorema, ADR‑115 de RPP) |
 | `FOL.Completeness` | 2026‑09‑12 | 702 líneas y **5 axiomas**, con **cero consumidores reales**. ⭐⭐ **Desde el 2026‑09‑13 es UNO**: la enumerabilidad la construye `FOL.Enumeration` y las dos congruencias de la igualdad son teoremas (`FOL/Theorems/Eq.lean`). ⛔ **Borrado el 2026-09-23**: lo supera `FOL.Canonical0.completeness₀`, con cero axiomas del proyecto |
 
 Los tres se **borraron** el 2026-09-23 (la cuarentena se vació de código); el porqué sigue en `cuarentena/README.md`. Sus sujetos, reparados sobre `Derives₀`: `FOL.Soundness0`, `FOL.Compacity0` y `FOL.Canonical0`.

@@ -45,8 +45,8 @@ syntax "derive_weaken " term : tactic
 macro_rules
   | `(tactic| derive_weaken $thm) => `(tactic| apply Derives.weakening $thm; repeat (apply List.subset_cons <|> exact List.Subset.refl _))
 
--- Tactic to automate Reductio ad Absurdum (RAA)
-syntax "derive_raa" : tactic
-
-macro_rules
-  | `(tactic| derive_raa) => `(tactic| apply Derives.raa)
+-- 2026-10-02 (ADR-115 de RPP): la táctica `derive_raa` se retiró. Expandía a `apply Derives.raa`,
+-- un nombre que ya no existía cuando se escribió: `raa` fue constructor de `Derives`
+-- (`Derives (neg A :: Γ) ⊥ → Derives Γ A`) sólo del 2026-04-22 (cab6eaf) al 2026-04-25 (9eac2a8,
+-- el mismo commit que añadió la táctica). El `raa` posterior fue un axioma, el último
+-- `FOL.MetaRules.raa`, borrado por refutable. Nadie la usaba.

@@ -3,114 +3,116 @@ Copyright (c) 2026. All rights reserved.
 Author: Julián Calderón Almendros
 License: MIT
 
-> ## ⭐⭐ 2026‑09‑23 · ESTE MÓDULO SUBE AL BUILD (decisión E3 del cierre)
+> ## 🗑️ 2026‑10‑02 · REESCRITO: `FOL/MetaRules.lean` RETIRADO, y el diagnóstico de este módulo, al revés
 >
-> Vivía en `cuarentena/`, que **no se compila**. Y `cuarentena/README.md` —en su nota de cabecera,
-> que atribuye la lección a su §7— dice, casi con esas
-> palabras, que un directorio no compilado es **cómo un `axiom` falso sobrevivió ochenta días**.
-> ⇒ la **evidencia** de que la solidez de `Derives` es falsa **no la verificaba ningún build**.
->
-> 🔑 *Congelar un repositorio con su pieza de evidencia sin compilar es congelar una
-> afirmación, no un hecho.*
->
-> ⚠️ **Y es seguro tenerlo en la librería principal**: el teorema es **CONDICIONAL**
-> —`(solidez : …) → False`—, no afirma `False`. Lo que dice es que **ese enunciado no tiene
-> testigo**, y por eso no hay nada que aislar.
+> Este módulo vivía en `cuarentena/` y subió al build el 2026‑09‑23 (decisión E3 del cierre: «congelar un
+> repositorio con su pieza de evidencia sin compilar es congelar una afirmación, no un hecho»). Su §1 era
+> `inconsistencia_de_cualquier_solidez`: con el `axiom raa` en el entorno, **cualquier** teorema de solidez
+> para `Derives` daba `False`. Se leyó como «la solidez de `Derives` es FALSA». **Era al revés: lo falso era
+> `raa`.** Los 22 constructores de `Derives` son sólidos (§1 de abajo), así que los ENUNCIADOS de las cuatro
+> meta‑reglas se refutan sin usarlas (§3). El propietario decidió retirarlas —«no hacemos uso de herramientas
+> que no sean verdaderas»— y con ellas se fue aquel teorema, cuyo enunciado era falso: sólo se «demostraba»
+> con `raa`. Registro de lo que decía y de su footprint, al final del fichero.
 -/
 import FOL.FOL
-import FOL.MetaRules
 import FOL.Semantics
 import FOL.Propositional0
 import FOL.Soundness0
 import FOL.Finitary0
+import FOL.Fresh0
 
 /-!
-# ⛔⛔ La EVIDENCIA COMPILADA: `Derives` no admite teorema de solidez
+# Lo que `Derives` SÍ cumple, y los enunciados que NO tienen testigo
 
-Medido el **2026‑09‑11**, cuando vivía en `cuarentena/`. Desde el 2026‑09‑23 está **en la
-librería** (`FOL.lean` lo importa y el build lo compila; ver la nota de arriba), y no contamina
-nada porque el teorema es **condicional**. Su footprint lo vigila
-`../ROBINSON_PlusPlus/check-footprints.bash`.
+| § | qué | teorema |
+|---|---|---|
+| 1 | sin meta‑reglas, `Derives` **ES** `Derives₀`: `gen_rule` es admisible con una constante fresca | `derives_to_derives0` |
+| 1 | y por tanto es **sólido** para Tarski | `derives_soundness` |
+| 2 | ⛔ la propiedad de disyunción es FALSA para `Derives₀` (en el build desde el 2026‑09‑23, sin `Classical.choice` desde el 2026‑09‑27; la reescritura de hoy no la toca) | `derives0_no_disjunction_property` |
+| 3 | ⛔ los ENUNCIADOS de `imp_intro`, `raa`, `or_elim` y `ex_elim`, refutados SIN usarlos | `imp_intro_refutable`, `raa_refutable`, `or_elim_refutable`, `ex_elim_refutable` |
 
-## Qué se demuestra aquí
+⭐ Los cuatro de §3 y el de §2 dicen lo mismo con distinta forma: **un enunciado no tiene testigo**. Las tres
+primeras refutaciones van por la vía FINITARIA (`derives_to_derives0` + `Finitary0`, sin `Classical.choice`);
+`ex_elim` necesita un modelo de dos puntos, porque su premisa habla de TODO término y una valuación booleana no
+distingue términos.
 
-No es «la prueba de `cuarentena/Soundness.lean` (borrado el 2026‑09‑23, `62dc2d5`) tenía un
-fallo». Es más fuerte:
+🔑 *La regla M‑11 —«un `axiom` que habita un inductivo prohíbe inducir sobre él»— se quedaba corta. El recursor
+cubre por definición a TODO habitante: si una inducción demuestra que el inductivo es sólido, el axioma que lo
+contradice es FALSO, y lo que hay que retirar es el axioma, no la inducción.*
 
-> **CUALQUIER función de tipo `∀ {Γ f}, (Γ ⊢ f) → satisfies Γ f` demuestra `False`.**
-
-Es decir: el enunciado de solidez para `Derives` **no es demostrable porque es FALSO**, y ninguna
-prueba más cuidadosa lo arreglaría.
-
-## Por qué
-
-`Derives` es un `inductive` de **22 constructores**; los 21 que comparte con `Derives₀` son
-semánticamente válidos (`derives0_soundness`). Pero `FOL/MetaRules.lean` declara **cuatro `axiom`s
-que lo HABITAN** (`imp_intro`, `raa`, `or_elim`, `ex_elim`; censo en `AXIOMS.md`) — y tienen que
-ser axiomas, porque sus premisas son **funciones de Lean**, es
-decir ocurrencias negativas que Lean rechazaría en un `inductive`.
-
-⇒ `Derives` tiene habitantes que **no son aplicaciones de constructor**. Un teorema probado por
-`induction` cubre los 22 casos, pero **se aplica a todos los habitantes**. Es el fallo clásico de
-`axiom foo : UnInductivo`: rompe la garantía de «no hay basura».
-
-El detonador concreto es `raa`: si `Γ ⊬ A`, la función `Γ ⊢ A → Γ ⊢ ⊥` existe **vacuamente**, luego
-`raa` da `Γ ⊢ ¬A`. Con solidez eso obliga a `Γ ⊨ ¬A`, que es falso en cuanto `A` sea verdadera en
-algún modelo de `Γ`. Y con `Γ = []` bastan **dos modelos triviales sobre `Unit`**.
-
-## Qué NO dice
-
-* ⚠️ **No dice que `ROBINSON_PlusPlus` sea inconsistente.** Medido el 2026‑09‑27: la librería de
-  RPP **no importa** este módulo (el `FOL.Soundness` que aquí se citaba ya no existe)
-  ni el barrel raíz `FOL`; sólo `FOL.FOL`, `FOL.MetaRules`, `FOL.Tactics`, `FOL.Deduction` y
-  `FOL.Theorems.*`. Su árbol entero y la cadena de Gödel no están en contexto inconsistente.
-* ⚠️ **No dice que `FOL/Semantics.lean` esté mal.** Está bien, y es útil: es lo que permitió probar
-  `prfI_soundness` en `../ROBINSON_PlusPlus/sondeos/AnclaSoundness.lean` (un sondeo, fuera del
-  build de RPP).
-* ⚠️ **No dice que las meta‑reglas estén mal.** Dicen lo que dicen: `⊢` es una noción metateórica de
-  verdad, no una relación de derivabilidad.
-  `../ROBINSON_PlusPlus/ROBINSON_PlusPlus/Meta/OmegaStrength.lean` mide la otra cara —`⊢` decide
-  toda sentencia— y de ahí que **no sea r.e.**
-
-## La salida buena
-
-Enunciar la solidez sobre un cálculo **sin axiomas habitándolo**. `ROBINSON_PlusPlus` tiene uno:
-`Prfᵢ` (17 constructores, **cero** axiomas). `prfI_soundness` está probado, con footprint
-`[propext, Classical.choice, Quot.sound]`.
+**Ámbito**: esto habla de `Derives`, el cálculo de 22 constructores de `FOL/FOL.lean`. El sujeto de FOL sigue
+siendo `Derives₀`; `Derives` queda como lo que es: `Derives₀` más `gen_rule`, que es admisible.
 -/
 
 open FOL.Metamath.Semantics
 
 namespace FOL.Inconsistencia
 
--- Los dos modelos triviales sobre `Unit` (`Mfalse`: toda relación falsa; `Mtrue`: toda verdadera) y
--- el átomo `P` son los de `FOL.Soundness0`. Aquí había copias literales, retiradas el 2026‑09‑27
--- (N4, RPP‑109).
-open FOL.Metamath.Soundness0 (Mfalse Mtrue P)
+-- ============================================================
+-- §1 · Sin meta‑reglas, `Derives` ES `Derives₀`, y es sólido
+-- ============================================================
 
-/-- Con contexto vacío, `contextSatisfies` es trivial. -/
-theorem ctx_nil {D : Type} (M : Model D) (v : Nat → D) : contextSatisfies M v [] := by
-  intro f hf; cases hf
+section DerivesEsDerives0
 
-/-- ⛔⛔ **El resultado.** Cualquier testigo del enunciado de solidez para `Derives` da `False`,
-    sin ninguna otra hipótesis. El argumento usa sólo `raa` y dos modelos sobre `Unit`. -/
-theorem inconsistencia_de_cualquier_solidez
-    (solidez : ∀ {Γ : List Formula} {f : Formula}, (Γ ⊢ f) → satisfies Γ f) : False := by
-  -- (1) `P` no es derivable del contexto vacío: lo refuta el modelo con relaciones falsas.
-  have hnd : ¬ ([] ⊢ P) := fun h => solidez h Unit Mfalse (fun _ => ()) (ctx_nil _ _)
-  -- (2) Luego `raa` — cuya premisa es una función de Lean — refuta `P`.
-  have hneg : [] ⊢ neg P := FOL.MetaRules.raa (fun h => absurd h hnd)
-  -- (3) Pero `P` es verdadera en el modelo con relaciones verdaderas.
-  have h := solidez hneg Unit Mtrue (fun _ => ()) (ctx_nil _ _)
-  simp only [evalFormula, neg] at h
-  exact h trivial
+open FOL.Eigenvariable FOL.Lift0 FOL.Fresh0
+
+/-- El núcleo de `Henkin0.abs_neg_witness` sin el `neg`: abstraer una constante fresca recién
+    sustituida devuelve la fórmula. -/
+theorem abs_witness (c : String) (A : Formula) (hcA : Not (occursFormula c A)) :
+    absFormula c 0 (substFormula 0 (Term.func c []) A) = A := by
+  rw [absFormula_subst c A 0 0 (Nat.le_refl 0), absFormula_eq_lift c A 1 hcA]
+  have hc : absTerm c 0 (Term.func c []) = Term.var 0 := by simp [absTerm]
+  rw [hc, substFormula_lift_var A 0]
+
+/-- 🏁 **Los 22 constructores de `Derives` se traducen a `Derives₀`.** Veintiuno son el mismo
+    constructor; `gen_rule` —cuya premisa recorre TODO término— es **admisible**: basta su premisa en
+    UNA constante fresca y `derives0_gen_fresh`. Medido en `ROBINSON_PlusPlus/sondeos/`
+    `MetaReglasRefutables.lean` §4 antes de subirlo aquí (2026‑10‑02). -/
+theorem derives_to_derives0 {Γ : List Formula} {f : Formula} (h : Γ ⊢ f) : Γ ⊢₀ f := by
+  induction h with
+  | hyp Γ f hm => exact Derives₀.hyp Γ f hm
+  | intro_impl Γ A B _ ih => exact Derives₀.intro_impl Γ A B ih
+  | elim_impl Γ A B _ _ ih1 ih2 => exact Derives₀.elim_impl Γ A B ih1 ih2
+  | intro_and Γ A B _ _ ih1 ih2 => exact Derives₀.intro_and Γ A B ih1 ih2
+  | elim_and_l Γ A B _ ih => exact Derives₀.elim_and_l Γ A B ih
+  | elim_and_r Γ A B _ ih => exact Derives₀.elim_and_r Γ A B ih
+  | intro_or_l Γ A B _ ih => exact Derives₀.intro_or_l Γ A B ih
+  | intro_or_r Γ A B _ ih => exact Derives₀.intro_or_r Γ A B ih
+  | elim_or Γ A B C _ _ _ ih1 ih2 ih3 => exact Derives₀.elim_or Γ A B C ih1 ih2 ih3
+  | intro_forall Γ A _ ih => exact Derives₀.intro_forall Γ A ih
+  | elim_forall Γ A t _ ih => exact Derives₀.elim_forall Γ A t ih
+  | intro_ex Γ A t _ ih => exact Derives₀.intro_ex Γ A t ih
+  | elim_ex Γ A B _ _ ih1 ih2 => exact Derives₀.elim_ex Γ A B ih1 ih2
+  | bot_elim Γ A _ ih => exact Derives₀.bot_elim Γ A ih
+  | weakening Γ Γ' f _ hsub ih => exact Derives₀.weakening Γ Γ' f ih hsub
+  | rewrite_at Γ f f' p sub sub' _ hget hrule heq ih =>
+      exact Derives₀.rewrite_at Γ f f' p sub sub' ih hget hrule heq
+  | gen_rule Γ A _ ih =>
+      obtain ⟨N1, h1⟩ := cst_bound_list Γ
+      obtain ⟨N2, h2⟩ := cst_bound_formula A
+      have hΓ := h1 (max N1 N2) (Nat.le_max_left _ _)
+      have hA := h2 (max N1 N2) (Nat.le_max_right _ _)
+      have h := derives0_gen_fresh (cst (max N1 N2)) hΓ (ih (Term.func (cst (max N1 N2)) []))
+      rwa [abs_witness _ A hA] at h
+  | dne_rule Γ A _ ih => exact Derives₀.dne_rule Γ A ih
+  | dne_schema Γ A => exact Derives₀.dne_schema Γ A
+  | forall_not_ex_not Γ A => exact Derives₀.forall_not_ex_not Γ A
+  | refl Γ t => exact Derives₀.refl Γ t
+  | subst Γ t₁ t₂ f _ _ ih1 ih2 => exact Derives₀.subst Γ t₁ t₂ f ih1 ih2
+
+end DerivesEsDerives0
+
+/-- 🏁 **La solidez de TARSKI de `Derives`.** Hasta el 2026‑10‑02 este fichero «demostraba» que este
+    enunciado no tenía testigo; lo que no lo tenía era `raa`. -/
+theorem derives_soundness {Γ : List Formula} {f : Formula} (h : Γ ⊢ f) : satisfies Γ f :=
+  derives0_soundness (derives_to_derives0 h)
 
 
 -- ============================================================
--- §2 · ⛔⛔ Y la PROPIEDAD DE DISYUNCIÓN es FALSA para `Derives₀`
+-- §2 · ⛔⛔ La PROPIEDAD DE DISYUNCIÓN es FALSA para `Derives₀`
 -- ============================================================
 
-/-! ## ⛔⛔ El segundo enunciado que NO tiene testigo
+/-! ## ⛔⛔ Un enunciado que NO tiene testigo
 
 ⭐⭐ **Añadido el 2026‑09‑23, y la historia vale más que el teorema.** El propietario decidió ir a
 por la **propiedad de disyunción** como último resultado de FOL. Se verificó el objetivo antes de
@@ -138,10 +140,7 @@ se conserva (módulo congelado) como corolario de su ruta.
 
 ⭐ **Lo que SÍ es cierto** está probado en otro árbol: `PeanoRF/Calculus/Slash.lean`, por la barra
 de Kleene, sobre `Derivesᵢ` = `Derives₀` **menos los tres constructores clásicos** y sobre esta
-misma `Formula`. ⛔ No es importable desde aquí: su cadena baja a `ROBINSON_PlusPlus` y a `Peano`.
-
-⚠️ **Este teorema y el de §1 son hermanos**, y por eso viven juntos: los dos dicen que un
-enunciado **no tiene testigo**, y los dos lo dicen del cálculo que el proyecto usa. -/
+misma `Formula`. ⛔ No es importable desde aquí: su cadena baja a `ROBINSON_PlusPlus` y a `Peano`. -/
 
 /-- La **propiedad de disyunción**, enunciada como `Prop` — el idioma del proyecto: una
 obligación se enuncia, nunca se postula. -/
@@ -176,10 +175,109 @@ theorem derives0_no_disjunction_property : Not DisjunctionProperty₀ := by
   · exact hA h
   · exact hnA h
 
+
+-- ============================================================
+-- §3 · ⛔⛔ Los ENUNCIADOS de las cuatro meta‑reglas, refutados SIN usarlas
+-- ============================================================
+
+/-! ## ⛔⛔ Las cuatro meta‑reglas de `FOL/MetaRules.lean` eran FALSAS
+
+Eran `axiom` porque su premisa es una **función de Lean** (`Γ ⊢ A → Γ ⊢ B`), una ocurrencia no positiva
+que el kernel rechaza en un `inductive`. Ese mismo rasgo las hace falsas: si `Γ ⊬ A`, la función existe
+**vacuamente**, y la regla fabrica una conclusión que la solidez de §1 prohíbe. Se enuncian aquí como `Prop`
+y se refutan **sin postularlas**: valen para siempre, y dicen que no se pueden volver a postular sin hacer
+inconsistente a Lean. Primera medición: `ROBINSON_PlusPlus/sondeos/MetaReglasRefutables.lean` (2026‑10‑02,
+auditoría de la base, L1‑3 y R2‑4‑1). -/
+
+/-- El enunciado de `imp_intro`: de una función `Γ ⊢ A → Γ ⊢ B`, la implicación objeto. -/
+def ImpIntro : Prop := ∀ {Γ : List Formula} {A B : Formula}, (Γ ⊢ A → Γ ⊢ B) → Γ ⊢ (A ⇒ B)
+
+/-- El enunciado de `raa`: de una función `Γ ⊢ A → Γ ⊢ ⊥`, la negación. -/
+def Raa : Prop := ∀ {Γ : List Formula} {A : Formula}, (Γ ⊢ A → Γ ⊢ Formula.bottom) → Γ ⊢ neg A
+
+/-- El enunciado de `or_elim`, con las dos ramas como funciones de Lean. -/
+def OrElim : Prop := ∀ {Γ : List Formula} {A B C : Formula}, (Γ ⊢ Formula.or A B) →
+    (Γ ⊢ A → Γ ⊢ C) → (Γ ⊢ B → Γ ⊢ C) → Γ ⊢ C
+
+/-- El enunciado de `ex_elim`, con la continuación como función de Lean sobre TODO término. -/
+def ExElim : Prop := ∀ {Γ : List Formula} {A C : Formula}, (Γ ⊢ Formula.ex A) →
+    (∀ t : Term, Γ ⊢ substFormula 0 t A → Γ ⊢ C) → Γ ⊢ C
+
+/-- `⊬ P`, por la vía finitaria: lo que `Derives` prueba, `Derives₀` lo prueba. -/
+theorem derives_not_P : Not (([] : List Formula) ⊢ Formula.atom "P" []) := fun h =>
+  FOL.Finitary0.derives0_not_P_fin (derives_to_derives0 h)
+
+/-- `⊬ ¬P`, ídem. -/
+theorem derives_not_negP : Not (([] : List Formula) ⊢ neg (Formula.atom "P" [])) := fun h =>
+  derives0_not_negP_fin (derives_to_derives0 h)
+
+/-- 🏁 **`imp_intro` es FALSO**: como `⊬ P`, la premisa `⊢ P → ⊢ ⊥` vale vacuamente, y daría `⊢ ¬P`. -/
+theorem imp_intro_refutable : Not ImpIntro := fun H =>
+  derives_not_negP (H (Γ := []) (A := Formula.atom "P" []) (B := Formula.bottom)
+    (fun h => absurd h derives_not_P))
+
+/-- 🏁 **`raa` es FALSO**, por la misma razón. Es el detonador que este fichero usaba al revés. -/
+theorem raa_refutable : Not Raa := fun H =>
+  derives_not_negP (H (Γ := []) (A := Formula.atom "P" []) (fun h => absurd h derives_not_P))
+
+/-- 🏁 **`or_elim` es FALSO**: `⊢ P ∨ ¬P` (tercio excluso), y como `⊬ P` y `⊬ ¬P`, las dos ramas valen
+    vacuamente hacia `⊥` — que `Derives₀` no prueba. -/
+theorem or_elim_refutable : Not OrElim := fun H =>
+  FOL.Finitary0.derives0_consistent_fin (derives_to_derives0
+    (H (Γ := []) (A := Formula.atom "P" []) (B := neg (Formula.atom "P" [])) (C := Formula.bottom)
+      (derives0_to_derives (FOL.Propositional0.derives0_em_ctx [] (Formula.atom "P" [])))
+      (fun h => absurd h derives_not_P) (fun h => absurd h derives_not_negP)))
+
+/-- El modelo de dos puntos para `ex_elim`: `P` sólo vale en `true`, y todo término vale `false`. -/
+private def MB : Model Bool := ⟨fun _ _ => false, fun _ ds => ds = [true]⟩
+private def vB : Nat → Bool := fun _ => false
+private def PA : Formula := Formula.atom "P" [Term.var 0]
+
+/-- 🏁 **`ex_elim` es FALSO**: en `MB`, `∃x P(x)` es verdadera pero ningún TÉRMINO la testimonia
+    (todos valen `false`), así que desde `[∃x P(x)]` no se deriva ningún `P(t)`, la continuación vale
+    vacuamente hacia `⊥`, y `MB` refuta `⊥`. Una valuación booleana no distingue términos: aquí hace falta
+    un modelo, y con él `Classical.choice`. -/
+theorem ex_elim_refutable : Not ExElim := by
+  intro hex
+  have hΓ : contextSatisfies MB vB [Formula.ex PA] := by
+    intro g hg
+    cases hg with
+    | head => simp [PA, MB, evalFormula, evalTerms, evalTerm, shiftEnv]
+    | tail _ h => exact absurd h List.not_mem_nil
+  have hterm : ∀ t : Term, evalTerm MB vB t = false := by
+    intro t; cases t <;> simp [evalTerm, MB, vB]
+  have hno : ∀ t : Term, Not ([Formula.ex PA] ⊢ substFormula 0 t PA) := by
+    intro t ht
+    have := derives_soundness ht Bool MB vB hΓ
+    simp [PA, MB, substFormula, substTerms, substTerm, evalFormula, evalTerms] at this
+    exact absurd this (by simpa [MB] using hterm t)
+  exact derives_soundness
+    (hex (Γ := [Formula.ex PA]) (A := PA) (C := Formula.bottom)
+      (Derives.hyp _ _ (List.Mem.head _)) (fun t ht => absurd ht (hno t)))
+    Bool MB vB hΓ
+
 end FOL.Inconsistencia
 
-/-! ## FOOTPRINT (2026‑09‑27) — §1, `[propext, FOL.MetaRules.raa]`; §2, `[propext, Quot.sound]`.
-Ni `Classical.choice` ni otro axioma del proyecto. (Decía «sólo `raa` y los tres de Lean»: §1 no
-usa `Quot.sound`, y §2 llevó `Classical.choice` hasta el 2026‑09‑27.) -/
-#print axioms FOL.Inconsistencia.inconsistencia_de_cualquier_solidez
+/-! ## 🗑️ REGISTRO — lo que este fichero demostraba hasta el 2026‑10‑02
+
+    inconsistencia_de_cualquier_solidez
+        (solidez : ∀ {Γ : List Formula} {f : Formula}, (Γ ⊢ f) → satisfies Γ f) : False
+      -- (1) `⊬ P`, por solidez con `Mfalse`;  (2) `raa` (premisa vacua) da `⊢ ¬P`;
+      -- (3) solidez con `Mtrue` lo contradice.
+
+(se cita sin la palabra clave a propósito: los controles cuentan declaraciones por texto), con footprint
+`[propext, FOL.MetaRules.raa]`. Su enunciado es **FALSO**, y lo era también entonces: `derives_soundness`
+es un testigo de su hipótesis, y la inducción que lo prueba no ve los axiomas. Lo que medía no era que `Derives` no fuera sólido, sino que `raa` no lo era. -/
+
+/-! ## FOOTPRINT (medido el 2026‑10‑02) — `derives_to_derives0`, `derives0_no_disjunction_property`,
+`imp_intro_refutable`, `raa_refutable` y `or_elim_refutable`: `[propext, Quot.sound]`, la vía finitaria,
+sin `Classical.choice`. `derives_soundness` y `ex_elim_refutable`: `[propext, Classical.choice,
+Quot.sound]`, porque pasan por los modelos de Tarski en `Prop`. Ningún axioma del proyecto: no queda
+ninguno. Los vigila `../ROBINSON_PlusPlus/check-footprints.bash`. -/
+#print axioms FOL.Inconsistencia.derives_to_derives0
+#print axioms FOL.Inconsistencia.derives_soundness
 #print axioms FOL.Inconsistencia.derives0_no_disjunction_property
+#print axioms FOL.Inconsistencia.imp_intro_refutable
+#print axioms FOL.Inconsistencia.raa_refutable
+#print axioms FOL.Inconsistencia.or_elim_refutable
+#print axioms FOL.Inconsistencia.ex_elim_refutable

@@ -1,14 +1,52 @@
-# `cuarentena/` — ⛔ **tres módulos apartados el 2026‑09‑11**, y **VACIADA el 2026‑09‑23**
+# `cuarentena/` — ⛔ **tres módulos apartados el 2026‑09‑11**, **VACIADA el 2026‑09‑23**, y su diagnóstico **RECTIFICADO el 2026‑10‑02**
+
+> ## ✏️✏️ RECTIFICACIÓN — 2026‑10‑02 · el diagnóstico de este README estaba **AL REVÉS**
+>
+> `soundness : Γ ⊢ f → Γ ⊨ f` **no era falso: es un teorema**, hoy `FOL.Inconsistencia.derives_soundness`
+> (`FOL/Inconsistencia.lean` §1), y la prueba de `Soundness.lean` era correcta (su entorno ni siquiera
+> importaba `MetaRules`). **Lo falso era `raa`**, y con él `imp_intro`, `or_elim` y `ex_elim`: sus
+> ENUNCIADOS se refutan **sin usarlos** (`raa_refutable` y sus tres gemelos, `FOL/Inconsistencia.lean` §3),
+> así que Lean + cualquiera de ellos demostraba `False` **sin ninguna hipótesis de solidez**. Lo midió
+> primero la auditoría de la base de RPP, en sus dos rondas
+> (`ROBINSON_PlusPlus/sondeos/MetaReglasRefutables.lean`; ADR‑114 y ADR‑115 de RPP). El propietario
+> decidió retirarlas —«no hacemos uso de herramientas que no sean verdaderas»— y `FOL/MetaRules.lean`
+> quedó **borrado** el 2026‑10‑02 (ADR‑115 de RPP). FOL tiene hoy **0 `axiom` de Lean** en el build
+> (los 15 de `cuarentena/librerias-retiradas/`, librerías muertas fuera del lakefile, aparte).
+>
+> ⚠️ El texto de abajo **no se reescribe**: es el registro. Pero estas afirmaciones suyas quedan
+> **refutadas**, y cada una lleva una marca ✏️ en su sitio:
+>
+> | dónde | lo que decía | lo que es |
+> |---|---|---|
+> | tabla del 2026‑09‑23, titular, §1, §5, §9.2 | «el teorema es FALSO», «`raa` es la causa de que la solidez sea falsa», «el cálculo completo y no sólido» | `Derives` es sólido: lo falso era `raa` |
+> | tabla del 2026‑09‑23, §5 | `compactness_theorem` era «vacuo» porque «pasaba por `soundness`» | esa razón no valía: `soundness` era cierto |
+> | §1 | «`import FOL` era un módulo inconsistente. Ya no los importa.» | lo siguió siendo hasta el 2026‑10‑02: dejó de importar `FOL.Soundness`, no `FOL.MetaRules` (desde el 2026‑09‑12, a través de `FOL.Core`), y `raa` solo bastaba |
+> | §2 | «Y tienen que ser axiomas … no hay alternativa dentro del tipo» | `gen` y `dne`: constructores desde D‑2 (2026‑09‑12); las otras cuatro: la alternativa era no postularlas: eran falsas, y se borraron |
+> | §2 (y el «mismo defecto» y el «mismo hueco» de §6bis y §7) | «Ningún teorema sobre `Derives` puede demostrarse por `induction`» · «El radio del daño es ése» | la inducción es legítima: el recursor cubre a TODO habitante, y `derives_to_derives0` induce sobre `Derives`. Si una inducción contradice un `axiom`, lo que se retira es el axioma. Y el radio era todo lo que importaba `MetaRules` |
+> | §4 | «`ROBINSON_PlusPlus` NO está afectado» | lo estaba: importaba `FOL.MetaRules`, y su entorno demostraba `False`. RPP retiró su capa `⊢` y ya no lo importa (ADR‑115 de RPP) |
+> | §4 | «Las meta‑reglas no están «mal»» | lo estaban: sus enunciados son falsos |
+> | §6bis | «ESTA CUARENTENA NO FUE EFECTIVA EL PRIMER DÍA» | no lo fue nunca contra `False`: con o sin el `.olean` fantasma, bastaba `raa`. La lección del fantasma vale igual |
+> | §8 | «La reparación de fondo, que NO se ha hecho» | hecha el 2026‑10‑02, por retirada y no con `DerivesW` |
+> | §9.2 | «Lo que **no** se sigue: `False`», porque el detonador sería «`raa` **más solidez**» | sí se seguía: `raa` solo ya daba `False` (`raa_refutable`) |
+>
+> 🔑 *Cuando un teorema y un `axiom` se contradicen, el que miente puede ser el axioma.* Aquí se apartó el
+> teorema cierto, y el axioma falso siguió en el build tres semanas más.
+>
+> ⛔ **Deuda declarada (2026‑10‑02)**: cinco módulos **CONGELADOS** repiten en sus docstrings el
+> diagnóstico viejo («la solidez de `Derives` es FALSA», «inducir sobre `Derives` es ilegítimo, M‑11»):
+> `FOL/Soundness0.lean`, `FOL/Canonical0.lean`, `FOL/Compacity0.lean`, `FOL/Rename.lean` y
+> `TheoryFramework/Instances/FOL.lean`. Sólo se pueden corregir con un `thaw`, y **esperan la
+> autorización del propietario**.
 
 > ## ⭐⭐ ESTE DIRECTORIO YA NO TIENE CÓDIGO — 2026‑09‑23
 >
 > | fichero | qué se hizo | por qué |
 > |---|---|---|
-> | `Soundness.lean` | **BORRADO** | el teorema es FALSO; su sujeto está reparado en `FOL/Soundness0.lean` |
-> | `Compacity.lean` | **BORRADO** | vacuo (pasaba por `soundness`); reparado en `FOL/Compacity0.lean` |
+> | `Soundness.lean` | **BORRADO** | ~~el teorema es FALSO; su sujeto está reparado en `FOL/Soundness0.lean`~~ ✏️ el teorema era **cierto** (rectificación de arriba): hoy es `derives_soundness` (`FOL/Inconsistencia.lean`), y su gemelo sobre `Derives₀`, `derives0_soundness` (`FOL/Soundness0.lean`) |
+> | `Compacity.lean` | **BORRADO** | vacuo (pasaba por `soundness`) ✏️ *(esa razón no valía: `soundness` era cierto)*; reparado en `FOL/Compacity0.lean` |
 > | `Theorems_Soundness.lean` | **BORRADO** | sólo re‑exportaba `soundness` |
-> | `Completeness.lean` | **BORRADO** | superado por `FOL/Canonical0.lean` (`completeness₀`), y con él se va el único `axiom` fuera del build |
-> | `Inconsistencia.lean` | ⭐ **SUBE AL BUILD** → `FOL/Inconsistencia.lean` | era la **evidencia**, y vivía donde nada se compila |
+> | `Completeness.lean` | **BORRADO** | superado por `FOL/Canonical0.lean` (`completeness₀`), y con él se va el único `axiom` fuera del build *(sin contar `librerias-retiradas/`, ver abajo)* |
+> | `Inconsistencia.lean` | ⭐ **SUBE AL BUILD** → `FOL/Inconsistencia.lean` | era la **evidencia**, y vivía donde nada se compila. ✏️ **Reescrito el 2026‑10‑02** (ADR‑115 de RPP): su teorema `inconsistencia_de_cualquier_solidez` se borró —sin `raa`, su enunciado es falso—, y hoy demuestra lo contrario: que `Derives` es sólido y que las cuatro meta‑reglas eran falsas |
 >
 > ⚠️ **Este README se queda**, y el texto de abajo también: es el **registro** de por qué
 > hubo cuarentena, y §7 es la lección que justificó E3 — *un directorio que no se compila es
@@ -23,10 +61,14 @@
 
 **Creado:** 2026‑09‑11 · **Autor:** Julián Calderón Almendros
 
-> ## `soundness : Γ ⊢ f → Γ ⊨ f` es **FALSO**, y junto con `raa` demostraba **`False` sin hipótesis**
+> ## ✏️ `soundness : Γ ⊢ f → Γ ⊨ f` **no era FALSO**: junto con `raa` demostraba **`False` sin hipótesis**, y lo falso era `raa`
 >
-> No es un fallo en la prueba. El **enunciado** no es demostrable, porque no es verdad.
-> Evidencia compilada: **`cuarentena/Inconsistencia.lean`**.
+> ~~No es un fallo en la prueba. El **enunciado** no es demostrable, porque no es verdad.~~ *(2026‑09‑11.)*
+> ✏️ **Rectificado el 2026‑10‑02** (ver la cabecera): no fallaba la prueba **ni** el enunciado. Es un
+> teorema (`FOL.Inconsistencia.derives_soundness`), así que `raa` solo ya daba `False` (`raa_refutable`).
+> La evidencia vivía en `cuarentena/Inconsistencia.lean`: subió al build el 2026‑09‑23 como
+> **`FOL/Inconsistencia.lean`**, y se reescribió el 2026‑10‑02, al quedar borrado `FOL/MetaRules.lean`
+> (ADR‑115 de RPP).
 
 ---
 
@@ -34,18 +76,24 @@
 
 | módulo | venía de | por qué |
 |---|---|---|
-| `Soundness.lean` | `FOL/Soundness.lean` | contiene el teorema falso |
+| `Soundness.lean` | `FOL/Soundness.lean` | contiene el teorema ~~falso~~ ✏️ que se dio por falso (era cierto) |
 | `Compacity.lean` | `FOL/Compacity.lean` | `compactness_theorem` se apoya en él |
 | `Theorems_Soundness.lean` | `FOL/Theorems/Soundness.lean` | reexportaba `soundness` |
 
 Y `FOL.lean` —el barrel raíz— importaba `FOL.MetaRules` **y** `FOL.Soundness` a la vez:
 ⇒ **`import FOL` era un módulo inconsistente.** Ya no los importa.
+✏️ *Dejó de importar `FOL.Soundness`, no `FOL.MetaRules` —desde el 2026‑09‑12, a través de `FOL.Core`—,
+y `raa` solo bastaba: `import FOL` siguió siendo inconsistente hasta el 2026‑10‑02, cuando
+`FOL/MetaRules.lean` quedó borrado (ADR‑115 de RPP).*
 
 ## 2 · La causa, exacta
 
 `Derives` (`FOL/FOL.lean:165`) es un `inductive` de **18 constructores**, todos semánticamente
 válidos — es deducción natural intuicionista. La solidez para ellos es cierta y su prueba era
 correcta caso por caso.
+✏️ *(Esto es del 2026‑09‑11. Hoy el `inductive` de `FOL/FOL.lean` tiene 22: D‑2 añadió
+`gen_rule` y los tres clásicos, `dne_rule`, `dne_schema` y `forall_not_ex_not`. La solidez de los 22
+está demostrada: `derives_soundness`.)*
 
 ⚠️ **CENSO CORREGIDO el 2026‑09‑12**: esta página decía «cinco» y son **OCHO en la librería FOL**
 (**doce** contando el lado de ROBINSON_PlusPlus). Los que faltaban estaban **fuera** de
@@ -56,7 +104,11 @@ correcta caso por caso.
 | `FOL/MetaRules.lean` | `imp_intro`, `gen`, `raa`, `dne`, `or_elim`, `ex_elim` | 6 |
 | `FOL/Theorems/Neg.lean:57` | **un SEGUNDO `dne`**, en forma de esquema (`Γ ⊢ (¬¬A ⇒ A)`), distinto del de `MetaRules` (que es regla). Lo consume `Completeness.lean:680` | 1 |
 | `FOL/Theorems/Quantifiers.lean:115` | `forall_not_impl_exists_not` | 1 |
-| *(RPP)* | `ax_induction_prim`, `ax_list_induction`, `ax_axiomsCodeT_eq`, `ax_p_tfa` | +4 |
+| *(RPP)* | `ax_induction_prim`, `ax_list_induction`, `ax_axiomsCodeT_eq`, `ax_p_tfa` — 🗑️ retirados todos: el último antes, los otros tres con la capa `⊢` (ADR‑115 de RPP) | +4 |
+
+🗑️ *Censo del 2026‑09‑12. Hoy no queda ninguno*: `gen`, `dne` y los dos de `FOL/Theorems/` son
+constructores de `Derives` desde el 2026‑09‑12 (D‑2); los otros cuatro de `MetaRules.lean` se borraron
+con el fichero el 2026‑10‑02, y los de RPP quedaron retirados (ADR‑115 de RPP).
 
 Los seis de `MetaRules.lean` son:
 
@@ -69,6 +121,10 @@ Los seis de `MetaRules.lean` son:
 ⚠️ **Y tienen que ser axiomas**: sus premisas son **funciones de Lean**, o sea ocurrencias negativas
 de `Derives` en su propio constructor. Lean rechaza ese `inductive`. No es un descuido: no hay
 alternativa dentro del tipo.
+✏️ *Refutado en dos tiempos: el 2026‑09‑12 (D‑2), `gen` y `dne` —premisa positiva— pasaron a
+constructores (`gen_rule`, `dne_rule`); el 2026‑10‑02, las cuatro con premisa‑función (`imp_intro`,
+`raa`, `or_elim`, `ex_elim`), que el kernel sí rechaza como constructores, resultaron falsas como
+`axiom` y se borraron (ADR‑115 de RPP).*
 
 ⇒ `Derives` tiene habitantes que **no son aplicaciones de constructor**, y entonces:
 
@@ -77,8 +133,14 @@ alternativa dentro del tipo.
 
 Es el fallo clásico de `axiom foo : UnInductivo`: rompe la garantía de «no hay basura» del tipo.
 
+✏️ *Refutado el 2026‑10‑02: el recursor cubre por definición a TODO habitante, también a los que fabrica
+un `axiom`. Lo que el axioma rompe no es la inducción sino la consistencia: si una inducción lo
+contradice, el axioma es falso. `FOL/Inconsistencia.lean` §1 induce sobre `Derives`
+(`derives_to_derives0`), y así se refutan las meta‑reglas.*
+
 **Medido**: `soundness` era **el único** teorema de todo `FOL/` probado por inducción sobre
 `Derives` (`grep -rn "induction h with" FOL/` → una sola línea). El radio del daño es ése.
+✏️ *(No: con `raa` en el entorno, el radio era todo lo que importaba `MetaRules`.)*
 
 ## 3 · El detonador, en tres pasos
 
@@ -97,6 +159,9 @@ Footprint medido: **`[propext, FOL.MetaRules.raa]`**. Ni `Classical.choice` hace
 * ⚠️ **`ROBINSON_PlusPlus` NO está afectado.** Medido: no importa `FOL.Soundness` ni el barrel raíz
   `FOL` — sólo `FOL.FOL`, `FOL.MetaRules`, `FOL.Tactics`, `FOL.Deduction` y `FOL.Theorems.*`.
   Sus 131 módulos y la cadena de Gödel no están en contexto inconsistente.
+  ✏️ *Refutado el 2026‑10‑02 (ADR‑114 de RPP): importaba `FOL.MetaRules`, y eso bastaba —Lean + `raa`
+  demuestra `False`—. La cadena sobre `Prf` no usaba ninguna meta‑regla (ADR‑115 de RPP, P0), pero vivía
+  en ese entorno. RPP retiró su capa `⊢` y ya no importa `FOL.MetaRules` (ADR‑115 de RPP).*
 * ⚠️ **`FOL/Semantics.lean` está BIEN** y se queda en la librería. Es sólido y es útil: es
   exactamente lo que permitió demostrar `prfI_soundness` (§6).
 * ⚠️ **Las meta‑reglas no están «mal»**. Dicen lo que dicen: `⊢` es una noción metateórica de
@@ -105,10 +170,15 @@ Footprint medido: **`[propext, FOL.MetaRules.raa]`**. Ni `Classical.choice` hace
   prueba, lo refuta) ⇒ **no es r.e.** Eso ya era sabido; lo nuevo es que **también impide la
   solidez**, y las dos cosas son la misma: un cálculo completo y sólido sobre una teoría con
   modelos no elementalmente equivalentes no existe.
+  ✏️ *Refutado el 2026‑10‑02: lo estaban — sus enunciados son falsos (`FOL/Inconsistencia.lean` §3). Que
+  con `raa` `⊢` decidiera toda sentencia era la consecuencia de un axioma falso, no una fuerza del
+  cálculo; y la solidez no la «impedían»: la contradecían. `Meta/OmegaStrength.lean` quedó retirado con
+  la capa `⊢` (ADR‑115 de RPP).*
 
 ## 5 · Lo que se perdió, y lo que no
 
 `compactness_theorem` (`Compacity.lean`) era **vacuo**: su prueba pasaba por `soundness`.
+✏️ *(Esa razón no valía: `soundness` era cierto. Ver la cabecera.)*
 
 > 🏁 **REPARADO FUERA el 2026‑09‑17** (ADR‑054): `FOL.Compacity0.compactness₀` es el mismo
 > teorema sobre **`Derives₀`**, cuya solidez sí es cierta, y con los mismos dos ingredientes
@@ -116,6 +186,8 @@ Footprint medido: **`[propext, FOL.MetaRules.raa]`**. Ni `Classical.choice` hace
 > **único** cuyo defecto queda reparado en otro sitio: el de `Soundness.lean` es un enunciado
 > **FALSO**, no una prueba mala. 🔑 *Cuando un teorema cae, su prueba suele estar bien — lo que
 > cambia es el SUJETO.*
+> ✏️ *(2026‑10‑02: el enunciado de `Soundness.lean` era cierto, y su prueba también; lo que había que
+> cambiar no era el sujeto sino `raa`. Ver la cabecera.)*
 `Completeness.lean` **no** está afectado por ESTA causa —no importa ni `Soundness` ni `MetaRules`—.
 
 ⚠️ **Corrección del 2026‑09‑12**: aquí decía «y se queda», y **ya no se queda**. `Completeness.lean`
@@ -138,6 +210,8 @@ Se movió el fuente, se quitó del barrel, se reconstruyó el árbol y dio **ver
 recoge la basura**: `.lake/build/lib/lean/FOL/Soundness.olean` se quedó, `import FOL.Soundness`
 **seguía resolviendo desde él**, y `False` se demostraba al día siguiente exactamente igual —
 verificado compilando, footprint `[propext, Classical.choice, Quot.sound, FOL.MetaRules.raa]`.
+✏️ *(2026‑10‑02: y sin el fantasma también. La cuarentena no fue efectiva NUNCA contra `False`: `soundness`
+se puede volver a demostrar, y `raa` solo ya bastaba. Ver la cabecera.)*
 
 🔑 **Retirar el FUENTE no retira el MÓDULO.** Un `.olean` sin `.lean` es un **módulo fantasma**:
 importable, invisible al build, y sin fuente que auditar.
@@ -152,7 +226,7 @@ que reexponía **`axiom D2` y `axiom D3`**, las dos condiciones que el proyecto 
 
 ⚠️ Y ojo al reverso: `FOLPure`, `PropLogic` y `FOL_poli` tienen sus **propios** `Soundness.lean`
 **vivos** con el mismo defecto estructural. No son fantasmas —tienen fuente— pero **no están en
-cuarentena**. Ver §7.
+cuarentena**. Ver §7. ✏️ *(Inducir no es el defecto: ver §2 y la cabecera.)*
 
 ## 7 · ⬜ Lo que esta cuarentena NO cubre
 
@@ -164,15 +238,26 @@ Auditoría del 2026‑09‑11/12, medido y **reproducido compilando** por dos ag
   las dos, footprint `[subst_lift_cancel_formula]`.
   🔶 **Contenido por desuso**: ninguna tiene consumidores ni artefactos, y RPP no las toca.
 * `FOLPure`, `PropLogic` y `FOL_poli` tienen además su propio `soundness` por inducción sobre su
-  propio `Derives`, con el mismo hueco. Sin cuarentena.
+  propio `Derives`, con el mismo hueco. Sin cuarentena. ✏️ *(No es un hueco: si un `axiom` contradice
+  esa inducción, el falso es el axioma. Ver §2 y la cabecera.)*
 * `FOL_poli/FOL.lean` es **byte‑idéntico** a `FOL/FOL.lean`: un clon muerto.
 * De las cinco `lean_lib`, **sólo `FOL` está viva** (único `@[default_target]`, único con `.olean`,
   única que consume RPP).
 
 ⇒ **Decisión pendiente del propietario**: retirar las tres librerías muertas, o ponerlas en
-cuarentena también.
+cuarentena también. ✏️ *(Tomada el 2026‑09‑12: retiradas a `cuarentena/librerias-retiradas/`; ver la
+cabecera de 2026‑09‑23.)*
 
-## 8 · La reparación de fondo, que NO se ha hecho
+## 8 · La reparación de fondo — ✏️ HECHA el 2026‑10‑02, por retirada (ADR‑115 de RPP)
+
+✏️ **2026‑10‑02**: hecha, y no como se proponía aquí. No hizo falta `DerivesW`: las cuatro meta‑reglas
+eran **falsas**, y se retiraron —`FOL/MetaRules.lean` quedó borrado (ADR‑115 de RPP)—. Los dos
+habitantes de `FOL/Theorems/` eran constructores de `Derives` desde el 2026‑09‑12 (D‑2), y los cuatro
+de RPP quedaron retirados (uno antes; los otros tres con la capa `⊢`, y con ellos el fichero
+`Full/Lists.lean`, borrado: ADR‑115 de RPP). ⇒ `Derives` ya no tiene ningún habitante‑axioma, y su
+solidez es un teorema (`FOL.Inconsistencia.derives_soundness`). La decisión que este § dejaba al
+propietario está tomada (ADR‑114 de RPP, §4, punto 2). Lo de abajo es el registro del 2026‑09‑12, con
+su título original: «La reparación de fondo, que NO se ha hecho».
 
 Lo de arriba **contiene**, no repara. La reparación real es que las meta‑reglas **no habiten
 `Derives`**: declararlas sobre una relación aparte `DerivesW` con `Derives Γ f → DerivesW Γ f`, y
@@ -238,7 +323,8 @@ un axioma y vive fuera del build no retira nada: nadie la verifica. `FOL/Enumera
 prueba clásica amplía el lenguaje con constantes nuevas y exige probar la conservatividad.
 **Se midió el 2026‑09‑13 y ese juicio era FALSO.** Sale — y sale por la peor razón.
 
-`sondeos/HenkinSaleDeRaa.lean` (ROBINSON_PlusPlus), compilado:
+`sondeos/HenkinSaleDeRaa.lean` (ROBINSON_PlusPlus), compilado ✏️ *(el 2026‑09‑13; usa `FOL.MetaRules.raa`,
+así que, borrado el fichero, ya no compila: ADR‑115 de RPP, §5)*:
 `IsMaximalConsistent S → IsHenkin S` es un teorema, y con él `henkin_extension_lemma` son tres
 líneas sobre `lindenbaum_lemma`. Este módulo llegaría a **CERO axiomas propios**.
 
@@ -259,19 +345,32 @@ la solidez sea falsa; §4 presentaba como tranquilizador que `Completeness.lean`
 hace el cálculo **completo y no sólido**. Un **0** en `AXIOMS.md` se leería como «Completitud
 demostrada», y lo que habría detrás es «completitud de un cálculo que, cuando no deriva `A`,
 deriva `¬A`». 🔑 *La cifra mejoraría y el contenido empeoraría.*
+✏️ *(2026‑10‑02: la solidez no era falsa, ni el cálculo «no sólido»; lo falso era `raa`. Pagar el axioma
+con él habría sido demostrarlo en un entorno inconsistente: no pagarlo así (ADR‑032) fue lo correcto, y
+por una razón más fuerte que la que daba.)*
 
 ⚠️ Lo que **no** se sigue: `False`. El detonador de `Inconsistencia.lean` es `raa` **más solidez**,
 y este módulo no demuestra solidez.
+✏️ **FALSO** (2026‑10‑02, ADR‑114 de RPP): sí se seguía. La solidez no hacía falta como hipótesis,
+porque es un teorema (`derives_soundness`): `raa` solo ya daba `False` (`raa_refutable`), y cualquier
+módulo que lo importara vivía en un entorno inconsistente.
 ⚠️ Lo que **sí** conviene subrayar: la prueba es **legítima** (ni una inducción sobre `Derives`,
 M‑11 intacta) y **no valdría para un cálculo sólido**, donde la completitud sintáctica es falsa.
+✏️ *(«Legítima» sólo según M‑11, que quedó refutada: usaba un `axiom` falso. Y `Derives` **es** un
+cálculo sólido.)*
 
 ✅ **DECIDIDO el 2026‑09‑13 (ADR‑032, opción A): el axioma se queda.** Medido y **no aplicado, a
 propósito**. ⛔ **No es trabajo pendiente.** Si alguien lo ve «demostrable y sin arreglar», que **no
 lo arregle**: hay que reabrir ADR‑032. El aviso está junto al `axiom` en `Completeness.lean`, y
 `check-axioms.bash` (`ESPERADO_CUAR=1`) **rompe también si la cifra baja a 0**.
+✏️ *(Registro: `Completeness.lean` se borró el 2026‑09‑23, y con él el axioma; hoy `ESPERADO_CUAR=0`.)*
 
 ---
 
-**Véase también:** `cuarentena/Inconsistencia.lean` (la evidencia, compilable),
-`FOL/MetaRules.lean` (el aviso en cabecera),
-`ROBINSON_PlusPlus/Meta/OmegaStrength.lean` y `ROBINSON_PlusPlus/sondeos/AnclaSoundness.lean`.
+**Véase también:** `FOL/Inconsistencia.lean` (la evidencia, en el build: la solidez de `Derives` y la
+refutación de las cuatro meta‑reglas), ADR‑114 y ADR‑115 de RPP (`ROBINSON_PlusPlus/DECISIONS.md`),
+`ROBINSON_PlusPlus/sondeos/MetaReglasRefutables.lean` (la primera medición) y
+`ROBINSON_PlusPlus/sondeos/AnclaSoundness.lean`.
+🗑️ *Hasta el 2026‑10‑02 esta línea citaba además `cuarentena/Inconsistencia.lean` (subió al build el
+2026‑09‑23), `FOL/MetaRules.lean` (borrado) y `ROBINSON_PlusPlus/Meta/OmegaStrength.lean` (retirado con
+la capa `⊢`); estos dos últimos, con ADR‑115 de RPP.*

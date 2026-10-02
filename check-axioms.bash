@@ -11,7 +11,14 @@
 export PATH="/usr/bin:$PATH"
 cd "$(dirname "$0")" || exit 2
 
-ESPERADO_FOL=4
+# ⭐ 2026-10-02 (ADR-115 de RPP): 4 → 0. Los cuatro de `FOL/MetaRules.lean` (`imp_intro`, `raa`,
+# `or_elim`, `ex_elim`) eran REFUTABLES sin usarlos (`FOL/Inconsistencia.lean` §3) y se borraron con el
+# módulo. Este control rompe si vuelve a aparecer UNO escrito `axiom …` a principio de línea en `FOL/`
+# o `TheoryFramework/` —un `axiom` sobre `Derives` puede ser refutable con el propio recursor, y eso es lo
+# que pasó—. ⚠️ Ámbito: es un grep. No ve `private`/`protected`/`@[…] axiom`, uno sangrado, ni uno en el
+# barrel `FOL.lean`; y un patrón más ancho casa con los ejemplos de los docstrings (`Enumeration.lean`).
+# El censo por ENTORNO es `../ROBINSON_PlusPlus/check-estratos.bash`: cuenta todo `axiom` de `import FOL`.
+ESPERADO_FOL=0
 ESPERADO_TF=0
 
 # ⭐ 2026-09-13: la CUARENTENA también se cuenta. Motivo: `cuarentena/Completeness.lean` bajó de

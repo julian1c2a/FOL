@@ -6,6 +6,11 @@
 > demostradas sobre `Derives₀`, y cita una `cuarentena/` ya vaciada. Estado vigente:
 > `CURRENT-STATUS-PROJECT.md`; lo que falta: `NEXT-STEPS.md`.
 >
+> ⚠️ **Y desde el 2026-10-02 (ADR‑115 de RPP)** tampoco vale lo que la tabla dice de `Derives`:
+> `FOL/MetaRules.lean` se borró —sus cuatro `axiom` eran refutables sin usarlos—, FOL no tiene ningún
+> `axiom`, y la solidez de `Derives` (`Γ ⊢ f → Γ ⊨ f`) es un teorema: `derives_soundness`, en
+> `FOL/Inconsistencia.lean`. Lo falso eran las meta‑reglas, no la solidez.
+>
 > **Este documento estaba fechado en mayo de 2026 y publicaba como hitos demostrados cosas que
 > hoy están medidas FALSAS.** Se corrigen abajo las afirmaciones concretas; el resto del texto
 > **no se ha reescrito** y debe leerse con esta advertencia delante.
@@ -23,7 +28,7 @@
 > **Fuentes:** `cuarentena/README.md` · `AXIOMS.md` ·
 > `../ROBINSON_PlusPlus/doc/AUDITORIA-FOL-2026-09-12.md`
 
-**Última actualización:** 2026-05-16
+**Última actualización:** 2026-05-16 (el cuerpo) · 2026-10-02 (el aviso y el estado de la librería 1, en §2: `FOL/MetaRules.lean` borrado, ADR‑115 de RPP)
 **Autor**: Julián Calderón Almendros
 
 > Este documento describe la visión estratégica y la planificación a largo plazo **de mayo de 2026**, y es HISTÓRICO: la arquitectura de §2 (cuatro `lean_lib`) ya no existe. Hoy hay **2 `lean_lib`** (`FOL`, `TheoryFramework`); el estado vigente, en `CURRENT-STATUS-PROJECT.md`.
@@ -46,7 +51,7 @@ El objetivo es trascender la lógica pura para abordar la **fundamentación de l
 ### Librería 1: `FOL` — FOL con Igualdad (FOL^=)
 
 - **Rol**: Fundamento Lógico con igualdad.
-- **Estado** (2026-09-26): 0 `sorry` y 4 `axiom` (los de `MetaRules`). `Completeness.lean` se borró el 2026-09-23; la completitud demostrada es `Canonical0.completeness₀`, sobre `Derives₀`.
+- **Estado** (2026-10-02): 0 `sorry` y 0 `axiom` (el 2026-09-26 eran 4, los de `FOL/MetaRules.lean` —`imp_intro`, `raa`, `or_elim`, `ex_elim`—: refutables sin usarlos, se borraron con el módulo, ADR‑115 de RPP). `Completeness.lean` se borró el 2026-09-23; la completitud demostrada es `Canonical0.completeness₀`, sobre `Derives₀`; la corrección, `derives0_soundness` sobre `Derives₀` y, desde el 2026-10-02, `derives_soundness` sobre `Derives`.
 
 ### Librería 2: `FOLPure` — FOL sin Igualdad
 

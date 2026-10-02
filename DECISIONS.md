@@ -86,8 +86,13 @@ Mathlib4, documentadas en `NAMING-CONVENTIONS.md`.
 **Consecuencias**: ver `NAMING-CONVENTIONS.md` para el diccionario completo y las 12
 reglas de formación. **Nota**: la antigua "REGLA 13" (sufijos de dominio `addZ`/`mulQ`)
 no se sigue en este proyecto — los axiomas de `MetaRules.lean` (`imp_intro`, `gen`,
-`raa`, `dne`, `or_elim`, `ex_elim`) usan nombres descriptivos planos, sin prefijo de
+`raa`, `dne`, `or_elim`, `ex_elim`) usaban nombres descriptivos planos, sin prefijo de
 dominio (`TAG_`) ni sufijo de estructura.
+✏️ *Nota del 2026-10-02*: `gen` y `dne` dejaron de ser axiomas el 2026-09-12 —pasaron a
+teoremas que envolvían los constructores `gen_rule` y `dne_rule` (D‑2 de ADR‑028 de RPP)—; los
+cuatro restantes, refutables sin usarlos, se borraron con `FOL/MetaRules.lean` el 2026-10-02
+(ADR‑115 de RPP), y aquellos dos envoltorios con ellos. Hoy FOL no tiene ningún `axiom`; la
+entrada vigente es `NAMING-CONVENTIONS.md` §9.
 
 ---
 
@@ -128,10 +133,12 @@ teoremas derivados facilita localizar cada pieza.
 
 > ## ⛔⛔ ESTE FICHERO ESTÁ DORMIDO DESDE ADR‑010 — aviso añadido el 2026‑09‑23
 >
-> **El log de decisiones VIVO de FOL es `../ROBINSON_PlusPlus/DECISIONS.md`**, que va por
-> ADR‑098. Todas las decisiones sobre este repositorio desde el 2026‑09‑12 están ahí — entre
+> **El log de decisiones VIVO de FOL es `../ROBINSON_PlusPlus/DECISIONS.md`**, que iba por
+> ADR‑098 al escribir este aviso (por ADR‑115 el 2026‑10‑02). Todas las decisiones sobre este repositorio desde el 2026‑09‑12 están ahí — entre
 > ellas ADR‑047 (la corrección de PeanoRF), ADR‑061 (`check-doc-sync` adoptado), ADR‑065,
-> ADR‑072 (el control `[E]` rearmado y `[G.1]`), ADR‑083 (`ModelG`) y ADR‑098 (el cierre).
+> ADR‑072 (el control `[E]` rearmado y `[G.1]`), ADR‑083 (`ModelG`) y ADR‑098 (el cierre); y,
+> el 2026‑10‑02, ADR‑114 (la auditoría de la base) y ADR‑115 (la capa `⊢` retirada de RPP y,
+> con ella, `FOL/MetaRules.lean` borrado: sus cuatro `axiom` eran refutables).
 >
 > ⚠️ **Y hay una colisión de numeración con PeanoRF**: los dos repositorios tienen un
 > ADR‑047 y los dos son sobre esta misma relación. Prefijo obligatorio en los dos sentidos:

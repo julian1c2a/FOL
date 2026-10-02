@@ -55,7 +55,9 @@ theorem double_neg_elim {Γ A} (h_dne : .impl (neg (neg A)) A ∈ Γ) : Γ ⊢ .
 -- 8. Doble Negación (Eliminación, axiomática): ¬¬A ⇒ A
 -- Axioma clásico: no es derivable intuicionísticamente; se postula como axioma del sistema.
 /-- ⭐ **YA NO ES `axiom`** (2026‑09‑12, D-2): es el constructor `Derives.dne_schema`.
-    ⚠️ Es el **SEGUNDO** `dne` del repo, en forma de esquema (el de `MetaRules` es regla). -/
+    ⚠️ Es el `dne` en forma de **esquema**; en forma de regla está el constructor
+    `Derives.dne_rule` (hasta el 2026‑10‑02 lo envolvía también `FOL.MetaRules.dne`, 🗑️ borrado
+    con ese módulo, ADR‑115 de RPP). -/
 theorem dne {Γ : List Formula} {A : Formula} : Γ ⊢ .impl (neg (neg A)) A :=
   Derives.dne_schema Γ A
 

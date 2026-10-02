@@ -9,7 +9,7 @@
 > La prosa de este documento (explicaciones, motivación) va en español para que quede
 > clara sin ambigüedad.
 
-**Última actualización:** 2026-09-27 — §9: N5 (qué es titular: el resultado que la cabecera entrega; las piezas técnicas son auxiliares). Antes, el mismo día: §9: N1 (las definiciones por derivabilidad, sin excepción) y N2 (qué es titular). Antes (2026-09-26): subíndices de cálculo (D6, decidida) y entrada de axiomas corregida
+**Última actualización:** 2026-10-02 — §9: la entrada de axiomas (FOL ya no tiene ninguno: `FOL/MetaRules.lean` borrado, ADR‑115 de RPP) y la razón de la excepción histórica de `Derives` (tabla y regla 4). Antes (2026-09-27): §9: N5 (qué es titular: el resultado que la cabecera entrega; las piezas técnicas son auxiliares). Antes, el mismo día: §9: N1 (las definiciones por derivabilidad, sin excepción) y N2 (qué es titular). Antes (2026-09-26): subíndices de cálculo (D6, decidida) y entrada de axiomas corregida
 **Autor**: Julián Calderón Almendros
 
 ---
@@ -325,13 +325,19 @@ que el código *realmente sigue* — verificado por grep antes de escribirlas, n
 aspiracional — y enlaza a `DECISIONS.md` si la convención nace de una decisión
 arquitectónica concreta (ADR).
 
-### Axiomas sin prefijo de dominio (verificado 2026-07-12)
+### Axiomas sin prefijo de dominio (verificado 2026-07-12; desde el 2026-10-02 FOL no tiene ninguno)
 
 A diferencia del patrón `TAG_ShortName` que otras plantillas de este ecosistema
-sugieren para axiomas, los axiomas de `MetaRules.lean` usan nombres descriptivos planos,
-sin prefijo `TAG_`. Hoy son **cuatro**: `imp_intro`, `raa`, `or_elim`, `ex_elim`
-(`AXIOMS.md`, 2026-09-23). ⚠️ Esta entrada listaba además `gen`, `dne` y
-`subst_lift_cancel_formula`, hoy teoremas; `formula_enum`, sustituido por la construcción
+sugieren para axiomas, los axiomas de `MetaRules.lean` usaban nombres descriptivos planos, sin
+prefijo `TAG_`. **Hoy FOL no tiene ningún `axiom`** (`check-axioms.bash`, `ESPERADO_FOL=0`): los
+cuatro últimos —`imp_intro`, `raa`, `or_elim`, `ex_elim`— eran refutables sin usarlos y se borraron
+con `FOL/MetaRules.lean` el 2026-10-02 (ADR‑115 de RPP); sus enunciados, refutados, siguen como `Prop`
+en `FOL/Inconsistencia.lean` §3 (`ImpIntro`, `Raa`, `OrElim`, `ExElim`). Hasta esa fecha esta entrada
+decía «Hoy son **cuatro**» (`AXIOMS.md`, 2026-09-23).
+⚠️ Esta entrada listaba además `gen` y `dne`, que el 2026-09-12 pasaron a ser teoremas de
+`MetaRules.lean` (envoltorios de los constructores `gen_rule` y `dne_rule`, D‑2 de ADR‑028 de RPP) y
+se borraron con él; `subst_lift_cancel_formula`, hoy teorema en la `FOLPure` retirada;
+`formula_enum`, sustituido por la construcción
 `Enumeration.natToFormula`; y `henkin_extension_lemma`, borrado con la cuarentena en
 `62dc2d5`. Las sub-librerías `FOLPure`/`PropLogic`/`FOL_poli` están retiradas en
 `cuarentena/librerias-retiradas/` (ver `DECISIONS.md` ADR-004). No introducir un prefijo de dominio nuevo sin discutirlo antes
@@ -347,7 +353,7 @@ ordinal de plan: `Derives₀` es el «PASO 0» de
 
 | marca | cálculo | notación | snake_case / fichero |
 |---|---|---|---|
-| sin marca | `Derives` (`FOL/FOL.lean`): herramienta, no sujeto (ADR-024/033 de RPP) | `⊢` | `derives_…` |
+| sin marca | `Derives` (`FOL/FOL.lean`): no es el sujeto de la metateoría (ADR-024/033 de RPP); fue la herramienta de RPP hasta su ADR‑115 (2026-10-02), y sin meta‑reglas se traduce a `Derives₀` (`derives_to_derives0`) | `⊢` | `derives_…` |
 | `₀` | `Derives₀`: deducción natural **clásica** de FOL⁼, finitaria, sin habitantes-axioma | `⊢₀` | `derives0_…`, `derivesSet0_…`; módulos `*0.lean` |
 | `₁`, `₂` | `Derives₁`, `Derives₂`: presentaciones **equivalentes** a `Derives₀` (`derives0_iff_derives1`, `derives0_iff_derives2`) | `⊢₁`, `⊢₂` | `derives1_…`, `derives2_…` |
 | `₀` en `LK₀` | secuentes clásicos **sin corte** (`LKc` = `LK₀` + corte; `LKh`, `LKp` son variantes con letra normal) | — | `lk0_…` |
@@ -395,7 +401,11 @@ ordinal de plan: `Derives₀` es el «PASO 0» de
 4. **Ningún cálculo es el «por defecto»**: los nombres SIN marca se reservan a lo que no
    depende de cálculo. Así, declarar fundamental el cálculo intuicionista (o darle semántica
    propia) no obliga a renombrar nada del clásico. La única excepción es HISTÓRICA: `Derives`
-   (`⊢`), la herramienta de RPP, que no es sujeto de ninguna metateoría (su solidez es falsa).
+   (`⊢`), que fue la herramienta de RPP hasta su ADR‑115 (2026-10-02, cuando RPP retiró la capa `⊢`)
+   y no es el sujeto de la metateoría de FOL: sin meta‑reglas se traduce a `Derives₀`
+   (`derives_to_derives0`), y de ahí saca su solidez (`derives_soundness`, `FOL/Inconsistencia.lean`
+   §1). Hasta esa fecha esta regla decía «su solidez es falsa»: lo falso eran las meta‑reglas de
+   `FOL/MetaRules.lean`, borrado (ADR‑115 de RPP).
 5. **Módulos**: el sufijo `0` del fichero es HISTÓRICO («capa del Paso 0»), no una garantía,
    y esta regla no pide renombrar ninguno. Medido: `Rename`, `Eigenvariable`, `Derives1`,
    `Derives2` e `Inconsistencia` hablan de `⊢₀` sin llevarlo; `NDtoLK0` lo lleva sin mencionar

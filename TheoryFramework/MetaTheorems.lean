@@ -27,9 +27,13 @@ variable {F : Type} [LogicSystem F]
 
 ⚠️ **CONDICIONAL desde 2026‑09‑12 (A‑6)**: pide `[SoundLogic F]` y `[CompleteLogic F]`
 **explícitamente**. Antes las obtenía «gratis» porque eran campos de `LogicSystem` — es
-decir, el marco las **postulaba** para toda instancia. ⛔ Para `FOL` la primera es
-indemostrable sobre `Derives`; sobre `Derives₀` las dos están y el teorema se aplica
-(`Instances.fol0_proves_iff_models`, 2026‑09‑27). -/
+decir, el marco las **postulaba** para toda instancia. ⛔ Para `FOL` sobre `Derives`, la
+primera se podía demostrar también con las meta‑reglas postuladas (por inducción, que no las
+ve), y por eso aquel entorno era inconsistente: junto a `raa` daba `False`. Sin ellas valen
+las dos sin contradicción —la solidez es `FOL.Inconsistencia.derives_soundness`; la
+completitud, `completeness₀` compuesto con `derives0_to_derives`—, aunque no hay instancia
+sobre él. Sobre `Derives₀` las dos están y el
+teorema se aplica (`Instances.fol0_proves_iff_models`, 2026‑09‑27). -/
 theorem proves_iff_models [SoundLogic F] [CompleteLogic F] (T : Theory F) (f : F) :
     T.proves f ↔ T.models f := by
   constructor

@@ -128,8 +128,9 @@ prefix:max "#" => Term.var
 
 -- 1.5. LIFT Y SUSTITUCIÓN (De Bruijn)
 -- ⭐ PASO 0-b de la migración (ADR-069). Esta es la capa que EXPONE el árbol: 32 ficheros de
--- `FOL/` la tocan, 29 de ellos bloqueados, y 107 de RPP. Si el `rfl` sigue cerrando aquí,
--- sigue cerrando en todas partes.
+-- `FOL/` la tocaban, 29 de ellos bloqueados, y 107 de RPP (medido el 2026-09-18, ADR-069; antes
+-- de que ADR‑115 de RPP borrara 27 módulos de RPP y `FOL/MetaRules.lean`). Si el `rfl` sigue
+-- cerrando aquí, sigue cerrando en todas partes.
 
 -- LIFT (Desplazamiento de índices libres)
 -- Aumenta en 1 las variables libres a partir de la profundidad 'c'
@@ -236,20 +237,31 @@ def replaceAt {Sym : Type} (f : FormulaG Sym) (p : Pos) (newSub : FormulaG Sym) 
 -- Definimos reglas de reescritura lógica que pueden aplicarse localmente.
 
 -- ⛔⛔ `LocalRule` y `Derives` SE QUEDAN EN `String`, y es una decisión, no un olvido (ADR-069):
---  1. `Derives` es el cálculo CONTAMINADO: `raa`/`imp_intro` toman funciones de Lean, luego es
---     sintácticamente completo, y ADR-029 prohibe inducir sobre él de forma PERMANENTE (M-11).
---     Es la herramienta de RPP, no el sujeto de la metateoría.
---  2. MEDIDO: RPP lo cita **192** veces y no cita `Derives₀` ni una. Parametrizarlo tocaría esas
---     192 citas y reabriría el coste de ADR-068 (noConfusion heterogéneo, ausencia de `.inj`)
---     con 22 constructores, a cambio de nada: la metateoría de FOL⁼ va sobre `Derives₀`.
+--  1. (2026-09-18) `Derives` era el cálculo CONTAMINADO: lo habitaban los cuatro `axiom` de
+--     `FOL/MetaRules.lean`; `raa`/`imp_intro` toman funciones de Lean, luego era sintácticamente
+--     completo, y ADR-029 prohibía inducir sobre él de forma PERMANENTE (M-11). Era la
+--     herramienta de RPP, no el sujeto de la metateoría.
+--     🗑️ 2026-10-02 (ADR‑115 de RPP): esos cuatro, refutables, se BORRARON con el módulo, y RPP
+--     retiró su capa `⊢`. Sin ellos `Derives` es `Derives₀` más `gen_rule`, que es admisible
+--     (`FOL.Inconsistencia.derives_to_derives0`): es sólido (`derives_soundness`), NO es
+--     sintácticamente completo, y la inducción sobre él es legítima. De esta razón queda en pie
+--     sólo que el sujeto de la metateoría es `Derives₀`.
+--  2. MEDIDO el 2026-09-18 (ADR-069): RPP lo citaba **192** veces y no citaba `Derives₀` ni una.
+--     Parametrizarlo habría tocado esas 192 citas y reabierto el coste de ADR-068 (noConfusion
+--     heterogéneo, ausencia de `.inj`) con 22 constructores, a cambio de nada: la metateoría de
+--     FOL⁼ va sobre `Derives₀`. Desde ADR‑115 de RPP la librería de RPP ya no lo usa (medido el
+--     2026-10-02; sólo dos sondeos fuera del build); el coste de ADR-068 sigue y no queda
+--     consumidor en el build.
 --  3. ⛔ **RECTIFICADO (ADR-071)**: ADR-069 dijo aquí «`LocalRule` es su premisa y le
 --     sigue», y era FALSO. `LocalRule` es premisa de `rewrite_at`, que está en **`Derives₀`**
 --     también ⇒ sigue a `Derives₀` y **sí** se generifica. `Derives` la usa instanciada en
 --     `String`, que es exactamente lo que necesita.
 --     🔑 *Una premisa compartida sigue al consumidor MÁS GENÉRICO, no al primero que se mire.*
 -- ⇒ la generificación se CORTA aquí, y `derives0_to_derives` (Derives0.lean) queda como
---    especialización sólo-String. *Cuando un tipo está contaminado, se declara al lado el que sí
---    sirve* — la misma razón por la que `Derives₀` existe.
+--    especialización sólo-String, igual que su recíproca (`FOL.Inconsistencia.derives_to_derives0`,
+--    2026-10-02). *Cuando un tipo está contaminado, se declara al lado el que sí sirve* — la
+--    razón por la que `Derives₀` existe (2026-09-14). La contaminación se retiró después
+--    (ADR‑115 de RPP), y `Derives₀` sigue siendo el sujeto: es el cálculo finitario.
 
 inductive LocalRule {Sym : Type} : FormulaG Sym → FormulaG Sym → Prop where
   | commuteImpl   : ∀ A B C, LocalRule (.impl A (.impl B C)) (.impl B (.impl A C))
@@ -300,14 +312,18 @@ inductive Derives : List Formula → Formula → Prop where
   -- ════════════════════════════════════════════════════════════════════════
   -- Reglas CLÁSICAS y de GENERALIZACIÓN — constructores desde el 2026‑09‑12
   --
-  -- ⭐ D-2 (ADR-028): estos cuatro eran `axiom` (tres en `MetaRules.lean`, uno en
-  -- `Theorems/Neg.lean`, uno en `Theorems/Quantifiers.lean`) y **NO tenían por qué serlo**:
-  -- sus premisas son ocurrencias POSITIVAS, así que el kernel los acepta aquí. Sólo los que
-  -- tienen premisa-FUNCIÓN (`Γ ⊢ A → Γ ⊢ B`) están obligados a ser axiomas — ver M-11.
+  -- ⭐ D-2 (ADR-028): estos cuatro eran `axiom` (dos en `MetaRules.lean`, `gen` y `dne`; uno en
+  -- `Theorems/Neg.lean`; uno en `Theorems/Quantifiers.lean`) y **NO tenían por qué serlo**:
+  -- sus premisas son ocurrencias POSITIVAS, así que el kernel los acepta aquí. Los que tienen
+  -- premisa-FUNCIÓN (`Γ ⊢ A → Γ ⊢ B`) no caben como constructores, y se postularon en
+  -- `MetaRules.lean`: `imp_intro`, `raa`, `or_elim` y `ex_elim`. Eran REFUTABLES
+  -- (`FOL/Inconsistencia.lean` §3) y 🗑️ se BORRARON con el módulo el 2026-10-02 (ADR‑115 de RPP).
   --
-  -- 🔑 Y esto no es contabilidad: un `axiom` que habita un inductivo **afirma una falsedad
-  -- sobre el punto fijo**; un constructor **lo extiende**. Con estos cuatro dentro, `Derives`
-  -- tiene cuatro habitantes-basura menos.
+  -- 🔑 Y esto no es contabilidad: un `axiom` que habita un inductivo **afirma algo sobre el punto
+  -- fijo** que nada garantiza —si la regla no es admisible, es FALSO, y lo eran los cuatro de
+  -- premisa‑función—; un constructor **lo extiende**. Con estos cuatro dentro, `Derives` tiene
+  -- cuatro habitantes‑axioma menos. (✏️ 2026-10-02: decía «afirma una falsedad», que no vale en
+  -- general: `gen`, como axioma, era una regla admisible.)
   | gen_rule : ∀ Γ A, (∀ n : Term, Derives Γ (substFormula 0 n A)) → Derives Γ (.forall A)
   | dne_rule : ∀ Γ A, Derives Γ (neg (neg A)) → Derives Γ A
   | dne_schema : ∀ Γ A, Derives Γ (.impl (neg (neg A)) A)

@@ -337,12 +337,15 @@ DEAD_MARKER="$DEAD_MARKER"'|falta|FALTA|construir|objetivo|medir|sin medir|pendi
 DECLS=$(mktemp)
 # El árbol de declaraciones incluye `cuarentena/`: esos símbolos EXISTEN (están fuera
 # del build, no borrados), y los docs los discuten con razón.
-# ⚠️ Se incluye `../ROBINSON_PlusPlus/`: los docs de FOL citan con razón símbolos de RPP
-# (p. ej. los tres `axiom` de Lean que `cuarentena/README.md` contabiliza), y sin ese
-# alcance [B] los daría por muertos. 🔑 Un control con el alcance equivocado no comprueba:
-# INVENTA.
-# ⚠️⚠️ Y si el hermano NO está, se DICE. Sin él [B] da por muertos los símbolos de RPP que
-# los docs de FOL citan con razón, y un aviso que siempre sale es un aviso que nadie lee.
+# ⚠️ Se incluye `../ROBINSON_PlusPlus/` por si los docs de FOL citan símbolos VIVOS de RPP con
+# los prefijos de [B]. Medido el 2026‑10‑02: hoy no citan ninguno (cero `prf_`/`goedel_`; los
+# cuatro `ax_` citados están retirados), y el alcance sólo hace pasar por vivo a
+# `ax_list_induction` —retirado por ADR‑115 de RPP— por dos causas: [B] no salta comentarios
+# (`sondeos/` de RPP lo nombra como `axiom ax_list_induction` en la prosa de un docstring) y casa por
+# PREFIJO (`ax_list_induction_refutable`; la prosa abrevia). 🔑 Un control con el alcance
+# equivocado no comprueba: INVENTA.
+# ⚠️⚠️ Y si el hermano NO está, se DICE. Sin él [B] daría por muertos los símbolos VIVOS de RPP
+# que los docs de FOL citaran, y un aviso que siempre sale es un aviso que nadie lee.
 # 🔑 Un control tiene TRES resultados — pasa, falla, NO HE PODIDO COMPROBARLO — y el tercero
 # se anuncia, no se colapsa en el primero.
 # ⭐ `RPP_DIR` permite apuntar al hermano desde donde esté: en la CI, `actions/checkout`
@@ -352,8 +355,8 @@ if [ -d "$SIBLING" ]; then
   SCOPE="FOL/ TheoryFramework/ cuarentena/ $SIBLING/"
 else
   SCOPE="FOL/ TheoryFramework/ cuarentena/"
-  echo "  ⚠️  ALCANCE REDUCIDO: no está ../ROBINSON_PlusPlus ⇒ los símbolos de RPP que estos"
-  echo "      docs citan con razón saldrán aquí como MUERTOS. No es un hallazgo: es un hueco."
+  echo "  ⚠️  ALCANCE REDUCIDO: no está ../ROBINSON_PlusPlus ⇒ los símbolos VIVOS de RPP que estos"
+  echo "      docs citaran saldrían aquí como MUERTOS. No es un hallazgo: es un hueco."
 fi
 grep -rhoE "(theorem|def|abbrev|axiom|noncomputable def) +[A-Za-z_][A-Za-z0-9_']*"      $SCOPE --include=*.lean 2>/dev/null      | awk '{print $NF}' | sort -u > "$DECLS"
 CANDS=$(grep -rhoE '`(prf_|pcc_|goedel_|godel|d[123]_|repr_|ax_)[A-Za-z0-9_'"'"']+`' $AUTHORITATIVE 2>/dev/null         | tr -d '`' | sort -u)
@@ -440,8 +443,9 @@ done
 # ─── [F] ARTEFACTOS HUÉRFANOS ───────────────────────────────────────────────
 # ⛔⛔ AÑADIDO EL 2026‑09‑12, y por un fallo REAL de la víspera.
 #
-# El 2026‑09‑11 se puso `FOL/Soundness.lean` en cuarentena porque su teorema es FALSO
-# (con `raa` demuestra `False` sin hipótesis). Se movió el fuente, se quitó del barrel,
+# El 2026‑09‑11 se puso `FOL/Soundness.lean` en cuarentena porque su teorema se tuvo por FALSO
+# (con `raa` en el entorno daba `False` sin hipótesis; ✏️ 2026‑10‑02: lo falso era `raa`, que se
+# borró con `FOL/MetaRules.lean` — ADR‑115 de RPP). Se movió el fuente, se quitó del barrel,
 # se reconstruyó el árbol y dio VERDE. Pero `lake` NO recoge la basura: el
 # `.olean` COMPILADO se quedó, `import FOL.Soundness` SEGUÍA RESOLVIENDO desde él, y
 # `False` se demostraba al día siguiente exactamente igual.

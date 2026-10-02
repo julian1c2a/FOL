@@ -84,9 +84,10 @@ jobs:
       # absueltos por SUBCADENA con el matcher que traía RPP.
       # ⛔ No ejecuta `lake build` (M-3: FOL no se construye desde FOL); la cifra de jobs
       # la mide y la publica ROBINSON_PlusPlus.
-      # ⚠️ El bloque [B] necesita el repo hermano: los docs de FOL citan con razón símbolos de
-      # ROBINSON_PlusPlus (sus tres `axiom` de Lean, por ejemplo), y sin ese alcance el control
-      # los daría por MUERTOS. Un control con el alcance equivocado no comprueba: INVENTA.
+      # ⚠️ [B] mira el repo hermano por si los docs de FOL citan símbolos VIVOS de RPP con sus
+      # prefijos; medido el 2026‑10‑02, hoy no hay ninguno (los cuatro `ax_` citados están
+      # retirados), y el clon entero sólo hace pasar por vivo a `ax_list_induction` vía
+      # `sondeos/`. Un control con el alcance equivocado no comprueba: INVENTA.
       # ⛔ `actions/checkout` no admite un `path:` fuera del workspace, así que RPP se clona
       # DENTRO (`_rpp`) y el script lo recibe por `RPP_DIR`. Si el checkout falla, el control
       # sigue: detecta que no está y lo anuncia como **alcance REDUCIDO** en vez de callarse.

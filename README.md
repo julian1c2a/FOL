@@ -1,6 +1,6 @@
 # FOL Ecosystem — Formalización de Lógica en Lean 4
 
-> # ⛔⛔ AVISO DE ESTADO — 2026-09-26 (reescrito: el del 2026-09-12 había quedado FALSO). LEER ANTES QUE NADA
+> # ⛔⛔ AVISO DE ESTADO — 2026-09-26, retocado el 2026-10-02 (reescrito: el del 2026-09-12 había quedado FALSO). LEER ANTES QUE NADA
 >
 > **Este documento estaba fechado en mayo de 2026 y publicaba como hitos demostrados cosas que
 > hoy están medidas FALSAS.** Se corrigen abajo las afirmaciones concretas; el resto del texto
@@ -8,16 +8,17 @@
 >
 > | lo que decía | lo medido |
 > |---|---|
-> | «Teorema de Corrección (Soundness): `Γ ⊢ A → Γ ⊨ A`» ✅ | 🏁 **Sí, sobre `Derives₀`** (2026-09-14): `derives0_soundness : Γ ⊢₀ f → Γ ⊨ f` (`FOL/Soundness0.lean`), y con ella `derives0_consistent`. ⛔ La de **`Derives`** sigue siendo **FALSA** en presencia de `FOL/MetaRules.lean`: `FOL/Inconsistencia.lean`, hoy **en el build** |
+> | «Teorema de Corrección (Soundness): `Γ ⊢ A → Γ ⊨ A`» ✅ | 🏁 **Sí, sobre `Derives₀`** (2026-09-14): `derives0_soundness : Γ ⊢₀ f → Γ ⊨ f` (`FOL/Soundness0.lean`), y con ella `derives0_consistent`. 🏁 **Y sobre `Derives`**, el enunciado de la columna izquierda, desde el 2026-10-02: `derives_soundness : Γ ⊢ f → Γ ⊨ f` (`FOL/Inconsistencia.lean` §1), porque sin meta‑reglas `Derives` se traduce a `Derives₀` (`derives_to_derives0`: `gen_rule` es admisible). Hasta ese día esta celda decía que la de `Derives` era «FALSA en presencia de `FOL/MetaRules.lean`»: lo falso era `raa` (`raa_refutable`, §3), y el módulo se borró (ADR‑115 de RPP) |
 > | «Compacidad» ✅ | 🏁 `compactness`, `loewenheim_skolem_down` y el modelo infinito `infinite_model_of_large`, en `FOL/Compacity0.lean`. El `Compacity.lean` vacuo **se borró** el 2026-09-23 |
 > | «Completitud» ✅ / «1 sorry» | 🏁 `completeness₀ : Γ ⊨ f → Γ ⊢₀ f` (`FOL/Canonical0.lean`, 2026-09-16), con **cero axiomas del proyecto**: `[propext, Classical.choice, Quot.sound]`. Ese `Classical.choice` viene del lema de la verdad sobre un maximal arbitrario (`max_cons_*`) y del `byContradiction` final de `completeness₀`; **no** del `if` de `Lindenbaum0`, que ya no decide nada (`lindenbaum_lemma₀` es `[propext, Quot.sound]`). Hasta el 2026-09-27 esta celda decía que era «el WKL de `Lindenbaum0`» (ADR-041): refutado, ADR-110 y `AXIOMS.md` §4. `Completeness.lean` y su último postulado, `henkin_extension_lemma`, **se borraron** el 2026-09-23. Ver **`AXIOMS.md`** |
-> | «4 `lean_lib`, ~43 módulos, 1 sorry, v4.28.0» | **2 `lean_lib`** (`FOL`, `TheoryFramework`) · **4 `axiom`**, los de `MetaRules` que el kernel obliga, y ninguno más fuera de las librerías retiradas · **0 sorry** · **v4.31.0**. `FOLPure`, `PropLogic` y `FOL_poli` **retiradas** el 2026-09-12 a `cuarentena/librerias-retiradas/` |
+> | «4 `lean_lib`, ~43 módulos, 1 sorry, v4.28.0» | **2 `lean_lib`** (`FOL`, `TheoryFramework`) · **0 `axiom`**: los cuatro de `FOL/MetaRules.lean` (`imp_intro`, `raa`, `or_elim`, `ex_elim`), refutables sin usarlos (`FOL/Inconsistencia.lean` §3), se borraron con el módulo el 2026-10-02 (ADR‑115 de RPP). Esta celda decía «4 `axiom`, los de `MetaRules` que el kernel obliga»: el kernel sólo impedía que fueran constructores (premisa‑función, ocurrencia no positiva), no obligaba a tenerlos · **0 sorry** · **v4.31.0**. `FOLPure`, `PropLogic` y `FOL_poli` **retiradas** el 2026-09-12 a `cuarentena/librerias-retiradas/` |
 >
 > ⭐ **Los seis teoremas del cierre (T1 a T6, 2026-09-23 y 2026-09-26) están en el árbol**, sobre `Derives₀`; el catálogo, en `CURRENT-STATUS-PROJECT.md` («Estado vigente») y `REFERENCE.md` §6. ⛔ Y lo que NO hay: la propiedad de disyunción para `Derives₀` es **FALSA** (`derives0_no_disjunction_property`).
 > (Este aviso decía que «lo único sólido MEDIDO» era `prf0_soundness`, en RPP: dejó de serlo el 2026-09-14.)
+> ⚠️ **2026-10-02 · deuda declarada**: cinco módulos 🧊 congelados (`Soundness0`, `Canonical0`, `Compacity0`, `Rename`, `TheoryFramework/Instances/FOL`) conservan el texto anterior al borrado de `FOL/MetaRules.lean` («la solidez de `Derives` es FALSA», M‑11) y esperan un `thaw` autorizado por el propietario: `NEXT-STEPS.md`.
 >
 > **Fuentes:** `cuarentena/README.md` · `AXIOMS.md` ·
-> `../ROBINSON_PlusPlus/doc/AUDITORIA-FOL-2026-09-12.md`
+> `../ROBINSON_PlusPlus/doc/AUDITORIA-FOL-2026-09-12.md` · ADR‑114 y ADR‑115 de `../ROBINSON_PlusPlus/DECISIONS.md` (2026-10-02)
 
 [![Lean 4](https://img.shields.io/badge/Lean-v4.31.0-blue)](https://leanprover.github.io/)
 [![Build Status](https://img.shields.io/badge/build-passing-brightgreen)](CURRENT-STATUS-PROJECT.md)
@@ -42,7 +43,7 @@ Este ecosistema formaliza la sintaxis, semántica y metamatemática de la Lógic
 **Características principales:**
 
 - **Sintaxis De Bruijn**: Índices de De Bruijn en fórmulas y términos, evitando la captura de variables en cuantificadores.
-- **Deducción Natural**: Sistema extendido con reglas de reescritura local y RAA (lógica clásica).
+- **Deducción Natural**: Sistema extendido con reglas de reescritura local (`rewrite_at`) y eliminación de la doble negación (`dne_rule`, `dne_schema`: lógica clásica; la versión objeto de `raa` es `derives0_raa` (`intro_impl` con conclusión `⊥`: de `A :: Γ ⊢₀ ⊥`, `Γ ⊢₀ ¬A`); la reducción al absurdo clásica (de `¬A :: Γ ⊢ ⊥`, `Γ ⊢ A`) es `intro_impl` seguido de `dne_rule`). La meta‑regla `raa` —un `axiom` de `FOL/MetaRules.lean`, con premisa‑función— se borró el 2026-10-02 por refutable (ADR‑115 de RPP).
 - **Automatización**: Tácticas `derive_hyp`, `derive_weaken`, `derive_rewrite` via `MetaM`.
 - **Semántica Tarskiana**: Modelos, evaluación de fórmulas, satisfacción `Γ ⊨ f`.
 - **Marco Genérico**: `class LogicSystem (F : Type)` con metateoremas reutilizables; desde el 2026-09-27, instanciado para FOL⁼ sobre `Derives₀` (`TheoryFramework/Instances/FOL.lean`: `fol0System`, con solidez y completitud).
@@ -50,7 +51,7 @@ Este ecosistema formaliza la sintaxis, semántica y metamatemática de la Lógic
 **Hitos Metamatemáticos:**
 
 1. Teorema de Deducción.
-2. 🏁 **Teorema de Corrección** sobre `Derives₀` (`derives0_soundness`). ⛔ La de `Derives` es FALSA con `MetaRules`: ver el aviso.
+2. 🏁 **Teorema de Corrección** sobre `Derives₀` (`derives0_soundness`), y sobre `Derives` desde el 2026-10-02, sin meta‑reglas (`derives_soundness`, vía `derives_to_derives0`; ADR‑115 de RPP). Hasta ese día este hito decía que la de `Derives` era «FALSA con `MetaRules`»: lo falso eran las meta‑reglas, refutadas en `FOL/Inconsistencia.lean` §3, y `FOL/MetaRules.lean` se borró.
 3. Construcción de Henkin + Lema de Lindenbaum (`henkin_completion₀`, `lindenbaum_lemma₀`): sin `Classical.choice` desde el 2026-09-27, `[propext, Quot.sound]`.
 4. 🏁 **Teorema de Completitud** sobre `Derives₀`: `completeness₀ : Γ ⊨ f → Γ ⊢₀ f`, cero axiomas del proyecto; y su forma de Henkin, `model_existence_iff₀`. Su `Classical.choice` es el del lema de la verdad sobre un maximal arbitrario (`max_cons_*`) y el de su `byContradiction` final (auditoría de constructividad del 2026-09-27: `AXIOMS.md` §4).
 5. 🏁 **Compacidad** (`compactness`), **Löwenheim–Skolem descendente** y el **modelo infinito por compacidad** (`infinite_model_of_large`: numerable e infinito).
@@ -67,7 +68,7 @@ Este ecosistema formaliza la sintaxis, semántica y metamatemática de la Lógic
 | `Tactics.lean` | top-level | ✅ |
 | `Deduction.lean` | `FOL.Metamath.Deduction` | ✅ |
 | `Semantics.lean` | `FOL.Metamath.Semantics` | ✅ |
-| ~~`Soundness.lean`~~ | — | ⛔ **CUARENTENA**: su teorema es FALSO |
+| ~~`Soundness.lean`~~ | — | ⛔ **CUARENTENA**: su teorema se tuvo por FALSO (con `raa` postulado, cualquier testigo suyo daba `False`). ✏️ Desde el 2026-10-02 (`FOL/MetaRules.lean` borrado, ADR‑115 de RPP) su enunciado es un teorema, `derives_soundness`: lo falso era `raa` |
 | `Completeness.lean` | `FOL.Metamath.Completeness` | ⚠️ **0 sorry, 1 `axiom`** — eran 5 |
 | ~~`Compacity.lean`~~ | — | ⛔ **CUARENTENA**: vacuo |
 | `Theorems/Impl.lean`, `Neg.lean`, `Derived.lean`, `Quantifiers.lean`, `Eq.lean` | — | ✅ |
@@ -161,7 +162,8 @@ bash new-module.bash ModuleName
 >
 > Sobrescriben el barrel entero: **borrarían el aviso de cuarentena** de `FOL.lean` y
 > **meterían tres módulos huérfanos con declaraciones duplicadas**, uno de los cuales
-> redefine `derive_hyp`/`derive_weaken` que ROBINSON_PlusPlus importa **22 veces**.
+> redefine `derive_hyp`/`derive_weaken`, de `FOL.Tactics`, que ROBINSON_PlusPlus importaba **22 veces**
+> el 2026‑09‑12 (9 el 2026‑10‑02, medido en RPP `b1dedd1`, tras retirar su capa `⊢`: ADR‑115 de RPP).
 > Tan prohibido como `cd FOL && lake build`. La cabecera de `gen-root.bash` dice qué
 > haría falta para levantar la prohibición.
 
@@ -212,4 +214,4 @@ Julián Calderón Almendros
 ---
 
 **Author**: Julián Calderón Almendros
-**Last updated:** 2026-09-27 — la auditoría de constructividad y D1–D8: aviso (la tesis del WKL, rectificada), la instancia de `TheoryFramework` y los hitos 3, 4 y 6. Antes, el mismo día: el decisor del fragmento sin cuantificadores; renombres de la regla de subíndices (P2). Antes (2026-09-26): aviso, insignias, librerías, hitos y cabeceras HISTÓRICO corregidos; el resto del cuerpo es de 2026-05-16.
+**Last updated:** 2026-10-02 — 🗑️ `FOL/MetaRules.lean` borrado (ADR‑115 de RPP): aviso (la solidez de `Derives` es un teorema, 0 `axiom`, la deuda de cinco módulos 🧊), «Deducción Natural» (sin `raa`), hito 2, la fila histórica de `Soundness.lean` y las importaciones de `FOL.Tactics` desde RPP. Antes (2026-09-27): la auditoría de constructividad y D1–D8: aviso (la tesis del WKL, rectificada), la instancia de `TheoryFramework` y los hitos 3, 4 y 6. Antes, el mismo día: el decisor del fragmento sin cuantificadores; renombres de la regla de subíndices (P2). Antes (2026-09-26): aviso, insignias, librerías, hitos y cabeceras HISTÓRICO corregidos; el resto del cuerpo es de 2026-05-16.

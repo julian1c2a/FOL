@@ -21,31 +21,47 @@ import FOL.FOL
 
 ## Por qué existe
 
-`Derives` no sirve como **sujeto** de ningún teorema metateórico, y está medido:
+🗑️ **2026‑10‑02 · las tres razones de abajo describían `Derives` CON `FOL/MetaRules.lean`, y ese
+módulo se BORRÓ (ADR‑115 de RPP).** Sus cuatro `axiom` eran refutables sin usarlos
+(`FOL/Inconsistencia.lean` §3). Sin ellos, `Derives` es `Derives₀` más `gen_rule`, que es
+**admisible**: `FOL.Inconsistencia.derives_to_derives0`, por inducción sobre `Derives`. ⇒ Hoy
+`Derives` **es sólido** (`derives_soundness`), **no** es sintácticamente completo (no decide `P`:
+`derives_not_P`, `derives_not_negP`) y **admite inducción**. La conclusión sigue en pie por otra
+razón: el sujeto de la metateoría es `Derives₀`, el cálculo **finitario**, y `Derives` deriva
+exactamente lo mismo (los dos puentes).
 
-1. ⛔ **Es sintácticamente COMPLETO**: `raa` toma una **función de Lean**, así que si `Γ ⊬ A` esa
-   función existe **vacuamente** y `Γ ⊢ ¬A`. Todo contexto decide toda fórmula, en tres líneas
-   (`../ROBINSON_PlusPlus/sondeos/HenkinSaleDeRaa.lean`). ⇒ **no es r.e.**
-2. ⛔ **No es SÓLIDO**: `FOL/Inconsistencia.lean` compila `False` a partir de cualquier
-   teorema de solidez para `Derives`, con footprint `[propext, FOL.MetaRules.raa]`.
-3. ⛔ **No admite INDUCCIÓN** (**M‑11**, ADR‑029, y es **permanente**): los cuatro axiomas de
-   `FOL/MetaRules.lean` habitan el tipo y no son aplicaciones de constructor.
+Lo que se escribió el 2026‑09‑14, como registro: `Derives` no servía como **sujeto** de ningún
+teorema metateórico, y estaba medido:
 
-⇒ Es ADR‑024 otra vez: **`⊢` es la herramienta de trabajo, no el sujeto**.
+1. ⛔ **Era sintácticamente COMPLETO**: `raa` tomaba una **función de Lean**, así que si `Γ ⊬ A`
+   esa función existía **vacuamente** y `Γ ⊢ ¬A`. Todo contexto decidía toda fórmula, en tres
+   líneas (`../ROBINSON_PlusPlus/sondeos/HenkinSaleDeRaa.lean`, que cita el `raa` borrado y por
+   eso ya no compila). ⇒ **no era r.e.**
+2. ⛔ **«No es SÓLIDO»**: `FOL/Inconsistencia.lean` compilaba `False` a partir de cualquier
+   teorema de solidez para `Derives`, con footprint `[propext, FOL.MetaRules.raa]`. Se leyó al
+   revés: lo falso era `raa`, no la solidez.
+3. ⛔ **«No admite INDUCCIÓN»** (**M‑11**, ADR‑029, que la declaraba **permanente**): los cuatro
+   axiomas de `FOL/MetaRules.lean` habitaban el tipo y no eran aplicaciones de constructor. El
+   recursor los cubría igual: lo que había que retirar eran los axiomas, no la inducción.
+
+⇒ Era ADR‑024 otra vez: **`⊢` era la herramienta de trabajo de RPP, no el sujeto**. RPP retiró
+esa capa el 2026‑10‑02 (ADR‑115 de RPP).
 
 ## Qué es `Derives₀`
 
-Los **21** constructores de `Derives` (que son 22) **menos `gen_rule`**, y **sin** los cuatro
-axiomas de `MetaRules`. Es decir: **deducción natural clásica de primer orden con igualdad**,
-finitaria, y **con cero habitantes‑axioma**.
+Los constructores de `Derives` (que son 22) **menos `gen_rule`**: **21**. Es decir: **deducción
+natural clásica de primer orden con igualdad**, finitaria, y **con cero habitantes‑axioma**.
+(Hasta el 2026‑10‑02 se definía además por diferencia, «**sin** los cuatro axiomas de
+`MetaRules`»; 🗑️ borrado ese módulo con ADR‑115 de RPP, `Derives` tampoco tiene ninguno.)
 
 | | `Derives` | `Derives₀` |
 |---|---|---|
 | constructores | 22 | **21** |
-| axiomas que lo habitan | **4** (suelo permanente, ADR‑029) | **0** |
-| ¿`induction`? | ⛔ **nunca** | ✅ **sí** |
-| ¿ω‑regla `gen_rule`? | sí | ❌ **no** — premisa infinitaria |
-| ¿sintácticamente completo? | ⛔ sí (patología) | ❌ no (`derives0_not_complete`), y por eso vale |
+| axiomas que lo habitan | **0** (eran 4 hasta ADR‑115 de RPP; ADR‑029 los llamaba «un suelo de cuatro» y declaraba M‑11 PERMANENTE) | **0** |
+| ¿`induction`? | ✅ **sí** (M‑11 la prohibía hasta ADR‑115 de RPP) | ✅ **sí** |
+| ¿ω‑regla `gen_rule`? | sí, y es **admisible** (`derives_to_derives0`) | ❌ **no** — premisa infinitaria |
+| ¿sólido? | ✅ sí (`derives_soundness`, demostrada el 2026‑10‑02; lo era también antes, cuando lo falso era `raa`) | ✅ sí (`derives0_soundness`) |
+| ¿sintácticamente completo? | ❌ **no** (`derives_not_P`, `derives_not_negP`); con `raa` postulado lo era (patología) | ❌ no (`derives0_not_complete`), y por eso vale |
 
 ### ⚠️ Por qué se quita también `gen_rule`
 
@@ -59,11 +75,12 @@ de completitud ya vive dentro del fragmento finitario.
 
 ### ⚠️ Lo que NO se pierde al quitar los cuatro axiomas
 
-**Sólo la fuerza META.** Medido en `../ROBINSON_PlusPlus/sondeos/DerivesSinMetaReglas.lean`: el
-inductivo pelado ya tiene las versiones **objeto** de las cuatro, las seis con footprint
-`[propext]`.
+**Se pierde sólo la fuerza META**, y era falsa: los cuatro enunciados se refutan sin usarlos
+(`FOL/Inconsistencia.lean` §3), y por eso se borraron (ADR‑115 de RPP). Medido en
+`../ROBINSON_PlusPlus/sondeos/DerivesSinMetaReglas.lean`: el inductivo pelado ya tiene las
+versiones **objeto** de las cuatro, las seis con footprint `[propext]`.
 
-| meta‑regla (axioma, premisa‑FUNCIÓN) | equivalente OBJETO aquí |
+| meta‑regla de `MetaRules` (premisa‑FUNCIÓN; 🗑️ borradas con ADR‑115 de RPP) | equivalente OBJETO aquí |
 |---|---|
 | `imp_intro (Γ ⊢ A → Γ ⊢ B)` | `Derives₀.intro_impl` |
 | `raa (Γ ⊢ A → Γ ⊢ ⊥)` | `Derives₀.intro_impl` con `B := ⊥` |
@@ -73,17 +90,27 @@ inductivo pelado ya tiene las versiones **objeto** de las cuatro, las seis con f
 
 ## ⭐ Y esto NO toca a ROBINSON_PlusPlus
 
-`Derives₀` es un objeto **NUEVO**, no un reemplazo. El puente va en **una** dirección:
+`Derives₀` es un objeto **NUEVO**, no un reemplazo. El puente de este módulo va en **una**
+dirección:
 
     derives0_to_derives : Γ ⊢₀ f → Γ ⊢ f
 
-RPP sigue con `Derives` y sus meta‑reglas exactamente igual —`gen` 323 usos, los cuatro axiomas
-320, los constructores `Derives.*` 164 (censo del 2026‑09‑12)—: **ni una cita cambia**. Y este
-módulo entra por el barrel `FOL`, que RPP **no importa**.
+🏁 Desde el 2026‑10‑02 está también la otra, en `FOL/Inconsistencia.lean` (en el build):
+`derives_to_derives0 : Γ ⊢ f → Γ ⊢₀ f`, porque `gen_rule` es admisible con una constante fresca.
+Sin las meta‑reglas, los dos cálculos derivan exactamente lo mismo.
 
-⇒ Es mucho más barato que la «reparación de fondo» de `cuarentena/README.md` §8 (partir
-`Derives`/`DerivesW`), y da lo mismo para lo que hace falta: un cálculo sobre el que **M‑11 no
-aplica**.
+Al entrar `Derives₀` (2026‑09‑14), RPP no tuvo que tocar ni una cita de `Derives` ni de sus
+meta‑reglas —`gen` 323 usos, los cuatro axiomas 320, los constructores `Derives.*` 164 (censo
+del 2026‑09‑12)—. 🗑️ El 2026‑10‑02 RPP retiró su capa `⊢` (27 módulos, 633 declaraciones) y FOL
+borró `FOL/MetaRules.lean`: desde entonces la librería de RPP (lo que compila `lake build`) no
+usa `Derives`; sólo lo usan sondeos fuera del build (`MetaReglasRefutables.lean`,
+`DerivesSinMetaReglas.lean`) (medido ese día). Este módulo entra por el barrel `FOL`, que RPP
+**no importa**.
+
+⇒ Fue mucho más barato que la «reparación de fondo» de `cuarentena/README.md` §8 (partir
+`Derives`/`DerivesW`), y dio lo mismo para lo que hacía falta: un cálculo sobre el que M‑11 no
+aplicaba. La reparación de fondo acabó siendo otra: retirar las meta‑reglas (ADR‑115 de RPP), y
+desde entonces M‑11 tampoco aplica a `Derives`.
 
 ## 🏁 Lo que venía después — **los TRES, hechos**
 
@@ -151,10 +178,14 @@ infix:50 " ⊢₀ " => Derives₀
 /-- **El encaje**: todo lo que `Derives₀` deriva, `Derives` lo deriva.
 
 ⭐ **Y esta prueba es la demostración de que el Paso 0 funciona**: es una **inducción sobre
-`Derives₀`**, que sobre `Derives` sería ilegítima (M‑11). Cada caso es su constructor homónimo.
+`Derives₀`**. Cada caso es su constructor homónimo. (El 2026‑09‑14 se añadía que sobre `Derives`
+esa inducción sería ilegítima por M‑11; desde ADR‑115 de RPP no lo es: ningún axioma lo habita.)
 
-⚠️ La recíproca **NO vale, y a propósito**: `Derives` tiene los cuatro habitantes‑axioma y la
-ω‑regla. Toda la metateoría vive de este lado; `Derives` se queda como herramienta. -/
+🏁 **La recíproca está demostrada desde el 2026‑10‑02**: `FOL.Inconsistencia.derives_to_derives0`,
+por inducción sobre `Derives`, con `gen_rule` admisible por una constante fresca. Aquí se decía
+que «NO vale, y a propósito»; era falso también entonces: la inducción no ve los axiomas, la
+misma prueba compilaba con `FOL/MetaRules.lean` importado, y junto a `raa` daba `False`. La
+metateoría sigue viviendo de este lado: `Derives₀` es el cálculo finitario. -/
 theorem derives0_to_derives : ∀ {Γ : List Formula} {f : Formula}, (Γ ⊢₀ f) → (Γ ⊢ f) := by
   intro Γ f h
   induction h with
@@ -181,9 +212,10 @@ theorem derives0_to_derives : ∀ {Γ : List Formula} {f : Formula}, (Γ ⊢₀ 
   | refl Γ t => exact Derives.refl Γ t
   | subst Γ t₁ t₂ f _ _ ih1 ih2 => exact Derives.subst Γ t₁ t₂ f ih1 ih2
 
-/-- Las versiones OBJETO de las meta‑reglas que en `Derives` **tienen** que ser axiomas.
-Aquí son teoremas de una línea, y por eso `Derives₀` no pierde ninguna REGLA: sólo pierde la
-fuerza **meta** (la premisa‑función), que es exactamente la patología. -/
+/-- Las versiones OBJETO de las meta‑reglas que en `Derives` eran axiomas (🗑️ borrados con
+`FOL/MetaRules.lean`, ADR‑115 de RPP: eran refutables). Aquí son teoremas de una línea, y por eso
+`Derives₀` no pierde ninguna REGLA: sólo pierde la fuerza **meta** (la premisa‑función), que era
+exactamente la patología, y era falsa (`FOL.Inconsistencia.raa_refutable`). -/
 theorem derives0_raa {Γ : List Formula} {A : Formula}
     (h : Derives₀ (A :: Γ) Formula.bottom) : Γ ⊢₀ neg A :=
   Derives₀.intro_impl Γ A Formula.bottom h

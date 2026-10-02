@@ -1,6 +1,6 @@
 # Diagrama de Dependencias — FOL
 
-**Last updated:** 2026-09-27 — GENERADO por `py gen-dependencies.py` desde las líneas `import`; no se edita a mano.
+**Last updated:** 2026-10-02 — GENERADO por `py gen-dependencies.py` desde las líneas `import`; no se edita a mano.
 **Autor**: Julián Calderón Almendros
 
 > ⚠️ Este fichero se **calcula**. Para actualizarlo: `py gen-dependencies.py`; para comprobar que
@@ -9,7 +9,7 @@
 
 ## Cifras
 
-* **55 módulos** (`FOL/` 44 + `FOL/Theorems/` 5 + `TheoryFramework/` 6), **99 aristas** `import` entre ellos, profundidad máxima **12**.
+* **54 módulos** (`FOL/` 43 + `FOL/Theorems/` 5 + `TheoryFramework/` 6), **97 aristas** `import` entre ellos, profundidad máxima **12**.
 * 2 `lean_lib`: `FOL` (raíz: el barril `FOL.lean`, sin globs) y `TheoryFramework` (globs `.submodules`).
 * Módulos que NINGÚN build alcanza: ninguno.
 * Imports externos a FOL: `Lean` (FOL no tiene `require`: no depende de nada más allá de sí mismo).
@@ -17,7 +17,7 @@
 ## Por niveles (camino de imports más largo hasta una raíz)
 
 * **0** — `FOL.FOL`, `TF.Logic`
-* **1** — `Complexity`, `DecEq`, `Derives0`, `MetaRules`, `Semantics`, `SymClasses`, `Tactics`, `Thm.Eq`, `Thm.Neg`, `TF.Theory`
+* **1** — `Complexity`, `DecEq`, `Derives0`, `Semantics`, `SymClasses`, `Tactics`, `Thm.Eq`, `Thm.Neg`, `TF.Theory`
 * **2** — `Deduction`, `Eigenvariable`, `Enumeration`, `Eq0`, `Propositional0`, `Rename`, `Soundness0`, `Thm.Derived`, `Thm.Impl`, `TF.Properties`, `TF.Relations`
 * **3** — `Herbrand0`, `Lift0`, `Thm.Quantifiers`, `TF.MetaTheorems`
 * **4** — `Core`, `Derives1`, `Henkin0`, `Prenex0`
@@ -46,7 +46,6 @@ graph BT
     Complexity["Complexity"] --> FOL_FOL["FOL.FOL"]
     Core["Core"] --> Deduction["Deduction"]
     Core["Core"] --> FOL_FOL["FOL.FOL"]
-    Core["Core"] --> MetaRules["MetaRules"]
     Core["Core"] --> Tactics["Tactics"]
     Core["Core"] --> Thm_Derived["Thm.Derived"]
     Core["Core"] --> Thm_Eq["Thm.Eq"]
@@ -81,7 +80,7 @@ graph BT
     HerbrandBlock0["HerbrandBlock0"] --> Sequent0["Sequent0"]
     Inconsistencia["Inconsistencia"] --> FOL_FOL["FOL.FOL"]
     Inconsistencia["Inconsistencia"] --> Finitary0["Finitary0"]
-    Inconsistencia["Inconsistencia"] --> MetaRules["MetaRules"]
+    Inconsistencia["Inconsistencia"] --> Fresh0["Fresh0"]
     Inconsistencia["Inconsistencia"] --> Propositional0["Propositional0"]
     Inconsistencia["Inconsistencia"] --> Semantics["Semantics"]
     Inconsistencia["Inconsistencia"] --> Soundness0["Soundness0"]
@@ -90,7 +89,6 @@ graph BT
     Inversion0["Inversion0"] --> Hauptsatz0["Hauptsatz0"]
     Lift0["Lift0"] --> Eigenvariable["Eigenvariable"]
     Lindenbaum0["Lindenbaum0"] --> HenkinLimit0["HenkinLimit0"]
-    MetaRules["MetaRules"] --> FOL_FOL["FOL.FOL"]
     NDtoLK0["NDtoLK0"] --> Sequent0["Sequent0"]
     Prenex0["Prenex0"] --> Herbrand0["Herbrand0"]
     Prenex0["Prenex0"] --> Lift0["Lift0"]
@@ -139,12 +137,11 @@ graph BT
 
 | módulo | nivel | importa | lo importan |
 |---|---|---|---|
-| `FOL.FOL` | 0 | — | `Complexity`, `Core`, `DecEq`, `Deduction`, `Derives0`, `Enumeration`, `Inconsistencia`, `MetaRules`, `Semantics`, `SymClasses`, `Tactics`, `Thm.Derived`, `Thm.Eq`, `Thm.Impl`, `Thm.Neg`, `Thm.Quantifiers` |
+| `FOL.FOL` | 0 | — | `Complexity`, `Core`, `DecEq`, `Deduction`, `Derives0`, `Enumeration`, `Inconsistencia`, `Semantics`, `SymClasses`, `Tactics`, `Thm.Derived`, `Thm.Eq`, `Thm.Impl`, `Thm.Neg`, `Thm.Quantifiers` |
 | `TheoryFramework.Logic` | 0 | — | `TF.Theory` |
 | `FOL.Complexity` | 1 | `FOL.FOL` | `Canonical0` |
 | `FOL.DecEq` | 1 | `FOL.FOL` | `Propositional0` |
 | `FOL.Derives0` | 1 | `FOL.FOL` | `Eigenvariable`, `Eq0`, `Propositional0`, `Rename`, `Soundness0` |
-| `FOL.MetaRules` | 1 | `FOL.FOL` | `Core`, `Inconsistencia` |
 | `FOL.Semantics` | 1 | `FOL.FOL` | `Canonical0`, `Inconsistencia`, `Soundness0` |
 | `FOL.SymClasses` | 1 | `FOL.FOL` | `Enumeration`, `Fresh0` |
 | `FOL.Tactics` | 1 | `FOL.FOL` · externo: `Lean` | `Core`, `Deduction`, `Thm.Impl` |
@@ -166,12 +163,12 @@ graph BT
 | `FOL.Lift0` | 3 | `Eigenvariable` | `Craig0`, `Derives1`, `Henkin0`, `Prenex0` |
 | `FOL.Theorems.Quantifiers` | 3 | `FOL.FOL`, `Thm.Derived`, `Thm.Impl`, `Thm.Neg` | `Core` |
 | `TheoryFramework.MetaTheorems` | 3 | `TF.Properties`, `TF.Relations` | `TF.Instances.FOL` |
-| `FOL.Core` | 4 | `Deduction`, `FOL.FOL`, `MetaRules`, `Tactics`, `Thm.Derived`, `Thm.Eq`, `Thm.Impl`, `Thm.Neg`, `Thm.Quantifiers` | — |
+| `FOL.Core` | 4 | `Deduction`, `FOL.FOL`, `Tactics`, `Thm.Derived`, `Thm.Eq`, `Thm.Impl`, `Thm.Neg`, `Thm.Quantifiers` | — |
 | `FOL.Derives1` | 4 | `Lift0` | `Derives2`, `PrenexNF0` |
 | `FOL.Henkin0` | 4 | `Lift0` | `Fresh0` |
 | `FOL.Prenex0` | 4 | `Herbrand0`, `Lift0` | `PrenexNF0` |
 | `FOL.Derives2` | 5 | `Derives1`, `Thm.Eq` | `Sequent0` |
-| `FOL.Fresh0` | 5 | `Henkin0`, `Rename`, `SymClasses` | `HenkinLimit0` |
+| `FOL.Fresh0` | 5 | `Henkin0`, `Rename`, `SymClasses` | `HenkinLimit0`, `Inconsistencia` |
 | `FOL.PrenexNF0` | 5 | `Derives1`, `Prenex0` | `SkolemNF0` |
 | `FOL.HenkinLimit0` | 6 | `Enumeration`, `Fresh0` | `Lindenbaum0` |
 | `FOL.Sequent0` | 6 | `Derives2`, `Herbrand0` | `Craig0`, `Hauptsatz0`, `HerbrandBlock0`, `NDtoLK0`, `SequentSound0`, `SkolemNF0` |
@@ -183,7 +180,7 @@ graph BT
 | `FOL.Finitary0` | 8 | `NDtoLK0` | `Inconsistencia` |
 | `FOL.Hauptsatz0` | 8 | `NDtoLK0`, `Sequent0` | `BlockExtraction0`, `Interpolation0`, `Inversion0`, `QFDecide0` |
 | `FOL.BlockExtraction0` | 9 | `Hauptsatz0`, `HerbrandBlock0` | `SkolemHerbrand0` |
-| `FOL.Inconsistencia` | 9 | `FOL.FOL`, `Finitary0`, `MetaRules`, `Propositional0`, `Semantics`, `Soundness0` | — |
+| `FOL.Inconsistencia` | 9 | `FOL.FOL`, `Finitary0`, `Fresh0`, `Propositional0`, `Semantics`, `Soundness0` | — |
 | `FOL.Interpolation0` | 9 | `Craig0`, `Hauptsatz0` | — |
 | `FOL.Inversion0` | 9 | `Hauptsatz0` | — |
 | `FOL.QFDecide0` | 9 | `Hauptsatz0` | — |
