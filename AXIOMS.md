@@ -20,11 +20,11 @@
 > `derives_not_negP`) y se puede inducir sobre él. Lo que abajo dice lo contrario es registro, fechado, con
 > su rectificación (✏️).
 >
-> ⚠️ **DEUDA declarada — cinco módulos CONGELADOS** (🧊, `frozen_files.txt`) llevan textos que el borrado
-> vuelve falsos. Sólo se corrigen con un `thaw` **autorizado por el propietario**, y lo esperan; su código no
-> cambia, sólo su texto:
+> ✅ **SALDADA el 2026‑10‑03** **— cinco módulos CONGELADOS** (🧊, `frozen_files.txt`) llevaban textos falsos —ya
+> lo eran al escribirse: lo falso era `raa` (ADR‑114 §2 de RPP)— que el diagnóstico del 2026‑10‑02 dejó a la vista. El propietario autorizó el `thaw`: se corrigieron sólo sus comentarios (código idéntico a HEAD,
+> comprobado sin comentarios) y se volvieron a congelar en el mismo ciclo. Lo que decían, como registro:
 >
-> | módulo 🧊 | lo que dice, y desde el 2026‑10‑02 no vale |
+> | módulo 🧊 | lo que decía (corregido el 2026‑10‑03; líneas de antes del `thaw`) |
 > |---|---|
 > | `FOL/Soundness0.lean` | l. 27-30: «la solidez de `Derives` es FALSA», con `FOL/Inconsistencia.lean` y `[propext, FOL.MetaRules.raa]` por prueba y M‑11 por causa; l. 45-48 y 228-231: que `Derives` es sintácticamente completo; l. 56-60: que a la prueba de `cuarentena/Soundness.lean` la invalidaba «el tipo sobre el que inducía» y que el teorema «cae por M‑11»; l. 208: «su solidez es falsa» |
 > | `FOL/Canonical0.lean` | l. 31-32: que sobre `Derives` «no puede haberlas» (solidez y completitud) porque «su solidez es FALSA», y que `axioms ⊢` es sintácticamente completo (M‑10), lo que venía de `raa` |
@@ -65,7 +65,7 @@
 > ✏️ **Rectificado el 2026‑10‑02** (ADR‑115 de RPP): no era la evidencia de eso, sino de que `raa` era
 > falso. El módulo se reescribió: su §1 demuestra hoy la solidez de `Derives` (`derives_soundness`) y su §3
 > refuta los enunciados de las cuatro meta‑reglas; el teorema de entonces, `inconsistencia_de_cualquier_solidez`,
-> se borró, porque su enunciado pasó a ser falso. Y «ni uno más en ninguna parte» dejaba fuera los 15 de las
+> se borró porque su enunciado era falso (también entonces) y sólo se «demostraba» con `raa`. Y «ni uno más en ninguna parte» dejaba fuera los 15 de las
 > librerías muertas de `cuarentena/librerias-retiradas/`, que siguen ahí, fuera del lakefile.
 
 > ## 🗄️ Registro histórico — ESTADO del 2026‑09‑13 · «4 `axiom` de Lean» en el build · 0 `sorry` · Lean v4.31.0
@@ -343,8 +343,9 @@ al borrarse el módulo.
   recursor cubre a todo habitante, y lo que la contradice es el axioma. El riesgo es un `axiom` sobre un
   inductivo, que puede ser **refutable por el propio recursor**: los cuatro de `MetaRules` lo eran (§1.1).
 * ⚠️ **ROBINSON_PlusPlus tiene su propio censo** (`../ROBINSON_PlusPlus/AXIOMS.md`), hoy sin ningún
-  `axiom` de Lean. Fabricaba un habitante más de `Derives`, `ax_list_induction` (con premisa‑función hasta
-  ADR‑029, 2026‑09‑13; después con premisa objeto, positiva). También era refutable: su `φ : Term → Formula`
+  `axiom` de Lean. Fabricaba tres habitantes más de `Derives`, hoy retirados: `ax_induction_prim`, `ax_list_induction` y
+  `ax_axiomsCodeT_eq` (ADR‑114 §5 de RPP), retirados con la capa `⊢` (ADR‑115). `ax_list_induction`
+  (retirado; con premisa‑función hasta ADR‑029, 2026‑09‑13; después con premisa objeto, positiva). También era refutable: su `φ : Term → Formula`
   mira la sintaxis del término y su `Γ` es libre, y él solo daba `[] ⊢ ⊥` (ADR‑114 L1‑2,
   `sondeos/ListInductionAxiomRefutable.lean`). Se retiró con la capa `⊢` de RPP (ADR‑115, 2026‑10‑02).
 * ⚠️ **No mide constructividad.** `Classical.choice`, `propext` y `Quot.sound` son axiomas del

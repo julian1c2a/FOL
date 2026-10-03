@@ -28,8 +28,11 @@ El último tramo de `../ROBINSON_PlusPlus/doc/PLAN-COMPLETITUD-FINITISTA.md` §6
 y, junto con `derives0_soundness` (ADR‑034), **`derives0_complete_iff : Γ ⊢₀ f ↔ Γ ⊨ f`**.
 
 ⭐⭐ Es la primera vez que este proyecto tiene **las dos direcciones** sobre un mismo cálculo de
-FOL⁼. ⛔ Recuérdese que sobre `Derives` **no puede haberlas**: su solidez es FALSA
-(`FOL/Inconsistencia.lean`) y `axioms ⊢` es sintácticamente completo (M‑10).
+FOL⁼. ✏️ 2026‑10‑03: aquí se decía que sobre `Derives` no podía haberlas, porque su solidez era FALSA
+y `axioms ⊢` sintácticamente completo (M‑10). Las dos cosas se debían al `axiom raa`, refutable
+(ADR‑115 de RPP). Borrado `FOL/MetaRules.lean`, valen sobre `Derives`: la solidez es
+`FOL.Inconsistencia.derives_soundness` y la completitud sale de `completeness₀` con
+`derives0_to_derives`.
 
 ## El recorrido
 

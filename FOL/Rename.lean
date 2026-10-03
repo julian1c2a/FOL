@@ -30,8 +30,10 @@ construcción clásica añade testigos `(∃A) → A[c]` con `c` **fresca**, y l
 paso se prueba por contraposición: de una derivación que usa `c` hay que fabricar otra que no la
 use. Eso es **transformar una derivación**, o sea **inducción sobre el cálculo**.
 
-⛔ Sobre `Derives` es **ilegítimo** (M‑11: cuatro axiomas lo habitan).
-✅ Sobre `Derives₀` es trabajo ordinario — y aquí está, con los **21** casos.
+✏️ 2026‑10‑03: aquí se decía que sobre `Derives` era ilegítimo (M‑11: cuatro axiomas lo habitaban).
+Era al revés: la inducción era válida, y lo falso eran esos axiomas, borrados con `FOL/MetaRules.lean`
+(ADR‑115 de RPP).
+✅ Sobre `Derives₀`, el sujeto de FOL⁼, es trabajo ordinario — y aquí está, con los **21** casos.
 
 ## ⚠️ Qué renombra, exactamente
 
@@ -275,8 +277,10 @@ theorem map_rename_lift (ρ : String → String) (Γ : List Formula) :
 
 /-- **`Derives₀` respeta el renombrado de símbolos de función.**
 
-⭐ Inducción sobre los 21 constructores — legítima porque `Derives₀` **no tiene
-habitantes‑axioma** (ADR‑033). Sobre `Derives` esto sería M‑11 en estado puro.
+⭐ Inducción sobre los 21 constructores (`Derives₀` **no tiene habitantes‑axioma**, ADR‑033).
+✏️ 2026‑10‑03: decía «legítima porque…» y que sobre `Derives` «sería M‑11 en estado puro»; la
+inducción es legítima siempre, y hoy tampoco `Derives` tiene habitantes‑axioma en el build de FOL y
+de RPP (ADR‑115 de RPP).
 
 Es la pieza que la extensión de Henkin necesitaba (plan §6.2). -/
 theorem derives0_rename (ρ : String → String) {Γ : List Formula} {f : Formula} (h : Γ ⊢₀ f) :

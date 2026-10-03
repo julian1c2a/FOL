@@ -15,12 +15,12 @@
 >
 > ⭐ **Los seis teoremas del cierre (T1 a T6, 2026-09-23 y 2026-09-26) están en el árbol**, sobre `Derives₀`; el catálogo, en `CURRENT-STATUS-PROJECT.md` («Estado vigente») y `REFERENCE.md` §6. ⛔ Y lo que NO hay: la propiedad de disyunción para `Derives₀` es **FALSA** (`derives0_no_disjunction_property`).
 > (Este aviso decía que «lo único sólido MEDIDO» era `prf0_soundness` (hoy `prfI_soundness`), en RPP: dejó de serlo el 2026-09-14.)
-> ⚠️ **2026-10-02 · deuda declarada**: cinco módulos 🧊 congelados (`Soundness0`, `Canonical0`, `Compacity0`, `Rename`, `TheoryFramework/Instances/FOL`) conservan el texto anterior al borrado de `FOL/MetaRules.lean` («la solidez de `Derives` es FALSA», M‑11) y esperan un `thaw` autorizado por el propietario: detalle por línea, abajo, en «Lo que queda».
+> ✅ **2026-10-03 · deuda saldada**: los cinco módulos 🧊 que conservaban el texto anterior al borrado de `FOL/MetaRules.lean` (`Soundness0`, `Canonical0`, `Compacity0`, `Rename`, `TheoryFramework/Instances/FOL`) se descongelaron con autorización del propietario, se corrigieron sólo sus comentarios y se volvieron a congelar: registro por línea, abajo, en «Lo que queda».
 >
 > **Fuentes:** `cuarentena/README.md` · `AXIOMS.md` ·
 > `../ROBINSON_PlusPlus/doc/AUDITORIA-FOL-2026-09-12.md` · ADR‑114 y ADR‑115 de `../ROBINSON_PlusPlus/DECISIONS.md` (2026-10-02)
 
-**Last updated:** 2026-10-02 — 🗑️ `FOL/MetaRules.lean` borrado (ADR‑115 de RPP: sus cuatro `axiom` eran refutables): aviso, sección nueva al principio de «Lo que queda» con la deuda de cinco módulos 🧊 que esperan un `thaw` autorizado, y la fila X1 (PeanoRF cae: importa `FOL.MetaRules`). Antes (2026-09-27): N5 y N7, resueltas por el propietario (N5: los nombres técnicos son auxiliares, regla escrita en `NAMING-CONVENTIONS.md` §9; N7: `herbrand_of_skolemNF₀` reforzado con la ecuación); 🧊 tercer lote congelado (8 módulos: 23 en total; de los 19 de la tercera criba sólo queda fuera `Inconsistencia`, por X1). Antes, el mismo día: 🧊 segundo lote congelado (10 módulos: 15 en total); quedan N5, N7 y X1. Antes, el mismo día: la tercera criba con refutación: 10 congelables (4 ya, 6 con sus correcciones aplicadas), decisiones N5 y N7; N6 aplicada. Antes, el mismo día: la auditoría de constructividad y las decisiones D1‑D8 del propietario, ejecutadas (`Classical.choice` 157 → 84 constantes; Lindenbaum y Henkin sin él; la tesis del WKL, rectificada; la instancia de `TheoryFramework`, declarada; `Rename` descongelado para retirar `invOf`); los 17 candidatos, sólo bloqueados. Antes, el mismo día: N1‑N4 resueltas y aplicadas (13 renombres, dos duplicados retirados; `PrenexNF0`/`SequentSound0` descongelados y re‑congelados); los 10 congelables, sólo bloqueados. Antes, el mismo día: la segunda criba con refutación (71 correcciones). Antes, el mismo día: P4 hecha (`QFDecide0`). Antes, el mismo día: 🧊 cinco módulos congelados; P2 (18 renombres) y P3 (`sub_*` en `Sequent0`) hechas. Antes, el mismo día: W2, W3 y W4 hechas; la criba de congelación, pasada con refutación (1 congelable ya, 4 tras arreglos —aplicados—, 18 todavía no). Antes (2026-09-26): aviso reescrito y sección «Lo que queda» nueva; el plan de fases de abajo es HISTÓRICO (2026-05-16).
+**Last updated:** 2026-10-03 — la deuda de los cinco módulos 🧊 con textos falsos, SALDADA: `thaw` autorizado por el propietario, sólo comentarios, re‑congelados en el mismo ciclo; y la línea de `SequentSound0` (D2), puesta al día. Antes, 2026-10-02 — 🗑️ `FOL/MetaRules.lean` borrado (ADR‑115 de RPP: sus cuatro `axiom` eran refutables): aviso, sección nueva al principio de «Lo que queda» con la deuda de cinco módulos 🧊 que esperan un `thaw` autorizado, y la fila X1 (PeanoRF cae: importa `FOL.MetaRules`). Antes (2026-09-27): N5 y N7, resueltas por el propietario (N5: los nombres técnicos son auxiliares, regla escrita en `NAMING-CONVENTIONS.md` §9; N7: `herbrand_of_skolemNF₀` reforzado con la ecuación); 🧊 tercer lote congelado (8 módulos: 23 en total; de los 19 de la tercera criba sólo queda fuera `Inconsistencia`, por X1). Antes, el mismo día: 🧊 segundo lote congelado (10 módulos: 15 en total); quedan N5, N7 y X1. Antes, el mismo día: la tercera criba con refutación: 10 congelables (4 ya, 6 con sus correcciones aplicadas), decisiones N5 y N7; N6 aplicada. Antes, el mismo día: la auditoría de constructividad y las decisiones D1‑D8 del propietario, ejecutadas (`Classical.choice` 157 → 84 constantes; Lindenbaum y Henkin sin él; la tesis del WKL, rectificada; la instancia de `TheoryFramework`, declarada; `Rename` descongelado para retirar `invOf`); los 17 candidatos, sólo bloqueados. Antes, el mismo día: N1‑N4 resueltas y aplicadas (13 renombres, dos duplicados retirados; `PrenexNF0`/`SequentSound0` descongelados y re‑congelados); los 10 congelables, sólo bloqueados. Antes, el mismo día: la segunda criba con refutación (71 correcciones). Antes, el mismo día: P4 hecha (`QFDecide0`). Antes, el mismo día: 🧊 cinco módulos congelados; P2 (18 renombres) y P3 (`sub_*` en `Sequent0`) hechas. Antes, el mismo día: W2, W3 y W4 hechas; la criba de congelación, pasada con refutación (1 congelable ya, 4 tras arreglos —aplicados—, 18 todavía no). Antes (2026-09-26): aviso reescrito y sección «Lo que queda» nueva; el plan de fases de abajo es HISTÓRICO (2026-05-16).
 **Autor**: Julián Calderón Almendros
 
 ## ⬜ Lo que queda para CERRAR FOL — 2026-09-26 (noche); al día el 2026-10-02
@@ -40,11 +40,11 @@ verdaderas»), ejecutada en RPP como ADR‑115 y en FOL el mismo día:
 | `FOL/MetaRules.lean` y sus cuatro `axiom` (`imp_intro`, `raa`, `or_elim`, `ex_elim`) | 🗑️ **borrados**: eran REFUTABLES sin usarlos. `FOL.Core` ya no lo importa |
 | `FOL/Inconsistencia.lean` | ✅ **reescrito**: §1 `derives_to_derives0` (`gen_rule` es admisible) y `derives_soundness`; §2, la propiedad de disyunción, sin cambios; §3, los enunciados `ImpIntro`, `Raa`, `OrElim`, `ExElim` y sus refutaciones. `inconsistencia_de_cualquier_solidez` **se borró**: su enunciado era FALSO (sólo se «demostraba» con `raa`). Sigue fuera de la congelación (X1) |
 | censo | `axiom` de Lean: 4 → **0** (`check-axioms.bash`, `ESPERADO_FOL=0`) · módulos activos: 55 → **54** (`FOL/`: 44 → 43) |
-| ⬜ **DEUDA: cinco módulos 🧊 CONGELADOS** con textos que el borrado volvió FALSOS | **esperan un `thaw` autorizado por el propietario**; sin él no se tocan. La lista, debajo |
+| ✅ cinco módulos 🧊 CONGELADOS con textos falsos (ya lo eran al escribirse; el diagnóstico del 2026-10-02 los dejó a la vista) | **saldada el 2026-10-03**: `thaw` autorizado por el propietario, sólo comentarios, re‑congelados en el mismo ciclo. La lista, debajo, como registro |
 | PeanoRF (X1) | ⛔ cae `PeanoRF/Prelim.lean` (importa `FOL.MetaRules`) y lo que lo importa; los módulos de `Calculus/`, no (fila X1). El propietario lo previó por escrito al bloquearlo; PeanoRF está bloqueado y no se toca |
 | RPP, en el push que sigue a éste | `check-estratos` (`Derives` 22 · 0), las filas `FOL.Inconsistencia.*` de `check-footprints.bash` y el prefijo de la caché de la CI (ADR‑115 §7) |
 
-La deuda, por fichero (citas de los textos congelados, sin su negrita; las líneas son estables mientras sigan 🧊):
+La deuda, por fichero, como REGISTRO (saldada el 2026-10-03; citas sin su negrita, con las líneas de antes del `thaw`):
 
 * `FOL/Soundness0.lean` — l. 27‑30 («La solidez de `Derives` es FALSA», con footprint
   `[propext, FOL.MetaRules.raa]` y la causa en M‑11), l. 45‑48 y 228‑231 («`Derives` es sintácticamente
@@ -61,7 +61,7 @@ La deuda, por fichero (citas de los textos congelados, sin su negrita; las líne
   CONTAMINADO … `SoundLogic` (inhabitable)») y l. 40 («La herramienta `Derives` sigue SIN instancia, y es
   correcto: su solidez es falsa»).
 
-Lo que es verdad hoy, contra lo que habrá que contrastarlos en el `thaw`: sin meta‑reglas, `Derives` es
+Lo que es verdad hoy, y contra lo que se contrastaron en el `thaw`: sin meta‑reglas, `Derives` es
 `Derives₀` más una regla admisible; es **sólido** (`derives_soundness`), **no** es sintácticamente
 completo (`⊬ P` y `⊬ ¬P`: `derives_not_P`, `derives_not_negP`) y la inducción sobre él es legítima. Lo
 falso eran las meta‑reglas, no la solidez.
@@ -163,9 +163,9 @@ meta de `FOL.Tactics`); `noncomputable`, **8 → 1** (`SkolemN0.skF`); titulares
   `Skolem0` cambiaron de código hoy, y otros candidatos, de docstrings (D2).
 * 🧊 `Rename` estaba congelado (RPP‑105): es su primer `thaw`, autorizado por D1 (la auditoría ya
   advertía que retirar `invOf` pedía descongelarlo), y vuelve a congelarse en el mismo ciclo.
-* 🧊 ⚠️ D2 no ha llegado a `SequentSound0`, CONGELADO: su cabecera y el docstring de `lk0_not_empty`
-  conservan tres localizaciones del WKL («en vez del **WKL**», dos veces; «el `Classical.choice` que
-  ADR‑041 identificó como el **WKL**»). Se rectifican en su próximo `thaw` autorizado (`AXIOMS.md` §4.5).
+* 🧊 ✅ D2 llegó a `SequentSound0` el 2026‑09‑28: `thaw` autorizado, las tres localizaciones del WKL de su
+  cabecera y del docstring de `lk0_not_empty` rectificadas y re‑congelado (`AXIOMS.md` §4.5). Esta línea
+  decía que esperaban su próximo `thaw`.
 
 **Tercera criba con refutación (2026‑09‑27, tras D1‑D8; RPP‑111)**, sobre los 19 que deja pasar la
 parte medible (los 17 más `Inconsistencia` y `TheoryFramework/Instances/FOL.lean`): 31 correcciones de

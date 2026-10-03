@@ -28,9 +28,10 @@ import FOL.Skolem0
 `cuarentena/Compacity.lean` estuvo apartado desde el 2026‑09‑11 —y se **borró** el 2026‑09‑23 con
 el resto de la cuarentena (RPP‑099 §5)—: su `compactness_theorem` estaba declarado **VACUO** —con
 esas palabras— en `cuarentena/README.md` y en el barril `FOL.lean`: *«su prueba pasaba por
-`soundness`»*, y la solidez de `Derives` es **falsa** (M‑11).
-⇒ `compactness` es el mismo teorema con el **SUJETO** cambiado. 🔑 Es el patrón ya escarmentado
-del proyecto: *cuando un teorema cae, su prueba suele estar bien — lo que cambia es el sujeto.*
+`soundness`»*, y la solidez de `Derives` se tenía por **falsa** (M‑11).
+✏️ 2026‑10‑03: era al revés —esa solidez era demostrable, y lo falso era el `axiom raa`, que FOL borró
+(ADR‑115 de RPP)—, así que aquel teorema no era vacuo por eso.
+⇒ `compactness` es el mismo teorema sobre `Derives₀`, el sujeto de FOL⁼.
 
 ## ⭐⭐ La compacidad SINTÁCTICA ya estaba metida en la definición
 

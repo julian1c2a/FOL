@@ -15,7 +15,7 @@
 >
 > ⭐ **Los seis teoremas del cierre (T1 a T6, 2026-09-23 y 2026-09-26) están en el árbol**, sobre `Derives₀`; el catálogo, en `CURRENT-STATUS-PROJECT.md` («Estado vigente») y `REFERENCE.md` §6. ⛔ Y lo que NO hay: la propiedad de disyunción para `Derives₀` es **FALSA** (`derives0_no_disjunction_property`).
 > (Este aviso decía que «lo único sólido MEDIDO» era `prf0_soundness`, en RPP: dejó de serlo el 2026-09-14.)
-> ⚠️ **2026-10-02 · deuda declarada**: cinco módulos 🧊 congelados (`Soundness0`, `Canonical0`, `Compacity0`, `Rename`, `TheoryFramework/Instances/FOL`) conservan el texto anterior al borrado de `FOL/MetaRules.lean` («la solidez de `Derives` es FALSA», M‑11) y esperan un `thaw` autorizado por el propietario: `NEXT-STEPS.md`.
+> ✅ **2026-10-03 · deuda saldada**: los cinco módulos 🧊 que conservaban el texto anterior al borrado de `FOL/MetaRules.lean` (`Soundness0`, `Canonical0`, `Compacity0`, `Rename`, `TheoryFramework/Instances/FOL`) se descongelaron con autorización del propietario, se corrigieron sólo sus comentarios y se volvieron a congelar: `NEXT-STEPS.md`.
 >
 > **Fuentes:** `cuarentena/README.md` · `AXIOMS.md` ·
 > `../ROBINSON_PlusPlus/doc/AUDITORIA-FOL-2026-09-12.md` · ADR‑114 y ADR‑115 de `../ROBINSON_PlusPlus/DECISIONS.md` (2026-10-02)
@@ -214,4 +214,4 @@ Julián Calderón Almendros
 ---
 
 **Author**: Julián Calderón Almendros
-**Last updated:** 2026-10-02 — 🗑️ `FOL/MetaRules.lean` borrado (ADR‑115 de RPP): aviso (la solidez de `Derives` es un teorema, 0 `axiom`, la deuda de cinco módulos 🧊), «Deducción Natural» (sin `raa`), hito 2, la fila histórica de `Soundness.lean` y las importaciones de `FOL.Tactics` desde RPP. Antes (2026-09-27): la auditoría de constructividad y D1–D8: aviso (la tesis del WKL, rectificada), la instancia de `TheoryFramework` y los hitos 3, 4 y 6. Antes, el mismo día: el decisor del fragmento sin cuantificadores; renombres de la regla de subíndices (P2). Antes (2026-09-26): aviso, insignias, librerías, hitos y cabeceras HISTÓRICO corregidos; el resto del cuerpo es de 2026-05-16.
+**Last updated:** 2026-10-03 — la deuda de los cinco módulos 🧊 con textos falsos, SALDADA (`thaw` autorizado, sólo comentarios, re‑congelados). Antes, 2026-10-02 — 🗑️ `FOL/MetaRules.lean` borrado (ADR‑115 de RPP): aviso (la solidez de `Derives` es un teorema, 0 `axiom`, la deuda de cinco módulos 🧊), «Deducción Natural» (sin `raa`), hito 2, la fila histórica de `Soundness.lean` y las importaciones de `FOL.Tactics` desde RPP. Antes (2026-09-27): la auditoría de constructividad y D1–D8: aviso (la tesis del WKL, rectificada), la instancia de `TheoryFramework` y los hitos 3, 4 y 6. Antes, el mismo día: el decisor del fragmento sin cuantificadores; renombres de la regla de subíndices (P2). Antes (2026-09-26): aviso, insignias, librerías, hitos y cabeceras HISTÓRICO corregidos; el resto del cuerpo es de 2026-05-16.

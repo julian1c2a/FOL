@@ -26,18 +26,23 @@ medida en la auditoría de constructividad (unas 20 líneas).
 ## La historia, en corto
 
 * Hasta el 2026‑09‑12 este fichero declaraba una instancia *«fully complete and verified»* que
-  rellenaba `sound`/`complete` con `FOL.Metamath.Soundness.soundness` (FALSA: con las
-  meta‑reglas, cualquier testigo suyo da `False`, `FOL/Inconsistencia.lean`) y con una
-  completitud que se apoyaba en un `axiom`. Y **no entraba en ningún build**: la `lean_lib` no
-  tenía `globs`.
-* El 2026‑09‑23 se retiró `folSystem`, que declaraba `derives := Derives` —el cálculo
-  CONTAMINADO— y que por eso no podía llevar ni `SoundLogic` (inhabitable) ni `CompleteLogic`
-  (`completeness₀` es de `Derives₀`: otro cálculo). La vía quedó cerrada con su mapa de vuelta
-  escrito.
+  rellenaba `sound`/`complete` con `FOL.Metamath.Soundness.soundness` (que se tuvo por FALSA:
+  con las meta‑reglas en el entorno, cualquier testigo suyo daba `False`; ✏️ 2026‑10‑03: lo falso
+  era `raa`, ADR‑115 de RPP) y con una completitud que se apoyaba en un `axiom`. Y **no entraba
+  en ningún build**: la `lean_lib` no tenía `globs`.
+* El 2026‑09‑23 se retiró `folSystem`, que declaraba `derives := Derives` —el cálculo con las
+  meta‑reglas— y que por eso, se dijo, no podía llevar ni `SoundLogic` (inhabitable) ni
+  `CompleteLogic` (`completeness₀` es de `Derives₀`: otro cálculo). ✏️ 2026‑10‑03: `SoundLogic` era
+  habitable, y `CompleteLogic` también (`derives0_to_derives ∘ completeness₀`, los dos en el árbol
+  desde el 2026‑09‑16); lo inconsistente era el entorno. La vía quedó cerrada con su mapa de vuelta escrito.
 * El 2026‑09‑27 se toma ese mapa: la instancia se declara sobre **`Derives₀`**, y entonces
   `SoundLogic` la paga `derives0_soundness` y `CompleteLogic` la paga `completeness₀`.
 
-⛔ **La herramienta `Derives` sigue SIN instancia**, y es correcto: su solidez es falsa.
+`Derives` sigue **sin instancia propia**. ✏️ 2026‑10‑03: aquí se decía «y es correcto: su solidez es
+falsa». Podría tenerla —y podía desde el 2026‑09‑16, salvo por el entorno inconsistente que FOL
+deshizo al borrar `FOL/MetaRules.lean` (ADR‑115 de RPP)—: la solidez es
+`FOL.Inconsistencia.derives_soundness`, y la completitud sale de `completeness₀` con
+`derives0_to_derives`—, pero no hace falta: el sujeto de FOL⁼ es `Derives₀`, y la tiene.
 
 ## 📏 Footprint
 

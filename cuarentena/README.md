@@ -32,11 +32,11 @@
 > 🔑 *Cuando un teorema y un `axiom` se contradicen, el que miente puede ser el axioma.* Aquí se apartó el
 > teorema cierto, y el axioma falso siguió en el build tres semanas más.
 >
-> ⛔ **Deuda declarada (2026‑10‑02)**: cinco módulos **CONGELADOS** repiten en sus docstrings el
+> ✅ **Deuda saldada el 2026‑10‑03**: cinco módulos **CONGELADOS** repetían en sus docstrings el
 > diagnóstico viejo («la solidez de `Derives` es FALSA», «inducir sobre `Derives` es ilegítimo, M‑11»):
 > `FOL/Soundness0.lean`, `FOL/Canonical0.lean`, `FOL/Compacity0.lean`, `FOL/Rename.lean` y
-> `TheoryFramework/Instances/FOL.lean`. Sólo se pueden corregir con un `thaw`, y **esperan la
-> autorización del propietario**.
+> `TheoryFramework/Instances/FOL.lean`. El propietario autorizó el `thaw`: se corrigieron sólo sus
+> comentarios y se volvieron a congelar.
 
 > ## ⭐⭐ ESTE DIRECTORIO YA NO TIENE CÓDIGO — 2026‑09‑23
 >
@@ -266,8 +266,8 @@ dejar `Derives` limpio para que su solidez sea un teorema de verdad.
 ⛔⛔ **Y con el censo corregido, esa reparación NO BASTARÍA** (2026‑09‑12): mover sólo `MetaRules`
 dejaría **seis** habitantes — los dos de `FOL/Theorems/` y los cuatro de RPP.
 
-⚠️ Y uno de ellos lo **fabrica RPP** con la forma mala: `ax_list_induction`
-(`../ROBINSON_PlusPlus/ROBINSON_PlusPlus/Full/Lists.lean:55`) tiene una **premisa‑FUNCIÓN**
+⚠️ Y uno de ellos lo **fabricaba RPP** con la forma mala: `ax_list_induction` (retirado el 2026‑10‑02)
+(`../ROBINSON_PlusPlus/ROBINSON_PlusPlus/Full/Lists.lean:55`, módulo borrado) tenía una **premisa‑FUNCIÓN**
 `Γ ⊢ φ t → Γ ⊢ φ (cons h t)`. ⇒ el problema no es de quién es el fichero, es de la **FORMA de la
 premisa**. Una reparación que deja habitantes **no repara nada**.
 

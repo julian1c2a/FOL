@@ -2,7 +2,6 @@ FOL/Eq0.lean
 FOL/Eigenvariable.lean
 FOL/Lift0.lean
 FOL/Prenex0.lean
-FOL/Soundness0.lean
 FOL/Complexity.lean
 FOL/Derives1.lean
 FOL/Inversion0.lean
@@ -12,8 +11,6 @@ FOL/Derives2.lean
 FOL/Herbrand0.lean
 FOL/NDtoLK0.lean
 FOL/Sequent0.lean
-FOL/Rename.lean
-FOL/Compacity0.lean
 FOL/Theorems/Eq.lean
 FOL/SymClasses.lean
 FOL/SkolemN0.lean
@@ -27,8 +24,6 @@ FOL/Interpolation0.lean
 FOL/Skolem0.lean
 FOL/Henkin0.lean
 FOL/Fresh0.lean
-FOL/Canonical0.lean
-TheoryFramework/Instances/FOL.lean
 FOL/HenkinLimit0.lean
 FOL/Lindenbaum0.lean
 FOL/SkolemNF0.lean
@@ -41,7 +36,4 @@ FOL/Inconsistencia.lean
 FOL.lean
 FOL/FOL.lean
 FOL/Derives0.lean
-TheoryFramework/Logic.lean
 TheoryFramework/MetaTheorems.lean
-cuarentena/README.md
-AXIOMS.md

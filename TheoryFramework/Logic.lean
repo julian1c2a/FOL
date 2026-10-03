@@ -68,7 +68,9 @@ era su **tercera** aparición en el repo: ese fichero **no existe**, y `cuarente
 tenía **UN** `axiom` (el fichero se borró el 2026‑09‑23). 🏁 Hoy la completitud de FOL⁼ es **`FOL.Canonical0.completeness₀`**, con
 **cero axiomas del proyecto** (ADR‑041) — pero sobre **`Derives₀`**, no sobre el `Derives` que
 instanciaba `folSystem` (retirada el 2026‑09‑23), así que no pagaba esta clase; desde el 2026‑09‑27
-la paga sobre `Derives₀` (`Instances.fol0Complete`). Ver `TheoryFramework/Instances/FOL.lean`. -/
+la paga sobre `Derives₀` (`Instances.fol0Complete`). Ver `TheoryFramework/Instances/FOL.lean`.
+✏️ 2026‑10‑03: sí podía pagarla —`derives0_to_derives` compuesto con `completeness₀`, los dos en el árbol
+desde el 2026‑09‑16—; lo que fallaba era el entorno, inconsistente con las meta‑reglas (ADR‑115 de RPP). -/
 class CompleteLogic (F : Type) [LogicSystem F] : Prop where
   complete : ∀ {Γ : List F} {f : F},
     LogicSystem.semanticEntails Γ f → LogicSystem.derives Γ f
