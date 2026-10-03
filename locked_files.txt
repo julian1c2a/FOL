@@ -37,3 +37,11 @@ FOL.lean
 FOL/FOL.lean
 FOL/Derives0.lean
 TheoryFramework/MetaTheorems.lean
+FOL/Soundness0.lean
+FOL/Canonical0.lean
+FOL/Compacity0.lean
+FOL/Rename.lean
+TheoryFramework/Instances/FOL.lean
+TheoryFramework/Logic.lean
+AXIOMS.md
+cuarentena/README.md
