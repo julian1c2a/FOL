@@ -50,46 +50,58 @@ if [ -z "$LEAN_FILES" ]; then
 fi
 
 # ── Despojador de comentarios y cadenas ──────────────────────────────────────
-# Emite UNA línea de salida por cada línea de entrada (así los números de línea
-# siguen siendo los del original) con el contenido de comentarios y de literales
-# de cadena sustituido por nada. Los bloques `/- … -/` ANIDAN en Lean, por eso se
-# lleva un contador de profundidad y no un booleano.
-STRIP='
-BEGIN { depth = 0 }
-{
-  line = $0; out = ""; i = 1; n = length(line)
-  while (i <= n) {
-    two = substr(line, i, 2)
-    if (depth > 0) {
-      if (two == "-/") { depth--; i += 2; continue }
-      if (two == "/-") { depth++; i += 2; continue }
-      i++; continue
-    }
-    if (two == "/-") { depth++; i += 2; continue }
-    if (two == "--") { break }
-    c = substr(line, i, 1)
-    if (c == "\"") {
-      i++
-      while (i <= n) {
-        c2 = substr(line, i, 1)
-        if (c2 == "\\") { i += 2; continue }
-        if (c2 == "\"") { i++; break }
-        i++
-      }
-      out = out " "; continue
-    }
-    out = out c; i++
-  }
-  print out
-}
-'
-SORRY_RE='(^|[^a-zA-Z_])sorry([^a-zA-Z_]|$)'
+# Vive en `strip-lean.awk` (2026-10-03): una definición delicada vive en UN sitio, y la usan
+# también `check-doc-sync.bash` [A] y [B] y `check-axioms.bash`.
+# Emite UNA línea por cada línea de entrada (los números de línea siguen siendo los del original)
+# sin comentarios (`--`, `/- … -/` anidados, docstrings) ni literales (cadenas y caracteres).
+# ⚠️ Se ejecuta con `LC_ALL=C`: despoja por BYTES (en otro locale se niega, y la prueba de humo lo dice).
+STRIP_AWK="$(cd "$(dirname "$0")" && pwd)/strip-lean.awk"
+[ -f "$STRIP_AWK" ] || { echo "⚠️  SIN MEDIR — falta $STRIP_AWK"; exit 2; }
+STRIP () { LC_ALL=C awk -f "$STRIP_AWK" "$@"; }
+# ⛔ 2026-10-03 (ADR-116): `admit` es `sorry`, `stop` es `repeat sorry` y `sorryAx` es el propio axioma
+# (Init/Tactics.lean del core); el patrón sólo casaba `sorry` y los tres daban verde.
+# (un literal de nombre, `` `sorryAx ``, no es un uso: se excluye la comilla invertida delante; el
+# nombre calificado `_root_.sorryAx` sí lo es — 2026-10-04, segunda revisión)
+SORRY_RE='(^|[^A-Za-z0-9_'"'"'.`])(_root_\.)?(sorry|sorryAx|admit|stop)([^A-Za-z0-9_'"'"'!?]|$)'
+# ── PRUEBA DE HUMO del despojador (2026-10-03, ADR-116; ampliada el 2026-10-04) ─────────────
+# Si `strip-lean.awk` falla (un error de sintaxis en una edición, un awk incompatible, un locale que
+# no es C), sin esto el control daba «✅ No sorry found.» con `sorry` reales: la salida vacía de un
+# awk roto pasa por limpia. Entrada fija con TRECE `sorry` reales —uno por cada construcción que
+# alguna versión del despojador leyó mal, en las dos revisiones adversariales— y siete falsos: si no
+# salen exactamente trece, NO se mide.
+SMOKE=$(STRIP <<'EOF' | grep -cE "$SORRY_RE" || true
+-- sorry
+"sorry" -- una cadena
+/- sorry -/ sorry -- 1
+('"', sorry) -- 2: '"' es un carácter, no abre cadena
+s!"v {(sorry : Nat)}" -- 3: el código de una interpolación
+theorem «a--b» : True := sorry -- 4: «…» es opaco
+/-/- x -/ sorry -- 5: `/-` consume tres caracteres
+r#"sorry"# -- una cadena en bruto
+"uno
+sorry dos" -- una cadena de dos líneas
+by admit -- 6
+throwError "x {(sorry : Nat)}" -- 7: throwError interpola
+#eval !"{".isEmpty -- `!"…"` es el not de una cadena normal: su `{` no abre nada
+sorry -- 8
+s!"a {s!"b {(sorry : Nat)} c"} d" -- 9: interpolaciones anidadas
+⟨'«', "»", sorry⟩ -- 10: un carácter tras un símbolo no ASCII
+⟨r"\", sorry⟩ -- 11: una cadena en bruto tras un símbolo no ASCII
+exact/- c -/sorry -- 12: un comentario es espacio
+_root_.sorryAx Nat -- 13
+(`sorryAx, h₀', Γ') -- un literal de nombre y dos primas
+EOF
+)
+if [ "$SMOKE" != "13" ]; then
+  echo "⚠️  SIN MEDIR — strip-lean.awk no pasa su prueba de humo ($SMOKE de 13 \`sorry\`)."
+  exit 2
+fi
 
 echo "=== sorry report ==="
 while IFS= read -r FILE; do
     [ -z "$FILE" ] && continue
     [ ! -f "$FILE" ] && continue
-    HITS=$(awk "$STRIP" "$FILE" 2>/dev/null | grep -nE "$SORRY_RE" | cut -d: -f1 || true)
+    HITS=$(STRIP "$FILE" | grep -nE "$SORRY_RE" | cut -d: -f1 || true)
     [ -z "$HITS" ] && continue
     COUNT=$(printf '%s\n' "$HITS" | grep -c . || true)
     echo ""

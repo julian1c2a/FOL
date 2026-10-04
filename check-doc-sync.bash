@@ -63,7 +63,45 @@ QUAR=$(ls cuarentena/*.lean 2>/dev/null | wc -l)
 # ⚠️ Sin `bc`: no está instalado en Git Bash ni, por defecto, en el runner de CI, y
 # `paste -sd+ | bc` fallaba en silencio dejando la cifra VACÍA. `wc -l` sobre las
 # líneas que casan cuenta lo mismo y no depende de nada.
-AXIOMS=$(grep -rhE "^axiom " FOL/ TheoryFramework/ --include=*.lean 2>/dev/null | wc -l)
+# ⛔ 2026-10-03 (ADR-116): antes era `grep "^axiom "`, ciego a `private`/`@[…]`/sangrados y crédulo con
+# los docstrings. Ahora es el mismo patrón que `check-axioms.bash` (de FOL), sobre el código sin
+# comentarios (`strip-lean.awk`). El censo autoritativo, por entorno, es el de `check-axioms.bash`.
+# ⛔⛔ 2026-10-04 (ADR-116 de RPP, segunda revisión): y la primera versión de esa línea daba SIEMPRE 0.
+# Donde iba la continuación de línea había un `\n` LITERAL (la cadena de herramientas se comió la
+# barra al escribirla): `find` recibía «\n» como un camino más y fallaba, y el `|| true` del final
+# se tragaba el fallo. Como el árbol tiene de verdad 0 `axiom`, la cifra cuadraba con los documentos
+# y nadie lo vio: un `axiom` nuevo habría dado VERDE. Ahora la cuenta es una función que DEVUELVE su
+# fallo, y antes de medir el árbol mide un fixture con TRES `axiom` reales y cinco señuelos: si no
+# salen 3, no se mide (y no medir es rojo). El alcance incluye ya el barrel `TheoryFramework.lean`.
+# 🔑 *Un `|| true` al final de una tubería convierte «no he podido medir» en «cero».*
+AX_RE='^[[:space:]]*(@\[[^]]*\][[:space:]]*)*((private|protected|noncomputable|unsafe|partial)[[:space:]]+)*axiom[[:space:]]+[^[:space:]:({]+'
+cuenta_axiomas () {   # $@ = caminos; imprime la cifra, o nada y estado 2 si no ha podido medir
+  local p n
+  for p in "$@"; do [ -e "$p" ] || return 2; done
+  [ -n "$(find "$@" -name '*.lean' ! -path '*/.lake/*' -print -quit)" ] || return 2
+  n=$(find "$@" -name '*.lean' ! -path '*/.lake/*' -print0 \
+        | xargs -0 env LC_ALL=C awk -f strip-lean.awk \
+        | { grep -E "$AX_RE" || [ $? -eq 1 ]; } | wc -l) || return 2
+  printf '%s\n' "$n" | tr -d ' '
+}
+AX_FIX=$(mktemp -d)
+cat > "$AX_FIX/Fixture.lean" <<'EOF'
+/-- un docstring con «axiom senuelo1 : True» -/
+axiom real1 : True
+-- axiom senuelo2 : True
+@[simp] private axiom real2 : True
+def s := "axiom senuelo3 : True"
+/-- doc -/ axiom real3 : True
+/- axiom senuelo4 : True -/ def t := 0
+theorem u : True := trivial -- axiom senuelo5
+EOF
+AXIOMS=""
+if [ "$(cuenta_axiomas "$AX_FIX" || true)" = "3" ]; then
+  AXIOMS=$(cuenta_axiomas FOL/ TheoryFramework/ FOL.lean TheoryFramework.lean || true)
+fi
+rm -rf "$AX_FIX"
+AXIOMS_MISSING=0
+[ -n "$AXIOMS" ] || AXIOMS_MISSING=1
 # ⚠️ El conteo de `sorry` se DELEGA en check-sorry.bash y no se reimplementa aquí: qué
 # cuenta como `sorry` (token de código, fuera de comentarios y de literales) es una
 # definición delicada, y tenerla en dos sitios garantiza que se separen.
@@ -101,10 +139,10 @@ echo "════ VERDAD DEL CÓDIGO ════"
 printf "  módulos activos : %s  (FOL/ %s + FOL/Theorems/ %s + TheoryFramework/ %s)\n" "$ACTIVE" "$CORE" "$THEO" "$TFW"
 printf "  cuarentena      : %s\n" "$QUAR"
 printf "  axiom de Lean   : %s\n" "$AXIOMS"
-printf "  sorry           : %s
-" "$SORRY"
+printf "  sorry           : %s\n" "$SORRY"
 echo "  build jobs      : no se mide aquí (M-3: FOL no se construye desde FOL)"
 [ "$SORRY_MISSING" = "1" ] && echo "  ⚠️  sorry         : SIN MEDIR — check-sorry.bash no dijo ni 'No sorry found' ni 'Total: N sorry'."
+[ "$AXIOMS_MISSING" = "1" ] && echo "  ⚠️  axiom de Lean : SIN MEDIR — el autotest de cuenta_axiomas no dio 3 (¿strip-lean.awk, LC_ALL?)."
 echo
 
 # Documentos AUTORITATIVOS: los que describen el ESTADO ACTUAL y por tanto deben cuadrar.
@@ -122,7 +160,7 @@ FAIL=0
 # 🔑 Un control tiene TRES resultados —pasa, falla, NO HE PODIDO COMPROBARLO— y colapsar
 # el tercero en el primero es lo que lo convierte en decoración. El único verde sin medida
 # es el que se pide a mano con `--quick`, y ése se anuncia como tal.
-if [ "$SORRY_MISSING" != "0" ]; then
+if [ "$SORRY_MISSING" != "0" ] || [ "$AXIOMS_MISSING" != "0" ]; then
   FAIL=1
 fi
 
@@ -172,7 +210,7 @@ hits=$(grep -nE "$pat" "$HEADREGION" 2>/dev/null          | grep -viE "hist[oó]
 }
 check_num "[0-9]+ módulos activos" "$ACTIVE" "módulos activos"
 check_num "[0-9]+ (módulos )?en \`cuarentena/\`" "$QUAR" "cuarentena"
-check_num '[0-9]+ `?axiom`? de Lean' "$AXIOMS" "axiom de Lean"
+[ -n "$AXIOMS" ] && check_num '[0-9]+ `?axiom`? de Lean' "$AXIOMS" "axiom de Lean"
 check_num '[0-9]+ sorrys?' "$SORRY" "sorry"
 rm -f "$HEADREGION"
 [ "$A_FAIL" = "0" ] && echo "  ✓ sin cifras obsoletas" || FAIL=1
@@ -215,7 +253,7 @@ warn_num () {   # $1 = regex con grupo numérico   $2 = valor correcto   $3 = et
   return 0
 }
 warn_num "[0-9]+ módulos activos" "$ACTIVE" "módulos activos"
-warn_num '[0-9]+ `?axiom`? de Lean' "$AXIOMS" "axiom de Lean"
+[ -n "$AXIOMS" ] && warn_num '[0-9]+ `?axiom`? de Lean' "$AXIOMS" "axiom de Lean"
 warn_num '[0-9]+ sorrys?' "$SORRY" "sorry"
 rm -f "$BODYREGION"
 if [ "$A2_HITS" = "0" ]; then
@@ -312,15 +350,15 @@ fi
 
 # ─── 3. SÍMBOLOS MUERTOS ─────────────────────────────────────────────────────
 # Un símbolo está MUERTO si se cita en un doc AUTORITATIVO pero ninguna declaración
-# del árbol activo empieza por él.
+# del árbol activo se llama así.
 #
 # Dos calibraciones aprendidas al estrenar este control (2026-08-23):
 #   * Sólo se miran los docs AUTORITATIVOS (los que describen el estado actual). Los
 #     de diseño e historia — MINIMAL-AXIOMS, THOUGHTS, GODEL-*-DESIGN, PLAN-* — citan
 #     por diseño cosas que ya no están, y marcarlos sería ruido.
-#   * Se compara por PREFIJO, no por igualdad: la prosa abrevia (`ax_C3` por
-#     `ax_C3_concat_assoc`, `ax_lineWF` por `ax_lineWF_c1`), y eso es legítimo.
-#     Un símbolo de verdad muerto (`goedel_first_real'`, `prf_tc_cons'`) no prefija nada.
+#   * (✏️ 2026-10-03, ADR-116 de RPP: REVOCADA.) Se comparaba por PREFIJO («la prosa abrevia»), y
+#     eso absolvía a todo nombre que empezara como uno vivo. Hoy se casa el nombre EXACTO, y una
+#     familia se cita con `_` final (`ax_C3_`): ver (2) más abajo.
 echo
 echo "════ [B] SÍMBOLOS MUERTOS — AVISO, requiere juicio ════"
 echo "   (no rompe el check: hay menciones legítimas en secciones de diseño e historia.)"
@@ -331,7 +369,7 @@ AUTHORITATIVE="$AUTHORITATIVE cuarentena/README.md"
 #   (a) se declara retirado;  (b) es hipotético/propuesto/descartado;  (c) va en una
 #   entrada fechada (histórico por diseño).
 DEAD_MARKER='YA NO EXISTE|NO EXISTEN|retirad|RETIRADO|eliminad|borrad|legacy|F7a|histórico|ANTERIORES|🗑️|muert|Aquí vivía|tampoco existe|inexistente|desapareci|ya no son|se borró'
-DEAD_MARKER="$DEAD_MARKER"'|propuest|candidat|hipot[eé]tic|har[ií]a falta|si se |habr[ií]a que|añadir |descartad|no existe|NO EXISTE|sin materializar|20[0-9]{2}-[0-9]{2}-[0-9]{2}'
+DEAD_MARKER="$DEAD_MARKER"'|propuest|candidat|hipot(e|é)tic|har(i|í)a falta|si se |habr(i|í)a que|añadir |descartad|no existe|NO EXISTE|sin materializar|20[0-9][0-9]-[0-9][0-9]-[0-9][0-9]'
 #   (d) es un OBJETIVO declarado, no una afirmación de que ya está.
 DEAD_MARKER="$DEAD_MARKER"'|falta|FALTA|construir|objetivo|medir|sin medir|pendiente|⏳|abiert|necesita|exige|pide|TAREA|hace falta|no hay ni habrá|sub‑familia|sub-familia|buscaba|buscó|usan la'
 DECLS=$(mktemp)
@@ -352,32 +390,91 @@ DECLS=$(mktemp)
 # no admite un `path:` fuera del workspace, así que RPP se clona DENTRO y se pasa aquí.
 SIBLING="${RPP_DIR:-../ROBINSON_PlusPlus}"
 if [ -d "$SIBLING" ]; then
-  SCOPE="FOL/ TheoryFramework/ cuarentena/ $SIBLING/"
+  # El alcance de RPP es su árbol ACTIVO —la librería y su cuarentena—, no sus sondeos ni `Probe/`
+  # (que en local existe y en el clon `_rpp` de la CI no): ADR-116.
+  SCOPE="FOL/ TheoryFramework/ FOL.lean cuarentena/ $SIBLING/ROBINSON_PlusPlus/ $SIBLING/cuarentena/"
 else
-  SCOPE="FOL/ TheoryFramework/ cuarentena/"
+  SCOPE="FOL/ TheoryFramework/ FOL.lean cuarentena/"
   echo "  ⚠️  ALCANCE REDUCIDO: no está ../ROBINSON_PlusPlus ⇒ los símbolos VIVOS de RPP que estos"
   echo "      docs citaran saldrían aquí como MUERTOS. No es un hallazgo: es un hueco."
 fi
-grep -rhoE "(theorem|def|abbrev|axiom|noncomputable def) +[A-Za-z_][A-Za-z0-9_']*"      $SCOPE --include=*.lean 2>/dev/null      | awk '{print $NF}' | sort -u > "$DECLS"
-CANDS=$(grep -rhoE '`(prf_|pcc_|goedel_|godel|d[123]_|repr_|ax_)[A-Za-z0-9_'"'"']+`' $AUTHORITATIVE 2>/dev/null         | tr -d '`' | sort -u)
-for sym in $CANDS; do
-  # los axiomas objeto son snake_case: `ax_UpperCamel` es un PLACEHOLDER de convención
-  # de nombres (`ax_TagDescriptor`), no un símbolo. Se ignora.
-  case "$sym" in ax_[A-Z]*) continue ;; esac
-  # vivo si ALGUNA declaración empieza por el símbolo (la prosa abrevia)
-  grep -qE "^${sym}" "$DECLS" && continue
-  bad=$(grep -rn "\`${sym}\`" $AUTHORITATIVE 2>/dev/null | grep -vE "$DEAD_MARKER" || true)
-  if [ -n "$bad" ]; then
-    echo "  ✗ \`$sym\` no existe en el árbol activo, y se cita sin marcar como retirado:"
-    echo "$bad" | head -2 | sed 's/^/      /' | cut -c1-140
-    B_FAIL=1
-  fi
-done
-rm -f "$DECLS"
-# [B] NO marca FAIL: es un aviso. [A], [C] y [D] sí son objetivos y sí lo marcan.
+# ⛔⛔ 2026-10-03 (ADR-116 de RPP): dos defectos de este bloque, medidos. (1) Las declaraciones se
+# sacaban del texto ENTERO, comentarios incluidos: un nombre que sólo aparece en prosa (p. ej. el
+# «axiom ax_list_induction» de un docstring de RPP) pasaba por VIVO. Ahora salen del código SIN
+# comentarios ni cadenas (`strip-lean.awk`), y con todas las palabras clave de declaración.
+# (2) Se casaba por PREFIJO («la prosa abrevia»): `ax_list_induction` pasaba por vivo porque existe
+# `ax_list_induction_refutable`, y `d3_prf` porque existe `d3_prf_real`. Ahora se casa el nombre
+# EXACTO; la abreviatura de una FAMILIA se escribe con `_` final (`prf_tc_`), y sólo ésa casa por
+# prefijo. 🔑 *Un control que casa por prefijo absuelve a todo nombre que empiece igual que uno vivo.*
+# (3) 2026-10-03, v2 (revisión adversarial): el NOMBRE se toma entero (`prf_foo₀`, `Prf.prf_bar`: antes
+# se cortaba en el primer carácter no ASCII o en el primer `.`) y se guarda también su último
+# componente; el ALCANCE es explícito (antes entraban `auditoria/`, las librerías muertas y, en local,
+# `Probe/`, que la CI no tiene); y si la lista sale vacía o sin un nombre que existe seguro, NO se mide.
+# (4) 2026-10-04, segunda revisión (ADR-116 de RPP): (a) las CITAS se leen enteras también:
+# calificadas (`Foo.ax_bar`, que vale por su último componente) y con caracteres no ASCII (`prf_zz₀`);
+# antes el patrón se paraba en el `.` o en el subíndice y esas citas no las miraba nadie; (b) `def
+# prf_univ.{u}` declara `prf_univ` (antes, `prf_univ.` y un nombre vacío); (c) una sola pasada de awk
+# sobre los documentos, y los marcadores por BYTES (un acento va con `(e|é)`: en modo byte un corchete
+# casa UN byte); (d) el control positivo es por NOMBRE: con el umbral de 1000 declaraciones, FOL sin
+# el hermano (990) daba «NO PUDE MEDIR» — y además seguía y decía «✓».
+# ⚠️ Lo que NO ve: los constructores y los campos de estructura no son declaraciones de primer nivel,
+# así que citar uno sale como MUERTO — falso aviso, nunca falso verde; se arregla citando el tipo.
+DECL_RE="(^|[^A-Za-z0-9_'.])(theorem|lemma|def|abbrev|axiom|opaque|instance|structure|inductive|class) +[^[:space:]:({[]+"
+NOMBRES='{n = $NF; sub(/[.]$/, "", n); if (n == "") next; print n; k = n; sub(/.*[.]/, "", k); if (k != n && k != "") print k}'
+B_SALIDA=$(mktemp)
+find $SCOPE -name '*.lean' ! -path '*/.lake/*' ! -path '*/librerias-retiradas/*' -print0 2>/dev/null \
+  | xargs -0 env LC_ALL=C awk -f strip-lean.awk | grep -oE "$DECL_RE" | awk "$NOMBRES" | sort -u > "$DECLS"
+B_MEDIDO=1
+B_SUELO=500; B_TESTIGOS="derives0_soundness"
+[ -d "$SIBLING" ] && { B_SUELO=1000; B_TESTIGOS="derives0_soundness goedel_first_prf"; }
+B_FALTA=""
+for w in $B_TESTIGOS; do grep -qxF "$w" "$DECLS" || B_FALTA="$B_FALTA $w"; done
+if [ "$(wc -l < "$DECLS" | tr -d ' ')" -lt "$B_SUELO" ] || [ -n "$B_FALTA" ]; then
+  echo "  ❌ NO PUDE MEDIR [B]: $(wc -l < "$DECLS" | tr -d ' ') declaraciones (suelo $B_SUELO), y faltan:${B_FALTA:- ninguna} (¿strip-lean.awk?)."
+  FAIL=1; B_FAIL=1; B_MEDIDO=0
+fi
+B_DOCS=""
+for d in $AUTHORITATIVE; do [ -f "$d" ] && B_DOCS="$B_DOCS $d"; done
+if [ "$B_MEDIDO" = "1" ]; then
+  LC_ALL=C awk -v MARK="$DEAD_MARKER" '
+    FILENAME == ARGV[1] { vivo[$0] = 1; next }
+    {
+      s = $0
+      # un carácter de nombre: ASCII, o en UTF-8 una letra (2 bytes), un subíndice, un letterlike, ⱼ,
+      # el griego extendido o el alfabeto matemático — NO la puntuación general (`1‑3`, `a–b`, `…`)
+      while (match(s, /`([A-Z][A-Za-z0-9_]*[.])*(prf_|pcc_|goedel_|godel|d[123]_|repr_|ax_)([A-Za-z0-9_'"'"'!?]|[\303-\337][\200-\277]|\342(\202|\204|\205|\261)[\200-\277]|\341[\265-\277][\200-\277]|\360\235[\200-\277][\200-\277])+`/)) {
+        t = substr(s, RSTART + 1, RLENGTH - 2); s = substr(s, RSTART + RLENGTH)
+        k = t; sub(/^([A-Z][A-Za-z0-9_]*[.])*/, "", k)
+        # los axiomas objeto son snake_case: `ax_UpperCamel` es un PLACEHOLDER de convención
+        # de nombres (`ax_TagDescriptor`), no un símbolo
+        if (k ~ /^ax_[A-Z]/) continue
+        if ((t in vivo) || (k in vivo)) continue
+        if (k ~ /_$/) {
+          if (!(k in fam)) { fam[k] = 0; for (v in vivo) if (index(v, k) == 1) { fam[k] = 1; break } }
+          if (fam[k]) continue
+        }
+        if ($0 ~ MARK) continue
+        print k "|" t "|" FILENAME ":" FNR ":" $0
+      }
+    }' "$DECLS" $B_DOCS > "$B_SALIDA"
+  cut -d'|' -f1 "$B_SALIDA" | sort -u | while IFS= read -r k; do
+    echo "  ✗ \`$k\` no existe en el árbol activo, y se cita sin marcar como retirado:"
+    awk -F'|' -v k="$k" '$1 == k' "$B_SALIDA" | head -2 | cut -d'|' -f3- | sed 's/^/      /' | cut -c1-140
+  done
+  [ -s "$B_SALIDA" ] && B_FAIL=1
+fi
+rm -f "$DECLS" "$B_SALIDA"
+# [B] NO marca FAIL: es un aviso. [A], [C] y [D] sí son objetivos y sí lo marcan (y «NO PUDE MEDIR»
+# también: un control que no ha medido no avisa de nada).
 # Razón: un control que grita lobo se acaba ignorando, y ése era justo el fallo que
 # este script existe para evitar.
-[ "$B_FAIL" = "0" ] && echo "  ✓ ningún símbolo muerto citado como vigente"                     || echo "  ⚠️  revisar los de arriba: ¿es una afirmación de que YA ESTÁ, o una mención histórica/planificada?"
+if [ "$B_MEDIDO" = "0" ]; then
+  echo "  ❌ [B] SIN MEDIR"
+elif [ "$B_FAIL" = "0" ]; then
+  echo "  ✓ ningún símbolo muerto citado como vigente"
+else
+  echo "  ⚠️  revisar los de arriba: ¿es una afirmación de que YA ESTÁ, o una mención histórica/planificada?"
+fi
 
 # ─── 4. PROYECCIÓN: ¿está cada módulo en el catálogo? ────────────────────────
 echo

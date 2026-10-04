@@ -72,6 +72,9 @@ jobs:
       # AXIOMS.md los cita todos y que ninguna librería retirada ha vuelto al lakefile —
       # que es la enfermedad que dejó un `axiom` FALSO vivo 80 días en una librería
       # declarada y nunca compilada.
+      # ⛔ 2026-10-03/04 (ADR-116 de RPP): ya no es un grep. Cuenta en el ENTORNO de Lean (`lake env
+      # lean`, tras el build de arriba) cada `axiomInfo` de FOL y de TheoryFramework, y también toda
+      # constante cuyo tipo o valor nombra `sorryAx`; el grep sin comentarios queda como contraste.
       - name: Check axioms
         run: bash check-axioms.bash
 
