@@ -1,0 +1,15 @@
+# Finales de línea de los SCRIPTS (2026-10-05; seguimiento de ADR-116 de RPP).
+#
+# Los `.bash` se ejecutan con Git Bash en Windows y con bash en el runner de la CI, y `strip-lean.awk` lo
+# leen awk de Windows y de Linux. Con `core.autocrlf=true`, un checkout los escribiría con CRLF, y entonces
+# fallan («$'\r': command not found») o el despojador lee otra cosa. Se fuerzan a LF SIEMPRE, en el índice y
+# en el árbol de trabajo.
+#
+# ⚠️ Sólo los scripts: un `* text=auto` renormalizaría también los `.lean` guardados con CRLF, entre ellos
+# módulos CONGELADOS, que el gancho de `git-lock.bash` no deja tocar.
+*.bash text eol=lf
+*.sh   text eol=lf
+*.awk  text eol=lf
+*.yml  text eol=lf
+*.yaml text eol=lf
+*.py   text eol=lf
