@@ -10,7 +10,10 @@ on:
 jobs:
   build:
     name: lake build
-    runs-on: ubuntu-latest
+    # ⛔ 2026-10-04 (ADR-116): FIJADO a ubuntu-24.04. `ubuntu-latest` pasa a Ubuntu 26.04 desde el 2026-10-19
+    # (otro mawk, coreutils en Rust), y un verde que no dice contra qué entorno se midió no es reproducible
+    # (ADR-073). Los controles se validaron también en 26.04 (WSL); el cambio de imagen se hará a propósito.
+    runs-on: ubuntu-24.04
 
     steps:
       - name: Checkout
@@ -53,6 +56,14 @@ jobs:
       # `TheoryFramework/Instances/FOL.lean` llevaba meses roto sin que nada lo dijera.
       - name: Build
         run: lake build
+
+      # ⭐ 2026-10-04 (ADR-116, cuarta revisión): `leanchecker` vuelve a pasar cada declaración por el KERNEL
+      # (Lean/LeanChecker.lean: «a tool to detect environment hacking»). Sin él, una declaración añadida con
+      # `debug.skipKernelTC` o `addDeclWithoutChecking` no la ve ningún censo: no es un `axiom` ni nombra
+      # `sorryAx`, y su `#print axioms` sale vacío. Probado con un señuelo así en TheoryFramework: rojo.
+      # Medido en local: ~20 s.
+      - name: Check kernel (leanchecker)
+        run: lake env leanchecker FOL TheoryFramework
 
       # ⛔⛔ CORREGIDO el 2026-09-17. El comentario anterior decía, y con razón aparente:
       #   «`continue-on-error` MEDIDO: hoy `check-sorry.bash` sale con 1 en este árbol.

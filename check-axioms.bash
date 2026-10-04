@@ -53,23 +53,41 @@ STRIP () { LC_ALL=C awk -f "$STRIP_AWK" "$@"; }
 # atributos y con modificadores.
 AX_RE='^[[:space:]]*(@\[[^]]*\][[:space:]]*)*((private|protected|noncomputable|unsafe|partial)[[:space:]]+)*axiom[[:space:]]+[^[:space:]:({]+'
 
-# grep_axiomas FICHERO… → una línea «fichero:línea:nombre» por axioma declarado
+# grep_axiomas FICHERO… → una línea «fichero:línea:nombre» por axioma declarado.
+# ⛔ 2026-10-04 (tercera revisión de ADR-116 de RPP): se busca el TOKEN `axiom` en todo el código despojado,
+# no sólo a principio de línea (`open Nat in axiom x`, `def t := 0 axiom x`); si el nombre va en la línea
+# siguiente, sale «?». En modo byte (LC_ALL=C), como el despojador.
+# ⛔ Y desde la cuarta revisión: la frontera excluye la comilla invertida (`` `axiom `` es un literal de
+# nombre) y los bytes de continuación UTF-8 (`αaxiom` es UN identificador); el nombre puede ser `«…»`; el
+# sed se ANCLA a la frontera (con `.*` voraz, `axiom my_axiom` salía «?»); y los ficheros se pasan de uno en
+# uno, nunca partidos por espacios («cuarentena/X - copia.lean» se saltaba en silencio). Un argumento que
+# no es un fichero es SIN MEDIR.
+AX_TOK="(^|[^A-Za-z0-9_'.«\`"$'\x80-\xbf'"])axiom([[:space:]]+(«[^»]*»|[^[:space:]:({«]+)|«[^»]*»|[[:space:]]*\$)"
 grep_axiomas () {
+  local f
   for f in "$@"; do
-    [ -f "$f" ] || continue
-    STRIP "$f" | grep -nE "$AX_RE" \
-      | sed -E "s|^([0-9]+):.*axiom[[:space:]]+([^[:space:]:({]+).*|$f:\1:\2|"
+    [ -f "$f" ] || { echo "SIN-MEDIR:$f"; continue; }
+    STRIP "$f" | { LC_ALL=C grep -noE "$AX_TOK" || true; } \
+      | LC_ALL=C sed -E "s|^([0-9]+):[^A-Za-z0-9_]?axiom[[:space:]]*(«[^»]*»\|[^[:space:]:({«]*).*|$f:\1:\2|; s|:\$|:?|"
   done
 }
 lean_de () { find "$@" -name '*.lean' ! -path '*/.lake/*' 2>/dev/null | sort; }
+# grep_lista DIR… → grep_axiomas de cada `.lean` de los directorios, leídos por LÍNEAS (con espacios, bien)
+grep_lista () { lean_de "$@" | while IFS= read -r f; do grep_axiomas "$f"; done; }
 
 # PRUEBA DE HUMO (ADR-116): con un despojador roto, el contraste y la cuarentena daban «0» sin medir.
-# Entrada fija: dos `axiom` reales (con sangría y modificador, y con atributo) y tres falsos (docstring,
-# comentario y cadena). Si no salen exactamente esos dos nombres, NO se mide.
-HUMO=$(printf '%s\n' '/-- axiom falso1 : X -/' '-- axiom falso2 : X' 'def s := "axiom falso3 : X"' \
-         '  private axiom real1 : True' '@[simp] axiom real2 : True' | STRIP \
-       | grep -oE "$AX_RE" | sed -E 's/.*axiom[[:space:]]+//' | tr '\n' ' ')
-if [ "$HUMO" != "real1 real2 " ]; then
+# Entrada fija: seis `axiom` reales (con sangría y modificador, con atributo, tras `open … in`, con
+# «axiom» DENTRO del nombre, con el nombre en la línea siguiente —sale «?»— y con nombre `«…»`) y seis
+# falsos (docstring, comentario, cadena, un identificador que empieza por `axiom`, un literal de nombre y
+# un identificador que ACABA en `axiom` tras una letra griega). Si no salen exactamente esos, NO se mide.
+HUMO_F=$(mktemp)
+printf '%s\n' '/-- axiom falso1 : X -/' '-- axiom falso2 : X' 'def s := "axiom falso3 : X"' \
+       '  private axiom real1 : True' '@[simp] axiom real2 : True' 'open Nat in axiom real3 : True' \
+       'def axiomInfo := 0' 'axiom real_axiom : True' 'axiom' '  real4 : True' 'def k := `axiom' \
+       'def αaxiom : Nat := 1' 'axiom«real5» : True' > "$HUMO_F"
+HUMO=$(grep_axiomas "$HUMO_F" | sed 's/.*://' | tr '\n' ' ')
+rm -f "$HUMO_F"
+if [ "$HUMO" != "real1 real2 real3 real_axiom ? «real5» " ]; then
   echo "  ⚠️  SIN MEDIR — strip-lean.awk o el patrón de \`axiom\` no pasan su prueba de humo («$HUMO»)."
   exit 2
 fi
@@ -93,6 +111,7 @@ BUILD_FECHA=$([ -n "$ULTIMO" ] && date -r "$ULTIMO" '+%Y-%m-%d %H:%M' 2>/dev/nul
 TMP=$(mktemp -d)
 LEANFILE="$TMP/Axiomas.lean"
 {
+  echo "import Lean"
   echo "import FOL"
   for f in $(lean_de TheoryFramework); do
     m="${f%.lean}"; echo "import ${m//\//.}"
@@ -104,6 +123,9 @@ run_cmd do
   let env ← Lean.getEnv
   let mut nFOL := 0
   let mut nTF := 0
+  -- los tres axiomas de Lean que el proyecto acepta; cualquier OTRO axioma ajeno que use una constante
+  -- nuestra (`sorryAx`, `Lean.ofReduceBool`, `Lean.ofReduceNat`, `Lean.trustCompiler`, …) es @TRUST
+  let estandar : NameSet := ((({} : NameSet).insert ``propext).insert ``Classical.choice).insert ``Quot.sound
   for (n, ci) in env.constants.toList do
     match env.getModuleIdxFor? n with
     | some idx =>
@@ -114,9 +136,22 @@ run_cmd do
       if lib != "" then
         if ci matches .axiomInfo _ then logInfo m!"@AX {lib} {n}"
         -- tipo y valor, también el de un teorema (`getUsedConstantsAsSet` lee con `allowOpaque`)
-        if ci.getUsedConstantsAsSet.contains ``sorryAx then logInfo m!"@SORRY {lib} {n}"
+        let usadas := ci.getUsedConstantsAsSet
+        if usadas.contains ``sorryAx then logInfo m!"@SORRY {lib} {n}"
+        for u in usadas do
+          if let some (.axiomInfo _) := env.find? u then
+            if !estandar.contains u && u != ``sorryAx then
+              match env.getModuleIdxFor? u with
+              | some j =>
+                let mu := env.header.moduleNames[j.toNat]!
+                if !((`FOL).isPrefixOf mu || (`TheoryFramework).isPrefixOf mu) then logInfo m!"@TRUST {lib} {n} {u}"
+              | none => logInfo m!"@TRUST {lib} {n} {u}"
+        if (Lean.Compiler.getImplementedBy? env n).isSome || Lean.isExtern env n then logInfo m!"@NATIVO {lib} {n}"
     | none => pure ()
   logInfo m!"@CONST {nFOL} {nTF}"
+  -- ¿alguna librería cargada que ningún censo mira? (una nueva, importada por FOL, quedaría fuera)
+  for m in env.header.moduleNames do
+    if !([`Init, `Std, `Lean, `Lake, `FOL, `TheoryFramework].contains m.getRoot) then logInfo m!"@AJENO {m}"
   logInfo m!"@FIN {env.header.moduleNames.size}"
 LEANEOF
 } > "$LEANFILE"
@@ -135,8 +170,8 @@ if [ "$RC" != "0" ] || [ -z "$MODS" ] || [ "$MODS" -le 0 ] 2>/dev/null \
 fi
 ENV_FOL=$(printf '%s' "$PLANA" | grep -oE "@AX FOL [^ ]+" | sed 's/@AX FOL //' | sort -u)
 ENV_TF=$(printf '%s' "$PLANA" | grep -oE "@AX TF [^ ]+" | sed 's/@AX TF //' | sort -u)
-GREP_FOL=$(grep_axiomas FOL.lean $(lean_de FOL))
-GREP_TF=$(grep_axiomas TheoryFramework.lean $(lean_de TheoryFramework))
+GREP_FOL=$(grep_axiomas FOL.lean; grep_lista FOL)
+GREP_TF=$(grep_axiomas TheoryFramework.lean; grep_lista TheoryFramework)
 cuenta () { printf '%s\n' "$1" | sed '/^$/d' | wc -l | tr -d ' '; }
 for lib in FOL TheoryFramework; do
   case "$lib" in
@@ -177,12 +212,32 @@ else
   FAIL=1
 fi
 
+# ── 1ter · CONFIANZA y código NATIVO en el ENTORNO (cuarta revisión de ADR-116 de RPP) ─────────
+# El censo de `sorry` sólo miraba `sorryAx`: una constante que use `Lean.ofReduceBool` (confiar en el
+# compilador, y con `implemented_by` el compilador puede «demostrar» `False`) pasaba por limpia.
+echo
+echo "════ CONFIANZA (axiomas del core fuera de los tres de Lean) · NATIVO (implemented_by / extern) · AJENO ════"
+TRUST=$(printf '%s' "$PLANA" | grep -oE "@TRUST (FOL|TF) [^ ]+ [^ ]+" | sed 's/@TRUST //' | sort -u)
+NATIVO=$(printf '%s' "$PLANA" | grep -oE "@NATIVO (FOL|TF) [^ ]+" | sed 's/@NATIVO //' | sort -u)
+AJENO=$(printf '%s' "$PLANA" | grep -oE "@AJENO [^ ]+" | sed 's/@AJENO //' | sort -u)
+for par in "TRUST|constante(s) usan un axioma de confianza" "NATIVO|constante(s) con implemented_by o extern" "AJENO|módulo(s) de una librería que ningún censo mira"; do
+  var="${par%%|*}"; txt="${par#*|}"
+  val="${!var}"
+  if [ -z "$val" ]; then
+    printf "  ✓ %-8s ninguno\n" "$var"
+  else
+    printf "  ✗ %-8s %s %s:\n" "$var" "$(cuenta "$val")" "$txt"
+    printf '%s\n' "$val" | head -10 | sed 's/^/      · /'
+    FAIL=1
+  fi
+done
+
 # ── 2 · La CUARENTENA, que no se compila: por grep, sin comentarios ──────────────────────────
 echo
 echo "════ CUARENTENA (fuera del build, pero con cifra publicada) ════"
 if [ -d cuarentena ]; then
-  TODO_C=$(grep_axiomas $(lean_de cuarentena))
-  RET_C=$(grep_axiomas $(lean_de cuarentena/librerias-retiradas))
+  TODO_C=$(grep_lista cuarentena)
+  RET_C=$(grep_lista cuarentena/librerias-retiradas)
   NC=$(( $(cuenta "$TODO_C") - $(cuenta "$RET_C") ))
   NR=$(cuenta "$RET_C")
   if [ "$NC" = "$ESPERADO_CUAR" ]; then
@@ -216,7 +271,8 @@ echo
 echo "════ librerías RETIRADAS: no deben estar en el lakefile ════"
 RET=0
 for l in FOLPure PropLogic FOL_poli; do
-  if grep -q "lean_lib «$l»" lakefile.lean 2>/dev/null; then
+  # (con «» o sin ellas: `lean_lib FOLPure where` también es Lake válido — cuarta revisión)
+  if grep -qE "lean_lib[[:space:]]+«?$l»?([[:space:]]|$)" lakefile.lean 2>/dev/null; then
     echo "  ✗ $l sigue declarada en el lakefile (se retiró el 2026-09-12)"; RET=1
   fi
 done

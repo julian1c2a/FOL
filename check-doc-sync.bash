@@ -74,29 +74,51 @@ QUAR=$(ls cuarentena/*.lean 2>/dev/null | wc -l)
 # fallo, y antes de medir el árbol mide un fixture con TRES `axiom` reales y cinco señuelos: si no
 # salen 3, no se mide (y no medir es rojo). El alcance incluye ya el barrel `TheoryFramework.lean`.
 # 🔑 *Un `|| true` al final de una tubería convierte «no he podido medir» en «cero».*
-AX_RE='^[[:space:]]*(@\[[^]]*\][[:space:]]*)*((private|protected|noncomputable|unsafe|partial)[[:space:]]+)*axiom[[:space:]]+[^[:space:]:({]+'
+# ⛔ Y desde la tercera revisión (2026-10-04): (1) se cuenta el TOKEN `axiom` en todo el código
+# despojado, no sólo a principio de línea —`open Nat in axiom x`, `def t := 0 axiom x` o el nombre en la
+# línea siguiente son declaraciones que el patrón anclado no veía; en código, `axiom` sólo declara—;
+# (2) el fixture EJERCE el despojador: señuelos que empiezan línea DENTRO de un docstring, de una
+# cadena de dos líneas y de un comentario anidado (el patrón anclado de antes los rechazaba aunque no
+# se despojara nada), y `axiom` reales detrás de una comilla escapada, de `'"'`, de una interpolación y
+# de una cadena en bruto: si el despojador falla en cualquiera, la cifra no sale.
+# (cuarta revisión: la frontera excluye la comilla invertida —`` `axiom `` es un literal de nombre— y los
+#  bytes de continuación UTF-8 —`αaxiom` es UN identificador—, y tras `axiom` vale también `«`; el fixture
+#  tiene hoy NUEVE `axiom` reales, y si no salen 9 no se mide)
+AX_TOK="(^|[^A-Za-z0-9_'.«\`"$'\x80-\xbf'"])axiom([[:space:]«]|$)"
 cuenta_axiomas () {   # $@ = caminos; imprime la cifra, o nada y estado 2 si no ha podido medir
   local p n
   for p in "$@"; do [ -e "$p" ] || return 2; done
   [ -n "$(find "$@" -name '*.lean' ! -path '*/.lake/*' -print -quit)" ] || return 2
   n=$(find "$@" -name '*.lean' ! -path '*/.lake/*' -print0 \
         | xargs -0 env LC_ALL=C awk -f strip-lean.awk \
-        | { grep -E "$AX_RE" || [ $? -eq 1 ]; } | wc -l) || return 2
+        | { LC_ALL=C grep -oE "$AX_TOK" || [ $? -eq 1 ]; } | wc -l) || return 2
   printf '%s\n' "$n" | tr -d ' '
 }
 AX_FIX=$(mktemp -d)
 cat > "$AX_FIX/Fixture.lean" <<'EOF'
-/-- un docstring con «axiom senuelo1 : True» -/
+/-- un docstring
+axiom senuelo1 : True
+-/
 axiom real1 : True
 -- axiom senuelo2 : True
-@[simp] private axiom real2 : True
-def s := "axiom senuelo3 : True"
+  @[simp] private axiom real2 : True
+def s := "una cadena de dos líneas
+axiom senuelo3 : True"
 /-- doc -/ axiom real3 : True
-/- axiom senuelo4 : True -/ def t := 0
+/- /- anidado -/
+axiom senuelo4 : True -/
+def q := "comilla: \"" axiom real4 : True
+def c := '"' axiom real5 : True
+def i := s!"{1}" axiom real6 : True
+def r := r#"x"# axiom real7 : True
+open Nat in axiom real8 : True
+axiom«real9» : True
 theorem u : True := trivial -- axiom senuelo5
+def k := `axiom
+def αaxiom : Nat := 1
 EOF
 AXIOMS=""
-if [ "$(cuenta_axiomas "$AX_FIX" || true)" = "3" ]; then
+if [ "$(cuenta_axiomas "$AX_FIX" || true)" = "9" ]; then
   AXIOMS=$(cuenta_axiomas FOL/ TheoryFramework/ FOL.lean TheoryFramework.lean || true)
 fi
 rm -rf "$AX_FIX"
@@ -121,10 +143,12 @@ AXIOMS_MISSING=0
 # Ahora se leen LAS DOS ramas y, si no aparece ninguna, se AVISA (§27.1).
 SORRY_OUT=$(bash check-sorry.bash 2>/dev/null || true)
 SORRY_MISSING=0
-if printf '%s' "$SORRY_OUT" | grep -q 'No sorry found'; then
+# ⛔ 2026-10-04 (tercera revisión): se leen las LÍNEAS DE RESUMEN, enteras. check-sorry reimprime cada
+# línea fuente con `sorry`, y una que contuviera «No sorry found» hacía SORRY=0 con un `sorry` real.
+if printf '%s\n' "$SORRY_OUT" | LC_ALL=C grep -qxF '✅ No sorry found.'; then
   SORRY=0
-elif printf '%s' "$SORRY_OUT" | grep -qE 'Total: [0-9]+ sorry'; then
-  SORRY=$(printf '%s' "$SORRY_OUT" | grep -oE 'Total: [0-9]+ sorry' | grep -oE '[0-9]+' | head -1)
+elif printf '%s\n' "$SORRY_OUT" | LC_ALL=C grep -qE '^⚠️  Total: [0-9]+ sorry in '; then
+  SORRY=$(printf '%s\n' "$SORRY_OUT" | LC_ALL=C grep -oE '^⚠️  Total: [0-9]+' | grep -oE '[0-9]+$' | head -1)
 else
   SORRY=0
   SORRY_MISSING=1
@@ -142,7 +166,7 @@ printf "  axiom de Lean   : %s\n" "$AXIOMS"
 printf "  sorry           : %s\n" "$SORRY"
 echo "  build jobs      : no se mide aquí (M-3: FOL no se construye desde FOL)"
 [ "$SORRY_MISSING" = "1" ] && echo "  ⚠️  sorry         : SIN MEDIR — check-sorry.bash no dijo ni 'No sorry found' ni 'Total: N sorry'."
-[ "$AXIOMS_MISSING" = "1" ] && echo "  ⚠️  axiom de Lean : SIN MEDIR — el autotest de cuenta_axiomas no dio 3 (¿strip-lean.awk, LC_ALL?)."
+[ "$AXIOMS_MISSING" = "1" ] && echo "  ⚠️  axiom de Lean : SIN MEDIR — el autotest de cuenta_axiomas no dio 9 (¿strip-lean.awk, LC_ALL?)."
 echo
 
 # Documentos AUTORITATIVOS: los que describen el ESTADO ACTUAL y por tanto deben cuadrar.
@@ -389,10 +413,15 @@ DECLS=$(mktemp)
 # ⭐ `RPP_DIR` permite apuntar al hermano desde donde esté: en la CI, `actions/checkout`
 # no admite un `path:` fuera del workspace, así que RPP se clona DENTRO y se pasa aquí.
 SIBLING="${RPP_DIR:-../ROBINSON_PlusPlus}"
-if [ -d "$SIBLING" ]; then
+# ⛔ 2026-10-04 (tercera revisión): el hermano se reconoce por su CONTENIDO. `actions/checkout` crea el
+# directorio y hace `git init` ANTES de traer nada, y si falla no lo borra: con `[ -d "$SIBLING" ]`, un
+# checkout fallido daba «NO PUDE MEDIR» (rojo) en vez de alcance reducido.
+SIBLING_OK=0
+[ -d "$SIBLING/ROBINSON_PlusPlus" ] && SIBLING_OK=1
+if [ "$SIBLING_OK" = "1" ]; then
   # El alcance de RPP es su árbol ACTIVO —la librería y su cuarentena—, no sus sondeos ni `Probe/`
   # (que en local existe y en el clon `_rpp` de la CI no): ADR-116.
-  SCOPE="FOL/ TheoryFramework/ FOL.lean cuarentena/ $SIBLING/ROBINSON_PlusPlus/ $SIBLING/cuarentena/"
+  SCOPE="FOL/ TheoryFramework/ FOL.lean cuarentena/ $SIBLING/ROBINSON_PlusPlus/ $SIBLING/ROBINSON_PlusPlus.lean $SIBLING/cuarentena/"
 else
   SCOPE="FOL/ TheoryFramework/ FOL.lean cuarentena/"
   echo "  ⚠️  ALCANCE REDUCIDO: no está ../ROBINSON_PlusPlus ⇒ los símbolos VIVOS de RPP que estos"
@@ -423,10 +452,10 @@ DECL_RE="(^|[^A-Za-z0-9_'.])(theorem|lemma|def|abbrev|axiom|opaque|instance|stru
 NOMBRES='{n = $NF; sub(/[.]$/, "", n); if (n == "") next; print n; k = n; sub(/.*[.]/, "", k); if (k != n && k != "") print k}'
 B_SALIDA=$(mktemp)
 find $SCOPE -name '*.lean' ! -path '*/.lake/*' ! -path '*/librerias-retiradas/*' -print0 2>/dev/null \
-  | xargs -0 env LC_ALL=C awk -f strip-lean.awk | grep -oE "$DECL_RE" | awk "$NOMBRES" | sort -u > "$DECLS"
+  | xargs -0 env LC_ALL=C awk -f strip-lean.awk | LC_ALL=C grep -oE "$DECL_RE" | LC_ALL=C awk "$NOMBRES" | LC_ALL=C sort -u > "$DECLS"
 B_MEDIDO=1
 B_SUELO=500; B_TESTIGOS="derives0_soundness"
-[ -d "$SIBLING" ] && { B_SUELO=1000; B_TESTIGOS="derives0_soundness goedel_first_prf"; }
+[ "$SIBLING_OK" = "1" ] && { B_SUELO=1000; B_TESTIGOS="derives0_soundness goedel_first_prf"; }
 B_FALTA=""
 for w in $B_TESTIGOS; do grep -qxF "$w" "$DECLS" || B_FALTA="$B_FALTA $w"; done
 if [ "$(wc -l < "$DECLS" | tr -d ' ')" -lt "$B_SUELO" ] || [ -n "$B_FALTA" ]; then
@@ -437,12 +466,13 @@ B_DOCS=""
 for d in $AUTHORITATIVE; do [ -f "$d" ] && B_DOCS="$B_DOCS $d"; done
 if [ "$B_MEDIDO" = "1" ]; then
   LC_ALL=C awk -v MARK="$DEAD_MARKER" '
+    BEGIN { CAND = "`([A-Z][A-Za-z0-9_]*[.])*(prf_|pcc_|goedel_|godel|d[123]_|repr_|ax_)([A-Za-z0-9_'"'"'!?]|[\303-\337][\200-\277]|\342(\202|\204|\205|\261)[\200-\277]|\341[\265-\277][\200-\277]|\360\235[\200-\277][\200-\277])+`" }
     FILENAME == ARGV[1] { vivo[$0] = 1; next }
     {
       s = $0
       # un carácter de nombre: ASCII, o en UTF-8 una letra (2 bytes), un subíndice, un letterlike, ⱼ,
       # el griego extendido o el alfabeto matemático — NO la puntuación general (`1‑3`, `a–b`, `…`)
-      while (match(s, /`([A-Z][A-Za-z0-9_]*[.])*(prf_|pcc_|goedel_|godel|d[123]_|repr_|ax_)([A-Za-z0-9_'"'"'!?]|[\303-\337][\200-\277]|\342(\202|\204|\205|\261)[\200-\277]|\341[\265-\277][\200-\277]|\360\235[\200-\277][\200-\277])+`/)) {
+      while (match(s, CAND)) {
         t = substr(s, RSTART + 1, RLENGTH - 2); s = substr(s, RSTART + RLENGTH)
         k = t; sub(/^([A-Z][A-Za-z0-9_]*[.])*/, "", k)
         # los axiomas objeto son snake_case: `ax_UpperCamel` es un PLACEHOLDER de convención
@@ -453,11 +483,14 @@ if [ "$B_MEDIDO" = "1" ]; then
           if (!(k in fam)) { fam[k] = 0; for (v in vivo) if (index(v, k) == 1) { fam[k] = 1; break } }
           if (fam[k]) continue
         }
-        if ($0 ~ MARK) continue
+        # el marcador se mira en la línea con las CITAS en blanco: un nombre muerto que contenga un
+        # marcador (`prf_x_muerto`, `ax_medir`) no puede eximirse a sí mismo (tercera revisión)
+        l = $0; gsub(CAND, "``", l)
+        if (l ~ MARK) continue
         print k "|" t "|" FILENAME ":" FNR ":" $0
       }
     }' "$DECLS" $B_DOCS > "$B_SALIDA"
-  cut -d'|' -f1 "$B_SALIDA" | sort -u | while IFS= read -r k; do
+  cut -d'|' -f1 "$B_SALIDA" | LC_ALL=C sort -u | while IFS= read -r k; do
     echo "  ✗ \`$k\` no existe en el árbol activo, y se cita sin marcar como retirado:"
     awk -F'|' -v k="$k" '$1 == k' "$B_SALIDA" | head -2 | cut -d'|' -f3- | sed 's/^/      /' | cut -c1-140
   done
