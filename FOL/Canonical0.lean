@@ -278,7 +278,7 @@ theorem pointwiseEqv_symm {S : Formula → Prop} (hMax : IsMaximalConsistent₀ 
 
 /-- ⭐ Se recorre **una posición cada vez**, con un prefijo `pre` que crece. Es lo que ADR‑031
 descubrió: *lo que faltaba no era lógica sino LISTAS.* -/
-theorem termEqv_func_congr {S : Formula → Prop} (hMax : IsMaximalConsistent₀ S) (f : String)
+theorem termEqv_func_congr {S : Formula → Prop} (hMax : IsMaximalConsistent₀ S) (f : List Char)
     {ts1 ts2 : List Term} (hEqv : PointwiseEqv S ts1 ts2) :
     termEqv S (Term.func f ts1) (Term.func f ts2) := by
   suffices H : ∀ pre : List Term,
@@ -294,7 +294,7 @@ theorem termEqv_func_congr {S : Formula → Prop} (hMax : IsMaximalConsistent₀
       simp only [List.append_assoc, List.cons_append, List.nil_append] at step2
       exact termEqv_trans hMax step1 step2
 
-theorem termEqv_rel_congr {S : Formula → Prop} (hMax : IsMaximalConsistent₀ S) (p : String)
+theorem termEqv_rel_congr {S : Formula → Prop} (hMax : IsMaximalConsistent₀ S) (p : List Char)
     {ts1 ts2 : List Term} (hEqv : PointwiseEqv S ts1 ts2) :
     S (Formula.atom p ts1) ↔ S (Formula.atom p ts2) := by
   have forward : ∀ {u1 u2 : List Term}, PointwiseEqv S u1 u2 →
@@ -559,12 +559,12 @@ theorem truth_lemma₀ {S : Formula → Prop} (hMax : IsMaximalConsistent₀ S) 
 
 /-- Reinterpreta cada símbolo de función `f` como `ρ f`. ⚠️ Los símbolos de relación no se tocan,
 igual que en `renameFormula`. -/
-def pullback {D : Type} (M : Model D) (ρ : String → String) : Model D where
+def pullback {D : Type} (M : Model D) (ρ : List Char → List Char) : Model D where
   func := fun f ds => M.func (ρ f) ds
   rel := fun p ds => M.rel p ds
 
 mutual
-theorem eval_pullback_term {D : Type} (M : Model D) (ρ : String → String) (v : Nat → D) :
+theorem eval_pullback_term {D : Type} (M : Model D) (ρ : List Char → List Char) (v : Nat → D) :
     ∀ t : Term, evalTerm (pullback M ρ) v t = evalTerm M v (renameTerm ρ t)
   | .var _ => rfl
   | .func f ts => by
@@ -573,7 +573,7 @@ theorem eval_pullback_term {D : Type} (M : Model D) (ρ : String → String) (v 
       rw [eval_pullback_terms M ρ v ts]
       rfl
 
-theorem eval_pullback_terms {D : Type} (M : Model D) (ρ : String → String) (v : Nat → D) :
+theorem eval_pullback_terms {D : Type} (M : Model D) (ρ : List Char → List Char) (v : Nat → D) :
     ∀ ts : List Term, evalTerms (pullback M ρ) v ts = evalTerms M v (renameTerms ρ ts)
   | [] => rfl
   | t :: ts => by
@@ -582,7 +582,7 @@ theorem eval_pullback_terms {D : Type} (M : Model D) (ρ : String → String) (v
       rw [eval_pullback_term M ρ v t, eval_pullback_terms M ρ v ts]
 end
 
-theorem eval_pullback_formula {D : Type} (M : Model D) (ρ : String → String) :
+theorem eval_pullback_formula {D : Type} (M : Model D) (ρ : List Char → List Char) :
     ∀ (f : Formula) (v : Nat → D),
     evalFormula (pullback M ρ) v f ↔ evalFormula M v (renameFormula ρ f) := by
   intro f

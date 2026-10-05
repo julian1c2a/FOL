@@ -3,7 +3,8 @@ import FOL.FOL
 /-!
 # `FOL.SymClasses` — lo que hay que saber del tipo de los SÍMBOLOS
 
-**Last updated:** 2026-09-27
+**Last updated:** 2026-10-05 — D7 ejecutada (ADR‑129 de RPP): los símbolos son `List Char`, la
+instancia de MEDIDA de `FreshSym` se retira y la instancia es la de `FOL.Fresh0`. Antes, 2026-09-27.
 
 ADR-068 metió el parámetro (`TermG Sym` / `FormulaG Sym`) y ADR-069 generificó la capa de
 operaciones. Falta lo que **no** es sintaxis: la metateoría de FOL⁼ le pide al tipo de símbolos
@@ -14,7 +15,7 @@ exactamente **dos** cosas, y este módulo las declara.
 | clase | quién la pide | qué le pide | medido en |
 |---|---|---|---|
 | `FreshSym` | `FOL.Fresh0` | fabricar constantes nuevas, y que no colisionen | `Fresh0.shift`, `cst`, `shift_inj`, `cst_inj`, `cst_ne_shift` |
-| `EnumSym` | `FOL.Metamath.Enumeration` | una **sobreyección** `Nat → Sym` | `Enumeration.natToString_surj` |
+| `EnumSym` | `FOL.Metamath.Enumeration` | una **sobreyección** `Nat → Sym` | `Enumeration.natToSym_surj` (hasta D7, `natToString_surj`) |
 
 ⭐ **`FreshSym` tiene exactamente tres propiedades, ni una más.** Se midió leyendo el único
 consumidor no trivial: `Fresh0.cst_bound_sym` se demostraba con `by_cases`
@@ -28,12 +29,14 @@ sin `cst_inj` y sin `Classical.choice`, mirando la capa de bytes de `String`. �
 genérico, la prueba con las tres propiedades es la de antes, clásica; la de `String` usa algo que
 la clase no tiene: una cota de tamaño. La instancia de `List Char` de abajo también la tendría
 (`cst n` mide `n + 1`). A 2026‑09‑27 la clase no se amplía: es una MEDIDA, y ningún módulo la
-consume.
+consume. ✏️ 2026‑10‑05 (D7, ADR‑129 de RPP): la cota es hoy `s.length` (`Fresh0.cst_length`;
+`cst_utf8ByteSize`, retirado), y la instancia de abajo se retiró: la de la clase es
+`FOL.Fresh0.instFreshSymListChar`. La clase sigue sin ampliarse y sin consumidores.
 
 ⭐ **`EnumSym` pide una sobreyección y nada más**: ni biyección, ni decidibilidad, ni orden, ni
 inyectividad. Medido sobre `Enumeration.lean`: los `if` de `natToTerm`/`natToFormula` son todos
-sobre `(unpair n).1 = k : Nat`, el caso base es `.var 0`, y `natToString_surj` se consume sólo en
-la dirección `∃ n`.
+sobre `(unpair n).1 = k : Nat`, el caso base es `.var 0`, y `natToSym_surj` (hasta D7,
+`natToString_surj`) se consume sólo en la dirección `∃ n`.
 
 ## ⚠️ Por qué el parámetro se llama `Sym` y no `S`
 
@@ -50,24 +53,32 @@ líneas abajo— es falsa para los tipos no numerables que LS↑ necesita. Y el 
 
 ⭐ Las clases **se quedan**, como MEDIDA y no como capa en uso: dicen exactamente qué le pediría
 esa cadena al tipo de símbolos, y **ningún** módulo las consume (ninguna firma del árbol lleva
-`[FreshSym _]` ni `[EnumSym _]`). `Fresh0`, `Enumeration` y la cadena de completitud son `String`
-por dentro y así se quedan. Para que la medida no sea *cierta y vacua*, aquí va la instancia de
-`List Char` de `FreshSym` — **construida sin pasar por `String`** —, y las de `EnumSym` van en
-`Enumeration.lean`, donde vive su prueba.
-Y la migración `String`→`List Char` del plan §7.3 de RPP queda **ABANDONADA en FOL** (D7,
-2026-09-26): la parte de FOL está hecha como parámetro, y terminarla no movería ningún
-footprint titular de FOL (su `Classical.choice` es el WKL).
+`[FreshSym _]` ni `[EnumSym _]`). `Fresh0`, `Enumeration` y la cadena de completitud son `List Char`
+por dentro (desde D7, 2026‑10‑05; hasta entonces `String`), concretos y no genéricos. Para que la
+medida no sea *cierta y vacua*, cada clase tiene su instancia en `List Char` junto a su prueba:
+`FOL.Fresh0.instFreshSymListChar` y `FOL.Metamath.Enumeration.instEnumSymListChar`. (Hasta D7 aquí
+iba una instancia `FreshSym (List Char)` de MEDIDA —`'c' :: replicate n 'i'`, construida sin pasar
+por `String`—, y `Enumeration.lean` tenía además una `EnumSym String`: D7 retiró las dos.)
+Y la migración `String`→`List Char` del plan §7.3 de RPP quedó **ABANDONADA en FOL** el 2026-09-26
+(D7): la parte de FOL estaba hecha como parámetro, y terminarla no movería ningún
+footprint titular de FOL (su `Classical.choice` es el WKL). ✏️ 2026‑10‑05: D7 EJECUTADA (ADR‑129 de
+RPP), por decisión del propietario: los `abbrev` de `FOL/FOL.lean` son `List Char`.
 
 ⚠️ **RECTIFICACIÓN (2026‑09‑27) de esa razón.** «Su `Classical.choice` es el WKL» era falso como
-localización (ver la cabecera de `FOL/Canonical0.lean`). La conclusión se mantiene, y con mejor
+localización (ver la cabecera de `FOL/Canonical0.lean`). La conclusión se mantenía, y con mejor
 fundamento: la migración **no hacía falta**. Lo que en v4.31 trae `Classical.choice` a `String` es
 DECODIFICAR UTF‑8 (`toList`, `ofList_toList`, `String.instOrd`), no `String` en sí; la capa de bytes
-está limpia. La auditoría de constructividad retiró esos usos sin migrar: `Fresh0` compara con
-`String.decEq` y acota con `utf8ByteSize`, y `natToString_surj` usa `String.exists_eq_ofList`.
-Los 34 titulares de FOL que conservan `Classical.choice` lo llevan por la semántica de Tarski, por
-el lema de la verdad sobre un maximal arbitrario, por el `byContradiction` final de
+está limpia. La auditoría de constructividad retiró esos usos sin migrar: `Fresh0` comparaba con
+`String.decEq` y acotaba con `utf8ByteSize`, y `natToString_surj` (hoy retirado) usaba
+`String.exists_eq_ofList`.
+Los 34 titulares de FOL que conservaban `Classical.choice` (2026‑09‑27) lo llevan por la semántica
+de Tarski, por el lema de la verdad sobre un maximal arbitrario, por el `byContradiction` final de
 `completeness₀` o por las funciones de Skolem, directamente o por ruta. `List Char` no cambiaría
 ninguno.
+✏️ 2026‑10‑05: el propietario reabrió la migración y D7 está EJECUTADA (ADR‑129 de RPP); `Fresh0`
+compara con la igualdad decidible de `List Char` y acota con `List.length`, y la sobreyección es
+`natToSym_surj`. Y «`List Char` no cambiaría ninguno» se midió: las 39 filas de FOL y
+`TheoryFramework` con `Classical.choice` (`../ROBINSON_PlusPlus/check-footprints.bash`) lo conservan.
 -/
 
 namespace FOL
@@ -94,23 +105,9 @@ class EnumSym (Sym : Type u) where
   enum      : Nat → Sym
   enum_surj : ∀ s, ∃ n, enum n = s
 
-/-- ⭐ `List Char` satisface `FreshSym` **sin pasar por `String`**: `'f' :: s` y
-`'c' :: replicate n 'i'`. Es el testigo de que la clase no se quedó corta ni se pasó de larga, y
-de que el parámetro tiene al menos **dos** habitantes en el árbol compilado. -/
-instance : FreshSym (List Char) where
-  shift s := 'f' :: s
-  cst n := 'c' :: List.replicate n 'i'
-  shift_inj := by
-    intro s t h
-    injection h
-  cst_inj := by
-    intro m n h
-    injection h with _ h2
-    have hl := congrArg List.length h2
-    simpa using hl
-  cst_ne_shift := by
-    intro n s h
-    injection h with h1 _
-    exact absurd h1 (by decide)
+-- D7 (2026‑10‑05): aquí iba una instancia `FreshSym (List Char)` de MEDIDA (`'c' :: replicate n 'i'`).
+-- Desde que los símbolos son `List Char`, la instancia es la de `FOL.Fresh0` —hecha con la `cst` y el `shift`
+-- que la cadena de completitud usa desnudos; la cadena no consume la instancia—, y dos instancias para el
+-- mismo tipo harían que la `cst` dependiera de los `import`.
 
 end FOL

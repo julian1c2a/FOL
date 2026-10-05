@@ -37,7 +37,7 @@ no se compila, que es exactamente donde un `axiom` falso sobrevivió ochenta dí
 |---|---|---|
 | 0 | `unpair : Nat → Nat × Nat` | `unpair_surj` |
 | 1 | `natToList : Nat → List Nat` | `natToList_surj` |
-| 2 | `natToString : Nat → String` | `natToString_surj` |
+| 2 | `natToSym : Nat → List Char` (hasta D7, `natToString : Nat → String`) | `natToSym_surj` |
 | 3 | `natToTerm` / `natToTerms` | `natToTerm_surj` / `natToTerms_surj` |
 | 4 | `natToFormula : Nat → Formula` | `natToFormula_surj` |
 
@@ -62,11 +62,17 @@ sin construir a mano un principio de inducción mutua.
 
 ## Footprint
 
-Cero axiomas del proyecto, y **sin `Classical.choice`** (medido el 2026‑09‑27): los titulares
-(`natToString_surj`, `natToTerm_surj`, `natToFormula_surj` y las dos instancias `EnumSym`) y las
-funciones `natToList`, `natToString`, `natToTerm` y `natToFormula` miden `[propext, Quot.sound]`;
-`unpair`, ningún axioma. Lo que se usa de fuera es núcleo de Lean: `Char.ofNat_toNat` y
+Cero axiomas del proyecto, y **sin `Classical.choice`** (medido el 2026‑09‑27, con `String`): los
+titulares (`natToString_surj`, `natToTerm_surj`, `natToFormula_surj` y las dos instancias `EnumSym`)
+y las funciones `natToList`, `natToString`, `natToTerm` y `natToFormula` miden `[propext, Quot.sound]`;
+`unpair`, ningún axioma. Lo que se usaba de fuera era núcleo de Lean: `Char.ofNat_toNat` y
 `String.exists_eq_ofList`.
+
+✏️ 2026‑10‑05: D7 EJECUTADA (ADR‑129 de RPP). Los símbolos son `List Char`; `natToString` y
+`natToString_surj` se retiraron por `natToSym` y `natToSym_surj`, y de las dos instancias `EnumSym`
+queda la de `List Char`. Medido de nuevo (filas de `../ROBINSON_PlusPlus/check-footprints.bash`):
+`natToSym_surj`, `natToFormula_surj` y la instancia `instEnumSymListChar`, `[propext, Quot.sound]`.
+De los lemas de caracteres y cadenas del núcleo queda sólo `Char.ofNat_toNat`.
 
 ⚠️ **RECTIFICACIÓN (2026‑09‑27).** Aquí decía «`Char.ofNat_toNat` y `String.ofList_toList`», sin
 más. `String.ofList_toList` y `String.toList` decodifican UTF‑8, y en v4.31 eso lleva
@@ -75,7 +81,8 @@ más. `String.ofList_toList` y `String.toList` decodifican UTF‑8, y en v4.31 e
 con `String.exists_eq_ofList` (`[propext]`) y no decodifica nada (auditoría de constructividad,
 `auditoria/constructividad-2026-09-27/`). ⭐ Eso limpia también `Lindenbaum0.lindenbaum_lemma₀`,
 que consume `natToFormula_surj`: con la etapa ya sin decidir, era la única elección que le
-quedaba (medido: `…/experimentos/exp-esencial/E4_Lindenbaum.lean`).
+quedaba (medido: `…/experimentos/exp-esencial/E4_Lindenbaum.lean`). (✏️ 2026‑10‑05: desde D7 no hay
+`String`; la prueba es `natToSym_surj`, de `natToList_surj` y `map_ofNat_toNat`.)
 
 ## ⚠️ Hay una SEGUNDA ruta, también compilada, y más corta
 
@@ -196,7 +203,7 @@ theorem natToList_surj : ∀ L : List Nat, ∃ n, natToList n = L := by
       exact ⟨k + 1, by simp [natToList, hk, hm]⟩
 
 -- ============================================================
--- Capa 2 · caracteres y cadenas
+-- Capa 2 · caracteres y símbolos (`List Char`; hasta D7, cadenas `String`)
 -- ============================================================
 
 theorem map_ofNat_toNat : ∀ L : List Char, (L.map Char.toNat).map Char.ofNat = L := by
@@ -205,38 +212,25 @@ theorem map_ofNat_toNat : ∀ L : List Char, (L.map Char.toNat).map Char.ofNat =
   | nil => rfl
   | cons c L' ih => simp [ih, Char.ofNat_toNat]
 
-def natToString (n : Nat) : String := String.ofList ((natToList n).map Char.ofNat)
+/-- Los símbolos, por la **capa 1** (`natToList`, sobre `List Nat`) y `Char.ofNat` (D7, 2026‑10‑05: antes
+`natToString`, con `String.ofList`). -/
+def natToSym (n : Nat) : List Char := (natToList n).map Char.ofNat
 
-/-- ⭐ Sin `String.toList`: `String.exists_eq_ofList` da la lista de caracteres sin decodificar
-(`[propext]`), mientras que `toList`/`ofList_toList` decodifican UTF‑8 y en v4.31 arrastran
-`Classical.choice` (auditoría de constructividad, 2026‑09‑27). -/
-theorem natToString_surj (s : String) : ∃ n, natToString n = s := by
-  obtain ⟨l, rfl⟩ := s.exists_eq_ofList
-  obtain ⟨n, hn⟩ := natToList_surj (l.map Char.toNat)
-  exact ⟨n, congrArg String.ofList (by rw [hn, map_ofNat_toNat])⟩
+/-- La sobreyectividad sale de `natToList_surj` y `map_ofNat_toNat`, sin `String`. -/
+theorem natToSym_surj (s : List Char) : ∃ n, natToSym n = s := by
+  obtain ⟨n, hn⟩ := natToList_surj (s.map Char.toNat)
+  refine ⟨n, ?_⟩
+  show (natToList n).map Char.ofNat = s
+  rw [hn]
+  exact map_ofNat_toNat s
 
-/-- ⭐ `String` satisface `FOL.EnumSym` con lo que esta capa ya tiene probado (ADR-069). -/
-instance : FOL.EnumSym String where
-  enum := natToString
-  enum_surj := natToString_surj
-
-/-- ⭐⭐ Y `List Char` la satisface saliendo de la **capa 1** (`natToList_surj`, sobre `List Nat`)
-más `map_ofNat_toNat`: **no toca `String` en absoluto**. ⚠️ Es una MEDIDA, no una capa en uso: la
-metateoría no se instancia en `List Char` (vía CERRADA, ver `FOL/FOL.lean`).
-
-⚠️ **RECTIFICACIÓN (2026‑09‑27).** Aquí decía que ésta la satisfacía «más barato», que «el
-`Classical.choice` que entra al DESCOMPONER un `String` no entra por esta puerta» y que
-`#print axioms` separaba las dos instancias. Era cierto hasta ese día, y ya no lo es. Desde que
-`natToString_surj` no decodifica (`String.exists_eq_ofList`), las dos miden lo mismo,
-`[propext, Quot.sound]`. La elección no la traía `String`, sino decodificar UTF‑8. -/
+/-- ⭐ `List Char` satisface `FOL.EnumSym` con lo que esta capa ya tiene probado (ADR-069). Hasta D7
+(2026‑10‑05) había dos instancias, una por `String` y otra por `List Char`; queda ésta. (2026‑09‑27: se
+decía que la de `List Char` era «más barata» que la de `String`; desde `String.exists_eq_ofList` las dos
+medían `[propext, Quot.sound]`.) -/
 instance : FOL.EnumSym (List Char) where
-  enum n := (natToList n).map Char.ofNat
-  enum_surj := by
-    intro s
-    obtain ⟨n, hn⟩ := natToList_surj (s.map Char.toNat)
-    refine ⟨n, ?_⟩
-    rw [hn]
-    exact map_ofNat_toNat s
+  enum := natToSym
+  enum_surj := natToSym_surj
 
 -- ============================================================
 -- Capa 3 · términos
@@ -249,7 +243,7 @@ def natToTerm : Nat → Term
       if (unpair n).1 = 0 then
         .var (unpair n).2
       else
-        .func (natToString (unpair (unpair n).2).1) (natToTerms (unpair (unpair n).2).2)
+        .func (natToSym (unpair (unpair n).2).1) (natToTerms (unpair (unpair n).2).2)
   termination_by n => n
   decreasing_by
     all_goals
@@ -300,7 +294,7 @@ theorem term_surj_aux : ∀ N : Nat,
         | func f ts =>
             have hts : termsSize ts < N := by simp only [termSize] at hlt; omega
             obtain ⟨nts, hnts⟩ := ihTs ts hts
-            obtain ⟨nf, hnf⟩ := natToString_surj f
+            obtain ⟨nf, hnf⟩ := natToSym_surj f
             obtain ⟨r, hr⟩ := unpair_surj nf nts
             obtain ⟨m, hm⟩ := unpair_surj 1 r
             exact ⟨m + 1, by simp [natToTerm, hm, hr, hnf, hnts]⟩
@@ -343,7 +337,7 @@ def natToFormula : Nat → Formula
   | n + 1 =>
       if (unpair n).1 = 0 then .bottom
       else if (unpair n).1 = 1 then
-        .atom (natToString (unpair (unpair n).2).1) (natToTerms (unpair (unpair n).2).2)
+        .atom (natToSym (unpair (unpair n).2).1) (natToTerms (unpair (unpair n).2).2)
       else if (unpair n).1 = 2 then
         .eq (natToTerm (unpair (unpair n).2).1) (natToTerm (unpair (unpair n).2).2)
       else if (unpair n).1 = 3 then
@@ -374,7 +368,7 @@ theorem formula_surj_aux :
       cases f with
       | bottom => exact ⟨0, by simp [natToFormula]⟩
       | atom p ts =>
-          obtain ⟨np, hnp⟩ := natToString_surj p
+          obtain ⟨np, hnp⟩ := natToSym_surj p
           obtain ⟨nts, hnts⟩ := natToTerms_surj ts
           obtain ⟨r, hr⟩ := unpair_surj np nts
           obtain ⟨m, hm⟩ := unpair_surj 1 r

@@ -501,8 +501,8 @@ theorem em_or2 {P Q : Prop} (hP : Or P (Not P)) (hQ : Or Q (Not Q)) :
     (fun hnP => hQ.elim (fun h => Or.inl (Or.inr h))
       (fun hnQ => Or.inr (fun h => h.elim hnP hnQ)))
 
-/-- `predF p f` es DECIDIBLE, sin `Classical`: `String` tiene `DecidableEq`. -/
-theorem predF_em (p : String) : ∀ (f : Formula), Or (predF p f) (Not (predF p f))
+/-- `predF p f` es DECIDIBLE, sin `Classical`: `List Char` tiene `DecidableEq` (hasta D7, `String`). -/
+theorem predF_em (p : List Char) : ∀ (f : Formula), Or (predF p f) (Not (predF p f))
   | .bottom => Or.inr (fun h => h)
   | .atom q _ => Decidable.em (q = p)
   | .eq _ _ => Or.inr (fun h => h)
@@ -513,7 +513,7 @@ theorem predF_em (p : String) : ∀ (f : Formula), Or (predF p f) (Not (predF p 
   | .ex a => predF_em p a
 
 /-- «`P` está en el lenguaje de `Γ`», decidido. -/
-theorem predL_em (P : String) : ∀ (Γ : List Formula),
+theorem predL_em (P : List Char) : ∀ (Γ : List Formula),
     Or (∃ g, And (g ∈ Γ) (predF P g)) (Not (∃ g, And (g ∈ Γ) (predF P g)))
   | [] => Or.inr (fun hx => by
       obtain ⟨_, hg, _⟩ := hx
@@ -650,22 +650,22 @@ testigos triviales `A` (tiene `Q`) y `B` (tiene `R`) quedan EXCLUIDOS.
 cumple en un caso no degenerado. ⛔ NO usar como control `A := ⊤` ni un `B` sin predicados:
 ahí `C := ⊤` / `C := B` satisfacen la conclusión SIN `craig₀`. -/
 theorem craig₀_example :
-    ∃ C, And ([Formula.and (Formula.atom "P" [Term.func "c" []])
-                (Formula.and (Formula.eq (Term.func "c" []) (Term.func "d" []))
-                  (Formula.atom "Q" []))] ⊢₀ C)
-      (And ([C] ⊢₀ Formula.or (Formula.atom "P" [Term.func "d" []]) (Formula.atom "R" []))
-           (∀ p, predF p C → p = "P")) := by
-  have hd : [Formula.and (Formula.atom "P" [Term.func "c" []])
-              (Formula.and (Formula.eq (Term.func "c" []) (Term.func "d" []))
-                (Formula.atom "Q" []))]
-      ⊢₀ Formula.or (Formula.atom "P" [Term.func "d" []]) (Formula.atom "R" []) := by
+    ∃ C, And ([Formula.and (Formula.atom ['P'] [Term.func ['c'] []])
+                (Formula.and (Formula.eq (Term.func ['c'] []) (Term.func ['d'] []))
+                  (Formula.atom ['Q'] []))] ⊢₀ C)
+      (And ([C] ⊢₀ Formula.or (Formula.atom ['P'] [Term.func ['d'] []]) (Formula.atom ['R'] []))
+           (∀ p, predF p C → p = ['P'])) := by
+  have hd : [Formula.and (Formula.atom ['P'] [Term.func ['c'] []])
+              (Formula.and (Formula.eq (Term.func ['c'] []) (Term.func ['d'] []))
+                (Formula.atom ['Q'] []))]
+      ⊢₀ Formula.or (Formula.atom ['P'] [Term.func ['d'] []]) (Formula.atom ['R'] []) := by
     have hA := Derives₀.hyp
-      [Formula.and (Formula.atom "P" [Term.func "c" []])
-        (Formula.and (Formula.eq (Term.func "c" []) (Term.func "d" [])) (Formula.atom "Q" []))]
+      [Formula.and (Formula.atom ['P'] [Term.func ['c'] []])
+        (Formula.and (Formula.eq (Term.func ['c'] []) (Term.func ['d'] [])) (Formula.atom ['Q'] []))]
       _ (List.Mem.head _)
     have hPc := Derives₀.elim_and_l _ _ _ hA
     have hcd := Derives₀.elim_and_l _ _ _ (Derives₀.elim_and_r _ _ _ hA)
-    exact Derives₀.intro_or_l _ _ _ (FOL.Eq0.derives0_atom_congr "P" [] [] hcd hPc)
+    exact Derives₀.intro_or_l _ _ _ (FOL.Eq0.derives0_atom_congr ['P'] [] [] hcd hPc)
   obtain ⟨C, h1, h2, hS1, hS2⟩ := craig₀ hd
   refine ⟨C, h1, h2, fun p hp => ?_⟩
   obtain ⟨g, hg, hpg⟩ := hS1 p hp
@@ -676,7 +676,7 @@ theorem craig₀_example :
       cases hg' with
       | tail _ hm => exact absurd hm List.not_mem_nil
       | head =>
-          -- hpg : "P" = p ∨ (False ∨ "Q" = p) ;  hpg' : "P" = p ∨ "R" = p
+          -- hpg : ['P'] = p ∨ (False ∨ ['Q'] = p) ;  hpg' : ['P'] = p ∨ ['R'] = p
           rcases hpg with e | e | e
           · exact e.symm
           · exact e.elim

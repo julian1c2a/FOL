@@ -1,6 +1,6 @@
 # Changelog
 
-**Last updated:** 2026-09-27
+**Last updated:** 2026-10-05 — D7 ejecutada (ADR‑129 de RPP): entrada nueva arriba. Antes, 2026-09-27.
 **Author**: Julián Calderón Almendros
 
 > ⛔⛔ **ESTE FICHERO ESTUVO CONGELADO EN 2026-05-16 CON 115 COMMITS DETRÁS**, y no fue un
@@ -18,6 +18,48 @@ All notable changes to this project will be documented in this file.
 
 Format based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+
+## 2026-10-05 — D7 ejecutada: los símbolos, `List Char` (ADR‑129 de RPP)
+
+* 🔁 **D7, reabierta y ejecutada** (propietario: «la decisión es completar la sustitución String->List Char,
+  D7 se cierra solo cuando esté completamente lista y terminada la sustitución»). El 2026‑09‑26 se había
+  cerrado como ABANDONADA en FOL, y el 2026‑09‑27 se dio por innecesaria: esas entradas, abajo, son historia.
+* `FOL.lean`: `abbrev Term := TermG (List Char)`, `abbrev Formula := FormulaG (List Char)`; los shims de
+  `noConfusion`, con `(S := List Char)`. 🗑️ `instance : Coe String Formula`, retirada (sin consumidores).
+  `Semantics`: `abbrev Model (D : Type) := ModelG (List Char) D`.
+* `Fresh0`: `shift s := 'f' :: s`; `cst 0 = ['g']`, `cst (n+1) = 'a' :: cst n` (los nombres de siempre: g, ag,
+  aag…); `cst_zero_ne`/`cst_ne_shift` siguen con `of_decide_eq_false rfl`; `shift_inj`/`cst_inj`, por
+  inyectividad de `cons`; `cst_utf8ByteSize` → **`cst_length`** (`(cst m).length = m + 1`), y `cst_bound_sym`
+  acota con `s.length`; `unshift`, un `match`, y `unshift_shift`, `rfl`; 🗑️ `valid_tail` y `shift_bytes` (la
+  capa de bytes de `String`). La instancia `FreshSym (List Char)` es `FOL.Fresh0.instFreshSymListChar`, sin
+  ningún axioma (la de `String`: `[propext, Quot.sound]`).
+* `SymClasses`: 🗑️ su instancia de MEDIDA `FreshSym (List Char)` (`'c' :: replicate n 'i'`): la instancia es la
+  de `Fresh0` (con la `cst` y el `shift` que usa la cadena de completitud, que no consume la instancia). Las
+  clases `FreshSym`/`EnumSym` se quedan.
+* `Enumeration`: `natToString` → **`natToSym`** (`(natToList n).map Char.ofNat`), `natToString_surj` →
+  **`natToSym_surj`** (sin `String.exists_eq_ofList`); 🗑️ la instancia `EnumSym String`: queda
+  `instEnumSymListChar` (`[propext, Quot.sound]`).
+* `HenkinLimit0`: `cst_ne_of_size` con `s.length ≤ m`; `bndTerm` toma la mayor LONGITUD de un símbolo (antes,
+  `utf8ByteSize`).
+* El resto (`Henkin0`, `Rename`, `Canonical0`, `Craig0`, `Interpolation0`, `QFDecide0`, `Skolem0`, `SkolemN0`,
+  `SkolemNF0`, `SkolemHerbrand0`, `HerbrandBlock0`, `Soundness0`, `Eigenvariable`, `Derives2`, `Eq0`,
+  `Theorems/Eq`, `Herbrand0`, `Inconsistencia`, `Finitary0`): `String` → `List Char` en los tipos, y los
+  literales de un carácter `"P"` → `['P']`. Compiló a la primera.
+* 📏 **Prueba de cierre, medida**: ninguna aparición de `String` en el código (sin comentarios) de `FOL/**` y
+  `TheoryFramework/**`, y ningún literal de símbolo (queda sólo un mensaje de error de `Tactics.lean`).
+* 📏 **Footprints** (`check-footprints` de RPP): las 39 filas de FOL y `TheoryFramework` con
+  `Classical.choice` lo siguen llevando (D7 no limpia los titulares de FOL); `Compacity0.evalFormula_updateCsts`
+  (`[propext]`) y `evalTerm_updateCsts` (`[propext, Quot.sound]`) pasan a ninguno. En RPP, 44 filas pierden
+  `Classical.choice` (ADR‑129).
+* 🧊↩️ **16 congelados, descongelados** (`thaw --confirm`, autorizado por la decisión): los 14 con código
+  (`Fresh0`, `HenkinLimit0`, `Henkin0`, `Rename`, `Canonical0`, `Craig0`, `Interpolation0`, `QFDecide0`,
+  `Skolem0`, `SkolemN0`, `SkolemNF0`, `SkolemHerbrand0`, `HerbrandBlock0`, `Soundness0`) y `Compacity0` y
+  `Lindenbaum0`, sólo prosa. Se vuelven a congelar tras el commit, y se re‑bloquean los 27 que salieron de
+  `locked_files.txt`.
+* 🔧 `check-doc-sync.bash`: `AXIOMS.md` sale de la deuda de `[E]` (ya lleva `**Last updated:**`);
+  `criba-congelacion.py`: fuera `FOL.instFreshSymListChar`, retirada. `DecEq.lean`: sólo prosa.
+* ⛔ **PeanoRF** (bloqueado, sólo lectura) depende de `../FOL` por ruta: dejará de compilar contra este FOL
+  hasta que se adapte. No se toca.
 
 ## 2026-09-27 (9) — N5 y N7 resueltas; 🧊 tercer lote CONGELADO: ocho módulos
 

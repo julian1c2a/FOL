@@ -101,7 +101,7 @@ def vars : Nat → List Term
 example : vars 3 = [Term.var 0, Term.var 1, Term.var 2] := rfl
 
 /-- Las variables no mencionan ningún símbolo de función. -/
-theorem not_occurs_vars (c : String) : ∀ n : Nat, Not (occursTerms c (vars n))
+theorem not_occurs_vars (c : List Char) : ∀ n : Nat, Not (occursTerms c (vars n))
   | 0 => fun h => h
   | n + 1 => by
       intro h
@@ -179,14 +179,14 @@ theorem skF_spec {D : Type} (M : Model D) (A : Formula) (v : Nat → D) (d0 : D)
 -- ═══════════════════════════════════════════════════════════════════════════
 
 /-- `∀x₀ … ∀x_{n-1}. (∃y. A → A[y := c(x₀,…,x_{n-1})])`. -/
-def skolemAxN (c : String) (n : Nat) (A : Formula) : Formula :=
+def skolemAxN (c : List Char) (n : Nat) (A : Formula) : Formula :=
   allBlock n (Formula.impl (Formula.ex A) (substFormula 0 (Term.func c (vars n)) A))
 
 /-- El caso `n = 0` es, **por `rfl`**, el axioma de argumentos fijos con lista vacía. -/
-example (c : String) (A : Formula) : skolemAxN c 0 A = skolemAxT c [] A := rfl
+example (c : List Char) (A : Formula) : skolemAxN c 0 A = skolemAxT c [] A := rfl
 
 /-- ⭐ El axioma con prefijo **es válido** en el modelo expandido con `skF`. -/
-theorem eval_skolemAxN {D : Type} (M : Model D) (c : String) (n : Nat) (A : Formula)
+theorem eval_skolemAxN {D : Type} (M : Model D) (c : List Char) (n : Nat) (A : Formula)
     (v : Nat → D) (d0 : D) (hA : Not (occursFormula c A)) :
     evalFormula (updateFunc M c (skF M A v d0)) v (skolemAxN c n A) := by
   show evalFormula (updateFunc M c (skF M A v d0)) (envPush v [])
@@ -224,7 +224,7 @@ teorema ε de Hilbert–Bernays) es HIPÓTESIS.
 ⚠️ Rectificado el 2026‑09‑27: decía que el de `completeness₀` «es el WKL». En Lean no lo es
 (`lindenbaum_lemma₀` es `[propext, Quot.sound]`); el WKL es la fuerza lógica de la completitud sobre
 RCA₀, no el sitio del `choice`. -/
-theorem skolem_conservative_n₀ {c : String} {n : Nat} {A φ : Formula} {Γ : List Formula}
+theorem skolem_conservative_n₀ {c : List Char} {n : Nat} {A φ : Formula} {Γ : List Formula}
     (hΓ : ∀ g, g ∈ Γ → Not (occursFormula c g))
     (hA : Not (occursFormula c A))
     (hφ : Not (occursFormula c φ))
@@ -243,7 +243,7 @@ theorem skolem_conservative_n₀ {c : String} {n : Nat} {A φ : Formula} {Γ : L
 /-- 🏁 El caso `n = 0` recupera la conservatividad del axioma de argumentos fijos con lista vacía —
 y por tanto la de Henkin. ⚠️ Por la ruta semántica y con `Classical.choice`; desde el 2026‑09‑27 la
 de Henkin tiene prueba sintáctica sin él (`Skolem0.henkin_conservative₀`, `[propext, Quot.sound]`). -/
-theorem skolem_conservative_n_zero {c : String} {A φ : Formula} {Γ : List Formula}
+theorem skolem_conservative_n_zero {c : List Char} {A φ : Formula} {Γ : List Formula}
     (hΓ : ∀ g, g ∈ Γ → Not (occursFormula c g))
     (hA : Not (occursFormula c A))
     (hφ : Not (occursFormula c φ))

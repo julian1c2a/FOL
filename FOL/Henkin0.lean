@@ -56,6 +56,9 @@ una línea. La forma positiva es la que consume `Skolem0.henkin_conservative₀`
   `neg_impl_right` y ⭐ `ctx_split`;
 * `[propext, Quot.sound]`: `abs_neg_witness`, `henkin_step_derives` y `henkin_step_consistent₀`.
 
+(✏️ 2026‑10‑05: medido con `String`. Tras D7 —ADR‑129 de RPP— `henkin_step_consistent₀` se midió de
+nuevo: `[propext, Quot.sound]`.)
+
 **Cero axiomas del proyecto.** Hasta el 2026‑09‑27 `henkin_step_consistent₀` llevaba
 `Classical.choice`, y era suyo: el `filter` del paso 1, bajo `open Classical`, decidía
 `x = henkinAx c A` con `Classical.propDecidable`. `ctx_split` parte el contexto con la disyunción
@@ -94,21 +97,24 @@ le faltaban dos.
 
 * `String.append_right_inj` y `shift_inj` nunca lo llevaron (`[propext, Quot.sound]`). Lo de
   `String` venía de la `ReflBEq String` que `not_eq_of_beq_eq_false` sintetizaba a través de
-  `String.instOrd`, que decodifica UTF‑8, en `cst_zero_ne`/`cst_ne_shift`. Hoy van por
-  `of_decide_eq_false` con `String.decEq`: `[propext]`.
+  `String.instOrd`, que decodifica UTF‑8, en `cst_zero_ne`/`cst_ne_shift`. Desde ese día van por
+  `of_decide_eq_false` (con `String.decEq`, `[propext]`; desde D7, sobre `List Char`, ningún axioma).
 * `Exists.choose` (la cota `bnd` de `FOL.HenkinLimit0`) → cota **calculada**.
-* El tercio excluso de `cst_bound_sym` → la cota `s.utf8ByteSize`.
-* `invOf` → `Fresh0.unshift`, inversa GLOBAL de `shift` calculada sobre bytes. `invOf` se retiró.
+* El tercio excluso de `cst_bound_sym` → la cota `s.utf8ByteSize` (desde D7, `s.length`).
+* `invOf` → `Fresh0.unshift`, inversa GLOBAL de `shift` calculada (sobre bytes hasta D7; hoy, un
+  `match` sobre `List Char`). `invOf` se retiró.
 * Faltaba una **aquí mismo**: el `filter` del paso 1, bajo `open Classical`. Hoy lo hace
   `ctx_split`, sin ningún axioma.
 * Y faltaba la sobreyectividad de `FOL.Enumeration` (la usa `HenkinLimit0.henLimit_witness`), que
-  decodificaba con `String.toList`. Hoy va por `String.exists_eq_ofList` (`[propext]`) y mide
-  `[propext, Quot.sound]`.
+  decodificaba con `String.toList`. Desde ese día iba por `String.exists_eq_ofList` (`[propext]`) y
+  medía `[propext, Quot.sound]`; desde D7 es `natToSym_surj`, sin `String`, y mide lo mismo.
 
 ⚠️ Y «la construcción no descompone ninguna [cadena]» ya no es cierto: `unshift` descompone
-`shift s` para devolver `s`. Pero lo hace por **bytes**, y la capa de bytes no lleva
-`Classical.choice`; en v4.31 lo trae **decodificar** UTF‑8, no descomponer. Hoy ninguna constante de
-`FOL.Henkin0`, `FOL.Fresh0`, `FOL.HenkinLimit0` ni `FOL.Rename` lleva `Classical.choice`.
+`shift s` para devolver `s`. Hasta D7 lo hacía por **bytes**, y la capa de bytes no lleva
+`Classical.choice`; en v4.31 lo trae **decodificar** UTF‑8, no descomponer. Desde D7 (2026‑10‑05,
+ADR‑129 de RPP) es un `match` sobre `List Char`. El 2026‑09‑27 ninguna constante de
+`FOL.Henkin0`, `FOL.Fresh0`, `FOL.HenkinLimit0` ni `FOL.Rename` llevaba `Classical.choice`, y tras D7
+ninguna de sus filas de `../ROBINSON_PlusPlus/check-footprints.bash` lo lleva.
 -/
 
 namespace FOL.Henkin0
@@ -127,7 +133,7 @@ local notation:50 S " ⊢₀* " f => DerivesSet₀ S f
 def IsConsistent₀ (S : Formula → Prop) : Prop := Not (S ⊢₀* Formula.bottom)
 
 /-- El axioma de Henkin para `A` con testigo la constante `c`. -/
-def henkinAx (c : String) (A : Formula) : Formula :=
+def henkinAx (c : List Char) (A : Formula) : Formula :=
   Formula.impl (Formula.ex A) (substFormula 0 (Term.func c []) A)
 
 -- ============================================================
@@ -160,7 +166,7 @@ theorem neg_impl_right {Γ : List Formula} {P Q : Formula}
 /-- ⭐⭐ **Abstraer `c` en `¬A[c]` devuelve `¬A`.** Es el punto exacto donde encajan las tres
 piezas: `absFormula_subst` (conmutación), `absFormula_eq_lift` (`c` no aparece en `A`) y
 `substFormula_lift_var` (el lift se deshace). -/
-theorem abs_neg_witness (c : String) (A : Formula) (hcA : Not (occursFormula c A)) :
+theorem abs_neg_witness (c : List Char) (A : Formula) (hcA : Not (occursFormula c A)) :
     absFormula c 0 (neg (substFormula 0 (Term.func c []) A)) = neg A := by
   show neg (absFormula c 0 (substFormula 0 (Term.func c []) A)) = neg A
   rw [absFormula_subst c A 0 0 (Nat.le_refl 0), absFormula_eq_lift c A 1 hcA]
@@ -210,7 +216,7 @@ el enunciado negativo (`IsConsistent₀`) sólo daría la contrapositiva dobleme
 ⚠️ La frescura se pide sobre `S` y sobre `A`, que es lo que la construcción puede garantizar. Y
 ⭐ basta con eso porque `DerivesSet₀` entrega un contexto **finito**: `derives0_gen_fresh` sólo
 necesita frescura ahí. -/
-theorem henkin_step_derives {S : Formula → Prop} (c : String) (A : Formula)
+theorem henkin_step_derives {S : Formula → Prop} (c : List Char) (A : Formula)
     (hcS : ∀ g, S g → Not (occursFormula c g)) (hcA : Not (occursFormula c A))
     (hbot : (fun x => Or (S x) (x = henkinAx c A)) ⊢₀* Formula.bottom) :
     S ⊢₀* Formula.bottom := by
@@ -234,7 +240,7 @@ theorem henkin_step_derives {S : Formula → Prop} (c : String) (A : Formula)
 
 /-- **Añadir el testigo de Henkin para `A` con una constante fresca preserva la consistencia.** -/
 theorem henkin_step_consistent₀ {S : Formula → Prop} (hCons : IsConsistent₀ S)
-    (c : String) (A : Formula)
+    (c : List Char) (A : Formula)
     (hcS : ∀ g, S g → Not (occursFormula c g)) (hcA : Not (occursFormula c A)) :
     IsConsistent₀ (fun x => Or (S x) (x = henkinAx c A)) :=
   fun hbot => hCons (henkin_step_derives c A hcS hcA hbot)

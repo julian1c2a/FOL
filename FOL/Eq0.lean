@@ -76,7 +76,7 @@ theorem derives0_eq_trans {Γ : List Formula} {t1 t2 t3 : Term}
   exact hDer3
 
 /-- Congruencia de `Term.func` en UNA posición de sus argumentos. -/
-theorem derives0_eq_func_congr {Γ : List Formula} (p : String) (pre post : List Term)
+theorem derives0_eq_func_congr {Γ : List Formula} (p : List Char) (pre post : List Term)
     {a b : Term} (h : Derives₀ Γ (.eq a b)) :
     Derives₀ Γ (.eq (Term.func p (pre ++ a :: post)) (Term.func p (pre ++ b :: post))) := by
   have key : ∀ x : Term,
@@ -97,7 +97,7 @@ theorem derives0_eq_func_congr {Γ : List Formula} (p : String) (pre post : List
   exact hstep (Derives₀.refl Γ _)
 
 /-- Congruencia de `Formula.atom` en UNA posición de sus argumentos. -/
-theorem derives0_atom_congr {Γ : List Formula} (p : String) (pre post : List Term)
+theorem derives0_atom_congr {Γ : List Formula} (p : List Char) (pre post : List Term)
     {a b : Term} (h : Derives₀ Γ (.eq a b))
     (hA : Derives₀ Γ (.atom p (pre ++ a :: post))) :
     Derives₀ Γ (.atom p (pre ++ b :: post)) := by

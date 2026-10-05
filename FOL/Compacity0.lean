@@ -66,13 +66,14 @@ numerable — con tres piezas y nada más:
   `HasLargeModels S`: para todo `n`, un modelo con `n` elementos distintos. ⚠️ **No pide
   finitud**: la prueba no la usa, y pedirla sólo debilitaría el teorema.
 * **la teoría ampliada** `infTheory S = S ∪ {cst i ≠ cst j}`. La frescura de las `cst` en `S` es
-  hipótesis REAL de `infinite_model_of_large_fresh` (`cst 0 = "g"`); `infinite_model_of_large`
+  hipótesis REAL de `infinite_model_of_large_fresh` (`cst 0 = ['g']`); `infinite_model_of_large`
   la ELIMINA sin construir nada: `shiftTheory` + `pullback`, que ya estaban.
 * **la satisfacibilidad finita** con `updateCsts`, el `updateFunc` de `Skolem0` ITERADO sobre
   `Nat`: el lema de coincidencia de UN símbolo basta, aplicado `n` veces.
 
 ⚠️ **NO es LS↑**: ningún teorema de §3 sube desde un modelo infinito a uno de cardinal mayor. Con
-`Formula = FormulaG String` sólo hay ℵ₀ constantes nuevas; la vía de constantes pediría un tipo de
+`Formula = FormulaG (List Char)` (hasta D7, 2026‑10‑05, `FormulaG String`) sólo hay ℵ₀ constantes
+nuevas; la vía de constantes pediría un tipo de
 símbolos no numerable (la 2ª entrega de `ModelG`, `Canonical0` genérico en el símbolo, está
 CERRADA: ver `FOL/FOL.lean`) más un Lindenbaum transfinito, y la vía de ultraproductos no estaba, a
 2026‑09‑26, en
@@ -103,11 +104,19 @@ módulo:
 
 Por los dos pasan `compactness`, `model_existence_iff₀` y `loewenheim_skolem_down`.
 ⇒ En §3 el `Classical.choice` viene YA SÓLO de esos dos sitios, a través de `compactness` y de
-`loewenheim_skolem_down`, que son los que usa `infinite_model_of_large_fresh`. Sin él, medidos: en §2,
-`countable_of_shift`, `[propext]`; en §3, `infTheory_finSat`, `evalTerm_updateCsts` y
-`hasLargeModels_shift`, `[propext, Quot.sound]`, `evalFormula_updateCsts`, `[propext]`, y los
+`loewenheim_skolem_down`, que son los que usa `infinite_model_of_large_fresh`. Sin él, medidos (con
+`String`): en §2, `countable_of_shift`, `[propext]`; en §3, `infTheory_finSat`,
+`evalTerm_updateCsts` y `hasLargeModels_shift`, `[propext, Quot.sound]`, `evalFormula_updateCsts`,
+`[propext]`, y los
 cuatro controles (`infiniteDom_nat`, `not_infiniteDom_unit`, `hasLargeModels_empty`,
 `not_hasLargeModels_one`), **ningún axioma**.
+
+✏️ **2026‑10‑05, D7 EJECUTADA (ADR‑129 de RPP)**, medido de nuevo sobre las filas de
+`../ROBINSON_PlusPlus/check-footprints.bash`: `evalTerm_updateCsts` y `evalFormula_updateCsts` pasan
+a **ningún axioma** (con `String`, `[propext, Quot.sound]` y `[propext]`). Los titulares de §1–§3,
+`infTheory_finSat`, `hasLargeModels_empty` y `not_hasLargeModels_one` no cambian.
+`countable_of_shift`, `hasLargeModels_shift`, `infiniteDom_nat` y `not_infiniteDom_unit` no tienen
+fila: su cifra es la del 2026‑09‑27.
 
 ⚠️⚠️ **RECTIFICACIÓN (2026‑09‑27).** Esta sección decía otras tres cosas, y las tres han caído:
 1. Que la procedencia que da la fuerza era «el `if IsConsistent₀` Π⁰₁ de `FOL.Lindenbaum0` — el
@@ -115,7 +124,8 @@ cuatro controles (`infiniteDom_nat`, `not_infiniteDom_unit`, `hasLargeModels_emp
 2. Que en §3 `infTheory_finSat` y `evalTerm_updateCsts` llevaban el `Classical.choice` de
    `FOL.Fresh0`: el tercio excluso de `cst_bound_sym` y «la implementación de `String`
    —descomponerlo, no compararlo—». Hoy `cst_bound_sym` calcula su cota en bytes, y las desigualdades entre
-   constantes se deciden con `String.decEq`. Y para §3 la frase estaba al revés: aquí la elección
+   constantes se deciden con `String.decEq` (✏️ 2026‑10‑05: desde D7, en caracteres —`s.length`— y
+   con la igualdad decidible de `List Char`). Y para §3 la frase estaba al revés: aquí la elección
    la traía COMPARAR por `BEq`, con un `ReflBEq` sintetizado vía `String.instOrd`
    (`…/exp-string/E9.lean`). Lo que en v4.31 lleva `Classical.choice` es DECODIFICAR UTF‑8, y
    `String.instOrd` decodifica; la capa de bytes de `String` está limpia.

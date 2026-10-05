@@ -262,7 +262,7 @@ theorem derives0_iff_implChain (Γ : List Formula) (φ : Formula) :
    fun h => FOL.Propositional0.derives0_of_implChain Γ Γ φ
      (Derives₀.weakening _ _ _ h (fun _ hx => absurd hx List.not_mem_nil)) (fun _ hx => hx)⟩
 
-theorem not_occurs_implChain {c : String} :
+theorem not_occurs_implChain {c : List Char} :
     ∀ (Γ : List Formula) (φ : Formula), (∀ g, g ∈ Γ → Not (occursFormula c g)) →
       Not (occursFormula c φ) → Not (occursFormula c (FOL.Propositional0.implChain Γ φ))
   | [], _, _, hφ => hφ

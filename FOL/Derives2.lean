@@ -115,10 +115,10 @@ inductive Derives₂ : List Formula → Formula → Prop where
   | forall_not_ex_not : ∀ Γ A, Derives₂ Γ (.impl (neg (.forall A)) (.ex (neg A)))
   | refl  : ∀ Γ t, Derives₂ Γ (.eq t t)
   -- ⭐ las TRES congruencias, en lugar de `subst`
-  | eq_func_congr : ∀ Γ (p : String) (pre post : List Term) (a b : Term),
+  | eq_func_congr : ∀ Γ (p : List Char) (pre post : List Term) (a b : Term),
       Derives₂ Γ (.eq a b) →
       Derives₂ Γ (.eq (Term.func p (pre ++ a :: post)) (Term.func p (pre ++ b :: post)))
-  | eq_atom_congr : ∀ Γ (p : String) (pre post : List Term) (a b : Term),
+  | eq_atom_congr : ∀ Γ (p : List Char) (pre post : List Term) (a b : Term),
       Derives₂ Γ (.eq a b) → Derives₂ Γ (.atom p (pre ++ a :: post)) →
       Derives₂ Γ (.atom p (pre ++ b :: post))
   | eq_eq_congr : ∀ Γ (a b c : Term),
@@ -229,7 +229,7 @@ inductive PwEq₂ (G : List Formula) : List Term → List Term → Prop where
   | cons : ∀ {a b l1 l2}, Derives₂ G (Formula.eq a b) → PwEq₂ G l1 l2 ->
       PwEq₂ G (a :: l1) (b :: l2)
 
-theorem eq_func_pw {G : List Formula} (p : String) : ∀ {l1 l2 : List Term},
+theorem eq_func_pw {G : List Formula} (p : List Char) : ∀ {l1 l2 : List Term},
     PwEq₂ G l1 l2 → ∀ pre : List Term,
     G ⊢₂ Formula.eq (Term.func p (pre ++ l1)) (Term.func p (pre ++ l2)) := by
   intro l1 l2 hpw
@@ -242,7 +242,7 @@ theorem eq_func_pw {G : List Formula} (p : String) : ∀ {l1 l2 : List Term},
       simp only [List.append_assoc, List.cons_append, List.nil_append] at step2
       exact eq_trans step1 step2
 
-theorem eq_atom_pw {G : List Formula} (p : String) : ∀ {l1 l2 : List Term},
+theorem eq_atom_pw {G : List Formula} (p : List Char) : ∀ {l1 l2 : List Term},
     PwEq₂ G l1 l2 → ∀ pre : List Term,
     (G ⊢₂ Formula.atom p (pre ++ l1)) → G ⊢₂ Formula.atom p (pre ++ l2) := by
   intro l1 l2 hpw
@@ -379,7 +379,7 @@ theorem derives1_eq_trans {Γ : List Formula} {t1 t2 t3 : Term}
   rw [hSubst3] at hDer3
   exact hDer3
 
-theorem derives1_eq_func_congr {Γ : List Formula} (p : String) (pre post : List Term)
+theorem derives1_eq_func_congr {Γ : List Formula} (p : List Char) (pre post : List Term)
     {a b : Term} (h : Derives₁ Γ (.eq a b)) :
     Derives₁ Γ (.eq (Term.func p (pre ++ a :: post)) (Term.func p (pre ++ b :: post))) := by
   have key : ∀ x : Term,
@@ -399,7 +399,7 @@ theorem derives1_eq_func_congr {Γ : List Formula} (p : String) (pre post : List
   rw [key a, key b] at hstep
   exact hstep (Derives₁.refl Γ _)
 
-theorem derives1_atom_congr {Γ : List Formula} (p : String) (pre post : List Term)
+theorem derives1_atom_congr {Γ : List Formula} (p : List Char) (pre post : List Term)
     {a b : Term} (h : Derives₁ Γ (.eq a b)) (hA : Derives₁ Γ (.atom p (pre ++ a :: post))) :
     Derives₁ Γ (.atom p (pre ++ b :: post)) := by
   have key : ∀ x : Term,

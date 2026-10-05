@@ -20,7 +20,7 @@ import FOL.Derives0
 ⭐⭐ **Pieza de la vía W** (Henkin real: el «Paso 2» de ADR‑037 §4) de
 `../ROBINSON_PlusPlus/doc/PLAN-COMPLETITUD-FINITISTA.md` §6.2.
 
-    derives0_rename (ρ : String → String) :
+    derives0_rename (ρ : List Char → List Char) :
         Γ ⊢₀ f  →  Γ.map (renameFormula ρ) ⊢₀ renameFormula ρ f
 
 ## Por qué hace falta
@@ -39,7 +39,8 @@ Era al revés: la inducción era válida, y lo falso eran esos axiomas, borrados
 
 **Sólo símbolos de FUNCIÓN.** Los de relación (`Formula.atom p ts`) se dejan intactos.
 
-En esta firma los dos son `String`, pero son **dos espacios de nombres distintos** (`Model.func` y
+En esta firma los dos son `List Char` (hasta D7, 2026‑10‑05, `String`), pero son **dos espacios de
+nombres distintos** (`Model.func` y
 `Model.rel` en `FOL/Semantics.lean`), y lo que Henkin necesita mover son las **constantes**, que
 son símbolos de función de aridad cero. Renombrar también los relacionales confundiría los dos.
 
@@ -64,14 +65,18 @@ mismo teorema aplicado a la inversa.*
 | `derives0_rename_conservative` (hipótesis: `ρ` **inyectiva**) | `[propext, Quot.sound]` ⭐ sin elección desde el 2026‑09‑27 |
 | `locInv` / `locInv_spec` (la inversa LOCAL) | ningún axioma |
 
+(✏️ 2026‑10‑05: las cuatro primeras filas se midieron de nuevo tras D7 —ADR‑129 de RPP— y no
+cambian; la de `locInv` es del 2026‑09‑27, con `String`.)
+
 ⭐ **La separación es exacta y vale la pena leerla**: la conservatividad **no** necesita elección.
 Lo que no sale de la mera inyectividad es una inversa GLOBAL **computable** (habría que decidir
 `∃ t, ρ t = s` para cada `s`); pero una derivación sólo menciona un número FINITO de símbolos, y
-sobre ellos la inversa se calcula buscando en una lista con la igualdad decidible de `String`
-(`locInv`). ⇒ Las dos formas son constructivas: `derives0_rename_inv` pide la inversa;
-`derives0_rename_conservative` pide la inyectividad y fabrica la inversa LOCAL. ⭐ La construcción
-de Henkin escribe la suya: `Fresh0.derivesSet0_shift_inv` mapea con `Fresh0.unshift`, inversa
-GLOBAL y computable de `shift`, calculada sobre bytes.
+sobre ellos la inversa se calcula buscando en una lista con la igualdad decidible de `List Char`
+(`locInv`; hasta D7, de `String`). ⇒ Las dos formas son constructivas: `derives0_rename_inv` pide la
+inversa; `derives0_rename_conservative` pide la inyectividad y fabrica la inversa LOCAL. ⭐ La
+construcción de Henkin escribe la suya: `Fresh0.derivesSet0_shift_inv` mapea con `Fresh0.unshift`,
+inversa GLOBAL y computable de `shift`, que quita el `'f'` de cabeza (hasta D7, sobre los bytes de
+`String`).
 
 ⚠️ **Hasta el 2026‑09‑27 aquí decía** que la elección la necesitaba «**sólo** el paso "inyectiva ⇒
 tiene inversa"», que `derives0_rename_conservative` llevaba `[propext, Classical.choice, Quot.sound]`
@@ -143,7 +148,7 @@ def renameFormula {Sym : Type} (ρ : Sym → Sym) : FormulaG Sym → FormulaG Sy
   | .ex a => .ex (renameFormula ρ a)
 
 /-- `neg` es `impl _ ⊥`, así que el renombrado pasa por dentro **por `rfl`**. -/
-theorem rename_neg (ρ : String → String) (A : Formula) :
+theorem rename_neg (ρ : List Char → List Char) (A : Formula) :
     renameFormula ρ (neg A) = neg (renameFormula ρ A) := rfl
 
 -- ============================================================
@@ -151,7 +156,7 @@ theorem rename_neg (ρ : String → String) (A : Formula) :
 -- ============================================================
 
 mutual
-theorem rename_liftTerm (ρ : String → String) (c : Nat) (t : Term) :
+theorem rename_liftTerm (ρ : List Char → List Char) (c : Nat) (t : Term) :
     renameTerm ρ (liftTerm c t) = liftTerm c (renameTerm ρ t) := by
   cases t with
   | var n =>
@@ -163,7 +168,7 @@ theorem rename_liftTerm (ρ : String → String) (c : Nat) (t : Term) :
       congr 1
       exact rename_liftTerms ρ c ts
 
-theorem rename_liftTerms (ρ : String → String) (c : Nat) (ts : List Term) :
+theorem rename_liftTerms (ρ : List Char → List Char) (c : Nat) (ts : List Term) :
     renameTerms ρ (liftTerms c ts) = liftTerms c (renameTerms ρ ts) := by
   cases ts with
   | nil => rfl
@@ -172,7 +177,7 @@ theorem rename_liftTerms (ρ : String → String) (c : Nat) (ts : List Term) :
       exact ⟨rename_liftTerm ρ c t, rename_liftTerms ρ c ts'⟩
 end
 
-theorem rename_liftFormula (ρ : String → String) : ∀ (c : Nat) (f : Formula),
+theorem rename_liftFormula (ρ : List Char → List Char) : ∀ (c : Nat) (f : Formula),
     renameFormula ρ (liftFormula c f) = liftFormula c (renameFormula ρ f) := by
   intro c f
   induction f generalizing c with
@@ -190,7 +195,7 @@ theorem rename_liftFormula (ρ : String → String) : ∀ (c : Nat) (f : Formula
 -- ============================================================
 
 mutual
-theorem rename_substTerm (ρ : String → String) (v : Nat) (s : Term) (t : Term) :
+theorem rename_substTerm (ρ : List Char → List Char) (v : Nat) (s : Term) (t : Term) :
     renameTerm ρ (substTerm v s t) = substTerm v (renameTerm ρ s) (renameTerm ρ t) := by
   cases t with
   | var n =>
@@ -204,7 +209,7 @@ theorem rename_substTerm (ρ : String → String) (v : Nat) (s : Term) (t : Term
       congr 1
       exact rename_substTerms ρ v s ts
 
-theorem rename_substTerms (ρ : String → String) (v : Nat) (s : Term) (ts : List Term) :
+theorem rename_substTerms (ρ : List Char → List Char) (v : Nat) (s : Term) (ts : List Term) :
     renameTerms ρ (substTerms v s ts) = substTerms v (renameTerm ρ s) (renameTerms ρ ts) := by
   cases ts with
   | nil => rfl
@@ -213,7 +218,7 @@ theorem rename_substTerms (ρ : String → String) (v : Nat) (s : Term) (ts : Li
       exact ⟨rename_substTerm ρ v s t, rename_substTerms ρ v s ts'⟩
 end
 
-theorem rename_substFormula (ρ : String → String) : ∀ (f : Formula) (v : Nat) (s : Term),
+theorem rename_substFormula (ρ : List Char → List Char) : ∀ (f : Formula) (v : Nat) (s : Term),
     renameFormula ρ (substFormula v s f) = substFormula v (renameTerm ρ s) (renameFormula ρ f) := by
   intro f
   induction f with
@@ -234,7 +239,7 @@ theorem rename_substFormula (ρ : String → String) : ∀ (f : Formula) (v : Na
 -- Conmuta con la NAVEGACIÓN por posiciones (para `rewrite_at`)
 -- ============================================================
 
-theorem rename_getAt? (ρ : String → String) : ∀ (p : Pos) (f : Formula),
+theorem rename_getAt? (ρ : List Char → List Char) : ∀ (p : Pos) (f : Formula),
     getAt? (renameFormula ρ f) p = (getAt? f p).map (renameFormula ρ) := by
   intro p
   induction p with
@@ -243,7 +248,7 @@ theorem rename_getAt? (ρ : String → String) : ∀ (p : Pos) (f : Formula),
   | right p' ih => intro f; cases f <;> simp only [getAt?, renameFormula, ih] <;> rfl
   | body p' ih => intro f; cases f <;> simp only [getAt?, renameFormula, ih] <;> rfl
 
-theorem rename_replaceAt (ρ : String → String) : ∀ (p : Pos) (f newSub : Formula),
+theorem rename_replaceAt (ρ : List Char → List Char) : ∀ (p : Pos) (f newSub : Formula),
     replaceAt (renameFormula ρ f) p (renameFormula ρ newSub)
       = renameFormula ρ (replaceAt f p newSub) := by
   intro p
@@ -254,7 +259,7 @@ theorem rename_replaceAt (ρ : String → String) : ∀ (p : Pos) (f newSub : Fo
   | body p' ih => intro f n; cases f <;> simp only [replaceAt, renameFormula, ih]
 
 /-- ⭐ Barato: `LocalRule` tiene **un solo constructor**. -/
-theorem rename_localRule (ρ : String → String) {A B : Formula} (h : LocalRule A B) :
+theorem rename_localRule (ρ : List Char → List Char) {A B : Formula} (h : LocalRule A B) :
     LocalRule (renameFormula ρ A) (renameFormula ρ B) := by
   cases h with
   | commuteImpl A B C =>
@@ -264,7 +269,7 @@ theorem rename_localRule (ρ : String → String) {A B : Formula} (h : LocalRule
 -- El contexto: renombrar y levantar conmutan
 -- ============================================================
 
-theorem map_rename_lift (ρ : String → String) (Γ : List Formula) :
+theorem map_rename_lift (ρ : List Char → List Char) (Γ : List Formula) :
     (Γ.map (liftFormula 0)).map (renameFormula ρ)
       = (Γ.map (renameFormula ρ)).map (liftFormula 0) := by
   induction Γ with
@@ -283,7 +288,7 @@ inducción es legítima siempre, y hoy tampoco `Derives` tiene habitantes‑axio
 de RPP (ADR‑115 de RPP).
 
 Es la pieza que la extensión de Henkin necesitaba (plan §6.2). -/
-theorem derives0_rename (ρ : String → String) {Γ : List Formula} {f : Formula} (h : Γ ⊢₀ f) :
+theorem derives0_rename (ρ : List Char → List Char) {Γ : List Formula} {f : Formula} (h : Γ ⊢₀ f) :
     (Γ.map (renameFormula ρ)) ⊢₀ renameFormula ρ f := by
   induction h with
   | hyp Γ' f' hIn => exact Derives₀.hyp _ _ (List.mem_map_of_mem hIn)
@@ -358,7 +363,7 @@ la versión con inyectividad «sí paga `Classical.choice` para fabricar la inve
 -/
 
 mutual
-theorem rename_rename_term {ρ σ : String → String} (hσ : ∀ s, σ (ρ s) = s) :
+theorem rename_rename_term {ρ σ : List Char → List Char} (hσ : ∀ s, σ (ρ s) = s) :
     ∀ t : Term, renameTerm σ (renameTerm ρ t) = t := by
   intro t
   cases t with
@@ -368,7 +373,7 @@ theorem rename_rename_term {ρ σ : String → String} (hσ : ∀ s, σ (ρ s) =
       congr 1
       exact rename_rename_terms hσ ts
 
-theorem rename_rename_terms {ρ σ : String → String} (hσ : ∀ s, σ (ρ s) = s) :
+theorem rename_rename_terms {ρ σ : List Char → List Char} (hσ : ∀ s, σ (ρ s) = s) :
     ∀ ts : List Term, renameTerms σ (renameTerms ρ ts) = ts := by
   intro ts
   cases ts with
@@ -378,7 +383,7 @@ theorem rename_rename_terms {ρ σ : String → String} (hσ : ∀ s, σ (ρ s) 
       exact ⟨rename_rename_term hσ t, rename_rename_terms hσ ts'⟩
 end
 
-theorem rename_rename_formula {ρ σ : String → String} (hσ : ∀ s, σ (ρ s) = s) :
+theorem rename_rename_formula {ρ σ : List Char → List Char} (hσ : ∀ s, σ (ρ s) = s) :
     ∀ f : Formula, renameFormula σ (renameFormula ρ f) = f := by
   intro f
   induction f with
@@ -391,7 +396,7 @@ theorem rename_rename_formula {ρ σ : String → String} (hσ : ∀ s, σ (ρ s
   | or a b iha ihb => simp only [renameFormula, iha, ihb]
   | ex a ih => simp only [renameFormula, ih]
 
-theorem map_rename_rename {ρ σ : String → String} (hσ : ∀ s, σ (ρ s) = s) (Γ : List Formula) :
+theorem map_rename_rename {ρ σ : List Char → List Char} (hσ : ∀ s, σ (ρ s) = s) (Γ : List Formula) :
     (Γ.map (renameFormula ρ)).map (renameFormula σ) = Γ := by
   induction Γ with
   | nil => rfl
@@ -401,7 +406,7 @@ theorem map_rename_rename {ρ σ : String → String} (hσ : ∀ s, σ (ρ s) = 
 izquierda, lo que se deriva en la imagen se deriva en el original.
 
 ⭐ **Ni una inducción nueva**: es `derives0_rename σ` más la cancelación. -/
-theorem derives0_rename_inv {ρ σ : String → String} (hσ : ∀ s, σ (ρ s) = s)
+theorem derives0_rename_inv {ρ σ : List Char → List Char} (hσ : ∀ s, σ (ρ s) = s)
     {Γ : List Formula} {f : Formula}
     (h : (Γ.map (renameFormula ρ)) ⊢₀ renameFormula ρ f) : Γ ⊢₀ f := by
   have h' := derives0_rename σ h
@@ -410,22 +415,23 @@ theorem derives0_rename_inv {ρ σ : String → String} (hσ : ∀ s, σ (ρ s) 
 -- ── La versión con INYECTIVIDAD, sin elección: una inversa LOCAL ─────────────
 -- ⭐ De la mera inyectividad no sale una inversa GLOBAL computable, pero no hace falta: la
 -- derivación sólo menciona un número FINITO de símbolos, y sobre ellos la inversa se calcula
--- buscando en una lista, con la igualdad decidible de `String` (sin axiomas). Hasta el
+-- buscando en una lista, con la igualdad decidible de `List Char` (hasta D7, 2026‑10‑05, la de
+-- `String`; sin axiomas). Hasta el
 -- 2026‑09‑27 esto era `invOf ρ := fun s => if h : ∃ t, ρ t = s then h.choose else s`,
 -- `noncomputable` y con `Classical.choice` (auditoría de constructividad; se retiró).
 
 mutual
 /-- Los símbolos de función de un término. -/
-def symsTerm : Term → List String
+def symsTerm : Term → List (List Char)
   | .var _ => []
   | .func s ts => s :: symsTerms ts
 
-def symsTerms : List Term → List String
+def symsTerms : List Term → List (List Char)
   | [] => []
   | t :: ts => symsTerm t ++ symsTerms ts
 end
 
-def symsFormula : Formula → List String
+def symsFormula : Formula → List (List Char)
   | .bottom => []
   | .atom _ ts => symsTerms ts
   | .eq t u => symsTerm t ++ symsTerm u
@@ -435,22 +441,22 @@ def symsFormula : Formula → List String
   | .or a b => symsFormula a ++ symsFormula b
   | .ex a => symsFormula a
 
-def symsList : List Formula → List String
+def symsList : List Formula → List (List Char)
   | [] => []
   | g :: l => symsFormula g ++ symsList l
 
-theorem symsList_mem : ∀ {l : List Formula} {g : Formula} {s : String},
+theorem symsList_mem : ∀ {l : List Formula} {g : Formula} {s : List Char},
     g ∈ l → s ∈ symsFormula g → s ∈ symsList l
   | _ :: _, _, _, .head _, hs => List.mem_append_left _ hs
   | _ :: _, _, _, .tail _ hg, hs => List.mem_append_right _ (symsList_mem hg hs)
 
 /-- ⭐ **La inversa local**: busca en la lista FINITA `L` una preimagen por `ρ`. -/
-def locInv (ρ : String → String) : List String → String → String
+def locInv (ρ : List Char → List Char) : List (List Char) → List Char → List Char
   | [], x => x
   | t :: L, x => if ρ t = x then t else locInv ρ L x
 
-theorem locInv_spec {ρ : String → String} (hinj : ∀ s t, ρ s = ρ t → s = t) :
-    ∀ {L : List String} {s : String}, s ∈ L → locInv ρ L (ρ s) = s
+theorem locInv_spec {ρ : List Char → List Char} (hinj : ∀ s t, ρ s = ρ t → s = t) :
+    ∀ {L : List (List Char)} {s : List Char}, s ∈ L → locInv ρ L (ρ s) = s
   | t :: L, s, hs => by
       show (if ρ t = ρ s then t else locInv ρ L (ρ s)) = s
       by_cases h : ρ t = ρ s
@@ -462,7 +468,7 @@ theorem locInv_spec {ρ : String → String} (hinj : ∀ s t, ρ s = ρ t → s 
 
 -- La cancelación, LOCAL: basta con que `σ ∘ ρ = id` sobre los símbolos que aparecen.
 mutual
-theorem rename_rename_term_loc {ρ σ : String → String} : ∀ t : Term,
+theorem rename_rename_term_loc {ρ σ : List Char → List Char} : ∀ t : Term,
     (∀ s, s ∈ symsTerm t → σ (ρ s) = s) → renameTerm σ (renameTerm ρ t) = t
   | .var _, _ => rfl
   | .func s ts, h => by
@@ -470,7 +476,7 @@ theorem rename_rename_term_loc {ρ σ : String → String} : ∀ t : Term,
       rw [h s (List.Mem.head _),
         rename_rename_terms_loc ts (fun x hx => h x (List.Mem.tail _ hx))]
 
-theorem rename_rename_terms_loc {ρ σ : String → String} : ∀ ts : List Term,
+theorem rename_rename_terms_loc {ρ σ : List Char → List Char} : ∀ ts : List Term,
     (∀ s, s ∈ symsTerms ts → σ (ρ s) = s) → renameTerms σ (renameTerms ρ ts) = ts
   | [], _ => rfl
   | t :: ts, h => by
@@ -479,7 +485,7 @@ theorem rename_rename_terms_loc {ρ σ : String → String} : ∀ ts : List Term
         rename_rename_terms_loc ts (fun x hx => h x (List.mem_append_right _ hx))]
 end
 
-theorem rename_rename_formula_loc {ρ σ : String → String} : ∀ f : Formula,
+theorem rename_rename_formula_loc {ρ σ : List Char → List Char} : ∀ f : Formula,
     (∀ s, s ∈ symsFormula f → σ (ρ s) = s) → renameFormula σ (renameFormula ρ f) = f := by
   intro f
   induction f with
@@ -520,7 +526,7 @@ theorem rename_rename_formula_loc {ρ σ : String → String} : ∀ f : Formula,
       show FormulaG.ex (renameFormula σ (renameFormula ρ a)) = _
       rw [ih h]
 
-theorem map_rename_rename_loc {ρ σ : String → String} : ∀ Γ : List Formula,
+theorem map_rename_rename_loc {ρ σ : List Char → List Char} : ∀ Γ : List Formula,
     (∀ g, g ∈ Γ → renameFormula σ (renameFormula ρ g) = g) →
     (Γ.map (renameFormula ρ)).map (renameFormula σ) = Γ
   | [], _ => rfl
@@ -533,7 +539,7 @@ theorem map_rename_rename_loc {ρ σ : String → String} : ∀ Γ : List Formul
 sólo tiene que valer sobre los símbolos de `Γ` y `f`, que son finitos (`locInv`). Mide
 `[propext, Quot.sound]`, como `derives0_rename_inv`; hasta el 2026‑09‑27 llevaba
 `Classical.choice`, por la inversa GLOBAL elegida `invOf` (retirada). -/
-theorem derives0_rename_conservative {ρ : String → String} (hinj : ∀ s t, ρ s = ρ t → s = t)
+theorem derives0_rename_conservative {ρ : List Char → List Char} (hinj : ∀ s t, ρ s = ρ t → s = t)
     {Γ : List Formula} {f : Formula}
     (h : (Γ.map (renameFormula ρ)) ⊢₀ renameFormula ρ f) : Γ ⊢₀ f := by
   have hc : ∀ g, g ∈ f :: Γ →
@@ -544,7 +550,7 @@ theorem derives0_rename_conservative {ρ : String → String} (hinj : ∀ s t, �
 
 /-- ⭐ **Las dos direcciones juntas**: con inversa por la izquierda, derivar en el original y
 derivar en la imagen es **lo mismo**. Es el enunciado que consume la extensión de lenguaje. -/
-theorem derives0_rename_iff {ρ σ : String → String} (hσ : ∀ s, σ (ρ s) = s)
+theorem derives0_rename_iff {ρ σ : List Char → List Char} (hσ : ∀ s, σ (ρ s) = s)
     {Γ : List Formula} {f : Formula} :
     Iff (Γ ⊢₀ f) ((Γ.map (renameFormula ρ)) ⊢₀ renameFormula ρ f) :=
   ⟨derives0_rename ρ, derives0_rename_inv hσ⟩

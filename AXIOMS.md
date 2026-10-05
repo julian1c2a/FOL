@@ -92,6 +92,7 @@
 > `False` (§1). El módulo y su axioma se borraron el 2026‑09‑23 (registro de arriba).
 
 **Creado:** 2026‑09‑12 · **Autor:** Julián Calderón Almendros
+**Last updated:** 2026-10-05 — D7 ejecutada (ADR‑129 de RPP): los símbolos son `List Char`; notas ✏️ en §2.4, §4.3 y §4.4, donde se daba por vigente lo de `String` (nombres retirados o renombrados; «no hacía falta»). Antes, sin marca: el último cambio fue el del 2026-10-03 (la deuda de los cinco módulos 🧊, saldada).
 
 ---
 
@@ -274,6 +275,10 @@ núcleo lleva `Classical.choice` (una prueba de `BitVec`/`Nat` dentro de su prue
 `natToString_surj` sale hoy por `String.exists_eq_ofList` (que sólo lleva `[propext]`) y queda,
 con `natToFormula_surj`, en `[propext, Quot.sound]`; `lindenbaum_lemma₀` también, pero porque además su etapa dejó de
 decidir nada (§4.4).
+✏️ **2026‑10‑05** (D7 ejecutada, ADR‑129 de RPP): `Formula.atom` toma hoy un `List Char`, y el punto desaparece.
+`natToString_surj` ya no existe: es `natToSym_surj` (`natToSym n = (natToList n).map Char.ofNat`), que sale de
+`natToList_surj` y `map_ofNat_toNat` sin `String`; con `natToFormula_surj`, sigue en `[propext, Quot.sound]`
+(`check-footprints` de RPP).
 
 ⚠️ **Las sobreyectividades de `Term` y `Formula` NO son inducción sobre el inductivo**, sino sobre
 una COTA de tamaño (`∀ N, ∀ t, size t < N → …`), el mismo patrón de `truth_lemma_lt`. `Term` es un
@@ -516,18 +521,22 @@ Salieron **21** titulares: `derivesSet0_intro_impl`, `henkin_step_consistent₀`
 `shiftTheory_consistent₀`, `natToString_surj`, `natToFormula_surj`, `instEnumSymString`,
 `evalTerm_updateCsts`, `infTheory_finSat`, `derives0_rename_conservative`, `henkin_conservative₀` y
 `derives0_no_disjunction_property`.
+✏️ 2026‑10‑05 (D7, ADR‑129 de RPP): tres de esos nombres eran de `String` y ya no existen: `instFreshSymString`
+es hoy `FOL.Fresh0.instFreshSymListChar` (ningún axioma), `natToString_surj` es `natToSym_surj`, e
+`instEnumSymString` se retiró (queda `instEnumSymListChar`, `[propext, Quot.sound]`). Y `evalTerm_updateCsts` ya
+no depende de ningún axioma.
 
 ### 4.4 · Lo que D1–D8 quitó, con los mismos enunciados
 
 | entrada, antes | causa medida | arreglo |
 |---|---|---|
-| `Fresh0.cst_zero_ne`, `cst_ne_shift` | la síntesis de `ReflBEq String` para `not_eq_of_beq_eq_false` pasaba por `String.instOrd`, y el orden de `String` decodifica UTF‑8 | `of_decide_eq_false rfl` (`String.decEq`, sin axiomas) ⇒ `[propext]` |
-| `Fresh0.cst_bound_sym` | tercio excluso sobre `∃ k, cst k = s` | una cota por tamaño en bytes (`cst_utf8ByteSize`) ⇒ `[propext, Quot.sound]` |
-| `Enumeration.natToString_surj` | `String.toList`/`ofList_toList` decodifican UTF‑8 | `String.exists_eq_ofList` ⇒ `[propext, Quot.sound]` |
+| `Fresh0.cst_zero_ne`, `cst_ne_shift` | la síntesis de `ReflBEq String` para `not_eq_of_beq_eq_false` pasaba por `String.instOrd`, y el orden de `String` decodifica UTF‑8 | `of_decide_eq_false rfl` (`String.decEq`, sin axiomas) ⇒ `[propext]`. ✏️ D7 (2026‑10‑05): la misma prueba, sobre la igualdad decidible de `List Char`; la instancia que los usa, `instFreshSymListChar`, no depende de ningún axioma |
+| `Fresh0.cst_bound_sym` | tercio excluso sobre `∃ k, cst k = s` | una cota por tamaño en bytes (`cst_utf8ByteSize`) ⇒ `[propext, Quot.sound]`. ✏️ D7 (2026‑10‑05): la cota es hoy `s.length`, por `cst_length`; `cst_utf8ByteSize` ya no existe; mismo footprint |
+| `Enumeration.natToString_surj` | `String.toList`/`ofList_toList` decodifican UTF‑8 | `String.exists_eq_ofList` ⇒ `[propext, Quot.sound]`. ✏️ D7 (2026‑10‑05): hoy es `natToSym_surj`, sin `String`; mismo footprint |
 | `Henkin0.henkin_step_consistent₀`, `Lindenbaum0.derivesSet0_intro_impl` | un `open Classical` para decidir `x = H` en un `filter` | `ctx_split`, sin ningún axioma: el contexto finito se parte sin decidir la igualdad |
-| `HenkinLimit0.bnd`, `bnd_spec` | `Exists.choose` sobre `cst_bound_formula` | `bnd` CALCULADA por recursión (`bndTerm`, `bndTerms`: el máximo de `utf8ByteSize`), sin axiomas; `bnd`, `hidx` y `hen`, computables |
+| `HenkinLimit0.bnd`, `bnd_spec` | `Exists.choose` sobre `cst_bound_formula` | `bnd` CALCULADA por recursión (`bndTerm`, `bndTerms`: el máximo de `utf8ByteSize`; ✏️ D7, 2026‑10‑05: hoy, de la longitud), sin axiomas; `bnd`, `hidx` y `hen`, computables |
 | `Lindenbaum0.LindenbaumStep` y sus pruebas | `if IsConsistent₀ … then … else …`, decidido con `Classical.propDecidable` | la etapa IMPREDICATIVA (la condición va dentro del predicado) y `lindenbaum_limit_closed` |
-| `Rename.invOf`, `invOf_spec` | una inversa global ELEGIDA (`Exists.choose`) | retiradas: `Fresh0.unshift` (inversa global y computable de `shift`, sobre bytes) y `Rename.locInv` (inversa local sobre la lista finita de símbolos) |
+| `Rename.invOf`, `invOf_spec` | una inversa global ELEGIDA (`Exists.choose`) | retiradas: `Fresh0.unshift` (inversa global y computable de `shift`, sobre bytes; ✏️ D7, 2026‑10‑05: hoy un `match` sobre `'f' :: t`, y `unshift_shift` es `rfl`) y `Rename.locInv` (inversa local sobre la lista finita de símbolos) |
 | `Canonical0.quotientOut`, `quotientOut_eq` | `Classical.choose` de un representante | retiradas: el modelo canónico se levanta con `Quot.lift` sobre listas (`listQuot`). ⚠️ La CONSTANTE, con su especificación, implicaba el tercio excluso (medido): lo evitable era su USO |
 | `substTerm_subst_comm_succ` y su familia (`Theorems/Eq`) | tres `simp` usaban `Nat.left_eq_add`/`Nat.add_eq_left`, que en v4.31 llevan choice | `simp [-Nat.left_eq_add, -Nat.add_eq_left, …]` ⇒ `[propext, Quot.sound]`; `FOL.Core` queda sin choice salvo el código meta de `Tactics` |
 | `Skolem0.henkin_conservative₀` (D3, D5) | era el corolario `t̄ = []` de `skolem_conservative₀`, semántico | la vía SINTÁCTICA (`henkin_step_derives`, `ctx_split`, `dne_rule`) ⇒ `[propext, Quot.sound]` |
@@ -538,6 +547,14 @@ Salieron **21** titulares: `derivesSet0_intro_impl`, `henkin_step_consistent₀`
 no hacía falta. Lo que trae `Classical.choice` en v4.31 es **decodificar UTF‑8** (y el orden de
 `String`, que decodifica); la capa de bytes (`String.decEq`, `utf8ByteSize`, `toByteArray`,
 `ofByteArray`) está limpia.
+✏️ **2026‑10‑05 · D7 EJECUTADA** (ADR‑129 de RPP): el propietario la reabrió («completar la sustitución
+String->List Char») y los símbolos son hoy `List Char`: ninguna aparición de `String` en el código (sin
+comentarios) de `FOL/` y `TheoryFramework/`, medido. Lo de la capa de bytes era cierto para `String`, y es
+registro. «No hacía falta» deja de valer: la migración se hizo por decisión del propietario, y en RPP 44 filas
+pierden `Classical.choice`. En FOL ninguna de las 39 filas con él (con las de `TheoryFramework`) lo pierde; lo que
+cambia es menor: `FOL.Fresh0.instFreshSymListChar` (la de `String`, `[propext, Quot.sound]`),
+`Compacity0.evalFormula_updateCsts` y `evalTerm_updateCsts` (antes, `[propext]` y `[propext, Quot.sound]`) ya no
+dependen de ningún axioma.
 
 ### 4.5 · ⛔ La tesis del WKL, rectificada (D2)
 

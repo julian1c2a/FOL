@@ -37,9 +37,10 @@ argumentos y el entorno De Bruijn, que es lo caro del caso general.
 ## ⛔ Y un bloqueo que yo había declarado y NO existe
 
 ADR‑056 §5 dijo que faltaba «suministro de símbolos frescos **n‑arios**». **Falso, y medido**: en
-este árbol `Term.func` toma un `String` y una lista de **cualquier** longitud, así que **la aridad
-no está en el tipo**; y `occursFormula c f` mira el **nombre**, no la aridad. ⇒ `cst : Nat → String`
-(`FOL/Fresh0.lean`) ya da infinitos símbolos de Skolem de cualquier aridad.
+este árbol `Term.func` toma un símbolo (`List Char`; hasta D7, 2026‑10‑05, un `String`) y una lista
+de **cualquier** longitud, así que **la aridad no está en el tipo**; y `occursFormula c f` mira el
+**nombre**, no la aridad. ⇒ `cst : Nat → List Char` (`FOL/Fresh0.lean`) ya da infinitos símbolos de
+Skolem de cualquier aridad.
 ⚠️ Van **cuatro** obstrucciones mías declaradas y luego refutadas en dos días (cuenta del
 2026‑09‑17, ADR‑059).
 
@@ -142,18 +143,20 @@ open FOL.Eigenvariable
 open FOL.Henkin0
 
 /-- Reinterpretar UN símbolo de función, dejando todo lo demás igual.
-⚠️ El `if f = c` usa `String.decEq`, que **no** trae `Classical.choice`: lo que lo trae es
+⚠️ El `if f = c` usa la igualdad decidible de `List Char`, que **no** trae `Classical.choice`
+(`evalTerm_updateFunc` y `evalFormula_updateFunc` no dependen de ningún axioma). Hasta D7
+(2026‑10‑05, ADR‑129 de RPP) usaba `String.decEq`, que tampoco lo traía: lo que lo traía era
 DESCOMPONER un `String`, no compararlo
 (`../ROBINSON_PlusPlus/doc/PLAN-COMPLETITUD-FINITISTA.md` §7). Precisado el 2026‑09‑27 (auditoría
 de constructividad): en v4.31 lo trae DECODIFICAR el UTF‑8 (`String.toList` y afines), no el tipo;
 comparar y recorrer los bytes no lo trae. -/
-def updateFunc {D : Type} (M : Model D) (c : String) (F : List D → D) : Model D where
+def updateFunc {D : Type} (M : Model D) (c : List Char) (F : List D → D) : Model D where
   func := fun f ds => if f = c then F ds else M.func f ds
   rel := M.rel
 
 -- ── ⭐⭐ EL LEMA DE COINCIDENCIA ─────────────────────────────────────────────
 mutual
-theorem evalTerm_updateFunc {D : Type} (M : Model D) (c : String) (F : List D → D) :
+theorem evalTerm_updateFunc {D : Type} (M : Model D) (c : List Char) (F : List D → D) :
     ∀ (t : Term) (v : Nat → D), Not (occursTerm c t) →
       evalTerm (updateFunc M c F) v t = evalTerm M v t
   | .var _, _, _ => rfl
@@ -163,7 +166,7 @@ theorem evalTerm_updateFunc {D : Type} (M : Model D) (c : String) (F : List D �
             else M.func s (evalTerms (updateFunc M c F) v ts)) = M.func s (evalTerms M v ts)
       rw [if_neg hs, evalTerms_updateFunc M c F ts v (fun ht => h (Or.inr ht))]
 
-theorem evalTerms_updateFunc {D : Type} (M : Model D) (c : String) (F : List D → D) :
+theorem evalTerms_updateFunc {D : Type} (M : Model D) (c : List Char) (F : List D → D) :
     ∀ (ts : List Term) (v : Nat → D), Not (occursTerms c ts) →
       evalTerms (updateFunc M c F) v ts = evalTerms M v ts
   | [], _, _ => rfl
@@ -174,7 +177,7 @@ theorem evalTerms_updateFunc {D : Type} (M : Model D) (c : String) (F : List D �
           evalTerms_updateFunc M c F ts v (fun ht => h (Or.inr ht))]
 end
 
-theorem evalFormula_updateFunc {D : Type} (M : Model D) (c : String) (F : List D → D) :
+theorem evalFormula_updateFunc {D : Type} (M : Model D) (c : List Char) (F : List D → D) :
     ∀ (f : Formula) (v : Nat → D), Not (occursFormula c f) →
       Iff (evalFormula (updateFunc M c F) v f) (evalFormula M v f) := by
   intro f
@@ -223,7 +226,7 @@ theorem evalFormula_updateFunc {D : Type} (M : Model D) (c : String) (F : List D
         (fun hx => hx.elim (fun d hd => ⟨d, (ih (shiftEnv v d) h).mpr hd⟩))
 
 /-- El símbolo nuevo se interpreta como el testigo elegido. -/
-theorem evalTerm_new {D : Type} (M : Model D) (c : String) (w : D) (v : Nat → D) :
+theorem evalTerm_new {D : Type} (M : Model D) (c : List Char) (w : D) (v : Nat → D) :
     evalTerm (updateFunc M c (fun _ => w)) v (Term.func c []) = w := by
   show (if c = c then w else M.func c (evalTerms (updateFunc M c (fun _ => w)) v [])) = w
   rw [if_pos rfl]
@@ -232,13 +235,13 @@ theorem evalTerm_new {D : Type} (M : Model D) (c : String) (w : D) (v : Nat → 
 
 /-- El axioma de Skolem con un término de argumentos **fijos**: `(∃A) ⇒ A[c(t̄)]`.
 Con `t̄ = []` es exactamente `henkinAx`. -/
-def skolemAxT (c : String) (ts : List Term) (A : Formula) : Formula :=
+def skolemAxT (c : List Char) (ts : List Term) (A : Formula) : Formula :=
   Formula.impl (Formula.ex A) (substFormula 0 (Term.func c ts) A)
 
 /-- ⭐ Con argumentos FIJOS, la interpretación del símbolo nuevo puede ser **constante**, y por eso
 el valor no depende de `ts`. Es lo que hace que no haga falta ninguna correspondencia entre la
 lista de argumentos y el entorno De Bruijn. -/
-theorem evalTerm_newT {D : Type} (M : Model D) (c : String) (w : D) (v : Nat → D)
+theorem evalTerm_newT {D : Type} (M : Model D) (c : List Char) (w : D) (v : Nat → D)
     (ts : List Term) : evalTerm (updateFunc M c (fun _ => w)) v (Term.func c ts) = w := by
   show (if c = c then w
         else M.func c (evalTerms (updateFunc M c (fun _ => w)) v ts)) = w
@@ -250,7 +253,7 @@ que se demuestra con él se demuestra sin él.
 
 ⭐ `ts` **no** necesita ser fresco: como la interpretación de `c` es constante, `c(t̄)` vale lo
 mismo sean cuales sean los argumentos — incluso si mencionan `c`. -/
-theorem skolem_conservative₀ {c : String} {A φ : Formula} {Γ : List Formula} {ts : List Term}
+theorem skolem_conservative₀ {c : List Char} {A φ : Formula} {Γ : List Formula} {ts : List Term}
     (hΓ : ∀ g, g ∈ Γ → Not (occursFormula c g))
     (hA : Not (occursFormula c A))
     (hφ : Not (occursFormula c φ))
@@ -288,7 +291,7 @@ constructividad): `(H :: Γ) ⊢₀ φ` da `(H :: ¬φ :: Γ) ⊢₀ ⊥`; el pa
 (`Henkin0.henkin_step_derives`) quita `H` porque `c` es fresca en `Γ`, `A` y `φ`; y `ctx_split` más
 `dne_rule` quitan `¬φ`. Hasta entonces era el corolario `t̄ = []` de `skolem_conservative₀`, que
 pasa por la completitud y por elegir el testigo en un modelo. -/
-theorem henkin_conservative₀ {c : String} {A φ : Formula} {Γ : List Formula}
+theorem henkin_conservative₀ {c : List Char} {A φ : Formula} {Γ : List Formula}
     (hΓ : ∀ g, g ∈ Γ → Not (occursFormula c g))
     (hA : Not (occursFormula c A))
     (hφ : Not (occursFormula c φ))

@@ -406,7 +406,7 @@ theorem substTerms_lift_hole (pre post : List Term) (x : Term) :
   rfl
 
 /-- Congruencia de `Term.func` en UNA posición de sus argumentos. -/
-theorem derive_eq_func_congr {Γ : List Formula} (p : String) (pre post : List Term)
+theorem derive_eq_func_congr {Γ : List Formula} (p : List Char) (pre post : List Term)
     {a b : Term} (h : Derives Γ (.eq a b)) :
     Derives Γ (.eq (Term.func p (pre ++ a :: post)) (Term.func p (pre ++ b :: post))) := by
   have key : ∀ x : Term,
@@ -427,7 +427,7 @@ theorem derive_eq_func_congr {Γ : List Formula} (p : String) (pre post : List T
   exact hstep (Derives.refl Γ _)
 
 /-- Congruencia de `Formula.atom` en UNA posición de sus argumentos. -/
-theorem derive_atom_congr {Γ : List Formula} (p : String) (pre post : List Term)
+theorem derive_atom_congr {Γ : List Formula} (p : List Char) (pre post : List Term)
     {a b : Term} (h : Derives Γ (.eq a b))
     (hA : Derives Γ (.atom p (pre ++ a :: post))) :
     Derives Γ (.atom p (pre ++ b :: post)) := by

@@ -226,7 +226,7 @@ theorem derives0_consistent : ¬ (([] : List Formula) ⊢₀ Formula.bottom) := 
   exact derives0_soundness h Unit Mtrue (fun _ => ()) (fun _ hf => absurd hf (List.not_mem_nil))
 
 /-- Una fórmula atómica testigo. -/
-def P : Formula := Formula.atom "P" []
+def P : Formula := Formula.atom ['P'] []
 
 theorem derives0_not_derives_P : ¬ (([] : List Formula) ⊢₀ P) := by
   intro h

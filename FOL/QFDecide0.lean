@@ -188,7 +188,7 @@ theorem mem_subTs_of_mem : ∀ {ts : List Term} {t : Term}, t ∈ ts → t ∈ s
       | tail _ h' => exact List.mem_append.mpr (Or.inr (mem_subTs_of_mem h'))
 
 mutual
-theorem subT_closed : ∀ (u : Term) {f : String} {ss : List Term},
+theorem subT_closed : ∀ (u : Term) {f : List Char} {ss : List Term},
     Term.func f ss ∈ subT u → ∀ y, y ∈ ss → y ∈ subT u
   | .var _, _, _, h, _, _ => by
       cases h with
@@ -197,7 +197,7 @@ theorem subT_closed : ∀ (u : Term) {f : String} {ss : List Term},
       cases h with
       | head => exact List.Mem.tail _ (mem_subTs_of_mem hy)
       | tail _ h' => exact List.Mem.tail _ (subTs_closed us h' y hy)
-theorem subTs_closed : ∀ (us : List Term) {f : String} {ss : List Term},
+theorem subTs_closed : ∀ (us : List Term) {f : List Char} {ss : List Term},
     Term.func f ss ∈ subTs us → ∀ y, y ∈ ss → y ∈ subTs us
   | [], _, _, h, _, _ => absurd h List.not_mem_nil
   | u :: us, _, _, h, y, hy => by
@@ -328,13 +328,13 @@ def qfA (A : List Formula) : List Formula := A ++ A.flatMap (fun x => A.flatMap 
 theorem mem_qfT_of_S {S : List Term} {t : Term} (h : t ∈ S) : t ∈ qfT S :=
   mem_dedup (List.mem_append.mpr (Or.inl h))
 
-theorem mem_qfT_mix {S : List Term} {f g : String} {xs ys zs : List Term}
+theorem mem_qfT_mix {S : List Term} {f g : List Char} {xs ys zs : List Term}
     (hx : Term.func f xs ∈ S) (hy : Term.func g ys ∈ S) (hz : zs ∈ mixL xs ys) :
     Term.func f zs ∈ qfT S :=
   mem_dedup (List.mem_append.mpr (Or.inr (List.mem_flatMap.mpr ⟨_, hx,
     List.mem_flatMap.mpr ⟨_, hy, List.mem_map.mpr ⟨zs, hz, rfl⟩⟩⟩)))
 
-theorem mem_qfA_mix {A : List Formula} {p q : String} {xs ys zs : List Term}
+theorem mem_qfA_mix {A : List Formula} {p q : List Char} {xs ys zs : List Term}
     (hx : Formula.atom p xs ∈ A) (hy : Formula.atom q ys ∈ A) (hz : zs ∈ mixL xs ys) :
     Formula.atom p zs ∈ qfA A :=
   List.mem_append.mpr (Or.inr (List.mem_flatMap.mpr ⟨_, hx,
@@ -393,12 +393,12 @@ theorem trans_mem {t u w : Term} (ht : t ∈ T) (hu : u ∈ T) (hw : w ∈ T) :
   inL (inL (inR (List.mem_flatMap.mpr ⟨t, ht, List.mem_flatMap.mpr ⟨u, hu,
     List.mem_map.mpr ⟨w, hw, rfl⟩⟩⟩)))
 
-theorem func_mem {f : String} {pre post : List Term} {a b : Term}
+theorem func_mem {f : List Char} {pre post : List Term} {a b : Term}
     (hx : Term.func f (pre ++ a :: post) ∈ T) (hb : b ∈ T) : eqFuncAx f pre post a b ∈ instsOf T A :=
   inL (inR (List.mem_flatMap.mpr ⟨_, hx, List.mem_flatMap.mpr ⟨(pre, a, post),
     mem_splits pre a post, List.mem_map.mpr ⟨b, hb, rfl⟩⟩⟩))
 
-theorem atom_mem {p : String} {pre post : List Term} {a b : Term}
+theorem atom_mem {p : List Char} {pre post : List Term} {a b : Term}
     (hx : Formula.atom p (pre ++ a :: post) ∈ A) (hb : b ∈ T) :
     eqAtomAx p pre post a b ∈ instsOf T A :=
   inR (List.mem_flatMap.mpr ⟨_, hx, List.mem_flatMap.mpr ⟨(pre, a, post),
@@ -449,12 +449,12 @@ def cls (t : Term) : Term :=
   | some s => s
   | none => t
 
-def headF (f : String) (us : List Term) : Term → Bool
+def headF (f : List Char) (us : List Term) : Term → Bool
   | .func g ss => decide (g = f) && decide (ss.map (cls v S) = us)
   | .var _ => false
 
 /-- Un nodo `f(us)`: si algún `f(ss) ∈ S` tiene las clases `us`, su clase; si no, él mismo. -/
-def node (f : String) (us : List Term) : Term :=
+def node (f : List Char) (us : List Term) : Term :=
   match pick (headF v S f us) S with
   | some s => cls v S s
   | none => Term.func f us
@@ -469,11 +469,11 @@ def evIs : List Term → List Term
   | t :: ts => evI t :: evIs ts
 end
 
-def headA (p : String) (us : List Term) : Formula → Bool
+def headA (p : List Char) (us : List Term) : Formula → Bool
   | .atom q ss => decide (q = p) && decide (ss.map (cls v S) = us)
   | _ => false
 
-def atomVal (p : String) (us : List Term) : Bool :=
+def atomVal (p : List Char) (us : List Term) : Bool :=
   match pick (headA v S p us) A with
   | some a => v a
   | none => false
@@ -544,7 +544,7 @@ theorem ext_eqInstance (v : PVal) (S : List Term) (A : List Formula) {g : Formul
 
 /-- Lo que se le pide a `v`: satisfacer `Inst(S)`. Y a `S`, `A`: estar cerrados. -/
 structure Good (v : PVal) (S : List Term) (A : List Formula) : Prop where
-  closed : ∀ {f : String} {ss : List Term}, Term.func f ss ∈ S → ∀ y, y ∈ ss → y ∈ S
+  closed : ∀ {f : List Char} {ss : List Term}, Term.func f ss ∈ S → ∀ y, y ∈ ss → y ∈ S
   atoms : ∀ {a : Formula}, a ∈ A → ∀ t, t ∈ atomT a → t ∈ S
   inst : ∀ g, g ∈ instsOf (qfT S) (qfA A) → peval v g = true
 
@@ -563,13 +563,13 @@ theorem Good.trans (hG : Good v S A) {t u w : Term} (ht : t ∈ qfT S) (hu : u �
     v (Formula.eq t w) = true :=
   peval_mp (peval_mp (hG.inst _ (trans_mem ht hu hw)) h1) h2
 
-theorem Good.func (hG : Good v S A) {f : String} {pre post : List Term} {a b : Term}
+theorem Good.func (hG : Good v S A) {f : List Char} {pre post : List Term} {a b : Term}
     (hx : Term.func f (pre ++ a :: post) ∈ qfT S) (hb : b ∈ qfT S)
     (h : v (Formula.eq a b) = true) :
     v (Formula.eq (Term.func f (pre ++ a :: post)) (Term.func f (pre ++ b :: post))) = true :=
   peval_mp (hG.inst _ (func_mem hx hb)) h
 
-theorem Good.atom (hG : Good v S A) {p : String} {pre post : List Term} {a b : Term}
+theorem Good.atom (hG : Good v S A) {p : List Char} {pre post : List Term} {a b : Term}
     (hx : Formula.atom p (pre ++ a :: post) ∈ qfA A) (hb : b ∈ qfT S)
     (h : v (Formula.eq a b) = true) (ha : v (Formula.atom p (pre ++ a :: post)) = true) :
     v (Formula.atom p (pre ++ b :: post)) = true :=
@@ -577,7 +577,7 @@ theorem Good.atom (hG : Good v S A) {p : String} {pre post : List Term} {a b : T
 
 /-- ⭐ La CADENA de funciones: de `xs ~ ys` punto a punto a `f(pre++xs) ≐ f(pre++ys)`, pasando
 por las mezclas (un argumento cada vez: `func` + `trans`). -/
-theorem chainF (hG : Good v S A) {f : String} :
+theorem chainF (hG : Good v S A) {f : List Char} :
     ∀ {xs ys : List Term}, Pw (fun x y => v (Formula.eq x y) = true) xs ys →
     (∀ y, y ∈ ys → y ∈ qfT S) →
     ∀ pre : List Term, (∀ zs, zs ∈ mixL xs ys → Term.func f (pre ++ zs) ∈ qfT S) →
@@ -601,7 +601,7 @@ theorem chainF (hG : Good v S A) {f : String} :
       exact hG.trans hA hB hC h1 h2
 
 /-- La CADENA de relaciones: lo mismo con `atom` (sin `trans`: basta encadenar implicaciones). -/
-theorem chainA (hG : Good v S A) {p : String} :
+theorem chainA (hG : Good v S A) {p : List Char} :
     ∀ {xs ys : List Term}, Pw (fun x y => v (Formula.eq x y) = true) xs ys →
     (∀ y, y ∈ ys → y ∈ qfT S) →
     ∀ pre : List Term, (∀ zs, zs ∈ mixL xs ys → Formula.atom p (pre ++ zs) ∈ qfA A) →
@@ -709,7 +709,7 @@ theorem evIs_S (hG : Good v S A) : ∀ (ts : List Term), (∀ t, t ∈ ts → t 
 end
 
 /-- La congruencia de relación sobre `A`, por `chainA` en los dos sentidos. -/
-theorem atom_congr (hG : Good v S A) {p : String} {xs ys : List Term}
+theorem atom_congr (hG : Good v S A) {p : List Char} {xs ys : List Term}
     (hx : Formula.atom p xs ∈ A) (hy : Formula.atom p ys ∈ A)
     (h : xs.map (cls v S) = ys.map (cls v S)) :
     v (Formula.atom p xs) = v (Formula.atom p ys) := by
@@ -844,8 +844,8 @@ end Decisor
 -- §8 · ⚠️ CONTROLES
 -- ============================================================
 
-private def ca : Term := Term.func "a" []
-private def cb : Term := Term.func "b" []
+private def ca : Term := Term.func ['a'] []
+private def cb : Term := Term.func ['b'] []
 
 -- ⭐ El certificado ACOTADO se comprueba POR CÓMPUTO: `[a≐b] ⟹ b≐a` sí; `[] ⟹ a≐b` no.
 example : qfCheck (implChain (qfInst [Formula.eq ca cb] (Formula.eq cb ca))
@@ -860,10 +860,10 @@ example : Not (([] : List Formula) ⊢₀ Formula.eq ca cb) :=
 
 -- ⛔ CONTROL: SIN las mezclas la cota es FALSA. `[a≐b, c≐d] ⟹ g(a,c) ≐ g(b,d)` es derivable, y
 -- `v0` satisface TODAS las instancias cuyos términos de igualdad están en `S` y refuta `φ`.
-private def cc : Term := Term.func "c" []
-private def cd : Term := Term.func "d" []
+private def cc : Term := Term.func ['c'] []
+private def cd : Term := Term.func ['d'] []
 private def Γx : List Formula := [Formula.eq ca cb, Formula.eq cc cd]
-private def φx : Formula := Formula.eq (Term.func "g" [ca, cc]) (Term.func "g" [cb, cd])
+private def φx : Formula := Formula.eq (Term.func ['g'] [ca, cc]) (Term.func ['g'] [cb, cd])
 
 private def eqTerms (g : Formula) : List Term :=
   (patoms g).flatMap (fun a => match a with | .eq x y => [x, y] | _ => [])

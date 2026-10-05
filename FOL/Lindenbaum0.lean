@@ -87,7 +87,8 @@ en `Prop`, sin decidirlo. ⇒ Ningún `Classical.choice` de este árbol «es el 
 ⚠️ Los demás `Classical.choice` que llegaban aquí, desde abajo o de este mismo módulo
 (`Exists.choose` en `HenkinLimit0.bnd`, el tercio excluso de `Fresh0.cst_bound_sym`,
 `Rename.invOf`, el `filter` bajo `open Classical` de `henkin_step_consistent₀` y de
-`derivesSet0_intro_impl`, la `ReflBEq String` de `Fresh0.cst_zero_ne`/`cst_ne_shift`, la
+`derivesSet0_intro_impl`, la `ReflBEq String` de `Fresh0.cst_zero_ne`/`cst_ne_shift` —los
+símbolos eran entonces `String`; desde D7, 2026‑10‑05, `List Char`—, la
 sobreyectividad de `FOL.Enumeration`) **tampoco eran necesarios**, y se retiraron el mismo día.
 
 🔑 *Un `Classical.choice` explicado vale más que uno escondido; uno retirado, más que uno explicado.*
@@ -107,6 +108,9 @@ Medido el 2026‑09‑27 sobre el entorno compilado (`auditoria/constructividad-
 
 **Cero axiomas del proyecto**, y ninguna declaración `noncomputable` (hasta el 2026‑09‑27 lo era
 `LindenbaumStep`).
+
+(✏️ 2026‑10‑05: tras D7 —ADR‑129 de RPP— se midieron de nuevo `derivesSet0_intro_impl`,
+`lindenbaum_lemma₀`, `henkin_completion₀` y `max_cons_contains`, y no cambian.)
 -/
 
 namespace FOL.Lindenbaum0

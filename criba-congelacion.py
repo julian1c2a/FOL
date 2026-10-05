@@ -67,7 +67,7 @@ root_map = {
     'liftFormula': 'FOL/FOL.lean', 'neg': 'FOL/FOL.lean', 'substFormula': 'FOL/FOL.lean',
     'top': 'FOL/FOL.lean', 'FOL.derive_atom_congr': 'FOL/Theorems/Eq.lean',
     'FOL.derive_eq_func_congr': 'FOL/Theorems/Eq.lean', 'FOL.substTerm_liftTerm': 'FOL/Theorems/Eq.lean',
-    'FOL.instFreshSymListChar': 'FOL/SymClasses.lean',
+    # D7 (2026-10-05): la instancia de medida de SymClasses se retiró; la de `List Char` es FOL.Fresh0.instFreshSymListChar.
 }
 ns_map = {'FOL.Metamath.Enumeration.': 'FOL/Enumeration.lean',
           'FOL.Metamath.Semantics.': 'FOL/Semantics.lean',

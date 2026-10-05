@@ -186,7 +186,7 @@ theorem split_map {Γ Γ₁ Γ₂ : List Formula} (k : Nat) (h : Split Γ Γ₁ 
 -- §3 · los símbolos de RELACIÓN
 -- ══════════════════════════════════════════════════════════════════════════
 
-def predF (p : String) : Formula → Prop
+def predF (p : List Char) : Formula → Prop
   | .bottom => False
   | .atom q _ => q = p
   | .eq _ _ => False
@@ -196,7 +196,7 @@ def predF (p : String) : Formula → Prop
   | .forall a => predF p a
   | .ex a => predF p a
 
-theorem predF_lift (p : String) : ∀ (f : Formula) (k : Nat),
+theorem predF_lift (p : List Char) : ∀ (f : Formula) (k : Nat),
     Iff (predF p (liftFormula k f)) (predF p f)
   | .bottom, _ => Iff.rfl
   | .atom _ _, _ => Iff.rfl
@@ -207,7 +207,7 @@ theorem predF_lift (p : String) : ∀ (f : Formula) (k : Nat),
   | .forall a, k => predF_lift p a (k + 1)
   | .ex a, k => predF_lift p a (k + 1)
 
-theorem predF_subst (p : String) : ∀ (f : Formula) (k : Nat) (t : Term),
+theorem predF_subst (p : List Char) : ∀ (f : Formula) (k : Nat) (t : Term),
     Iff (predF p (substFormula k t f)) (predF p f)
   | .bottom, _, _ => Iff.rfl
   | .atom _ _, _, _ => Iff.rfl
@@ -799,19 +799,19 @@ theorem craigₚ {A B : Formula} (h : LKp [A] [B]) :
 
 /-- `LKp` demuestra algo: `P ∧ Q ⊢ P ∨ R`. -/
 theorem lkp_example :
-    LKp [Formula.and (Formula.atom "P" []) (Formula.atom "Q" [])]
-        [Formula.or (Formula.atom "P" []) (Formula.atom "R" [])] :=
-  LKp.andL [] _ (Formula.atom "P" []) (Formula.atom "Q" [])
-    (LKp.orR _ [] (Formula.atom "P" []) (Formula.atom "R" [])
-      (LKp.ax _ _ (Formula.atom "P" []) (List.Mem.head _) (List.Mem.head _)))
+    LKp [Formula.and (Formula.atom ['P'] []) (Formula.atom ['Q'] [])]
+        [Formula.or (Formula.atom ['P'] []) (Formula.atom ['R'] [])] :=
+  LKp.andL [] _ (Formula.atom ['P'] []) (Formula.atom ['Q'] [])
+    (LKp.orR _ [] (Formula.atom ['P'] []) (Formula.atom ['R'] [])
+      (LKp.ax _ _ (Formula.atom ['P'] []) (List.Mem.head _) (List.Mem.head _)))
 
 /-- ⭐ Y `craigₚ` se aplica a ello: hay interpolante para `P ∧ Q ⊢ P ∨ R`, y su único predicado
 posible es `P` — el común a los dos lados. -/
 theorem craig_example :
-    ∃ C, And (LKp [Formula.and (Formula.atom "P" []) (Formula.atom "Q" [])] [C])
-         (And (LKp [C] [Formula.or (Formula.atom "P" []) (Formula.atom "R" [])])
-         (And (PredSub C [Formula.and (Formula.atom "P" []) (Formula.atom "Q" [])])
-              (PredSub C [Formula.or (Formula.atom "P" []) (Formula.atom "R" [])]))) :=
+    ∃ C, And (LKp [Formula.and (Formula.atom ['P'] []) (Formula.atom ['Q'] [])] [C])
+         (And (LKp [C] [Formula.or (Formula.atom ['P'] []) (Formula.atom ['R'] [])])
+         (And (PredSub C [Formula.and (Formula.atom ['P'] []) (Formula.atom ['Q'] [])])
+              (PredSub C [Formula.or (Formula.atom ['P'] []) (Formula.atom ['R'] [])]))) :=
   craigₚ lkp_example
 
 /-- 🏁 **La forma reconocible de Craig**: de `A ⊢ B` salen `⊢ A ⇒ C` y `⊢ C ⇒ B`. -/

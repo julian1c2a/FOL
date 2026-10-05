@@ -58,7 +58,8 @@ valen». El primero obliga a leer los nombres; el segundo, no.*
 
 ⚠️ **Rectificación, 2026‑09‑27** (auditoría de constructividad). `bnd` ya no es `Exists.choose`: se
 CALCULA por recursión sobre la fórmula —el mayor `utf8ByteSize` de sus símbolos de función—, y
-`bnd_spec` sale de contar bytes (`cst m` ocupa `m + 1`). O sea: la función `Formula → Nat` acabó
+`bnd_spec` sale de contar bytes (`cst m` ocupa `m + 1`). (✏️ 2026‑10‑05, D7: hoy la mayor LONGITUD, y
+`bnd_spec` cuenta caracteres: `Fresh0.cst_length`.) O sea: la función `Formula → Nat` acabó
 escribiéndose, pero por otra razón —quitar el `Classical.choice`—, y con el enunciado de COTA, no de
 índice. El 🔑 de arriba sigue en pie: `bnd` **mide** los nombres, no los **lee** (no invierte `cst`
 ni averigua qué `cst m` aparece).
@@ -69,9 +70,10 @@ ni averigua qué `cst m` aparece).
    símbolos, y la **sustitución** sólo puede meter los del término sustituido. De ahí
    `not_occurs_henkinAx`: una constante distinta del testigo, y fresca en `A`, es fresca en
    `henkinAx d A`. ⭐ **Net‑0 puro** — no depende de ningún axioma.
-2. **§2** — la cota `bnd`, **calculada** por recursión (`bndTerm`, `bndTerms`: el mayor
-   `utf8ByteSize` de un símbolo de función), su especificación `bnd_spec` (vía `cst_ne_of_size`:
-   una cadena de `k` bytes no es `cst m` para ningún `m ≥ k`), y `hidx`, con las dos propiedades.
+2. **§2** — la cota `bnd`, **calculada** por recursión (`bndTerm`, `bndTerms`: la mayor longitud
+   de un símbolo de función; hasta D7, el mayor `utf8ByteSize`), su especificación `bnd_spec` (vía
+   `cst_ne_of_size`: un símbolo de `k` caracteres no es `cst m` para ningún `m ≥ k`), y `hidx`, con
+   las dos propiedades.
    ⭐ Desde el 2026‑09‑27 `bnd`, `hidx` y `hen` son **computables** (hasta entonces
    `noncomputable`): `hidx 5` se evalúa con `#eval`.
 3. **§3** — la cadena, su monotonía, su frescura y su **consistencia**, que es `henkin_step_consistent₀`
@@ -97,6 +99,12 @@ ni averigua qué `cst m` aparece).
 
 **Cero axiomas del proyecto.**
 
+✏️ 2026‑10‑05: esa medición es la de `String`. Tras D7 (ADR‑129 de RPP) se midieron de nuevo las
+filas de `../ROBINSON_PlusPlus/check-footprints.bash`: `not_occurs_henkinAx`, ningún axioma;
+`hen_consistent`, `henLimit_consistent₀` y `henLimit_witness`, `[propext, Quot.sound]`. Sin
+`Classical.choice`, como antes. Lo que no tiene fila lleva la cifra del 2026‑09‑27, sin volver a
+medirla con `List Char`.
+
 ⚠️⚠️ **Hasta el 2026‑09‑27 esta sección decía** `[propext, Classical.choice, Quot.sound]`, con el
 `Classical.choice` entrando «por `Exists.choose` en `bnd` (§2), por `String` (§7 del plan) y por lo
 que ya traen `shiftTheory_consistent₀` (`Rename.invOf`) y `henkin_step_consistent₀`», y que «no es
@@ -104,7 +112,8 @@ el de la completitud — ése es el `if IsConsistent …` de Lindenbaum». Ningu
 necesaria, y se retiraron: `bnd` calculada (§2); `Fresh0.unshift` en lugar de `invOf`; el
 `ctx_split` de `FOL.Henkin0` en lugar del `filter` bajo `open Classical`; `of_decide_eq_false` en
 `Fresh0.cst_zero_ne`/`cst_ne_shift` y `String.exists_eq_ofList` en la sobreyectividad de
-`FOL.Enumeration` (lo de `String` era DECODIFICAR UTF‑8). Y la segunda mitad también era falsa: la
+`FOL.Enumeration` (lo de `String` era DECODIFICAR UTF‑8; ✏️ 2026‑10‑05: desde D7 no hay `String`, y
+la sobreyectividad es `natToSym_surj`). Y la segunda mitad también era falsa: la
 etapa de Lindenbaum ya no decide nada — ver `FOL.Lindenbaum0`.
 -/
 
@@ -124,7 +133,7 @@ local notation:50 S " ⊢₀* " f => DerivesSet₀ S f
 
 -- ⭐ El lift mueve **índices**, no **símbolos**.
 mutual
-theorem occursTerm_lift (c : String) : ∀ (k : Nat) (t : Term),
+theorem occursTerm_lift (c : List Char) : ∀ (k : Nat) (t : Term),
     occursTerm c (liftTerm k t) → occursTerm c t
   | _, .var _ => by
       simp only [liftTerm]
@@ -132,7 +141,7 @@ theorem occursTerm_lift (c : String) : ∀ (k : Nat) (t : Term),
   | k, .func _ ts => fun h =>
       h.elim Or.inl (fun ht => Or.inr (occursTerms_lift c k ts ht))
 
-theorem occursTerms_lift (c : String) : ∀ (k : Nat) (ts : List Term),
+theorem occursTerms_lift (c : List Char) : ∀ (k : Nat) (ts : List Term),
     occursTerms c (liftTerms k ts) → occursTerms c ts
   | _, [] => fun h => h
   | k, t :: ts => fun h =>
@@ -142,7 +151,7 @@ end
 
 -- ⭐ Sustituir sólo puede introducir los símbolos del término que se sustituye.
 mutual
-theorem not_occurs_substTerm (c : String) : ∀ (v : Nat) (s t : Term),
+theorem not_occurs_substTerm (c : List Char) : ∀ (v : Nat) (s t : Term),
     Not (occursTerm c s) → Not (occursTerm c t) → Not (occursTerm c (substTerm v s t))
   | _, _, .var _ => by
       intro hs _
@@ -156,7 +165,7 @@ theorem not_occurs_substTerm (c : String) : ∀ (v : Nat) (s t : Term),
       | inl he => exact ht (Or.inl he)
       | inr hts => exact not_occurs_substTerms c v s ts hs (fun k => ht (Or.inr k)) hts
 
-theorem not_occurs_substTerms (c : String) : ∀ (v : Nat) (s : Term) (ts : List Term),
+theorem not_occurs_substTerms (c : List Char) : ∀ (v : Nat) (s : Term) (ts : List Term),
     Not (occursTerm c s) → Not (occursTerms c ts) → Not (occursTerms c (substTerms v s ts))
   | _, _, [] => fun _ _ h => h
   | v, s, t :: ts => by
@@ -166,7 +175,7 @@ theorem not_occurs_substTerms (c : String) : ∀ (v : Nat) (s : Term) (ts : List
       | inr h2 => exact not_occurs_substTerms c v s ts hs (fun k => hts (Or.inr k)) h2
 end
 
-theorem not_occurs_substFormula (c : String) : ∀ (f : Formula) (v : Nat) (s : Term),
+theorem not_occurs_substFormula (c : List Char) : ∀ (f : Formula) (v : Nat) (s : Term),
     Not (occursTerm c s) → Not (occursFormula c f) →
     Not (occursFormula c (substFormula v s f)) := by
   intro f
@@ -195,7 +204,7 @@ theorem not_occurs_substFormula (c : String) : ∀ (f : Formula) (v : Nat) (s : 
 
 /-- ⭐ **Lo que la cadena necesita de los axiomas ya añadidos**: una constante distinta del
 testigo y fresca en `A` es fresca en `henkinAx d A`. **Net‑0 puro.** -/
-theorem not_occurs_henkinAx {c d : String} {A : Formula}
+theorem not_occurs_henkinAx {c d : List Char} {A : Formula}
     (hcd : c ≠ d) (hA : Not (occursFormula c A)) : Not (occursFormula c (henkinAx d A)) := by
   intro h
   cases h with
@@ -211,26 +220,27 @@ theorem not_occurs_henkinAx {c d : String} {A : Formula}
 -- §2 · El índice del testigo de cada turno
 -- ============================================================
 
-/-- Una cadena de `k` bytes no es `cst m` para ningún `m ≥ k`: sólo contar bytes
-(`Fresh0.cst_utf8ByteSize`). -/
-theorem cst_ne_of_size {s : String} {m : Nat} (hm : s.utf8ByteSize ≤ m) : cst m ≠ s := by
+/-- Un símbolo de `k` caracteres no es `cst m` para ningún `m ≥ k`: sólo contar caracteres
+(`Fresh0.cst_length`; hasta D7, 2026‑10‑05, bytes). -/
+theorem cst_ne_of_size {s : List Char} {m : Nat} (hm : s.length ≤ m) : cst m ≠ s := by
   intro h
-  have h1 : m + 1 = s.utf8ByteSize :=
-    (cst_utf8ByteSize m).symm.trans (congrArg String.utf8ByteSize h)
+  have h1 : m + 1 = s.length :=
+    (cst_length m).symm.trans (congrArg List.length h)
   exact Nat.not_succ_le_self m (Nat.le_trans (Nat.le_of_eq h1) hm)
 
 mutual
-/-- El mayor tamaño en bytes de un símbolo de función del término. -/
+/-- La mayor longitud de un símbolo de función del término (hasta D7, en bytes). -/
 def bndTerm : Term → Nat
   | .var _ => 0
-  | .func s ts => max s.utf8ByteSize (bndTerms ts)
+  | .func s ts => max s.length (bndTerms ts)
 
 def bndTerms : List Term → Nat
   | [] => 0
   | t :: ts => max (bndTerm t) (bndTerms ts)
 end
 
-/-- ⭐ **La cota, CALCULADA**: el mayor tamaño en bytes de un símbolo de función de la fórmula. A
+/-- ⭐ **La cota, CALCULADA**: la mayor longitud de un símbolo de función de la fórmula (hasta D7,
+2026‑10‑05, el mayor tamaño en bytes). A
 partir de ahí ninguna `cst m` aparece (`bnd_spec`). Hasta el 2026‑09‑27 era
 `(cst_bound_formula f).choose`, `noncomputable` y con `Classical.choice`; su docstring decía que
 «no es evitable con este enunciado»: lo era (auditoría de constructividad). -/
@@ -392,7 +402,7 @@ theorem henLimit_consistent₀ {S : Formula → Prop} (hCons : IsConsistent₀ S
 /-- ⭐⭐ **Y tiene testigo para TODA fórmula** — aquí es donde paga la enumeración construida en
 `FOL.Enumeration` (ADR‑030). -/
 theorem henLimit_witness (S : Formula → Prop) (A : Formula) :
-    ∃ c : String, henLimit S (henkinAx c A) := by
+    ∃ c : List Char, henLimit S (henkinAx c A) := by
   obtain ⟨n, hn⟩ := natToFormula_surj A
   exact ⟨cst (hidx n), n + 1, Or.inr (by rw [hn])⟩
 

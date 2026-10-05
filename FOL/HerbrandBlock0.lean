@@ -203,7 +203,7 @@ theorem herbrand_block_iff (h : HerbrandExtractionBlock₀) {n : Nat} {φ : Form
 -- §5 · ⚠️ CONTROL: un certificado de BLOQUE concreto, y de los que llevan igualdad
 -- ============================================================
 
-private def c : Term := Term.func "c" []
+private def c : Term := Term.func ['c'] []
 
 /-- ⭐⭐ `∃x ∃y (x ≐ y)`, con la tupla `[c, c]`. Su instancia es `c ≐ c`, que **no** es tautología
 proposicional —es un átomo— pero **sí** es un axioma de la igualdad: por eso el certificado lleva

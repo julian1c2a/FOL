@@ -228,11 +228,11 @@ def eqSymmAx (t u : Term) : Formula := Formula.impl (Formula.eq t u) (Formula.eq
 def eqTransAx (t u w : Term) : Formula :=
   Formula.impl (Formula.eq t u) (Formula.impl (Formula.eq u w) (Formula.eq t w))
 
-def eqFuncAx (f : String) (pre post : List Term) (a b : Term) : Formula :=
+def eqFuncAx (f : List Char) (pre post : List Term) (a b : Term) : Formula :=
   Formula.impl (Formula.eq a b)
     (Formula.eq (Term.func f (pre ++ a :: post)) (Term.func f (pre ++ b :: post)))
 
-def eqAtomAx (p : String) (pre post : List Term) (a b : Term) : Formula :=
+def eqAtomAx (p : List Char) (pre post : List Term) (a b : Term) : Formula :=
   Formula.impl (Formula.eq a b)
     (Formula.impl (Formula.atom p (pre ++ a :: post)) (Formula.atom p (pre ++ b :: post)))
 
@@ -242,8 +242,8 @@ inductive EqInstance : Formula → Prop where
   | refl (t : Term) : EqInstance (eqReflAx t)
   | symm (t u : Term) : EqInstance (eqSymmAx t u)
   | trans (t u w : Term) : EqInstance (eqTransAx t u w)
-  | func (f : String) (pre post : List Term) (a b : Term) : EqInstance (eqFuncAx f pre post a b)
-  | atom (p : String) (pre post : List Term) (a b : Term) : EqInstance (eqAtomAx p pre post a b)
+  | func (f : List Char) (pre post : List Term) (a b : Term) : EqInstance (eqFuncAx f pre post a b)
+  | atom (p : List Char) (pre post : List Term) (a b : Term) : EqInstance (eqAtomAx p pre post a b)
 
 /-- ⭐⭐ **Toda instancia admisible es DERIVABLE.** Aquí pagan `FOL.Eq0` y los dos constructores
 `refl`/`subst` de `Derives₀`. -/
@@ -334,8 +334,8 @@ theorem herbrand_iff (h3 : HerbrandExtraction₀) {φ : Formula} (hqf : QuantFre
 -- la parte proposicional se comprueba **por `rfl`** — que es el punto de toda la vía H: *un
 -- certificado finito y verificable*.
 
-private def Px : Formula := Formula.atom "P" [Term.var 0]
-private def c : Term := Term.func "c" []
+private def Px : Formula := Formula.atom ['P'] [Term.var 0]
+private def c : Term := Term.func ['c'] []
 
 /-- ⭐ **Caso puro**: `∃x (P(x) ∨ ¬P(x))`, con el testigo `c` y **sin** instancias ecuacionales. -/
 theorem ex_tercio : [] ⊢₀ Formula.ex (Formula.or Px (neg Px)) := by

@@ -22,19 +22,20 @@ import FOL.Rename
 Pieza (1) del ensamblaje de
 `../ROBINSON_PlusPlus/doc/PLAN-COMPLETITUD-FINITISTA.md` §6.4. `henkin_step_consistent₀`
 (ADR‑037) pide una constante `c` fresca **en la teoría y en la fórmula**; para una teoría
-`S : Formula → Prop` **arbitraria** no tiene por qué haber ninguna: `S` puede usar todas las
-cadenas. Este módulo fabrica el suministro por el camino de los libros (meter la teoría en un
+`S : Formula → Prop` **arbitraria** no tiene por qué haber ninguna: `S` puede usar todos los
+símbolos. Este módulo fabrica el suministro por el camino de los libros (meter la teoría en un
 sublenguaje) y, desde el 2026‑09‑27, **sin `Classical.choice`** (§Footprint).
 
 ## La construcción, en dos movimientos
 
-1. **Meter la teoría en un sublenguaje.** `shift s := "f" ++ s` renombra *todos* los símbolos de
+1. **Meter la teoría en un sublenguaje.** `shift s := 'f' :: s` renombra *todos* los símbolos de
    función. `shiftTheory S` es la imagen de `S`, y es **conservativa** en los dos sentidos
    (`derivesSet0_shift` / `derivesSet0_shift_inv`) y **equiconsistente**
    (`shiftTheory_consistent₀`). La vuelta mapea con `unshift`, la inversa GLOBAL de `shift`,
-   **calculada** sobre los bytes (§5).
-2. **Las constantes nuevas.** `cst 0 = "g"`, `cst (n+1) = "a" ++ cst n` — infinitas, inyectiva, y
+   **calculada**: quita el `'f'` de cabeza (§5; hasta D7, 2026‑10‑05, sobre los bytes de `String`).
+2. **Las constantes nuevas.** `cst 0 = ['g']`, `cst (n+1) = 'a' :: cst n` — infinitas, inyectiva, y
    **ninguna está en la imagen de `shift`** ⇒ `cst n` no aparece en ninguna fórmula desplazada.
+   (Los nombres de siempre, «g», «ag», «aag»…: con `String`, hasta D7, eran `"g"` y `"a" ++ cst n`.)
 
 ## ⭐ Y el punto que §6.4 marcaba en rojo
 
@@ -47,9 +48,10 @@ sino «**a partir de cierto índice, todas son frescas**»:
 
     cst_bound_formula : ∀ f, ∃ N, ∀ m ≥ N, ¬ occursFormula (cst m) f
 
-y eso sale por inducción estructural con `max`, sin invertir `cst` y sin tocar `String.length`.
-El caso del **símbolo** —`∃ N, ∀ m ≥ N, cst m ≠ s`— se CALCULA: `N := s.utf8ByteSize`, porque
-`cst m` ocupa `m + 1` bytes (`cst_utf8ByteSize`). (Hasta el 2026‑09‑27 se decidía por
+y eso sale por inducción estructural con `max`, sin invertir `cst`.
+El caso del **símbolo** —`∃ N, ∀ m ≥ N, cst m ≠ s`— se CALCULA: `N := s.length`, porque
+`cst m` tiene `m + 1` caracteres (`cst_length`; hasta D7, 2026‑10‑05, `s.utf8ByteSize` y
+`cst_utf8ByteSize`, en bytes). (Hasta el 2026‑09‑27 se decidía por
 `Classical.em (∃ k, cst k = s)` más la inyectividad de `cst`, y esta cabecera lo llamaba «el único
 punto clásico»: no hacía falta.)
 
@@ -65,15 +67,24 @@ de `bnd f`, todas frescas), no `cst_bound_formula`.
 
 ⭐ **Ninguna constante de `FOL.Fresh0` lleva `Classical.choice`** (auditoría de constructividad,
 2026‑09‑27, medido sobre el entorno compilado: `auditoria/constructividad-2026-09-27/despues/`).
-Lo que queda es la capa de bytes de `String`:
+
+✏️ **2026‑10‑05, D7 EJECUTADA (ADR‑129 de RPP).** Los símbolos son `List Char`, y la capa de bytes de
+`String` se fue con ellos: `valid_tail` y `shift_bytes`, retirados; `cst_utf8ByteSize`, hoy
+`cst_length`. Medido de nuevo (filas de `../ROBINSON_PlusPlus/check-footprints.bash`): la instancia
+`instFreshSymListChar` **no depende de ningún axioma**, y por tanto tampoco nada de lo que usa
+—`shift`, `cst`, `shift_inj`, `cst_inj`, `cst_ne_shift` y `cst_zero_ne`—; `cst_bound_sym`,
+`cst_bound_formula`, `derivesSet0_shift_inv`, `shiftTheory_consistent₀` y `exists_fresh`,
+`[propext, Quot.sound]`. Ninguna de las medidas lleva `Classical.choice`.
+
+La tabla es la del 2026‑09‑27, con `String`; lo que entonces quedaba era su capa de bytes:
 
 | footprint | constantes |
 |---|---|
-| `[propext]` | `shift`, `cst`, `cst_zero_ne`, `cst_ne_shift`, `shift_bytes`, `not_occurs_shiftTerm`/`Terms`/`Formula`, `shiftTheory`, `shiftTheory_fresh` |
-| `[propext, Quot.sound]` | `shift_inj`, `cst_inj`, `cst_utf8ByteSize`, `cst_bound_sym`/`term`/`terms`/`formula`/`list`, `valid_tail`, `unshift`, `unshift_shift`, `derivesSet0_shift`, `derivesSet0_shift_inv`, `shiftTheory_consistent₀`, `exists_fresh` y la instancia `FreshSym String` |
+| `[propext]` | `shift`, `cst`, `cst_zero_ne`, `cst_ne_shift`, `shift_bytes` (retirado), `not_occurs_shiftTerm`/`Terms`/`Formula`, `shiftTheory`, `shiftTheory_fresh` |
+| `[propext, Quot.sound]` | `shift_inj`, `cst_inj`, `cst_utf8ByteSize` (retirado; hoy `cst_length`), `cst_bound_sym`/`term`/`terms`/`formula`/`list`, `valid_tail` (retirado), `unshift`, `unshift_shift`, `derivesSet0_shift`, `derivesSet0_shift_inv`, `shiftTheory_consistent₀`, `exists_fresh` y la instancia `FreshSym String` (retirada; hoy `instFreshSymListChar`) |
 
-`propext` entra ya en `shift` y `cst`, que no usan más que literales y `++` de `String`: es el
-suelo del módulo. **Cero axiomas del proyecto.**
+`propext` entraba ya en `shift` y `cst`, que no usaban más que literales y `++` de `String`: era el
+suelo del módulo. Con `List Char` ese suelo no existe (ver arriba). **Cero axiomas del proyecto.**
 
 ⚠️⚠️ **Hasta el 2026‑09‑27 esta sección decía** que `Classical.choice` entraba «por tres vías
 distintas que conviene no confundir»: `Rename.invOf` en `derivesSet0_shift_inv`; «la matemática», el
@@ -82,14 +93,15 @@ arrastra choice», el muro de `../ROBINSON_PlusPlus/doc/PLAN-COMPLETITUD-FINITIS
 eran evitables, y se retiraron:
 
 * `Rename.invOf`, la inversa GLOBAL **elegida** → `unshift`, inversa GLOBAL **calculada** sobre los
-  bytes (§5). `invOf` ya no existe;
-* el tercio excluso de `cst_bound_sym` → la cota `s.utf8ByteSize` (§4);
+  bytes (§5; desde D7, un `match` sobre `List Char`). `invOf` ya no existe;
+* el tercio excluso de `cst_bound_sym` → la cota `s.utf8ByteSize` (§4; desde D7, `s.length`);
 * `String` → el choice no venía de descomponer, sino de DECODIFICAR UTF‑8 (una prueba de
   `BitVec`/`Nat` dentro del decodificador del núcleo, v4.31): aquí, por la `ReflBEq String` que
   `not_eq_of_beq_eq_false` sintetizaba a través de `String.instOrd` en `cst_zero_ne`/`cst_ne_shift`.
-  Con `of_decide_eq_false` (`String.decEq`) miden `[propext]`. `String.decEq`,
-  `String.append_right_inj` y `shift_inj` nunca lo llevaron, y `unshift` DESCOMPONE un `String` —por
-  bytes— sin él.
+  Con `of_decide_eq_false` (`String.decEq`) medían `[propext]`. `String.decEq`,
+  `String.append_right_inj` y `shift_inj` nunca lo llevaron, y `unshift` DESCOMPONÍA un `String`
+  —por bytes— sin él. (✏️ 2026‑10‑05: desde D7 no hay `String`; `cst_zero_ne`/`cst_ne_shift` siguen
+  con `of_decide_eq_false`, sobre `List Char`, y no dependen de ningún axioma.)
 
 ⚠️ Y el `Classical.choice` de la completitud tampoco es «el `if IsConsistent …` de Lindenbaum», como
 decía esta sección: la etapa ya no decide nada. Ver `FOL.Lindenbaum0`, «Dónde está, y dónde NO está,
@@ -108,35 +120,32 @@ local notation:50 S " ⊢₀* " f => DerivesSet₀ S f
 -- §1 · El desplazamiento al sublenguaje
 -- ============================================================
 
-/-- Renombra **todo** símbolo de función `s` como `"f" ++ s`. ⚠️ Los símbolos de RELACIÓN no se
+/-- Renombra **todo** símbolo de función `s` como `'f' :: s`. ⚠️ Los símbolos de RELACIÓN no se
 tocan (`renameFormula` no los toca): no hacen falta testigos para ellos. -/
-def shift (s : String) : String := "f" ++ s
+def shift (s : List Char) : List Char := 'f' :: s
 
-/-- ⭐ Una línea, porque `String.append_right_inj` **existe** en el núcleo. Medido en
-`../ROBINSON_PlusPlus/sondeos/NombresFrescosMedicion.lean`. -/
-theorem shift_inj : ∀ s t : String, shift s = shift t → s = t :=
-  fun _ _ h => (String.append_right_inj "f").mp h
+/-- Una línea: `shift` es un `cons`, y los constructores son inyectivos (D7, 2026‑10‑05: antes
+`String.append_right_inj`). -/
+theorem shift_inj : ∀ s t : List Char, shift s = shift t → s = t :=
+  fun _ _ h => (List.cons.inj h).2
 
 -- ============================================================
 -- §2 · La familia infinita de constantes nuevas
 -- ============================================================
 
-/-- `"g"`, `"ag"`, `"aag"`, … Infinitas, e **inyectiva**. -/
-def cst : Nat → String
-  | 0 => "g"
-  | n + 1 => "a" ++ cst n
+/-- `['g']`, `['a', 'g']`, `['a', 'a', 'g']`, … Infinitas, e **inyectiva**. -/
+def cst : Nat → List Char
+  | 0 => ['g']
+  | n + 1 => 'a' :: cst n
 
 /-- ⚠️ `of_decide_eq_false rfl` con variables libres **parece imposible** y no lo es: la igualdad
-decidible de `String` compara byte a byte **cortocircuitando** en el primero que difiere, y aquí ese
-byte es el del literal. Verificado con control adversarial (el análogo FALSO **no compila**).
-⛔ No `not_eq_of_beq_eq_false`: su `ReflBEq String` se sintetiza a través de `String.instOrd`, que en
-v4.31 arrastra `Classical.choice` (decodifica UTF‑8); `decide` usa `String.decEq`, sin axiomas
-(auditoría de constructividad, 2026‑09‑27). -/
+decidible de `List Char` compara carácter a carácter **cortocircuitando** en el primero que difiere,
+y aquí ese carácter es el del literal. (Con `String`, hasta D7, era byte a byte.) -/
 theorem cst_zero_ne (n : Nat) : cst 0 ≠ cst (n + 1) := of_decide_eq_false rfl
 
 /-- ⭐⭐ **Ninguna constante nueva está en la imagen del desplazamiento.** Es lo único que hay que
 saber de los nombres: todo lo demás se deduce. -/
-theorem cst_ne_shift : ∀ (n : Nat) (s : String), cst n ≠ shift s
+theorem cst_ne_shift : ∀ (n : Nat) (s : List Char), cst n ≠ shift s
   | 0, _ => of_decide_eq_false rfl
   | _ + 1, _ => of_decide_eq_false rfl
 
@@ -144,13 +153,13 @@ theorem cst_inj : ∀ m n : Nat, cst m = cst n → m = n
   | 0, 0, _ => rfl
   | 0, _ + 1, h => absurd h (cst_zero_ne _)
   | _ + 1, 0, h => absurd h.symm (cst_zero_ne _)
-  | m + 1, n + 1, h => congrArg (· + 1) (cst_inj m n ((String.append_right_inj "a").mp h))
+  | m + 1, n + 1, h => congrArg (· + 1) (cst_inj m n (List.cons.inj h).2)
 
-/-- ⭐ **La instancia**: `String` satisface `FOL.FreshSym` con los cinco nombres de arriba
+/-- ⭐ **La instancia**: `List Char` satisface `FOL.FreshSym` con los cinco nombres de arriba
 (ADR-069). ⛔ Las seis declaraciones **NO se retiran**: `HenkinLimit0`, `Lindenbaum0` y
 `Canonical0` usan `cst`, `shift` y `shiftTheory` **desnudos** en una docena de sitios, y
 retirarlas movería contenido bajo teoremas ya publicados. La instancia se añade **al lado**. -/
-instance : FOL.FreshSym String where
+instance : FOL.FreshSym (List Char) where
   shift := shift
   cst := cst
   shift_inj := shift_inj
@@ -196,26 +205,21 @@ theorem not_occurs_shiftFormula (n : Nat) : ∀ f : Formula,
 -- §4 · ⭐⭐ A partir de cierto índice, TODAS son frescas
 -- ============================================================
 
-/-- `cst m` ocupa `m + 1` bytes. ⭐ `utf8ByteSize` es de la capa de BYTES de `String`, sin axiomas;
-`String.length` decodifica UTF‑8 y en v4.31 arrastra `Classical.choice`. -/
-theorem cst_utf8ByteSize : ∀ m : Nat, (cst m).utf8ByteSize = m + 1
+/-- `cst m` tiene `m + 1` caracteres (D7, 2026‑10‑05: antes `cst_utf8ByteSize`, en bytes). -/
+theorem cst_length : ∀ m : Nat, (cst m).length = m + 1
   | 0 => rfl
-  | m + 1 => by
-      show ("a" ++ cst m).utf8ByteSize = m + 1 + 1
-      rw [String.utf8ByteSize_append, cst_utf8ByteSize m]
-      show 1 + (m + 1) = m + 1 + 1
-      omega
+  | m + 1 => congrArg (· + 1) (cst_length m)
 
-/-- ⭐ **La cota se CALCULA**: a partir de `s.utf8ByteSize`, ninguna `cst m` es `s`, porque es más
-larga. Antes esto se probaba por tercio excluso sobre `∃ k, cst k = s` («el único paso clásico»);
-no hacía falta (auditoría de constructividad, 2026‑09‑27).
+/-- ⭐ **La cota se CALCULA**: a partir de `s.length`, ninguna `cst m` es `s`, porque es más larga.
+Antes esto se probaba por tercio excluso sobre `∃ k, cst k = s` («el único paso clásico»); no hacía
+falta (auditoría de constructividad, 2026‑09‑27).
 
 🔑 Éste es el lema que sustituyó a la función `Formula → Nat` de §6.4; desde el 2026‑09‑27 la
 iteración usa `HenkinLimit0.bnd_spec`. -/
-theorem cst_bound_sym (s : String) : ∃ N, ∀ m, N ≤ m → cst m ≠ s :=
-  ⟨s.utf8ByteSize, fun m hm he => by
-    have h := congrArg String.utf8ByteSize he
-    rw [cst_utf8ByteSize] at h
+theorem cst_bound_sym (s : List Char) : ∃ N, ∀ m, N ≤ m → cst m ≠ s :=
+  ⟨s.length, fun m hm he => by
+    have h := congrArg List.length he
+    rw [cst_length] at h
     omega⟩
 
 mutual
@@ -282,69 +286,16 @@ theorem cst_bound_list : ∀ l : List Formula,
 -- §5 · La teoría desplazada
 -- ============================================================
 
--- ── La inversa GLOBAL de `shift`, calculada (sin `Classical.choice`) ──────────────────────
--- Se trabaja en BYTES: `String.ofByteArray` y `ByteArray` no llevan axiomas, y la validez UTF‑8 de
--- la cola se DEMUESTRA (no se decide) a partir de la de la cadena, porque el primer byte de
--- `shift s = "f" ++ s` es ASCII (102). ⛔ Las API de `String` que decodifican (`drop`,
--- `dropPrefix?`, `isPrefixOf`, `fromUTF8?`) arrastran `Classical.choice` en v4.31.
+-- ── La inversa GLOBAL de `shift` ──────────────────────────────────────────────────────────
+-- D7 (2026‑10‑05): con `List Char`, quitar el `'f'` de cabeza es un `match`; la capa de bytes de
+-- `String` (`valid_tail`, `shift_bytes`) ya no hace falta y se retira.
 
-theorem valid_tail {x : String} (h : x.toByteArray.data.toList.head? = some 102) :
-    ByteArray.IsValidUTF8 ⟨x.toByteArray.data.toList.tail.toArray⟩ := by
-  obtain ⟨m, hm⟩ := x.isValidUTF8
-  have hl : x.toByteArray.data.toList = m.flatMap String.utf8EncodeChar := by
-    rw [hm, List.utf8Encode, List.toList_data_toByteArray]
-  rw [hl] at h ⊢
-  cases m with
-  | nil => exact absurd h (fun h' => by cases h')
-  | cons c m' =>
-    rw [List.flatMap_cons] at h ⊢
-    have hv : c.val.toNat ≤ 0x7f := by
-      apply Nat.le_of_not_lt
-      intro hlt
-      have hlt' : Not (c.val.toNat ≤ 0x7f) := Nat.not_le_of_lt hlt
-      simp only [String.utf8EncodeChar, if_neg hlt'] at h
-      by_cases h2 : c.val.toNat ≤ 0x7ff
-      · rw [if_pos h2] at h
-        have h3 := congrArg UInt8.toNat (Option.some.inj h)
-        rw [UInt8.toNat_ofNat'] at h3
-        exact absurd h3 (by show Not (_ = 102); omega)
-      · rw [if_neg h2] at h
-        by_cases h4 : c.val.toNat ≤ 0xffff
-        · rw [if_pos h4] at h
-          have h3 := congrArg UInt8.toNat (Option.some.inj h)
-          rw [UInt8.toNat_ofNat'] at h3
-          exact absurd h3 (by show Not (_ = 102); omega)
-        · rw [if_neg h4] at h
-          have h3 := congrArg UInt8.toNat (Option.some.inj h)
-          rw [UInt8.toNat_ofNat'] at h3
-          exact absurd h3 (by show Not (_ = 102); omega)
-    simp only [String.utf8EncodeChar, if_pos hv]
-    have e : (m'.flatMap String.utf8EncodeChar).toByteArray.data =
-        (m'.flatMap String.utf8EncodeChar).toArray := List.data_toByteArray
-    exact ⟨m', by rw [List.utf8Encode]; exact congrArg ByteArray.mk e.symm⟩
+/-- ⭐ **La inversa global de `shift`**: quita el `'f'` de cabeza; lo demás lo deja como está. -/
+def unshift : List Char → List Char
+  | 'f' :: t => t
+  | x => x
 
-/-- ⭐ **La inversa global de `shift`**, computable y sin elección: quita el byte `'f'` de cabeza. -/
-def unshift (x : String) : String :=
-  if h : x.toByteArray.data.toList.head? = some 102 then
-    String.ofByteArray ⟨x.toByteArray.data.toList.tail.toArray⟩ (valid_tail h)
-  else x
-
-theorem shift_bytes (s : String) :
-    (shift s).toByteArray.data.toList = 102 :: s.toByteArray.data.toList := by
-  show ("f" ++ s).toByteArray.data.toList = _
-  rw [String.toByteArray_append, ByteArray.toList_data_append]
-  rfl
-
-theorem unshift_shift (s : String) : unshift (shift s) = s := by
-  apply String.toByteArray_inj.mp
-  unfold unshift
-  split
-  · show ByteArray.mk (shift s).toByteArray.data.toList.tail.toArray = s.toByteArray
-    rw [shift_bytes]
-    show ByteArray.mk s.toByteArray.data.toList.toArray = s.toByteArray
-    rw [Array.toArray_toList]
-  · rename_i hne
-    exact absurd (by rw [shift_bytes]; rfl) hne
+theorem unshift_shift (s : List Char) : unshift (shift s) = s := rfl
 
 /-- La imagen de `S` por el desplazamiento. ⚠️ Se enuncia como imagen (`∃ g, S g ∧ …`) y no como
 preimagen: así la frescura de `cst n` es inmediata (§3) y la conservatividad se obtiene
@@ -405,7 +356,7 @@ de Henkin ya añadidos, y la fórmula del turno.
 `cst_bound_formula` y, desde el 2026‑09‑27, `HenkinLimit0.bnd_spec`), y dejó de necesitar
 la función «mayor índice usado». -/
 theorem exists_fresh (S : Formula → Prop) (extra : List Formula) (A : Formula) :
-    ∃ c : String, And (∀ g, shiftTheory S g → Not (occursFormula c g))
+    ∃ c : List Char, And (∀ g, shiftTheory S g → Not (occursFormula c g))
       (And (∀ g, g ∈ extra → Not (occursFormula c g)) (Not (occursFormula c A))) := by
   obtain ⟨N1, h1⟩ := cst_bound_list extra
   obtain ⟨N2, h2⟩ := cst_bound_formula A

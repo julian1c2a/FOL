@@ -29,9 +29,10 @@ Aquí está la instancia real, y es **net‑0 pura**: `#print axioms` no imprime
 
 ## ⚠️ Por qué está escrita a mano
 
-⛔ **`deriving instance DecidableEq for Term` NO funciona** (medido): `Term.func : String → List
-Term → Term` es un inductivo **anidado**, y ninguno de los *deriving handlers* de v4.31 se le
-aplica. Hay que escribir la recursión mutua `Term` / `List Term`.
+⛔ **`deriving instance DecidableEq for Term` NO funciona** (medido con los símbolos aún en
+`String`, antes de D7): `Term.func : List Char → List Term → Term` es un inductivo **anidado**, y
+ninguno de los *deriving handlers* de v4.31 se le aplica. Hay que escribir la recursión mutua
+`Term` / `List Term`.
 
 ⭐ En cambio **`Formula` sí se deriva**, una vez existe la de `Term`: sus ocurrencias recursivas
 son directas y la única anidada es `List Term`, que ya tiene instancia.
@@ -48,6 +49,9 @@ El texto anterior era:
     decide (Term.var 1 = Term.var 1) = true
     decide (Formula.atom "P" [#0] = Formula.atom "P" [#0]) = true
     decide (Formula.atom "P" [#0] = Formula.atom "Q" [#0]) = false
+
+(✏️ 2026‑10‑05: son de antes de D7, con símbolos `String`; desde D7 —ADR‑129 de RPP— el literal de
+símbolo es `['P']`.)
 
 ⇒ **la instancia SÍ reduce**, y por eso `FOL.Herbrand0.ptautCheck` —que la usa a través de
 `upd`— se evalúa en el kernel y un certificado de Herbrand se comprueba con `by rfl`.

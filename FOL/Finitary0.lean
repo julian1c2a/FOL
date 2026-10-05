@@ -442,7 +442,7 @@ theorem derives0_consistent_fin : Not (([] : List Formula) ⊢₀ Formula.bottom
 ⭐ Desde el 2026‑09‑27 lo consume `Inconsistencia.derives0_not_complete_fin`, con su gemelo
 `derives0_not_negP_fin` (valuación `true`): así la propiedad de disyunción cae sin
 `Classical.choice`. -/
-theorem derives0_not_P_fin : Not (([] : List Formula) ⊢₀ Formula.atom "P" []) := by
+theorem derives0_not_P_fin : Not (([] : List Formula) ⊢₀ Formula.atom ['P'] []) := by
   intro h
   have hc := FOL.NDtoLK0.ndToLK (FOL.Derives2.derives0_iff_derives2.mp h)
   rcases lkc_tval hc false

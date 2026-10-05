@@ -122,7 +122,7 @@ def absFormula {Sym : Type} [DecidableEq Sym] (c : Sym) (k : Nat) (f : FormulaG 
     FormulaG Sym :=
   absFormula' (fun s => s = c) k f
 
-theorem abs_neg (c : String) (k : Nat) (A : Formula) :
+theorem abs_neg (c : List Char) (k : Nat) (A : Formula) :
     absFormula c k (neg A) = neg (absFormula c k A) := rfl
 
 -- ============================================================
@@ -130,7 +130,7 @@ theorem abs_neg (c : String) (k : Nat) (A : Formula) :
 -- ============================================================
 
 mutual
-theorem absTerm'_lift (P : String → Prop) [DecidablePred P] : ∀ (j k : Nat) (_ : j ≤ k) (t : Term),
+theorem absTerm'_lift (P : List Char → Prop) [DecidablePred P] : ∀ (j k : Nat) (_ : j ≤ k) (t : Term),
     liftTerm j (absTerm' P k t) = absTerm' P (k + 1) (liftTerm j t) := by
   intro j k hjk t
   cases t with
@@ -153,7 +153,7 @@ theorem absTerm'_lift (P : String → Prop) [DecidablePred P] : ∀ (j k : Nat) 
           congr 1
           exact absTerms'_lift P j k hjk (u :: us)
 
-theorem absTerms'_lift (P : String → Prop) [DecidablePred P] :
+theorem absTerms'_lift (P : List Char → Prop) [DecidablePred P] :
     ∀ (j k : Nat) (_ : j ≤ k) (ts : List Term),
     liftTerms j (absTerms' P k ts) = absTerms' P (k + 1) (liftTerms j ts) := by
   intro j k hjk ts
@@ -164,7 +164,7 @@ theorem absTerms'_lift (P : String → Prop) [DecidablePred P] :
       exact ⟨absTerm'_lift P j k hjk t, absTerms'_lift P j k hjk ts'⟩
 end
 
-theorem absFormula'_lift (P : String → Prop) [DecidablePred P] :
+theorem absFormula'_lift (P : List Char → Prop) [DecidablePred P] :
     ∀ (f : Formula) (j k : Nat), j ≤ k →
     liftFormula j (absFormula' P k f) = absFormula' P (k + 1) (liftFormula j f) := by
   intro f
@@ -182,15 +182,15 @@ theorem absFormula'_lift (P : String → Prop) [DecidablePred P] :
       intro j k h
       simp only [absFormula', liftFormula, ih (j + 1) (k + 1) (by omega)]
 
-theorem absTerm_lift (c : String) : ∀ (j k : Nat) (_ : j ≤ k) (t : Term),
+theorem absTerm_lift (c : List Char) : ∀ (j k : Nat) (_ : j ≤ k) (t : Term),
     liftTerm j (absTerm c k t) = absTerm c (k + 1) (liftTerm j t) :=
   absTerm'_lift (fun s => s = c)
 
-theorem absTerms_lift (c : String) : ∀ (j k : Nat) (_ : j ≤ k) (ts : List Term),
+theorem absTerms_lift (c : List Char) : ∀ (j k : Nat) (_ : j ≤ k) (ts : List Term),
     liftTerms j (absTerms c k ts) = absTerms c (k + 1) (liftTerms j ts) :=
   absTerms'_lift (fun s => s = c)
 
-theorem absFormula_lift (c : String) : ∀ (f : Formula) (j k : Nat), j ≤ k →
+theorem absFormula_lift (c : List Char) : ∀ (f : Formula) (j k : Nat), j ≤ k →
     liftFormula j (absFormula c k f) = absFormula c (k + 1) (liftFormula j f) :=
   absFormula'_lift (fun s => s = c)
 
@@ -199,7 +199,7 @@ theorem absFormula_lift (c : String) : ∀ (f : Formula) (j k : Nat), j ≤ k �
 -- ============================================================
 
 mutual
-theorem absTerm'_subst (P : String → Prop) [DecidablePred P] :
+theorem absTerm'_subst (P : List Char → Prop) [DecidablePred P] :
     ∀ (v k : Nat) (_ : v ≤ k) (s : Term) (t : Term),
     absTerm' P k (substTerm v s t) = substTerm v (absTerm' P k s) (absTerm' P (k + 1) t) := by
   intro v k hvk s t
@@ -233,7 +233,7 @@ theorem absTerm'_subst (P : String → Prop) [DecidablePred P] :
           congr 1
           exact absTerms'_subst P v k hvk s (u :: us)
 
-theorem absTerms'_subst (P : String → Prop) [DecidablePred P] :
+theorem absTerms'_subst (P : List Char → Prop) [DecidablePred P] :
     ∀ (v k : Nat) (_ : v ≤ k) (s : Term) (ts : List Term),
     absTerms' P k (substTerms v s ts) = substTerms v (absTerm' P k s) (absTerms' P (k + 1) ts) := by
   intro v k hvk s ts
@@ -244,7 +244,7 @@ theorem absTerms'_subst (P : String → Prop) [DecidablePred P] :
       exact ⟨absTerm'_subst P v k hvk s t, absTerms'_subst P v k hvk s ts'⟩
 end
 
-theorem absFormula'_subst (P : String → Prop) [DecidablePred P] :
+theorem absFormula'_subst (P : List Char → Prop) [DecidablePred P] :
     ∀ (f : Formula) (v k : Nat), v ≤ k → ∀ (s : Term),
     absFormula' P k (substFormula v s f)
       = substFormula v (absTerm' P k s) (absFormula' P (k + 1) f) := by
@@ -268,15 +268,15 @@ theorem absFormula'_subst (P : String → Prop) [DecidablePred P] :
       simp only [absFormula', substFormula, ih (v + 1) (k + 1) (by omega) (liftTerm 0 s),
         absTerm'_lift P 0 k (by omega)]
 
-theorem absTerm_subst (c : String) : ∀ (v k : Nat) (_ : v ≤ k) (s : Term) (t : Term),
+theorem absTerm_subst (c : List Char) : ∀ (v k : Nat) (_ : v ≤ k) (s : Term) (t : Term),
     absTerm c k (substTerm v s t) = substTerm v (absTerm c k s) (absTerm c (k + 1) t) :=
   absTerm'_subst (fun s => s = c)
 
-theorem absTerms_subst (c : String) : ∀ (v k : Nat) (_ : v ≤ k) (s : Term) (ts : List Term),
+theorem absTerms_subst (c : List Char) : ∀ (v k : Nat) (_ : v ≤ k) (s : Term) (ts : List Term),
     absTerms c k (substTerms v s ts) = substTerms v (absTerm c k s) (absTerms c (k + 1) ts) :=
   absTerms'_subst (fun s => s = c)
 
-theorem absFormula_subst (c : String) : ∀ (f : Formula) (v k : Nat), v ≤ k → ∀ (s : Term),
+theorem absFormula_subst (c : List Char) : ∀ (f : Formula) (v k : Nat), v ≤ k → ∀ (s : Term),
     absFormula c k (substFormula v s f)
       = substFormula v (absTerm c k s) (absFormula c (k + 1) f) :=
   absFormula'_subst (fun s => s = c)
@@ -298,7 +298,7 @@ def posDepth : Pos → Nat
   | .right p => posDepth p
   | .body p => posDepth p + 1
 
-theorem abs'_getAt? (P : String → Prop) [DecidablePred P] : ∀ (p : Pos) (k : Nat) (f : Formula),
+theorem abs'_getAt? (P : List Char → Prop) [DecidablePred P] : ∀ (p : Pos) (k : Nat) (f : Formula),
     getAt? (absFormula' P k f) p = (getAt? f p).map (absFormula' P (k + posDepth p)) := by
   intro p
   induction p with
@@ -310,7 +310,7 @@ theorem abs'_getAt? (P : String → Prop) [DecidablePred P] : ∀ (p : Pos) (k :
       cases f <;>
         simp only [getAt?, absFormula', ih, posDepth, Nat.add_assoc, Nat.add_comm 1] <;> rfl
 
-theorem abs'_replaceAt (P : String → Prop) [DecidablePred P] :
+theorem abs'_replaceAt (P : List Char → Prop) [DecidablePred P] :
     ∀ (p : Pos) (k : Nat) (f newSub : Formula),
     replaceAt (absFormula' P k f) p (absFormula' P (k + posDepth p) newSub)
       = absFormula' P k (replaceAt f p newSub) := by
@@ -326,22 +326,22 @@ theorem abs'_replaceAt (P : String → Prop) [DecidablePred P] :
       have e : k + (posDepth p' + 1) = (k + 1) + posDepth p' := by omega
       cases f <;> simp only [replaceAt, absFormula', posDepth, e, ih]
 
-theorem abs'_localRule (P : String → Prop) [DecidablePred P] (k : Nat) {A B : Formula}
+theorem abs'_localRule (P : List Char → Prop) [DecidablePred P] (k : Nat) {A B : Formula}
     (h : LocalRule A B) : LocalRule (absFormula' P k A) (absFormula' P k B) := by
   cases h with
   | commuteImpl A B C =>
       exact LocalRule.commuteImpl (absFormula' P k A) (absFormula' P k B) (absFormula' P k C)
 
-theorem abs_getAt? (c : String) : ∀ (p : Pos) (k : Nat) (f : Formula),
+theorem abs_getAt? (c : List Char) : ∀ (p : Pos) (k : Nat) (f : Formula),
     getAt? (absFormula c k f) p = (getAt? f p).map (absFormula c (k + posDepth p)) :=
   abs'_getAt? (fun s => s = c)
 
-theorem abs_replaceAt (c : String) : ∀ (p : Pos) (k : Nat) (f newSub : Formula),
+theorem abs_replaceAt (c : List Char) : ∀ (p : Pos) (k : Nat) (f newSub : Formula),
     replaceAt (absFormula c k f) p (absFormula c (k + posDepth p) newSub)
       = absFormula c k (replaceAt f p newSub) :=
   abs'_replaceAt (fun s => s = c)
 
-theorem abs_localRule (c : String) (k : Nat) {A B : Formula} (h : LocalRule A B) :
+theorem abs_localRule (c : List Char) (k : Nat) {A B : Formula} (h : LocalRule A B) :
     LocalRule (absFormula c k A) (absFormula c k B) :=
   abs'_localRule (fun s => s = c) k h
 
@@ -349,7 +349,7 @@ theorem abs_localRule (c : String) (k : Nat) {A B : Formula} (h : LocalRule A B)
 -- §5 · El contexto
 -- ============================================================
 
-theorem map_abs'_lift (P : String → Prop) [DecidablePred P] (k : Nat) (Γ : List Formula) :
+theorem map_abs'_lift (P : List Char → Prop) [DecidablePred P] (k : Nat) (Γ : List Formula) :
     (Γ.map (absFormula' P k)).map (liftFormula 0)
       = (Γ.map (liftFormula 0)).map (absFormula' P (k + 1)) := by
   induction Γ with
@@ -357,7 +357,7 @@ theorem map_abs'_lift (P : String → Prop) [DecidablePred P] (k : Nat) (Γ : Li
   | cons g Γ' ih =>
       simp only [List.map_cons, absFormula'_lift P g 0 k (Nat.zero_le _), ih]
 
-theorem map_abs_lift (c : String) (k : Nat) (Γ : List Formula) :
+theorem map_abs_lift (c : List Char) (k : Nat) (Γ : List Formula) :
     (Γ.map (absFormula c k)).map (liftFormula 0)
       = (Γ.map (liftFormula 0)).map (absFormula c (k + 1)) :=
   map_abs'_lift (fun s => s = c) k Γ
@@ -371,7 +371,7 @@ theorem map_abs_lift (c : String) (k : Nat) (Γ : List Formula) :
 ⚠️ El `∀ k` está **dentro** a propósito: en `intro_forall` y `elim_ex` la hipótesis inductiva se
 usa a nivel `k + 1`, no a nivel `k`. Si el `k` se fija fuera, la inducción no cierra.
 ⭐ Con `P := fun _ => False` es `Lift0.derives0_lift`; con `P := (· = c)`, `absDerives`. -/
-theorem absDerives' (P : String → Prop) [DecidablePred P] {Γ : List Formula} {φ : Formula}
+theorem absDerives' (P : List Char → Prop) [DecidablePred P] {Γ : List Formula} {φ : Formula}
     (h : Γ ⊢₀ φ) : ∀ k : Nat, (Γ.map (absFormula' P k)) ⊢₀ absFormula' P k φ := by
   induction h with
   | hyp Γ' f' hIn => intro k; exact Derives₀.hyp _ _ (List.mem_map_of_mem hIn)
@@ -432,7 +432,7 @@ theorem absDerives' (P : String → Prop) [DecidablePred P] {Γ : List Formula} 
       exact this
 
 /-- **`Derives₀` transporta la abstracción de una constante.** -/
-theorem absDerives (c : String) {Γ : List Formula} {φ : Formula} (h : Γ ⊢₀ φ) :
+theorem absDerives (c : List Char) {Γ : List Formula} {φ : Formula} (h : Γ ⊢₀ φ) :
     ∀ k : Nat, (Γ.map (absFormula c k)) ⊢₀ absFormula c k φ :=
   absDerives' (fun s => s = c) h
 
@@ -461,7 +461,7 @@ def occursFormula {Sym : Type} (c : Sym) : FormulaG Sym → Prop
   | .ex a => occursFormula c a
 
 mutual
-theorem absTerm'_eq_lift (P : String → Prop) [DecidablePred P] : ∀ (k : Nat) (t : Term),
+theorem absTerm'_eq_lift (P : List Char → Prop) [DecidablePred P] : ∀ (k : Nat) (t : Term),
     (∀ d, occursTerm d t → Not (P d)) → absTerm' P k t = liftTerm k t := by
   intro k t hocc
   cases t with
@@ -476,7 +476,7 @@ theorem absTerm'_eq_lift (P : String → Prop) [DecidablePred P] : ∀ (k : Nat)
           congr 1
           exact absTerms'_eq_lift P k (u :: us) (fun d hd => hocc d (Or.inr hd))
 
-theorem absTerms'_eq_lift (P : String → Prop) [DecidablePred P] : ∀ (k : Nat) (ts : List Term),
+theorem absTerms'_eq_lift (P : List Char → Prop) [DecidablePred P] : ∀ (k : Nat) (ts : List Term),
     (∀ d, occursTerms d ts → Not (P d)) → absTerms' P k ts = liftTerms k ts := by
   intro k ts hocc
   cases ts with
@@ -490,7 +490,7 @@ end
 /-- ⭐ **Si ningún símbolo que aparece cumple `P`, abstraer es exactamente LEVANTAR.** Con
 `P := (· = c)` es el puente entre §6 y `Derives₀.intro_forall`; con `P := fun _ => False` es la
 identificación `absFormula' (fun _ => False) = liftFormula` de `FOL.Lift0` §0. -/
-theorem absFormula'_eq_lift (P : String → Prop) [DecidablePred P] : ∀ (f : Formula) (k : Nat),
+theorem absFormula'_eq_lift (P : List Char → Prop) [DecidablePred P] : ∀ (f : Formula) (k : Nat),
     (∀ d, occursFormula d f → Not (P d)) → absFormula' P k f = liftFormula k f := by
   intro f
   induction f with
@@ -515,23 +515,23 @@ theorem absFormula'_eq_lift (P : String → Prop) [DecidablePred P] : ∀ (f : F
         ihb k (fun d x => h d (Or.inr x))]
   | ex a ih => intro k h; simp only [absFormula', liftFormula, ih (k + 1) h]
 
-theorem absTerm_eq_lift (c : String) : ∀ (k : Nat) (t : Term), Not (occursTerm c t) →
+theorem absTerm_eq_lift (c : List Char) : ∀ (k : Nat) (t : Term), Not (occursTerm c t) →
     absTerm c k t = liftTerm k t :=
   fun k t hocc => absTerm'_eq_lift (fun s => s = c) k t (fun d hd (hdc : d = c) => hocc (hdc ▸ hd))
 
-theorem absTerms_eq_lift (c : String) : ∀ (k : Nat) (ts : List Term), Not (occursTerms c ts) →
+theorem absTerms_eq_lift (c : List Char) : ∀ (k : Nat) (ts : List Term), Not (occursTerms c ts) →
     absTerms c k ts = liftTerms k ts :=
   fun k ts hocc =>
     absTerms'_eq_lift (fun s => s = c) k ts (fun d hd (hdc : d = c) => hocc (hdc ▸ hd))
 
 /-- ⭐ **Si `c` no aparece, abstraerla es exactamente LEVANTAR.** Es el puente entre §6 y
 `Derives₀.intro_forall`. -/
-theorem absFormula_eq_lift (c : String) : ∀ (f : Formula) (k : Nat), Not (occursFormula c f) →
+theorem absFormula_eq_lift (c : List Char) : ∀ (f : Formula) (k : Nat), Not (occursFormula c f) →
     absFormula c k f = liftFormula k f :=
   fun f k hocc =>
     absFormula'_eq_lift (fun s => s = c) f k (fun d hd (hdc : d = c) => hocc (hdc ▸ hd))
 
-theorem map_abs_eq_map_lift (c : String) {Γ : List Formula}
+theorem map_abs_eq_map_lift (c : List Char) {Γ : List Formula}
     (hfresh : ∀ g, g ∈ Γ → Not (occursFormula c g)) :
     Γ.map (absFormula c 0) = Γ.map (liftFormula 0) := by
   induction Γ with
@@ -549,7 +549,7 @@ preserva la consistencia.
 
 ⚠️ Nótese que **no se pide** que `c` no aparezca en `φ` — al revés: la gracia es justamente que
 `φ` la usa, y `absFormula c 0 φ` es «`φ` con `c` convertida en la variable ligada». -/
-theorem derives0_gen_fresh (c : String) {Γ : List Formula} {φ : Formula}
+theorem derives0_gen_fresh (c : List Char) {Γ : List Formula} {φ : Formula}
     (hfresh : ∀ g, g ∈ Γ → Not (occursFormula c g)) (h : Γ ⊢₀ φ) :
     Γ ⊢₀ Formula.forall (absFormula c 0 φ) := by
   refine Derives₀.intro_forall _ _ ?_
@@ -558,7 +558,7 @@ theorem derives0_gen_fresh (c : String) {Γ : List Formula} {φ : Formula}
 
 /-- Corolario en la forma que consume Henkin: con `c` fresca en el contexto, de `Γ ⊢₀ φ` se obtiene
 **cualquier instancia** `Γ ⊢₀ (absFormula c 0 φ)[t]`. -/
-theorem derives0_inst_fresh (c : String) {Γ : List Formula} {φ : Formula}
+theorem derives0_inst_fresh (c : List Char) {Γ : List Formula} {φ : Formula}
     (hfresh : ∀ g, g ∈ Γ → Not (occursFormula c g)) (h : Γ ⊢₀ φ) (t : Term) :
     Γ ⊢₀ substFormula 0 t (absFormula c 0 φ) :=
   Derives₀.elim_forall _ _ t (derives0_gen_fresh c hfresh h)

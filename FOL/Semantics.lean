@@ -23,13 +23,15 @@ namespace FOL.Metamath.Semantics
 /-- **Estructura de primer orden con el símbolo como PARÁMETRO** (2026‑09‑22).
 
 ⭐ Misma técnica que `TermG`/`FormulaG` (ADR‑068/069): el genérico lleva `G`, y `Model` queda
-como el `abbrev` en `String`, de modo que **las nueve consumidoras no se tocan**. -/
+como el `abbrev` en el símbolo concreto —`List Char` desde D7 (2026‑10‑05, ADR‑129 de RPP); hasta
+entonces `String`—, de modo que **las nueve consumidoras no se tocan** por el parámetro. -/
 structure ModelG (S D : Type) where
   func : S → List D → D
   rel  : S → List D → Prop
 
-/-- Modelo sobre el alfabeto concreto. Lo que usaban los nueve ficheros; no cambia. -/
-abbrev Model (D : Type) := ModelG String D
+/-- Modelo sobre el alfabeto concreto. Lo que usaban los nueve ficheros; el parámetro no lo cambió
+(D7, 2026‑10‑05, sí: de `String` a `List Char`). -/
+abbrev Model (D : Type) := ModelG (List Char) D
 
 mutual
 def evalTerm {S D : Type} (M : ModelG S D) (v : Nat → D) (t : TermG S) : D :=

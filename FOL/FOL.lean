@@ -11,17 +11,22 @@
 ### El tipo de los SÍMBOLOS es un PARÁMETRO (ADR-068, paso 4 del plan)
 
 `TermG S` / `FormulaG S` son el núcleo genérico; `Term`/`Formula` son los `abbrev` de hoy,
-`S := String`. ⚠️ El árbol entero sigue diciendo `Term`/`Formula` y **no cambió ni una
-línea**: meter el PARÁMETRO costó TRES ficheros (éste, `FOL/DecEq.lean` y
+`S := List Char` (desde D7, 2026‑10‑05; hasta entonces `String`). ⚠️ El árbol entero sigue diciendo
+`Term`/`Formula`, y meter el PARÁMETRO **no le cambió ni una
+línea**: costó TRES ficheros (éste, `FOL/DecEq.lean` y
 `ROBINSON_PlusPlus/Meta/HilbertSeq.lean`) y los 147 footprints de entonces salieron idénticos (ADR-068).
-⛔ Eso **no** es la migración `String`→`List Char` (plan §7.3 de RPP): los `abbrev` siguen en
-`String`, y la instanciación en `List Char` queda ABANDONADA en FOL (D7): no mueve ningún
-footprint titular de FOL y su dividendo es de RPP (`strCode`).
+⛔ Eso **no** es la migración `String`→`List Char` (plan §7.3 de RPP, D7): los `abbrev` siguieron en
+`String`, y el 2026‑09‑26 la instanciación en `List Char` se cerró como ABANDONADA en FOL: no movía
+ningún footprint titular de FOL y su dividendo era de RPP (`strCode`).
+✏️ 2026‑10‑05: D7 EJECUTADA (ADR‑129 de RPP), por decisión del propietario. Los titulares de FOL
+siguen sin moverse (las 39 filas de FOL y `TheoryFramework` con `Classical.choice` en
+`../ROBINSON_PlusPlus/check-footprints.bash` lo conservan); en RPP, 44 filas lo pierden.
 ⚠️ (2026‑09‑27) Aquí se daba entre paréntesis la razón «su `Classical.choice` es el WKL», y era
 falsa como localización (ver la cabecera de `FOL/Canonical0.lean`). La razón buena: lo que en v4.31
 trae `Classical.choice` a `String` es DECODIFICAR UTF‑8, no `String` en sí. La capa de bytes está
 limpia, y la auditoría de constructividad del 2026‑09‑27 retiró esos usos sin migrar
-(`FOL/SymClasses.lean`, al final de la cabecera).
+(`FOL/SymClasses.lean`, al final de la cabecera). (✏️ 2026‑10‑05: era cierta para `String`; desde D7
+los símbolos ya no son `String`.)
 
 ⛔⛔ **La razón que aquí se daba para el parámetro era FALSA, y se midió el 2026‑09‑23.**
 Decía: *«`List Char` es numerable y sirve para Gödel, pero si Löwenheim-Skolem **ascendente**
@@ -34,8 +39,9 @@ LS↑ es justo la que es FALSA para los lenguajes que LS↑ necesita.** Un LS↑
 arbitrario pide un Lindenbaum **transfinito**, y sin Mathlib no hay Zorn.
 
 ⛔ **Y la 2ª entrega —`Canonical0` genérico en el símbolo— queda CERRADA**, por decisión del
-propietario del 2026‑09‑23: nadie la consume (RPP y PeanoRF sólo instancian `String`) y su única
-justificación escrita era la de arriba.
+propietario del 2026‑09‑23: nadie la consume (RPP y PeanoRF sólo instancian `String`; ✏️ 2026‑10‑05:
+tras D7, RPP instancia `List Char`, y sigue sin consumirla; PeanoRF, bloqueado, sigue en `String` y deja
+de compilar contra este FOL hasta que se adapte) y su única justificación escrita era la de arriba.
 
 ⭐ **El parámetro se queda**, y no es un error: costó tres ficheros, no rompió nada, y la sintaxis,
 `Derives₀`, `LocalRule` y la semántica (`ModelG`) ya son genéricos. Lo que se cierra es seguir
@@ -43,12 +49,13 @@ empujándolo por la cadena de completitud.
 
 ⛔ **Y el cierre es DEFINITIVO** (decisión del propietario del 2026-09-26): no hay receta para
 reabrirla. `Fresh0`, `Henkin0`, `HenkinLimit0`, `Lindenbaum0`, `Canonical0` y `Enumeration` son
-`String` por dentro y así se quedan; las clases de `SymClasses.lean` se quedan como MEDIDA de lo
-que esa cadena le pediría al tipo de símbolos, y **ningún** módulo las consume. Enhebrarlas
-tampoco daría LS↑ (ver arriba).
+CONCRETOS en el símbolo, no genéricos: `String` por dentro hasta D7 —que ese mismo 2026‑09‑26 se dio
+por abandonada— y `List Char` desde el 2026‑10‑05 (D7 EJECUTADA, ADR‑129 de RPP). Las clases de
+`SymClasses.lean` se quedan como MEDIDA de lo que esa cadena le pediría al tipo de símbolos, y
+**ningún** módulo las consume. Enhebrarlas tampoco daría LS↑ (ver arriba).
 
 ⭐ Y el **modelo infinito numerable** (`Compacity0.infinite_model_of_large`, que **no** es LS↑)
-**no la necesita**: basta con ℵ₀ constantes frescas, y `Fresh0.cst : Nat → String` las da.
+**no la necesita**: basta con ℵ₀ constantes frescas, y `Fresh0.cst : Nat → List Char` las da.
 -/
 inductive TermG (S : Type) where
   | var  : Nat → TermG S
@@ -66,8 +73,8 @@ inductive FormulaG (S : Type) where
   | ex     : FormulaG S → FormulaG S
   deriving Repr, BEq
 
-abbrev Term := TermG String
-abbrev Formula := FormulaG String
+abbrev Term := TermG (List Char)
+abbrev Formula := FormulaG (List Char)
 
 namespace Term
   export TermG (var func var.injEq func.injEq rec recOn casesOn)
@@ -77,7 +84,7 @@ Lean genera el `noConfusion` **heterogéneo** (`S = S' → t ≈ t'`), no el hom
 recupera la forma de siempre, y con él los 13 sitios de llamada del árbol no cambian. -/
 theorem noConfusion {P : Prop} {t t' : Term} (h : t = t') :
     TermG.noConfusionType P t t' :=
-  TermG.noConfusion (S := String) (S' := String) rfl (heq_of_eq h)
+  TermG.noConfusion (S := List Char) (S' := List Char) rfl (heq_of_eq h)
 end Term
 
 namespace Formula
@@ -88,7 +95,7 @@ namespace Formula
 /-- ⚠️ El mismo shim que en `Term`. -/
 theorem noConfusion {P : Prop} {t t' : Formula} (h : t = t') :
     FormulaG.noConfusionType P t t' :=
-  FormulaG.noConfusion (S := String) (S' := String) rfl (heq_of_eq h)
+  FormulaG.noConfusion (S := List Char) (S' := List Char) rfl (heq_of_eq h)
 
 /-- ⚠️ Y la otra: para un inductivo con parámetro Lean genera `.injEq` pero **no** `.inj`. -/
 theorem ex.inj {a b : Formula} (h : FormulaG.ex a = FormulaG.ex b) : a = b := by
@@ -119,9 +126,8 @@ infix:55 " ⇔ " => iff
 prefix:80 "∀. " => Formula.forall
 prefix:80 "∃. " => Formula.ex
 
--- Coerción para escribir átomos proposicionales más fácilmente (ej. "P" en lugar de .atom "P" [])
-instance : Coe String Formula where
-  coe s := Formula.atom s []
+-- D7 (2026‑10‑05): aquí iba `instance : Coe String Formula` (`"P"` por `.atom "P" []`). Sin consumidores
+-- (medido), y con `List Char` convertiría cualquier símbolo en átomo allí donde se espere una fórmula: se retira.
 
 -- Notación para variables de De Bruijn
 prefix:max "#" => Term.var
@@ -236,7 +242,10 @@ def replaceAt {Sym : Type} (f : FormulaG Sym) (p : Pos) (newSub : FormulaG Sym) 
 -- 3. REGLAS DE TRANSFORMACIÓN
 -- Definimos reglas de reescritura lógica que pueden aplicarse localmente.
 
--- ⛔⛔ `LocalRule` y `Derives` SE QUEDAN EN `String`, y es una decisión, no un olvido (ADR-069):
+-- ⛔⛔ `Derives` SE QUEDA EN EL `Formula` CONCRETO, no genérico en el símbolo, y es una decisión, no un
+-- olvido (ADR-069). El símbolo concreto era `String`; desde D7 (2026‑10‑05, ADR‑129 de RPP) es
+-- `List Char`. (ADR-069 decía «`LocalRule` y `Derives` se quedan en `String`»; lo de `LocalRule` lo
+-- rectifica el punto 3.)
 --  1. (2026-09-18) `Derives` era el cálculo CONTAMINADO: lo habitaban los cuatro `axiom` de
 --     `FOL/MetaRules.lean`; `raa`/`imp_intro` toman funciones de Lean, luego era sintácticamente
 --     completo, y ADR-029 prohibía inducir sobre él de forma PERMANENTE (M-11). Era la
@@ -254,11 +263,12 @@ def replaceAt {Sym : Type} (f : FormulaG Sym) (p : Pos) (newSub : FormulaG Sym) 
 --     consumidor en el build.
 --  3. ⛔ **RECTIFICADO (ADR-071)**: ADR-069 dijo aquí «`LocalRule` es su premisa y le
 --     sigue», y era FALSO. `LocalRule` es premisa de `rewrite_at`, que está en **`Derives₀`**
---     también ⇒ sigue a `Derives₀` y **sí** se generifica. `Derives` la usa instanciada en
---     `String`, que es exactamente lo que necesita.
+--     también ⇒ sigue a `Derives₀` y **sí** se generifica. `Derives` la usa instanciada en el
+--     símbolo concreto (`List Char`; hasta D7, `String`), que es exactamente lo que necesita.
 --     🔑 *Una premisa compartida sigue al consumidor MÁS GENÉRICO, no al primero que se mire.*
 -- ⇒ la generificación se CORTA aquí, y `derives0_to_derives` (Derives0.lean) queda como
---    especialización sólo-String, igual que su recíproca (`FOL.Inconsistencia.derives_to_derives0`,
+--    especialización al `Formula` concreto (sólo-String hasta D7; hoy `List Char`), igual que su
+--    recíproca (`FOL.Inconsistencia.derives_to_derives0`,
 --    2026-10-02). *Cuando un tipo está contaminado, se declara al lado el que sí sirve* — la
 --    razón por la que `Derives₀` existe (2026-09-14). La contaminación se retiró después
 --    (ADR‑115 de RPP), y `Derives₀` sigue siendo el sujeto: es el cálculo finitario.
@@ -339,7 +349,7 @@ infix:50 " ⊢ " => Derives
 -- Vamos a ver cómo se vería la estructura de una fórmula y su manipulación.
 
 def formula_ejemplo : Formula :=
-  .impl (.atom "P" []) (neg (neg (.atom "Q" [])))
+  .impl (.atom ['P'] []) (neg (neg (.atom ['Q'] [])))
 
 -- Queremos aplicar Doble Negación sólo al átomo Q, que está en la posición:
 -- Raíz -> Derecha (lado derecho de la implicación)
@@ -347,7 +357,7 @@ def posicion_Q : Pos := .right .root
 
 -- La fórmula resultante tras aplicar la regla en esa posición exacta sería:
 def formula_simplificada : Formula :=
-  replaceAt formula_ejemplo posicion_Q (.atom "Q" [])
+  replaceAt formula_ejemplo posicion_Q (.atom ['Q'] [])
 
 -- Comprobación:
 -- formula_simplificada es P → Q

@@ -314,7 +314,6 @@ echo "════ [E] FRESCURA DEL TITULAR — ROJO (objetivo: lo decide git) �
 # rojo — *la deuda se saldó, quítala de la tabla*. Así la cifra sólo puede BAJAR.
 read -r -d '' E_DEUDA <<'EOF'
 DECISIONS.md
-AXIOMS.md
 AI-GUIDE.md
 cuarentena/README.md
 EOF

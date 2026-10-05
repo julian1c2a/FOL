@@ -58,7 +58,7 @@ open FOL.Eigenvariable FOL.Lift0 FOL.Fresh0
 
 /-- El núcleo de `Henkin0.abs_neg_witness` sin el `neg`: abstraer una constante fresca recién
     sustituida devuelve la fórmula. -/
-theorem abs_witness (c : String) (A : Formula) (hcA : Not (occursFormula c A)) :
+theorem abs_witness (c : List Char) (A : Formula) (hcA : Not (occursFormula c A)) :
     absFormula c 0 (substFormula 0 (Term.func c []) A) = A := by
   rw [absFormula_subst c A 0 0 (Nat.le_refl 0), absFormula_eq_lift c A 1 hcA]
   have hc : absTerm c 0 (Term.func c []) = Term.var 0 := by simp [absTerm]
@@ -151,7 +151,7 @@ def DisjunctionProperty₀ : Prop :=
 /-- `⊬₀ ¬P`, por la valuación BOOLEANA de `FOL.Finitary0` (`derives0_iff_derives2`, `ndToLK` y
 `lkc_tval` con la valuación `true`; **sin** el Hauptsatz, que `Finitary0` no importa), no por un
 modelo de Tarski: sin `Classical.choice`. -/
-theorem derives0_not_negP_fin : Not (([] : List Formula) ⊢₀ neg (Formula.atom "P" [])) := by
+theorem derives0_not_negP_fin : Not (([] : List Formula) ⊢₀ neg (Formula.atom ['P'] [])) := by
   intro h
   have hc := FOL.NDtoLK0.ndToLK (FOL.Derives2.derives0_iff_derives2.mp h)
   rcases FOL.Finitary0.lkc_tval hc true
@@ -204,34 +204,34 @@ def ExElim : Prop := ∀ {Γ : List Formula} {A C : Formula}, (Γ ⊢ Formula.ex
     (∀ t : Term, Γ ⊢ substFormula 0 t A → Γ ⊢ C) → Γ ⊢ C
 
 /-- `⊬ P`, por la vía finitaria: lo que `Derives` prueba, `Derives₀` lo prueba. -/
-theorem derives_not_P : Not (([] : List Formula) ⊢ Formula.atom "P" []) := fun h =>
+theorem derives_not_P : Not (([] : List Formula) ⊢ Formula.atom ['P'] []) := fun h =>
   FOL.Finitary0.derives0_not_P_fin (derives_to_derives0 h)
 
 /-- `⊬ ¬P`, ídem. -/
-theorem derives_not_negP : Not (([] : List Formula) ⊢ neg (Formula.atom "P" [])) := fun h =>
+theorem derives_not_negP : Not (([] : List Formula) ⊢ neg (Formula.atom ['P'] [])) := fun h =>
   derives0_not_negP_fin (derives_to_derives0 h)
 
 /-- 🏁 **`imp_intro` es FALSO**: como `⊬ P`, la premisa `⊢ P → ⊢ ⊥` vale vacuamente, y daría `⊢ ¬P`. -/
 theorem imp_intro_refutable : Not ImpIntro := fun H =>
-  derives_not_negP (H (Γ := []) (A := Formula.atom "P" []) (B := Formula.bottom)
+  derives_not_negP (H (Γ := []) (A := Formula.atom ['P'] []) (B := Formula.bottom)
     (fun h => absurd h derives_not_P))
 
 /-- 🏁 **`raa` es FALSO**, por la misma razón. Es el detonador que este fichero usaba al revés. -/
 theorem raa_refutable : Not Raa := fun H =>
-  derives_not_negP (H (Γ := []) (A := Formula.atom "P" []) (fun h => absurd h derives_not_P))
+  derives_not_negP (H (Γ := []) (A := Formula.atom ['P'] []) (fun h => absurd h derives_not_P))
 
 /-- 🏁 **`or_elim` es FALSO**: `⊢ P ∨ ¬P` (tercio excluso), y como `⊬ P` y `⊬ ¬P`, las dos ramas valen
     vacuamente hacia `⊥` — que `Derives₀` no prueba. -/
 theorem or_elim_refutable : Not OrElim := fun H =>
   FOL.Finitary0.derives0_consistent_fin (derives_to_derives0
-    (H (Γ := []) (A := Formula.atom "P" []) (B := neg (Formula.atom "P" [])) (C := Formula.bottom)
-      (derives0_to_derives (FOL.Propositional0.derives0_em_ctx [] (Formula.atom "P" [])))
+    (H (Γ := []) (A := Formula.atom ['P'] []) (B := neg (Formula.atom ['P'] [])) (C := Formula.bottom)
+      (derives0_to_derives (FOL.Propositional0.derives0_em_ctx [] (Formula.atom ['P'] [])))
       (fun h => absurd h derives_not_P) (fun h => absurd h derives_not_negP)))
 
 /-- El modelo de dos puntos para `ex_elim`: `P` sólo vale en `true`, y todo término vale `false`. -/
 private def MB : Model Bool := ⟨fun _ _ => false, fun _ ds => ds = [true]⟩
 private def vB : Nat → Bool := fun _ => false
-private def PA : Formula := Formula.atom "P" [Term.var 0]
+private def PA : Formula := Formula.atom ['P'] [Term.var 0]
 
 /-- 🏁 **`ex_elim` es FALSO**: en `MB`, `∃x P(x)` es verdadera pero ningún TÉRMINO la testimonia
     (todos valen `false`), así que desde `[∃x P(x)]` no se deriva ningún `P(t)`, la continuación vale

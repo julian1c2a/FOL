@@ -183,22 +183,22 @@ example (fuel k n : Nat) (A : Formula) :
 -- ── ⭐ y por eso la normalización se comprueba POR CÓMPUTO ─────────────────
 /-- `∀x ∃y P(x,y)  ↝  ∀x P(x, c₀(x))`. -/
 example :
-    skolemize 0 (Formula.forall (Formula.ex (Formula.atom "P" [Term.var 1, Term.var 0])))
-      = Formula.forall (Formula.atom "P" [Term.var 0, Term.func (cst 0) [Term.var 0]]) := by
+    skolemize 0 (Formula.forall (Formula.ex (Formula.atom ['P'] [Term.var 1, Term.var 0])))
+      = Formula.forall (Formula.atom ['P'] [Term.var 0, Term.func (cst 0) [Term.var 0]]) := by
   rfl
 
 /-- `∃y ∀x P(x,y)  ↝  ∀x P(x, c₀)` — con el existencial por FUERA, el símbolo es una
 constante, y eso lo decide `vars 0 = []`. -/
 example :
-    skolemize 0 (Formula.ex (Formula.forall (Formula.atom "P" [Term.var 0, Term.var 1])))
-      = Formula.forall (Formula.atom "P" [Term.var 0, Term.func (cst 0) []]) := by
+    skolemize 0 (Formula.ex (Formula.forall (Formula.atom ['P'] [Term.var 0, Term.var 1])))
+      = Formula.forall (Formula.atom ['P'] [Term.var 0, Term.func (cst 0) []]) := by
   rfl
 
 /-- `∀x ∃y ∀z ∃w Q(x,y,z,w)  ↝  ∀x ∀z Q(x, c₀(x), z, c₁(z,x))`. -/
 example :
     skolemize 0 (Formula.forall (Formula.ex (Formula.forall (Formula.ex
-      (Formula.atom "Q" [Term.var 3, Term.var 2, Term.var 1, Term.var 0])))))
-      = Formula.forall (Formula.forall (Formula.atom "Q"
+      (Formula.atom ['Q'] [Term.var 3, Term.var 2, Term.var 1, Term.var 0])))))
+      = Formula.forall (Formula.forall (Formula.atom ['Q']
           [Term.var 1, Term.func (cst 0) [Term.var 1],
            Term.var 0, Term.func (cst 1) [Term.var 0, Term.var 1]])) := by
   rfl
@@ -274,12 +274,12 @@ theorem derives0_of_skolemizeF (fuel k n : Nat) (f : Formula) (Γ : List Formula
 -- ═══════════════════════════════════════════════════════════════════════════
 
 /-- El bloque `∀ⁿ` no esconde símbolos. -/
-theorem occurs_allBlock (c : String) : ∀ (n : Nat) (X : Formula),
+theorem occurs_allBlock (c : List Char) : ∀ (n : Nat) (X : Formula),
     occursFormula c (allBlock n X) → occursFormula c X
   | 0, _, h => h
   | n + 1, X, h => occurs_allBlock c n X h
 
-theorem not_occurs_skolemAxN {c d : String} {n : Nat} {A : Formula}
+theorem not_occurs_skolemAxN {c d : List Char} {n : Nat} {A : Formula}
     (hcd : c ≠ d) (hA : Not (occursFormula c A)) :
     Not (occursFormula c (skolemAxN d n A)) := by
   intro h
@@ -366,7 +366,7 @@ theorem skolem_conservative_nf₀ (k : Nat) (f : Formula) (Γ : List Formula) (�
 
 /-- ⚠️ **No existía.** El árbol tenía `occursTerm_lift`/`occursTerms_lift` y **nada** para
 fórmulas. El levantamiento mueve **índices**, no **símbolos**. -/
-theorem occursFormula_lift (c : String) : ∀ (f : Formula) (k : Nat),
+theorem occursFormula_lift (c : List Char) : ∀ (f : Formula) (k : Nat),
     occursFormula c (liftFormula k f) → occursFormula c f
   | .bottom, _, h => h
   | .atom _ ts, k, h => occursTerms_lift c k ts h
@@ -385,7 +385,7 @@ theorem occursFormula_lift (c : String) : ∀ (f : Formula) (k : Nat),
   | .forall a, k, h => occursFormula_lift c a (k + 1) h
   | .ex a, k, h => occursFormula_lift c a (k + 1) h
 
-theorem occurs_mergeAndR (c : String) : ∀ (A B : Formula),
+theorem occurs_mergeAndR (c : List Char) : ∀ (A B : Formula),
     occursFormula c (mergeAndR A B) → Or (occursFormula c A) (occursFormula c B)
   | A, .forall B', h =>
       (occurs_mergeAndR c (liftFormula 0 A) B' h).elim
@@ -400,7 +400,7 @@ theorem occurs_mergeAndR (c : String) : ∀ (A B : Formula),
   | _, .and _ _, h => h
   | _, .or _ _, h => h
 
-theorem occurs_mergeAnd (c : String) : ∀ (A B : Formula),
+theorem occurs_mergeAnd (c : List Char) : ∀ (A B : Formula),
     occursFormula c (mergeAnd A B) → Or (occursFormula c A) (occursFormula c B)
   | .forall A', B, h =>
       (occurs_mergeAnd c A' (liftFormula 0 B) h).elim
@@ -415,7 +415,7 @@ theorem occurs_mergeAnd (c : String) : ∀ (A B : Formula),
   | .and _ _, B, h => occurs_mergeAndR c _ B h
   | .or _ _, B, h => occurs_mergeAndR c _ B h
 
-theorem occurs_mergeOrR (c : String) : ∀ (A B : Formula),
+theorem occurs_mergeOrR (c : List Char) : ∀ (A B : Formula),
     occursFormula c (mergeOrR A B) → Or (occursFormula c A) (occursFormula c B)
   | A, .forall B', h =>
       (occurs_mergeOrR c (liftFormula 0 A) B' h).elim
@@ -430,7 +430,7 @@ theorem occurs_mergeOrR (c : String) : ∀ (A B : Formula),
   | _, .and _ _, h => h
   | _, .or _ _, h => h
 
-theorem occurs_mergeOr (c : String) : ∀ (A B : Formula),
+theorem occurs_mergeOr (c : List Char) : ∀ (A B : Formula),
     occursFormula c (mergeOr A B) → Or (occursFormula c A) (occursFormula c B)
   | .forall A', B, h =>
       (occurs_mergeOr c A' (liftFormula 0 B) h).elim
@@ -445,7 +445,7 @@ theorem occurs_mergeOr (c : String) : ∀ (A B : Formula),
   | .and _ _, B, h => occurs_mergeOrR c _ B h
   | .or _ _, B, h => occurs_mergeOrR c _ B h
 
-theorem occurs_mergeImplR (c : String) : ∀ (A B : Formula),
+theorem occurs_mergeImplR (c : List Char) : ∀ (A B : Formula),
     occursFormula c (mergeImplR A B) → Or (occursFormula c A) (occursFormula c B)
   | A, .forall B', h =>
       (occurs_mergeImplR c (liftFormula 0 A) B' h).elim
@@ -460,7 +460,7 @@ theorem occurs_mergeImplR (c : String) : ∀ (A B : Formula),
   | _, .and _ _, h => h
   | _, .or _ _, h => h
 
-theorem occurs_mergeImpl (c : String) : ∀ (A B : Formula),
+theorem occurs_mergeImpl (c : List Char) : ∀ (A B : Formula),
     occursFormula c (mergeImpl A B) → Or (occursFormula c A) (occursFormula c B)
   | .forall A', B, h =>
       (occurs_mergeImpl c A' (liftFormula 0 B) h).elim
@@ -476,7 +476,7 @@ theorem occurs_mergeImpl (c : String) : ∀ (A B : Formula),
   | .or _ _, B, h => occurs_mergeImplR c _ B h
 
 /-- 🏁 **La forma normal prenexa no inventa símbolos** — y por eso la frescura viaja. -/
-theorem occurs_prenex (c : String) : ∀ (f : Formula),
+theorem occurs_prenex (c : List Char) : ∀ (f : Formula),
     occursFormula c (prenex f) → occursFormula c f
   | .bottom, h => h
   | .atom _ _, h => h
@@ -493,7 +493,7 @@ theorem occurs_prenex (c : String) : ∀ (f : Formula),
       (occurs_mergeImpl c _ _ h).elim
         (fun ha => Or.inl (occurs_prenex c a ha)) (fun hb => Or.inr (occurs_prenex c b hb))
 
-theorem not_occurs_prenex {c : String} {f : Formula} (h : Not (occursFormula c f)) :
+theorem not_occurs_prenex {c : List Char} {f : Formula} (h : Not (occursFormula c f)) :
     Not (occursFormula c (prenex f)) := fun hc => h (occurs_prenex c f hc)
 
 -- ═══════════════════════════════════════════════════════════════════════════
