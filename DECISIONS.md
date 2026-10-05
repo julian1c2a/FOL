@@ -46,6 +46,10 @@ decidibilidad, etc.) se construye desde cero en cada sub-librería.
 
 **Decisión**: `moreServerArgs := #["-DautoImplicit=false"]` en `lakefile.lean`.
 
+✏️ **Rectificado el 2026-10-05 (ADR‑128 de RPP)**: `moreServerArgs` sólo llega al servidor del EDITOR, así que
+`lake build` aceptaba variables implícitas automáticas (medido con un módulo sonda). Hoy la opción es
+`leanOptions`, con `autoImplicit` y `relaxedAutoImplicit` a `false`, que vale para el editor y para el build.
+
 **Justificación**: las anotaciones de tipo explícitas evitan problemas accidentales de
 polimorfismo de universos y hacen el código más legible y mantenible.
 

@@ -2,7 +2,11 @@ import Lake
 open Lake DSL
 
 package «FOL» where
-  moreServerArgs := #["-DautoImplicit=false"]
+  -- `autoImplicit` desactivado en el EDITOR y en `lake build` (ADR‑128 de RPP, 2026‑10‑05). Antes era
+  -- `moreServerArgs := #["-DautoImplicit=false"]`, que sólo llega al servidor del editor: `lake build`
+  -- aceptaba variables implícitas automáticas (medido con un módulo sonda). `leanOptions` vale para los
+  -- dos; activarlo no rompió ningún módulo (build completo desde cero, medido).
+  leanOptions := #[⟨`autoImplicit, false⟩, ⟨`relaxedAutoImplicit, false⟩]
 
 @[default_target]
 lean_lib «FOL» where
