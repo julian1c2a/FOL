@@ -104,8 +104,9 @@ meta‑reglas —`gen` 323 usos, los cuatro axiomas 320, los constructores `Deri
 del 2026‑09‑12)—. 🗑️ El 2026‑10‑02 RPP retiró su capa `⊢` (27 módulos, 633 declaraciones) y FOL
 borró `FOL/MetaRules.lean`: desde entonces la librería de RPP (lo que compila `lake build`) no
 usa `Derives`; sólo lo usan sondeos fuera del build (`MetaReglasRefutables.lean`,
-`DerivesSinMetaReglas.lean`) (medido ese día). Este módulo entra por el barrel `FOL`, que RPP
-**no importa**.
+`DerivesSinMetaReglas.lean`) (medido ese día). Este módulo entraba sólo por el barrel `FOL`, que RPP
+**no importa**; ✏️ 2026‑10‑14 (ADR‑137 de RPP): desde ADR‑121 de RPP (2026‑10‑05, Tarski) le llega también por
+`Meta/TarskiPrf.lean` → `FOL.Lift0` → `FOL.Eigenvariable` → `FOL.Derives0`, y sigue sin usar `Derives`.
 
 ⇒ Fue mucho más barato que la «reparación de fondo» de `cuarentena/README.md` §8 (partir
 `Derives`/`DerivesW`), y dio lo mismo para lo que hacía falta: un cálculo sobre el que M‑11 no
@@ -179,7 +180,9 @@ infix:50 " ⊢₀ " => Derives₀
 
 ⭐ **Y esta prueba es la demostración de que el Paso 0 funciona**: es una **inducción sobre
 `Derives₀`**. Cada caso es su constructor homónimo. (El 2026‑09‑14 se añadía que sobre `Derives`
-esa inducción sería ilegítima por M‑11; desde ADR‑115 de RPP no lo es: ningún axioma lo habita.)
+esa inducción sería ilegítima por M‑11. ✏️ 2026‑10‑14 (ADR‑133 y ADR‑137 de RPP): era M‑11 leída al revés. La
+inducción sobre un inductivo es válida siempre, también habitado por `axiom`s; lo que puede ser falso es el AXIOMA,
+si contradice lo que la inducción demuestra —`raa` lo hacía, y se retiró con ADR‑115 de RPP—.)
 
 🏁 **La recíproca está demostrada desde el 2026‑10‑02**: `FOL.Inconsistencia.derives_to_derives0`,
 por inducción sobre `Derives`, con `gen_rule` admisible por una constante fresca. Aquí se decía
