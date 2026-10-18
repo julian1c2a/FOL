@@ -1,6 +1,6 @@
 # Changelog
 
-**Last updated:** 2026-10-18 — T15 y T07 (ADR‑163 y ADR‑165 de RPP): entrada nueva arriba. Antes, 2026-10-05 (D7, ADR‑129 de RPP).
+**Last updated:** 2026-10-18 — T15, T07 y T04 (ADR‑163, ADR‑165 y ADR‑166 de RPP): entrada nueva arriba. Antes, 2026-10-05 (D7, ADR‑129 de RPP).
 **Author**: Julián Calderón Almendros
 
 > ⛔⛔ **ESTE FICHERO ESTUVO CONGELADO EN 2026-05-16 CON 115 COMMITS DETRÁS**, y no fue un
@@ -18,6 +18,18 @@ All notable changes to this project will be documented in this file.
 
 Format based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+
+## 2026-10-18 — T04: `[B]` rompe, con el universo de toda cita y la deuda POR CITA (ADR‑166 de RPP)
+
+* 🔒 `check-doc-sync.bash` `[B]`: era un AVISO con el universo de RPP (siete prefijos que en FOL casan cuatro nombres, los
+  cuatro de RPP) e imprimía «✓» habiendo mirado sólo esos. Ahora usa el MISMO núcleo que RPP, `b-citas.awk` (RPP compara
+  las dos copias): toda cita entre comillas invertidas con forma de identificador o de ruta; viva si existe (declaración
+  de FOL o de RPP, constante o espacio de nombres de Lean, constructor o campo, módulo, fichero o etiqueta de git);
+  absuelta sólo por un marcador a 100 bytes o menos, sin cruzar una celda de tabla; la fecha ya no absuelve.
+* 🆕 `doc/control/b-deuda.tsv`: la deuda POR CITA (261 entradas, 415 citas el 2026‑10‑18). Una cita muerta de más es
+  rojo; una de menos, también, hasta `bash check-doc-sync.bash --b-deuda`. No puede crecer sobre la versión inicial.
+* 🆕 `scripts/VolcarEntorno.lean`: el entorno de Lean para `[B]`. M‑3: en local se ejecuta desde la raíz de RPP; en la CI
+  de FOL, desde FOL.
 
 ## 2026-10-18 — T15: todo `.lean` de las dos `lean_lib` entra en el build, y el universo de los controles es el cierre de imports (ADR‑163 de RPP)
 
