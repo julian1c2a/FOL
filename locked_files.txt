@@ -11,6 +11,7 @@ FOL/BlockExtraction0.lean
 FOL/Hauptsatz0.lean
 FOL/SequentSound0.lean
 FOL/Core.lean
+FOL.lean
 FOL/Derives0.lean
 TheoryFramework/MetaTheorems.lean
 TheoryFramework/Instances/FOL.lean
