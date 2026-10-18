@@ -1,6 +1,6 @@
 # Changelog
 
-**Last updated:** 2026-10-18 — T15 (ADR‑163 de RPP): entrada nueva arriba. Antes, 2026-10-05 (D7, ADR‑129 de RPP).
+**Last updated:** 2026-10-18 — T15 y T07 (ADR‑163 y ADR‑165 de RPP): entrada nueva arriba. Antes, 2026-10-05 (D7, ADR‑129 de RPP).
 **Author**: Julián Calderón Almendros
 
 > ⛔⛔ **ESTE FICHERO ESTUVO CONGELADO EN 2026-05-16 CON 115 COMMITS DETRÁS**, y no fue un
@@ -36,6 +36,8 @@ this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
   con sus objetivos del Makefile; README, WORKFLOW, AI-GUIDE, `setup.bash` y el comentario de `FOL.lean` (con
   `unlock` y re‑`lock`), al día. Visto fallar: un fichero suelto roto en `FOL/` rompe el build, y uno suelto válido
   en `TheoryFramework/` pone `[L]` en rojo (`../ROBINSON_PlusPlus/doc/registro/2026-10-18-t15/`).
+* 🔒 `FOL/Semantics.lean`, **bloqueado** (T07 y ADR‑165 de RPP). El contrato de los enunciados de RPP fija las huellas
+  de `evalFormula`, `evalTerm` y `Model`, que están en el enunciado de sus titulares semánticos; tocarlas pide un ADR.
 
 ## 2026-10-05 — D7 ejecutada: los símbolos, `List Char` (ADR‑129 de RPP)
 

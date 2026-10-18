@@ -45,3 +45,4 @@ FOL/Enumeration.lean
 FOL/Inconsistencia.lean
 FOL/FOL.lean
 AXIOMS.md
+FOL/Semantics.lean
