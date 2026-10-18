@@ -8,7 +8,7 @@ Nació el 2026-09-26: el DEPENDENCIES.md a mano llevaba desde julio describiendo
 existía (cinco lean_lib, tres nodos borrados, ninguno de la capa ₀). Un grafo que se escribe a mano
 se pudre con el árbol; éste se CALCULA.
 """
-import io, os, re, sys, glob, datetime
+import io, os, re, sys, datetime
 
 ROOT = os.path.dirname(os.path.abspath(__file__))
 os.chdir(ROOT)
@@ -16,8 +16,12 @@ os.chdir(ROOT)
 def rd(p):
     return io.open(p, encoding='utf-8').read()
 
-PATTERNS = ('FOL/*.lean', 'FOL/Theorems/*.lean', 'TheoryFramework/*.lean', 'TheoryFramework/Instances/*.lean')
-files = sorted({f.replace(os.sep, '/') for pat in PATTERNS for f in glob.glob(pat)})
+# ✏️ 2026-10-18 (T15 y ADR-163 de RPP): el dominio son TODOS los .lean de `FOL/` y de `TheoryFramework/`, a cualquier
+# profundidad: lo que compilan los `globs := #[.andSubmodules …]` del lakefile. Que sea el cierre de imports de las
+# raíces (y lo que hay en git) lo comprueba [L] de `check-doc-sync.bash`. Antes eran cuatro patrones fijos, y un
+# subdirectorio nuevo no habría entrado en el grafo.
+files = sorted(os.path.join(d, f).replace(os.sep, '/') for top in ('FOL', 'TheoryFramework')
+               for d, _, fs in os.walk(top) for f in fs if f.endswith('.lean'))
 
 def mod(path):
     return path[:-5].replace('/', '.')
@@ -53,17 +57,6 @@ barrels = {}
 for b in ('FOL.lean', 'TheoryFramework.lean'):
     if os.path.exists(b):
         barrels[b] = re.findall(r'^\s*import\s+([A-Za-z0-9_.]+)', rd(b), re.M)
-compiled = set()
-def close(ms):
-    st = list(ms)
-    while st:
-        x = st.pop()
-        if x in compiled or x not in MODSET:
-            continue
-        compiled.add(x)
-        st.extend(imports[x])
-close(barrels.get('FOL.lean', []))
-close([m for m in mods if m.startswith('TheoryFramework.')])   # globs del lean_lib TheoryFramework
 
 n_edges = sum(len(v) for v in imports.values())
 n_fol = sum(1 for f in files if f.startswith('FOL/') and not f.startswith('FOL/Theorems/'))
@@ -91,9 +84,10 @@ w('## Cifras')
 w('')
 w(f'* **{len(mods)} módulos** (`FOL/` {n_fol} + `FOL/Theorems/` {n_thm} + `TheoryFramework/` {n_tf}), '
   f'**{n_edges} aristas** `import` entre ellos, profundidad máxima **{max(level.values())}**.')
-w('* 2 `lean_lib`: `FOL` (raíz: el barril `FOL.lean`, sin globs) y `TheoryFramework` (globs `.submodules`).')
-nc = sorted(set(mods) - compiled)
-w(f'* Módulos que NINGÚN build alcanza: {", ".join("`" + m + "`" for m in nc) if nc else "ninguno"}.')
+w('* 2 `lean_lib`: `FOL` y `TheoryFramework`, las dos con `globs := #[.andSubmodules …]`: el build compila el barril y')
+w('  TODO su directorio (T15 de RPP, 2026-10-18). Que todo módulo esté además en el cierre de imports de las raíces')
+w('  (`cierre-imports.bash`: `FOL`, `TheoryFramework` y `TheoryFramework.Instances.FOL`) lo comprueba [L] de')
+w('  `check-doc-sync.bash`.')
 ext = sorted({i for v in lean_imports.values() for i in v})
 w(f'* Imports externos a FOL: {", ".join("`" + i + "`" for i in ext) if ext else "ninguno"} '
   f'(FOL no tiene `require`: no depende de nada más allá de sí mismo).')

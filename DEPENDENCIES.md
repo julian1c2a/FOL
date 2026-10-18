@@ -1,6 +1,6 @@
 # Diagrama de Dependencias — FOL
 
-**Last updated:** 2026-10-02 — GENERADO por `py gen-dependencies.py` desde las líneas `import`; no se edita a mano.
+**Last updated:** 2026-10-18 — GENERADO por `py gen-dependencies.py` desde las líneas `import`; no se edita a mano.
 **Autor**: Julián Calderón Almendros
 
 > ⚠️ Este fichero se **calcula**. Para actualizarlo: `py gen-dependencies.py`; para comprobar que
@@ -10,8 +10,10 @@
 ## Cifras
 
 * **54 módulos** (`FOL/` 43 + `FOL/Theorems/` 5 + `TheoryFramework/` 6), **97 aristas** `import` entre ellos, profundidad máxima **12**.
-* 2 `lean_lib`: `FOL` (raíz: el barril `FOL.lean`, sin globs) y `TheoryFramework` (globs `.submodules`).
-* Módulos que NINGÚN build alcanza: ninguno.
+* 2 `lean_lib`: `FOL` y `TheoryFramework`, las dos con `globs := #[.andSubmodules …]`: el build compila el barril y
+  TODO su directorio (T15 de RPP, 2026-10-18). Que todo módulo esté además en el cierre de imports de las raíces
+  (`cierre-imports.bash`: `FOL`, `TheoryFramework` y `TheoryFramework.Instances.FOL`) lo comprueba [L] de
+  `check-doc-sync.bash`.
 * Imports externos a FOL: `Lean` (FOL no tiene `require`: no depende de nada más allá de sí mismo).
 
 ## Por niveles (camino de imports más largo hasta una raíz)

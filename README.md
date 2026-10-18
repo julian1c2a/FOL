@@ -155,17 +155,22 @@ make build-all  # TODAS las librerias del lakefile, explicitamente
 make sorry      # check-sorry.bash
 make axioms     # check-axioms.bash  ← el censo de `axiom` (A-1)
 make status     # locked files + sorry + axiom status
-bash new-module.bash ModuleName
 ```
 
+> ### 🗑️ `gen-root.bash` y `new-module.bash`, **RETIRADOS** el 2026‑10‑18 (T15 y ADR‑163 de RPP)
+>
+> Un módulo nuevo se crea a mano y se importa desde su barril, que se cura a mano. Los `globs` del lakefile
+> compilan todo `FOL/` y `TheoryFramework/`, y `[L]` de `check-doc-sync.bash` es rojo si un fichero no está en el
+> cierre de imports de las raíces (`cierre-imports.bash`) o no está en git. Lo que sigue es el aviso de entonces.
+>
 > ### ⛔ `make root` / `bash gen-root.bash` están **PROHIBIDOS** (2026‑09‑12, A‑7)
 >
 > Sobrescriben el barrel entero: **borrarían el aviso de cuarentena** de `FOL.lean` y
 > **meterían tres módulos huérfanos con declaraciones duplicadas**, uno de los cuales
 > redefine `derive_hyp`/`derive_weaken`, de `FOL.Tactics`, que ROBINSON_PlusPlus importaba **22 veces**
 > el 2026‑09‑12 (9 el 2026‑10‑02, medido en RPP `b1dedd1`, tras retirar su capa `⊢`: ADR‑115 de RPP).
-> Tan prohibido como `cd FOL && lake build`. La cabecera de `gen-root.bash` dice qué
-> haría falta para levantar la prohibición.
+> Tan prohibido como `cd FOL && lake build`. La cabecera de `gen-root.bash` decía qué
+> habría hecho falta para levantar la prohibición.
 
 > Ver [WORKFLOW.md](WORKFLOW.md) para el flujo completo.
 
@@ -214,4 +219,4 @@ Julián Calderón Almendros
 ---
 
 **Author**: Julián Calderón Almendros
-**Last updated:** 2026-10-03 — la deuda de los cinco módulos 🧊 con textos falsos, SALDADA (`thaw` autorizado, sólo comentarios, re‑congelados). Antes, 2026-10-02 — 🗑️ `FOL/MetaRules.lean` borrado (ADR‑115 de RPP): aviso (la solidez de `Derives` es un teorema, 0 `axiom`, la deuda de cinco módulos 🧊), «Deducción Natural» (sin `raa`), hito 2, la fila histórica de `Soundness.lean` y las importaciones de `FOL.Tactics` desde RPP. Antes (2026-09-27): la auditoría de constructividad y D1–D8: aviso (la tesis del WKL, rectificada), la instancia de `TheoryFramework` y los hitos 3, 4 y 6. Antes, el mismo día: el decisor del fragmento sin cuantificadores; renombres de la regla de subíndices (P2). Antes (2026-09-26): aviso, insignias, librerías, hitos y cabeceras HISTÓRICO corregidos; el resto del cuerpo es de 2026-05-16.
+**Last updated:** 2026-10-18 — T15 (ADR‑163 de RPP): `gen-root.bash` y `new-module.bash`, retirados; los `globs` compilan todo `FOL/` y `TheoryFramework/`. Antes, 2026-10-03 — la deuda de los cinco módulos 🧊 con textos falsos, SALDADA (`thaw` autorizado, sólo comentarios, re‑congelados). Antes, 2026-10-02 — 🗑️ `FOL/MetaRules.lean` borrado (ADR‑115 de RPP): aviso (la solidez de `Derives` es un teorema, 0 `axiom`, la deuda de cinco módulos 🧊), «Deducción Natural» (sin `raa`), hito 2, la fila histórica de `Soundness.lean` y las importaciones de `FOL.Tactics` desde RPP. Antes (2026-09-27): la auditoría de constructividad y D1–D8: aviso (la tesis del WKL, rectificada), la instancia de `TheoryFramework` y los hitos 3, 4 y 6. Antes, el mismo día: el decisor del fragmento sin cuantificadores; renombres de la regla de subíndices (P2). Antes (2026-09-26): aviso, insignias, librerías, hitos y cabeceras HISTÓRICO corregidos; el resto del cuerpo es de 2026-05-16.

@@ -122,7 +122,9 @@ consumidor no usaba.
 Los tres se **borraron** el 2026-09-23 (la cuarentena se vació de código); el porqué sigue en `cuarentena/README.md`. Sus sujetos, reparados sobre `Derives₀`: `FOL.Soundness0`, `FOL.Compacity0` y `FOL.Canonical0`.
 -/
 
--- ⛔⛔ NO REGENERAR CON `gen-root.bash`: está PROHIBIDO (A-7). Sobrescribiría este
--- fichero entero, borrando los avisos de abajo y metiendo tres módulos huérfanos con
--- declaraciones duplicadas. Ver la cabecera de `gen-root.bash`.
+-- ⛔⛔ Este barril se cura A MANO. `gen-root.bash` lo habría sobrescrito entero, borrando los
+-- avisos de abajo y metiendo tres módulos huérfanos con declaraciones duplicadas: estuvo
+-- PROHIBIDO desde A-7 y se retiró el 2026-10-18 (T15 y ADR-163 de RPP). Hoy los `globs` del
+-- lakefile compilan todo `FOL/`, y [L] de `check-doc-sync.bash` dice si un fichero no está
+-- en el cierre de imports de las raíces (`cierre-imports.bash`).
 

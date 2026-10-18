@@ -10,6 +10,10 @@ package «FOL» where
 
 @[default_target]
 lean_lib «FOL» where
+  -- ⚠️ `globs` EXPLÍCITO (2026‑10‑18, T15 y ADR‑163 de RPP): sin él sólo se compila lo que el barril `FOL.lean`
+  -- alcanza, como le pasó a `TheoryFramework` hasta A‑5. Con `.andSubmodules` entran el barril y TODO `FOL/`; `[L]`
+  -- de `check-doc-sync.bash` dice si algo de ahí no está en el cierre de imports de las raíces (`cierre-imports.bash`).
+  globs := #[.andSubmodules `FOL]
 
 -- ⚠️ `TheoryFramework` SÍ entra en el build desde el 2026‑09‑12 (A‑5): antes estaba
 -- declarada pero sin `@[default_target]`, así que **nunca se compilaba** y su
@@ -20,7 +24,9 @@ lean_lib «TheoryFramework» where
   -- barrel alcanza, y `TheoryFramework/Instances/FOL.lean` era HUÉRFANO — roto desde hacía
   -- meses, autodescribiéndose «fully complete and verified», y sin que nada lo dijera.
   -- Con `.submodules` entra TODO el directorio: si algo rompe, el build lo dice.
-  globs := #[.submodules `TheoryFramework]
+  -- ✏️ 2026‑10‑18 (T15 y ADR‑163 de RPP): `.andSubmodules`. `.submodules` dejaba fuera el propio barril
+  -- `TheoryFramework.lean`, que no lo compilaba nadie.
+  globs := #[.andSubmodules `TheoryFramework]
 
 -- 🗑️ **RETIRADAS el 2026‑09‑12** (D‑1): `FOLPure`, `PropLogic` y `FOL_poli` están en
 -- `cuarentena/librerias-retiradas/`. Medido: cero consumidores, cero artefactos de

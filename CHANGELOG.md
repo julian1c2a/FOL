@@ -1,6 +1,6 @@
 # Changelog
 
-**Last updated:** 2026-10-05 — D7 ejecutada (ADR‑129 de RPP): entrada nueva arriba. Antes, 2026-09-27.
+**Last updated:** 2026-10-18 — T15 (ADR‑163 de RPP): entrada nueva arriba. Antes, 2026-10-05 (D7, ADR‑129 de RPP).
 **Author**: Julián Calderón Almendros
 
 > ⛔⛔ **ESTE FICHERO ESTUVO CONGELADO EN 2026-05-16 CON 115 COMMITS DETRÁS**, y no fue un
@@ -18,6 +18,24 @@ All notable changes to this project will be documented in this file.
 
 Format based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+
+## 2026-10-18 — T15: todo `.lean` de las dos `lean_lib` entra en el build, y el universo de los controles es el cierre de imports (ADR‑163 de RPP)
+
+* 🔒 `lakefile.lean`: `globs := #[.andSubmodules `FOL]` en la `lean_lib` `FOL`, y `.andSubmodules` en vez de
+  `.submodules` en `TheoryFramework`. Antes `FOL` sólo compilaba lo que alcanzaba su barril, y `.submodules` dejaba
+  fuera el propio `TheoryFramework.lean`, que no compilaba nadie (hoy compila: 59 jobs con `lake build "@FOL/FOL"
+  "@FOL/TheoryFramework"` desde la raíz de RPP).
+* 🆕 `cierre-imports.bash`: el cierre de imports de las raíces (`FOL`, `TheoryFramework` y
+  `TheoryFramework.Instances.FOL`, que su barril no importa a propósito), leído en la cabecera y sin comentarios; con
+  `--autotest`. El mismo código que el de RPP, salvo las raíces (lo comprueba RPP).
+* 🔒 `check-doc-sync.bash`: el bloque `[L]` (cierre = disco = git, rojo en los dos sentidos), y `[A]` y `[C]` cuentan
+  y recorren sobre el cierre. `[C]` dejaba fuera `FOL/FOL.lean` (el módulo `FOL.FOL`) por un `continue` pensado para
+  el barril. `gen-dependencies.py`: el dominio son todos los `.lean` de `FOL/` y `TheoryFramework/` (lo que compilan
+  los globs), no cuatro patrones fijos; `DEPENDENCIES.md`, regenerado (las mismas cifras: 54 módulos, 97 aristas).
+* 🗑️ `new-module.bash` (pedía un `_template.lean` que no existía) y `gen-root.bash` (PROHIBIDO desde A‑7), retirados
+  con sus objetivos del Makefile; README, WORKFLOW, AI-GUIDE, `setup.bash` y el comentario de `FOL.lean` (con
+  `unlock` y re‑`lock`), al día. Visto fallar: un fichero suelto roto en `FOL/` rompe el build, y uno suelto válido
+  en `TheoryFramework/` pone `[L]` en rojo (`../ROBINSON_PlusPlus/doc/registro/2026-10-18-t15/`).
 
 ## 2026-10-05 — D7 ejecutada: los símbolos, `List Char` (ADR‑129 de RPP)
 

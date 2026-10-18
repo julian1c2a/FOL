@@ -2,7 +2,7 @@
 # Usage: make <target>
 # Requires: bash, lake, git
 
-.PHONY: build build-all clean rebuild sorry axioms status lock unlock list init new help
+.PHONY: build build-all clean rebuild sorry axioms status lock unlock list init help
 
 ## Build the project (los DOS `@[default_target]`: FOL y TheoryFramework)
 build:
@@ -61,16 +61,9 @@ list:
 init:
 	@bash git-lock.bash init
 
-## Create a new module: make new NAME=Algebra/Ring
-new:
-	@[ -n "$(NAME)" ] || (echo "Usage: make new NAME=ModuleName" && exit 1)
-	@bash new-module.bash $(NAME)
-
-## ⛔ PROHIBIDO (2026-09-12, A-7): sobrescribe el barrel, borra el aviso de cuarentena
-## y mete tres modulos huerfanos con declaraciones DUPLICADAS. Ver gen-root.bash.
-root:
-	@echo "⛔ 'make root' esta PROHIBIDO en este repo — ver la cabecera de gen-root.bash (A-7)."
-	@exit 2
+# (2026-10-18, T15 y ADR-163 de RPP: `make new` y `make root` se retiraron con new-module.bash y gen-root.bash, que
+#  estaba PROHIBIDO desde A-7. Un modulo nuevo se crea a mano y se importa desde su barril; [L] de
+#  check-doc-sync.bash dice si un fichero no esta en el cierre de imports.)
 
 ## Update Lean toolchain: make update-toolchain VERSION=v4.29.0
 update-toolchain:

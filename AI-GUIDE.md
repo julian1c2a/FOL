@@ -175,8 +175,8 @@ theorem subset_refl (A : Type) : A ⊆ A := fun _ h => h
 en el directorio raíz del repositorio (donde está `lakefile.lean`). Todo módulo de
 trabajo vive dentro del directorio del proyecto (p. ej. `ProjectName/`) o en
 subdirectorios temáticos dentro de él. El único `.lean` permitido en la raíz es el
-módulo raíz autogenerado (`ProjectName.lean`, vía `gen-root.bash`) y el ejecutable
-(`Main.lean`) si existe.
+barril raíz (`ProjectName.lean`), curado a mano, y el ejecutable (`Main.lean`) si existe.
+(✏️ 2026‑10‑18, T15 y ADR‑163 de RPP: decía «autogenerado, vía `gen-root.bash`»; el script se retiró.)
 
 **Ficheros scratch/temporales de sesión (`scratch*.lean`, `temp_*.lean`, `fix_*.py`,
 `fix-*.ps1`) nunca se commitean.** Van en `.gitignore` desde el primer commit del
@@ -226,14 +226,17 @@ que el directorio (p. ej. `Algebra.lean` para `Algebra/`) que importe todos sus
 submódulos. Los barrels **no contienen código**, solo `import` (y opcionalmente un
 comentario catalogando la API pública del directorio). El barrel raíz del proyecto
 (`ProjectName.lean`) prefiere importar barrels de subdirectorio en vez de listar cada
-submódulo suelto. `gen-root.bash` detecta barrels automáticamente.
+submódulo suelto. Los barrels se curan a mano (✏️ 2026‑10‑18, T15 y ADR‑163 de RPP: `gen-root.bash`, que los
+regeneraba y borraba sus comentarios, se retiró). Los `globs` del lakefile compilan todo el directorio, y `[L]` de
+`check-doc-sync.bash` exige que cada fichero esté en el cierre de imports de las raíces (`cierre-imports.bash`).
 
 ### (19.) Organización por subdirectorios temáticos
 
 A medida que el proyecto crece, organizar los módulos en subdirectorios temáticos
 (`UpperCamelCase`, reflejando el sub-namespace). Cada subdirectorio puede tener su
-propio `Basic.lean` fundacional. `new-module.bash Nat/Add` crea
-`ProjectName/Nat/Add.lean` con namespace `ProjectName.Nat.Add`.
+propio `Basic.lean` fundacional. El módulo `Nat/Add` es `ProjectName/Nat/Add.lean`, con namespace
+`ProjectName.Nat.Add`, y se importa desde su barril. (✏️ 2026‑10‑18, T15 y ADR‑163 de RPP: lo creaba
+`new-module.bash` desde una plantilla, `_template.lean`, que ya no existía; el script se retiró.)
 
 ---
 
@@ -314,8 +317,7 @@ Transición: 🔄 → 🔶 → ✅ → 🧊 (el estado 🧊 es final).
 | `bash git-lock.bash freeze/thaw <file>` | Congelado permanente / deshielo de emergencia |
 | `bash git-lock.bash list` | Lista de bloqueados y congelados |
 | `bash git-lock.bash init` | Instala/reinstala el hook pre-commit |
-| `bash new-module.bash NombreModulo` | Crea un módulo nuevo desde la plantilla |
-| `bash gen-root.bash` | Regenera el fichero de importación raíz |
+| `bash cierre-imports.bash` | El cierre de imports de las raíces: el universo de los módulos (`[L]`, `[A]` y `[C]` de `check-doc-sync.bash`; T15 y ADR‑163 de RPP). `--autotest` lo comprueba. (✏️ 2026‑10‑18: aquí estaban `new-module.bash` y `gen-root.bash`, retirados) |
 | `bash check-sorry.bash` | Localiza todos los `sorry` (excluyendo comentarios) |
 | `bash update-toolchain.bash vX.Y.Z` | Actualiza el toolchain de Lean con verificación de build |
 | `make help` | Lista los targets del Makefile |

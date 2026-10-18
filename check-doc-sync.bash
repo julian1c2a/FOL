@@ -12,6 +12,8 @@
 # «✅ Complete (1 sorry pendiente)» en la tabla de fases) que ningún control veía, porque
 # hasta hoy NADIE miraba los documentos de FOL — ni los de FOL ni los de RPP.
 #
+# ✏️ 2026-10-18 (T15 y ADR-163 de RPP): y [L], el universo de los módulos (el cierre de imports de las raíces = el
+# disco = git), que rompe.
 # [A], [C] y [D] son OBJETIVOS y rompen el check. [A2], [B] y [E] son AVISOS que piden
 # juicio: hay menciones legítimas de símbolos inexistentes y cifras históricas.
 #
@@ -55,10 +57,17 @@ done
 
 # ─── 1. VERDAD DEL CÓDIGO ────────────────────────────────────────────────────
 # El árbol de FOL son DOS `lean_lib` (`FOL` y `TheoryFramework`) más `FOL/Theorems/`.
-CORE=$(ls FOL/*.lean 2>/dev/null | wc -l)
-THEO=$(ls FOL/Theorems/*.lean 2>/dev/null | wc -l)
-TFW=$(ls TheoryFramework/*.lean TheoryFramework/**/*.lean 2>/dev/null | sort -u | wc -l)
-ACTIVE=$((CORE + THEO + TFW))
+# ✏️ 2026-10-18 (T15 y ADR-163 de RPP): se cuentan sobre el CIERRE de imports de las raíces (`cierre-imports.bash`),
+# el mismo conjunto que [L] compara con el disco y con git. Antes eran `ls`, y `TheoryFramework/**/*.lean` sin
+# `globstar` es UN nivel. Un módulo es un fichero de `FOL/` o de `TheoryFramework/`; los barriles de la raíz
+# (`FOL.lean`, `TheoryFramework.lean`) no.
+CIERRE=$(bash cierre-imports.bash 2>/dev/null)
+CIERRE_RC=$?
+cuenta_cierre() { printf '%s\n' "$CIERRE" | grep -cE "$1" || true; }
+CORE=$(cuenta_cierre '^FOL/[^/]*\.lean$')
+THEO=$(cuenta_cierre '^FOL/Theorems/')
+TFW=$(cuenta_cierre '^TheoryFramework/')
+ACTIVE=$(cuenta_cierre '^(FOL|TheoryFramework)/')
 QUAR=$(ls cuarentena/*.lean 2>/dev/null | wc -l)
 # ⚠️ Sin `bc`: no está instalado en Git Bash ni, por defecto, en el runner de CI, y
 # `paste -sd+ | bc` fallaba en silencio dejando la cifra VACÍA. `wc -l` sobre las
@@ -187,6 +196,58 @@ FAIL=0
 if [ "$SORRY_MISSING" != "0" ] || [ "$AXIOMS_MISSING" != "0" ]; then
   FAIL=1
 fi
+
+# ─── [L] LIBRERÍA = CIERRE DE IMPORTS ────────────────────────────────────────
+# ⭐ AÑADIDO el 2026-10-18 (T15 y ADR-163 de RPP). Con `globs := #[.andSubmodules …]` en las dos `lean_lib`
+# (lakefile.lean), Lake compila TODO `.lean` de `FOL/` y de `TheoryFramework/` y los dos barriles, lo importe alguien
+# o no. Tres conjuntos tienen que ser EL MISMO: (1) el cierre de imports de las raíces (`cierre-imports.bash`: `FOL`,
+# `TheoryFramework` y `TheoryFramework.Instances.FOL`, que el barril no importa a propósito), que es lo que cuentan
+# [A] y recorre [C]; (2) lo que compilan los globs (el disco); (3) lo que ve la CI (`git ls-files`). Rompe en LOS
+# DOS SENTIDOS, y también con un módulo fuera de las tres cuentas de [A].
+# 🔑 Probado con el fallo puesto: el autotest de `cierre-imports.bash` y un fichero suelto de verdad (ADR-163 de RPP).
+# (Que el código de `cierre-imports.bash` sea el de RPP lo comprueba RPP, que ve los dos repos.)
+echo "════ [L] LIBRERÍA = CIERRE DE IMPORTS — ROJO, y rompe en LOS DOS SENTIDOS ════"
+L_FAIL=0
+sin_vacias() { grep -v '^$' || true; }
+if ! bash cierre-imports.bash --autotest; then
+  echo "  ❌ SIN MEDIR: el autotest de cierre-imports.bash falla (¿strip-lean.awk? ¿LC_ALL? ¿bash?)."
+  L_FAIL=1
+elif [ "$CIERRE_RC" != "0" ] || [ -z "$CIERRE" ]; then
+  echo "  ❌ el cierre de imports no sale (código $CIERRE_RC): bash cierre-imports.bash"
+  L_FAIL=1
+elif ! git rev-parse --git-dir > /dev/null 2>&1; then
+  echo "  ❌ SIN MEDIR: esto no es un repositorio de git, y sin \`git ls-files\` no sé qué ve la CI."
+  L_FAIL=1
+else
+  L_GIT=$(git ls-files -- FOL.lean 'FOL/*.lean' TheoryFramework.lean 'TheoryFramework/*.lean' | sin_vacias | LC_ALL=C sort -u)
+  L_DISCO=$( { for r in FOL.lean TheoryFramework.lean; do [ -f "$r" ] && echo "$r"; done
+               find FOL TheoryFramework -name '*.lean'; } | sin_vacias | LC_ALL=C sort -u)
+  L_SUELTOS=$(printf '%s\n%s\n' "$L_GIT" "$L_DISCO" | sin_vacias | LC_ALL=C sort -u \
+    | LC_ALL=C comm -23 - <(printf '%s\n' "$CIERRE"))
+  L_SINGIT=$(printf '%s\n' "$CIERRE" | LC_ALL=C comm -23 - <(printf '%s\n' "$L_GIT"))
+  L_CUENTAS=$((CORE + THEO + TFW))
+  while IFS= read -r f; do
+    [ -n "$f" ] || continue
+    echo "  ✗ $f está en el disco o en git y NO en el cierre de imports de las raíces: los globs lo compilan,"
+    echo "      pero ningún \`import\` lo alcanza. Impórtalo desde su barril, o añade la raíz en cierre-imports.bash."
+    L_FAIL=1
+  done <<< "$L_SUELTOS"
+  while IFS= read -r f; do
+    [ -n "$f" ] || continue
+    echo "  ✗ $f está en el cierre y NO en git: aquí compila, y la CI no lo tiene (git add)."
+    L_FAIL=1
+  done <<< "$L_SINGIT"
+  if [ "$L_CUENTAS" != "$ACTIVE" ]; then
+    echo "  ✗ hay módulos del cierre fuera de FOL/, FOL/Theorems/ y TheoryFramework/ ($ACTIVE módulos, $L_CUENTAS"
+    echo "      en las tres cuentas): [A] no los contaría. Añade la cuenta arriba."
+    L_FAIL=1
+  fi
+  L_TOTAL=$(printf '%s\n' "$CIERRE" | grep -c .)
+  [ "$L_FAIL" = "0" ] && echo "  ✓ los $L_TOTAL ficheros del cierre de imports de las raíces son los del disco y los de" \
+    "git ($((L_TOTAL - ACTIVE)) barriles y $ACTIVE módulos); el autotest del cierre pasa"
+fi
+[ "$L_FAIL" = "0" ] || FAIL=1
+echo
 
 # ─── 2. CIFRAS OBSOLETAS ─────────────────────────────────────────────────────
 # CHANGELOG.md se excluye: es un diario, sus cifras son históricas por diseño.
@@ -522,10 +583,12 @@ C_FAIL=0
 # 🔑 Un control que casa por subcadena no comprueba: ABSUELVE.
 if [ -f REFERENCE.md ]; then
   FOLEXP=$(sed -n '/^## 6\. Exports/,/^## 7\./p' REFERENCE.md)
-  for f in FOL/*.lean FOL/Theorems/*.lean; do
+  # ✏️ 2026-10-18 (T15 y ADR-163 de RPP): el dominio es el cierre de imports, sus ficheros de `FOL/` a cualquier
+  # profundidad. Antes eran `FOL/*.lean` y `FOL/Theorems/*.lean`, y un `continue` pensado para el barril dejaba
+  # fuera `FOL/FOL.lean`, el módulo `FOL.FOL`: el barril está en la raíz.
+  for f in $(printf '%s\n' "$CIERRE" | grep '^FOL/'); do
     [ -e "$f" ] || continue
     m=${f#FOL/}; m=${m%.lean}
-    [ "$m" = "FOL" ] && continue
     case "$m" in
       */*) PAT="(^|[^A-Za-z0-9_])$m\.lean" ;;
       *)   PAT="(^|[^A-Za-z0-9_/])$m\.lean" ;;
@@ -543,7 +606,7 @@ fi
 # SUBCADENA (`Logic`, `Theory`, `Properties` y `FOL` aparecen sueltos por todo REFERENCE.md)
 # estando los SEIS sin proyectar. Es la novena causa otra vez: casar por subcadena ABSUELVE.
 if [ -f REFERENCE.md ]; then
-  for f in TheoryFramework/*.lean TheoryFramework/Instances/*.lean; do
+  for f in $(printf '%s\n' "$CIERRE" | grep '^TheoryFramework/'); do   # ✏️ 2026-10-18: del cierre (T15)
     [ -e "$f" ] || continue
     if ! printf '%s' "$FOLEXP" | grep -qE "(^|[^A-Za-z0-9_])$f"; then
       echo "  ✗ $f NO está proyectado en REFERENCE.md §6 (AI-GUIDE §14)"

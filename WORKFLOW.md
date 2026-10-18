@@ -100,14 +100,12 @@ make sorry
 
 ### Creating a new module
 
-```bash
-# Creates MyProject/ModuleName.lean from _template.lean
-# and adds the import to MyProject.lean
-make new NAME=ModuleName
-
-# For nested modules:
-make new NAME=Algebra/Ring
-```
+Create `FOL/ModuleName.lean` (or `FOL/Topic/ModuleName.lean`, or under `TheoryFramework/`) by hand and import it
+from its barrel (`FOL.lean`, `FOL/Core.lean` or `TheoryFramework.lean`), which is curated by hand. The lakefile's
+`globs := #[.andSubmodules …]` compile every file in both directories, and `[L]` of `check-doc-sync.bash` fails if a
+file is not in the import closure of the roots (`cierre-imports.bash`) or not in git.
+(2026-10-18, T15 and ADR-163 of RPP: `make new` / `new-module.bash`, which needed a missing `_template.lean`, and
+`gen-root.bash`, PROHIBITED since A-7, were retired.)
 
 Then edit the generated file. When done:
 
@@ -211,15 +209,11 @@ bash update-toolchain.bash v4.29.0
 
 ---
 
-## Part 5: Regenerating the Root Module
+## Part 5: The Root Module
 
-If you add/remove modules manually without using `new-module.bash`:
-
-```bash
-bash gen-root.bash
-```
-
-This scans `MyProject/` for all `.lean` files (excluding `_template.lean`) and rewrites `MyProject.lean` with the full import list.
+The barrels are curated by hand. (2026-10-18, T15 and ADR-163 of RPP: `gen-root.bash`, which rewrote `MyProject.lean`
+with the full import list and erased its comments, was retired; it had been PROHIBITED here since A-7.) `[L]` of
+`check-doc-sync.bash` says whether every file is reachable from the roots.
 
 ---
 
@@ -251,11 +245,9 @@ bash git-lock.bash init              # install git hook (once per clone)
 bash git-lock.bash list              # show locked files
 bash git-lock.bash lock File.lean    # lock a file
 bash git-lock.bash unlock File.lean  # unlock a file
-make new NAME=Module                 # create new module
 make build                           # compile
 make sorry                           # check for sorry
 make status                          # lock + sorry status
-bash gen-root.bash                   # regenerate root imports
 bash update-toolchain.bash vX.Y.Z    # update Lean version
 ```
 n.bash vX.Y.Z    # update Lean version
