@@ -1,6 +1,6 @@
 # Changelog
 
-**Last updated:** 2026-10-18 — T15, T07 y T04 (ADR‑163, ADR‑165 y ADR‑166 de RPP): entrada nueva arriba. Antes, 2026-10-05 (D7, ADR‑129 de RPP).
+**Last updated:** 2026-10-18 — T04, segunda entrega (ADR‑166 de RPP): entrada nueva arriba. Antes, el mismo día — T15, T07 y T04 (ADR‑163, ADR‑165 y ADR‑166 de RPP). Antes, 2026-10-05 (D7, ADR‑129 de RPP).
 **Author**: Julián Calderón Almendros
 
 > ⛔⛔ **ESTE FICHERO ESTUVO CONGELADO EN 2026-05-16 CON 115 COMMITS DETRÁS**, y no fue un
@@ -18,6 +18,27 @@ All notable changes to this project will be documented in this file.
 
 Format based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+
+## 2026-10-18 — T04, segunda entrega: el núcleo de las tres revisiones adversariales y el techo que rehace la historia de la tabla (ADR‑166 de RPP)
+
+* 🔒 `b-citas.awk` (idéntico al de RPP, que compara las dos copias): cada PIEZA de una cita se mira (la regla de la
+  cabeza escondía los nombres muertos que no iban primero); un nombre que el proyecto declaró alguna vez (HIST, de la
+  historia de git) no se exime por su forma ni lo absuelve un homónimo de Lean; «hace falta» no es un marcador; las
+  reglas de CommonMark; una orden (`#print`) vive si el analizador la conoce.
+* 🆕 `b-control.bash` (idéntico al de RPP): el autotest de salida exacta, HIST (HEAD y etiquetas de FOL y de RPP, como
+  la CI), la deuda por cita y el TECHO, que rehace en git la historia de la tabla en cada ejecución: cada versión sólo
+  baja, salvo lo que un cambio de `b-citas.awk` vea de más; una subida sin cabida no cuenta para las siguientes (un
+  comentario en el núcleo, un commit intermedio o un núcleo roto ya no blanquean la tabla).
+* `check-doc-sync.bash` `[B]`: la interfaz nueva (`B_GITS`, `b_adr_texto`: un ADR que deja subir una entrada tiene que
+  nombrarla); las librerías retiradas (`cuarentena/librerias-retiradas/`) sólo viven con su ruta entera.
+* `scripts/VolcarEntorno.lean`: también los módulos (M), las órdenes (T) y los nombres por un alias del proyecto
+  (`Formula.atom` es `FormulaG.atom`).
+* `doc/control/b-deuda.tsv`, rehecha con el núcleo nuevo: 331 entradas, 648 citas. El núcleo de la primera entrega leía
+  otras entradas, así que la historia de la tabla empieza aquí (lo dice la línea «historia de la tabla» de `[B]`).
+* ⚠️ **Abierto:** la tercera revisión adversarial encontró tres vías para subir la tabla con la CI en verde (un núcleo
+  con «otra interfaz» o debilitado en un commit intermedio que la CI no ve, y las fusiones que el recorrido por primeros
+  padres no mira), y verdes falsos en el núcleo (un marcador que absuelve una cita vecina, los globs sin directorio, las
+  abreviaturas con `/`). Es el trabajo pendiente de T04: ADR‑166 §4 de RPP.
 
 ## 2026-10-18 — T04: `[B]` rompe, con el universo de toda cita y la deuda POR CITA (ADR‑166 de RPP)
 

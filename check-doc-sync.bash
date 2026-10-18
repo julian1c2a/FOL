@@ -29,6 +29,7 @@
 #   bash check-doc-sync.bash --fix-hint # además, sugiere el sed de cada corrección
 #   bash check-doc-sync.bash --b-deuda  # además, baja doc/control/b-deuda.tsv a la deuda de hoy, si nada sube
 #   bash check-doc-sync.bash --b-deuda-inicial  # crea esa tabla, sólo si no existe (se hizo una vez, ADR-166)
+#   bash check-doc-sync.bash --b-deuda-rehacer  # la rehace, sólo en el commit que cambia el núcleo de [B]
 #
 # Salida: 0 si todo cuadra, 1 si hay desincronización.
 
@@ -56,6 +57,7 @@ for a in "$@"; do
     --fix-hint)  HINT=1 ;;
     --b-deuda)   B_DEUDA_MODO=1 ;;
     --b-deuda-inicial) B_DEUDA_MODO=2 ;;
+    --b-deuda-rehacer) B_DEUDA_MODO=3 ;;
     -h|--help)   sed -n '2,20p' "$0"; exit 0 ;;
     *) echo "opción desconocida: $a" >&2; exit 2 ;;
   esac
@@ -453,27 +455,22 @@ echo
 echo "════ [B] CITAS MUERTAS — ROJO, con trinquete POR CITA (T04 y ADR-166 de RPP) ════"
 # ⛔⛔ REHECHO EL 2026-10-18 (T04 y ADR-166 de RPP; M-12: FOL primero). Hasta hoy era un AVISO con el universo de RPP
 # —siete prefijos (`prf_`, `pcc_`, `goedel_`…) que en FOL casan cuatro nombres, los cuatro de RPP— e imprimía «✓ ningún
-# símbolo muerto citado como vigente» habiendo mirado sólo esos cuatro. Ahora es el MISMO núcleo que RPP, `b-citas.awk`
-# (RPP compara las dos copias): toda cita entre comillas invertidas con forma de identificador o de ruta; viva si existe
-# (declaración de FOL o de RPP, constante o espacio de nombres de Lean, constructor o campo, módulo, fichero o etiqueta
-# de git); absuelta sólo por un marcador a 100 bytes o menos, sin cruzar una celda de tabla; la FECHA ya no absuelve.
-# 🔑 La deuda es POR CITA: `doc/control/b-deuda.tsv` dice cuántas citas muertas tiene cada (clase, clave, documento).
-# Una de más es rojo, y una de menos también, hasta que `bash check-doc-sync.bash --b-deuda` baje la tabla. La tabla
-# no puede pasar de la que se creó con ADR-166 de RPP, entrada a entrada, sin un ADR (`B_SUBE_ADR`).
+# símbolo muerto citado como vigente» habiendo mirado sólo esos cuatro. Ahora es el MISMO núcleo que RPP: `b-citas.awk`
+# y `b-control.bash`, idénticos byte a byte en los dos repos (RPP los compara). Los detalles, en su cabecera.
+# 🔑 La deuda es POR CITA (`doc/control/b-deuda.tsv`), con TECHO: el que sale de rehacer en git la historia de la tabla
+# desde que se creó; sólo baja, salvo lo que un cambio del núcleo vea de más (b-control.bash lo explica).
 # ⛔ M-3: el entorno de Lean lo vuelca `scripts/VolcarEntorno.lean`. En local, desde la raíz de RPP (que es donde se
 # construye FOL); en la CI de FOL, desde FOL, que acaba de construirse ahí. Si no se puede, no se mide, y es rojo.
-B_FAIL=0
-B_W=100
-B_TABLA=doc/control/b-deuda.tsv
-B_SUBE_ADR=""   # sólo si un ADR deja que la tabla CREZCA sobre la de ADR-166 de RPP: «ADR-NNN» (de RPP)
-B_MARK='YA NO EXISTE|NO EXISTEN|retirad|RETIRADO|eliminad|borrad|archivad|legacy|F7a|histórico|ANTERIORES|🗑️|muert|Aquí vivía|tampoco existe|inexistente|desapareci|ya no son|se borró'
-B_MARK="$B_MARK"'|propuest|candidat|hipot(e|é)tic|har(i|í)a falta|si se |habr(i|í)a que|añadir |descartad|no existe|NO EXISTE|sin materializar'
-B_MARK="$B_MARK"'|falta|FALTA|construir|objetivo|medir|sin medir|pendiente|⏳|abiert|necesita|exige|pide|TAREA|hace falta|no hay ni habrá|sub‑familia|sub-familia|buscaba|buscó|usan la'
-AUTHORITATIVE="REFERENCE.md CURRENT-STATUS-PROJECT.md DEPENDENCIES.md DECISIONS.md README.md AXIOMS.md NEXT-STEPS.md AI-GUIDE.md"
-AUTHORITATIVE="$AUTHORITATIVE cuarentena/README.md"
+B_SUBE_ADR=""   # sólo si un ADR de RPP deja que la tabla CREZCA sin cambiar el núcleo: «ADR-NNN» (que las nombre)
+B_DOCS_LISTA="REFERENCE.md CURRENT-STATUS-PROJECT.md DEPENDENCIES.md DECISIONS.md README.md AXIOMS.md NEXT-STEPS.md AI-GUIDE.md"
+B_DOCS_LISTA="$B_DOCS_LISTA cuarentena/README.md"
 SIBLING="${RPP_DIR:-../ROBINSON_PlusPlus}"
 SIBLING_OK=0
 [ -d "$SIBLING/ROBINSON_PlusPlus" ] && SIBLING_OK=1
+# la historia de los nombres: la de FOL (con lo que aún no está en git) y la de RPP (su HEAD: lo que ve la CI)
+B_GITS="."; [ "$SIBLING_OK" = "1" ] && B_GITS=". $SIBLING"
+b_adr_existe() { [ "$SIBLING_OK" = "1" ] && grep -qE "^## $1:" "$SIBLING/DECISIONS.md"; }
+b_adr_texto() { awk -v a="## $1:" '/^## / { en = (index($0, a) == 1) } en' "$SIBLING/DECISIONS.md"; }
 if [ "$SIBLING_OK" = "1" ]; then
   # El alcance de RPP es su árbol ACTIVO —la librería y su cuarentena—, no sus sondeos ni `Probe/` (ADR-116 de RPP).
   SCOPE="FOL/ TheoryFramework/ FOL.lean cuarentena/ $SIBLING/ROBINSON_PlusPlus/ $SIBLING/ROBINSON_PlusPlus.lean $SIBLING/cuarentena/"
@@ -483,20 +480,35 @@ else
 fi
 DECL_RE="(^|[^A-Za-z0-9_'.])(theorem|lemma|def|abbrev|axiom|opaque|instance|structure|inductive|class) +[^[:space:]:({[]+"
 NOMBRES='{n = $NF; sub(/[.]$/, "", n); if (n == "") next; print n; k = n; sub(/.*[.]/, "", k); if (k != n && k != "") print k}'
-DECLS=$(mktemp); B_SOND=$(mktemp); B_ENV=$(mktemp); B_MOD=$(mktemp); B_RUT=$(mktemp); B_CIT=$(mktemp); B_ACT=$(mktemp)
-B_AUTO=$(mktemp -d)
-trap 'rm -rf "$DECLS" "$B_SOND" "$B_ENV" "$B_MOD" "$B_RUT" "$B_CIT" "$B_ACT" "$B_AUTO"' EXIT
+DECLS=$(mktemp); B_SOND=$(mktemp); B_ENV=$(mktemp); B_MOD=$(mktemp); B_RUT=$(mktemp)
+trap 'rm -rf "$DECLS" "$B_SOND" "$B_ENV" "$B_MOD" "$B_RUT"' EXIT
 find $SCOPE -name '*.lean' ! -path '*/.lake/*' ! -path '*/librerias-retiradas/*' -print0 2>/dev/null \
   | xargs -0 env LC_ALL=C awk -f strip-lean.awk | LC_ALL=C grep -oE "$DECL_RE" | LC_ALL=C awk "$NOMBRES" | LC_ALL=C sort -u > "$DECLS"
-# los módulos (cada tramo de su ruta con puntos), las rutas y las etiquetas de git, de FOL y de RPP; las de FOL también
-# con `FOL/` delante y las de RPP con `ROBINSON_PlusPlus/`, que es como se citan desde el otro repo
-{ git ls-files '*.lean'; [ "$SIBLING_OK" = "1" ] && git -C "$SIBLING" ls-files '*.lean'; } | sed 's/[.]lean$//; s|/|.|g' \
+# los sondeos de RPP (estos documentos los citan a veces): «nombre|fichero»
+if [ "$SIBLING_OK" = "1" ]; then
+  find "$SIBLING/sondeos/" -name '*.lean' 2>/dev/null | sort | while IFS= read -r f; do
+    LC_ALL=C awk -f strip-lean.awk "$f" | LC_ALL=C grep -oE "$DECL_RE" | LC_ALL=C awk "$NOMBRES" \
+      | LC_ALL=C awk -v f="sondeos/${f##*/}" '{print $0 "|" f}'
+  done | LC_ALL=C sort -u > "$B_SOND"
+fi
+# los MÓDULOS (cada tramo de su nombre con puntos): el cierre de las librerías de FOL y de RPP, y los sondeos y scripts
+# de RPP; las RUTAS: lo versionado en los dos (con el repo delante también), sus etiquetas y «etiqueta:ruta». Las
+# librerías RETIRADAS (`cuarentena/librerias-retiradas/`) entran sólo con su ruta entera (y la de sus directorios), con
+# «=»: `FOLPure/Soundness.lean` a secas ya no es un fichero vivo
+{ printf '%s\n' "$CIERRE"
+  if [ "$SIBLING_OK" = "1" ]; then bash "$SIBLING/cierre-imports.bash" 2>/dev/null; git -C "$SIBLING" ls-files 'sondeos/*.lean' 'scripts/*.lean'; fi
+} | grep . | sed 's/[.]lean$//; s|/|.|g' \
   | LC_ALL=C awk '{ n = split($0, z, "."); for (i = 1; i <= n; i++) { s = z[i]; print s; for (j = i + 1; j <= n; j++) { s = s "." z[j]; print s } } }' \
   | LC_ALL=C sort -u > "$B_MOD"
 { git ls-files; git ls-files | sed 's|^|FOL/|'; git tag
-  if [ "$SIBLING_OK" = "1" ]; then git -C "$SIBLING" ls-files; git -C "$SIBLING" ls-files | sed 's|^|ROBINSON_PlusPlus/|'; git -C "$SIBLING" tag; fi
-} | LC_ALL=C sort -u > "$B_RUT"
-B_MEDIDO=1
+  for t in $(git tag); do git ls-tree -r --name-only "$t" | sed "s|^|$t:|"; done
+  if [ "$SIBLING_OK" = "1" ]; then
+    git -C "$SIBLING" ls-files; git -C "$SIBLING" ls-files | sed 's|^|ROBINSON_PlusPlus/|'; git -C "$SIBLING" tag
+    for t in $(git -C "$SIBLING" tag); do git -C "$SIBLING" ls-tree -r --name-only "$t" | sed "s|^|$t:|"; done
+  fi
+} | sed -E 's#^((FOL/|ROBINSON_PlusPlus/)?cuarentena/librerias-retiradas/)#=\1#' \
+  | LC_ALL=C awk '{ print } /^=/ { p = substr($0, 2); while (sub(/\/[^\/]*$/, "", p)) print "=" p }' | LC_ALL=C sort -u > "$B_RUT"
+B_MEDIDO=1; B_FAIL=0
 B_SUELO=500; B_TESTIGOS="derives0_soundness"
 [ "$SIBLING_OK" = "1" ] && { B_SUELO=1000; B_TESTIGOS="derives0_soundness goedel_first_prf"; }
 B_FALTA=""
@@ -519,117 +531,19 @@ if [ "$B_MEDIDO" = "1" ]; then
   else
     echo "  ❌ NO PUDE MEDIR [B]: sin RPP construido al lado ni la CI, no vuelco el entorno de Lean (M-3)."
   fi
-  if [ "$B_VOLCADO" = "1" ] && { [ "$(wc -l < "$B_ENV" | tr -d ' ')" -lt 50000 ] || ! grep -q '^FOL\.Canonical0\.completeness₀	P$' "$B_ENV"; }; then
+  if [ "$B_VOLCADO" = "1" ] && { [ "$(wc -l < "$B_ENV" | tr -d ' ')" -lt 50000 ] || ! grep -q '^FOL\.Canonical0\.completeness₀	P$' "$B_ENV" \
+       || ! grep -q '^Init\.Classical	M$' "$B_ENV"; }; then
     echo "  ❌ NO PUDE MEDIR [B]: el volcado del entorno de Lean salió corto o sin \`completeness₀\` (¿el build no está hecho?)."
     B_VOLCADO=0
   fi
   [ "$B_VOLCADO" = "1" ] || { B_FAIL=1; B_MEDIDO=0; }
 fi
-# ⭐ AUTOTEST de salida EXACTA (el mismo que el de RPP): un documento sintético con una cita de cada clase tiene que dar
-# exactamente las siete muertas esperadas.
 if [ "$B_MEDIDO" = "1" ]; then
-  printf '%s\n' vivo_ok > "$B_AUTO/vivos"
-  printf 'Lean.Name\tL\nROBINSON_PlusPlus.X.Ctor.listInd\tP\nautoImplicit\tO\n' > "$B_AUTO/env"
-  printf '%s\n' 'solo_en_sondeo|sondeos/Sondeo.lean' > "$B_AUTO/sond"
-  printf '%s\n' ROBINSON_PlusPlus.Meta.Rosser Meta.Rosser Rosser > "$B_AUTO/mod"
-  printf '%s\n' ROBINSON_PlusPlus/Meta/Rosser.lean doc/registro/x.txt archivo/tag-1 > "$B_AUTO/rut"
-  B_RELLENO=$(printf '%0150d' 0 | tr 0 x)
-  printf '%s\n' \
-    '`vivo_ok`, `Lean.Name`, `listInd`, `autoImplicit`, `Rosser`, `Meta/Rosser.lean`, `doc/registro`, `archivo/tag-1` y `Rosser.lean:12`' \
-    'El `muerto_a`, retirado.' \
-    "El \`muerto_b\` $B_RELLENO retirado." \
-    '| `muerto_c` | retirado |' \
-    '2026-10-18: `muerto_d`.' \
-    '`T_UNIVERSO`, `simp`, `f9941dc`, `hPsiId`, `ax21` y `Prop`.' \
-    '`solo_en_sondeo`, en sondeos/Sondeo.lean.' \
-    '`solo_en_sondeo` sin nombrar su fichero.' \
-    '`Meta/NoExiste.lean` y la familia `muerto_e_`.' \
-    '```' '`muerto_f`' '```' \
-    '`muerto_retirado_g`.' > "$B_AUTO/doc.md"
-  B_AUTO_SAL=$(LC_ALL=C awk -v MARK="$B_MARK" -v W="$B_W" -f b-citas.awk "$B_AUTO/vivos" "$B_AUTO/env" "$B_AUTO/sond" \
-    "$B_AUTO/mod" "$B_AUTO/rut" "$B_AUTO/doc.md" | cut -d'|' -f1,2 | LC_ALL=C sort | tr '\n' ';')
-  B_AUTO_ESP="B2|Meta/NoExiste.lean;B|muerto_b;B|muerto_c;B|muerto_d;B|muerto_e_;B|muerto_retirado_g;B|solo_en_sondeo;"
-  if [ "$B_AUTO_SAL" != "$B_AUTO_ESP" ]; then
-    echo "  ❌ NO PUDE MEDIR [B]: el autotest de b-citas.awk no da las siete muertas esperadas; da: $B_AUTO_SAL"
-    B_FAIL=1; B_MEDIDO=0
-  fi
+  B_DECLS=$DECLS
+  source ./b-control.bash
 fi
-B_DOCS=""
-for d in $AUTHORITATIVE; do [ -f "$d" ] && B_DOCS="$B_DOCS $d"; done
-if [ "$B_MEDIDO" = "1" ]; then
-  LC_ALL=C awk -v MARK="$B_MARK" -v W="$B_W" -f b-citas.awk "$DECLS" "$B_ENV" "$B_SOND" "$B_MOD" "$B_RUT" $B_DOCS > "$B_CIT"
-  LC_ALL=C awk -F'|' '{ d = $4; sub(/:[0-9]+$/, "", d); n[$1 "\t" $2 "\t" d]++ } END { for (k in n) print k "\t" n[k] }' "$B_CIT" \
-    | LC_ALL=C sort > "$B_ACT"
-  # --b-deuda-inicial: CREA la tabla con la deuda de hoy, y sólo si no existe (ADR-166: la creó así, una vez)
-  if [ "$B_DEUDA_MODO" = "2" ]; then
-    if [ -e "$B_TABLA" ]; then
-      echo "  ❌ --b-deuda-inicial: $B_TABLA ya existe; la tabla sólo baja (--b-deuda)."
-      B_FAIL=1
-    else
-      mkdir -p "$(dirname "$B_TABLA")"
-      { printf '%s\n' "# $B_TABLA — la deuda POR CITA de [B] (check-doc-sync.bash; T04, ADR-166 de RPP)." \
-          "# Una línea por (clase, clave, documento): cuántas citas muertas tiene. B, un identificador; B2, una ruta." \
-          "# Una cita muerta de más es rojo; una de menos, también, hasta bajar la tabla: bash check-doc-sync.bash --b-deuda." \
-          "# No puede pasar de la versión que la creó sin un ADR. Se arregla en el DOCUMENTO: la cita, o un marcador a" \
-          "# $B_W bytes o menos («retirado», «archivado», «propuesto», «falta»…). La creó --b-deuda-inicial el $(date +%F)." \
-          "# clase	clave	documento	citas"; cat "$B_ACT"; } > "$B_TABLA"
-      echo "  ✓ --b-deuda-inicial: $B_TABLA creada, $(grep -vc '^#' "$B_TABLA") entradas y $(wc -l < "$B_CIT" | tr -d ' ') citas"
-    fi
-  fi
-  B_TAB_HOY=$(grep -v '^#' "$B_TABLA" 2>/dev/null | tr -d '\r' | LC_ALL=C sort)
-  if [ "$B_DEUDA_MODO" = "1" ]; then
-    B_SUBEN=$(LC_ALL=C awk -F'\t' 'NR == FNR { t[$1 "\t" $2 "\t" $3] = $4; next } { k = $1 "\t" $2 "\t" $3; if (!(k in t) || $4 > t[k]) print }' \
-      <(printf '%s\n' "$B_TAB_HOY") "$B_ACT")
-    if [ -n "$B_SUBEN" ]; then
-      echo "  ❌ --b-deuda NO baja la tabla: estas entradas suben o son nuevas (arréglalas en el documento o márcalas):"
-      printf '%s\n' "$B_SUBEN" | head -20 | sed 's/^/      /'
-      B_FAIL=1
-    else
-      { grep '^#' "$B_TABLA"; cat "$B_ACT"; } > "$B_TABLA.nueva" && mv "$B_TABLA.nueva" "$B_TABLA"
-      B_TAB_HOY=$(grep -v '^#' "$B_TABLA" | tr -d '\r' | LC_ALL=C sort)
-      echo "  ✓ --b-deuda: la tabla baja a $(grep -vc '^#' "$B_TABLA") entradas y $(awk -F'\t' '!/^#/ { s += $4 } END { print s + 0 }' "$B_TABLA") citas"
-    fi
-  fi
-  B_DIF=$(LC_ALL=C awk -F'\t' 'NR == FNR { if ($0 != "") t[$1 "\t" $2 "\t" $3] = $4; next }
-      { k = $1 "\t" $2 "\t" $3; h[k] = $4; if (!(k in t)) print "N\t" k "\t" $4; else if ($4 > t[k]) print "S\t" k "\t" $4 "\t" t[k]; else if ($4 < t[k]) print "B\t" k "\t" $4 "\t" t[k] }
-      END { for (k in t) if (!(k in h)) print "B\t" k "\t0\t" t[k] }' <(printf '%s\n' "$B_TAB_HOY") "$B_ACT")
-  printf '%s\n' "$B_DIF" | grep -E '^(N|S)	' | while IFS=$'\t' read -r tipo c k d n m; do
-    [ -n "$c" ] || continue
-    if [ "$tipo" = "N" ]; then echo "  ❌ $c \`$k\` no existe y se cita sin marcar, en $d ($n) — cita muerta NUEVA:"
-    else echo "  ❌ $c \`$k\`: $n citas muertas en $d, y la tabla dice $m — una de más:"; fi
-    LC_ALL=C awk -F'|' -v c="$c" -v k="$k" -v d="$d" '$1 == c && $2 == k && index($4, d ":") == 1 { print "      " $4 }' "$B_CIT" | head -3
-  done
-  printf '%s\n' "$B_DIF" | grep -qE '^(N|S)	' && B_FAIL=1
-  B_NBAJA=$(printf '%s\n' "$B_DIF" | grep -c '^B	' || true)
-  if [ "$B_NBAJA" -gt 0 ]; then
-    echo "  ❌ $B_NBAJA entradas de $B_TABLA tienen MENOS citas muertas que las que dice la tabla (deuda saldada):"
-    printf '%s\n' "$B_DIF" | grep '^B	' | head -5 | sed 's/^B	/      /'
-    echo "      baja la tabla con: bash check-doc-sync.bash --b-deuda"
-    B_FAIL=1
-  fi
-  B_PRIMERA=$(git log --diff-filter=A --format=%H -- "$B_TABLA" 2>/dev/null | tail -1)
-  if [ -n "$B_PRIMERA" ]; then
-    B_SOBRE=$(LC_ALL=C awk -F'\t' 'NR == FNR { if ($0 !~ /^#/ && $0 != "") t[$1 "\t" $2 "\t" $3] = $4; next }
-        $0 !~ /^#/ && $0 != "" { k = $1 "\t" $2 "\t" $3; if (!(k in t) || $4 > t[k]) print }' \
-      <(git show "$B_PRIMERA:$B_TABLA" | tr -d '\r') <(tr -d '\r' < "$B_TABLA"))
-    if [ -n "$B_SOBRE" ]; then
-      if [ -n "$B_SUBE_ADR" ]; then
-        echo "  ⚠️  la tabla tiene $(printf '%s\n' "$B_SOBRE" | grep -c .) entradas por encima de la de ADR-166, con $B_SUBE_ADR de RPP."
-      else
-        echo "  ❌ la tabla tiene entradas por encima de la que creó ADR-166 de RPP ($B_PRIMERA), sin un ADR (B_SUBE_ADR):"
-        printf '%s\n' "$B_SOBRE" | head -5 | sed 's/^/      /'
-        B_FAIL=1
-      fi
-    fi
-  fi
-  B_NT=$(grep -vc '^#' "$B_TABLA" 2>/dev/null || true)
-  B_NC=$(awk -F'\t' '!/^#/ { s += $4 } END { print s + 0 }' "$B_TABLA" 2>/dev/null)
-  echo "  deuda declarada: $B_NC citas muertas en $B_NT entradas (clase, clave, documento) de $B_TABLA; hoy, $(wc -l < "$B_CIT" | tr -d ' ')"
-else
-  echo "  deuda declarada: SIN MEDIR"
-fi
-rm -rf "$DECLS" "$B_SOND" "$B_ENV" "$B_MOD" "$B_RUT" "$B_CIT" "$B_ACT" "$B_AUTO"
-[ "$B_FAIL" = "0" ] && echo "  ✓ ninguna cita muerta nueva, y la deuda por cita cuadra con la tabla" || FAIL=1
+rm -rf "$DECLS" "$B_SOND" "$B_ENV" "$B_MOD" "$B_RUT"
+[ "$B_FAIL" = "0" ] && [ "$B_MEDIDO" = "1" ] && echo "  ✓ ninguna cita muerta nueva, y la deuda por cita cuadra con la tabla" || FAIL=1
 
 # ─── 4. PROYECCIÓN: ¿está cada módulo en el catálogo? ────────────────────────
 echo
