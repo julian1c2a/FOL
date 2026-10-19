@@ -134,9 +134,8 @@ jobs:
 
       # ⭐ 2026-10-19 (ADR-167 de RPP): el techo de la deuda de `[B]` es la tabla de la BASE VERIFICADA. En un push a una
       # rama `ci/…` (el flujo de RPP, que FOL adopta: la CI primero, master después), la base es `origin/master`, con su
-      # nombre entero; en un push a master, el commit de ANTES del push; en un PR, su base. ⚠️ Mientras el master de FOL
-      # no esté protegido, un push rojo directo a master queda ahí y es la base del siguiente: la verificación de FOL es
-      # tan fuerte como su disciplina (ADR-167 §4).
+      # nombre entero; en un push a master, el commit de ANTES del push; en un PR, su base. ✏️ Desde ADR-168 de RPP el
+      # master de FOL está PROTEGIDO (sólo entra un commit con «lake build» en verde): la base siempre está verificada.
       - name: Check doc sync
         run: bash check-doc-sync.bash
         env:

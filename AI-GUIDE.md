@@ -548,6 +548,17 @@ preservando los bloqueos locales.
 6. Volver a bloquear los mismos ficheros por seguridad:
    `bash git-lock.bash lock modulo_1.lean ... modulo_n.lean`
 
+> ✏️ **2026‑10‑19 · `master` PROTEGIDO, como el de RPP** (ADR‑168 de RPP; antes ADR‑136 allí). Sólo admite un commit
+> cuya comprobación «lake build» de la CI ya salió verde, sin excepción para el administrador; ni force push ni borrar
+> la rama. El paso 5 va entonces en tres tiempos:
+> 1. `git push origin HEAD:refs/heads/ci/<nombre>` — la CI corre en esa rama (`build.yml` corre en las ramas «ci/…»);
+> 2. esperar el verde: `gh run watch` (o `gh run list --branch ci/<nombre>`);
+> 3. `git push origin HEAD:refs/heads/master` —un avance rápido hasta lo ya comprobado— y borrar la rama:
+>    `git push origin --delete ci/<nombre>`.
+>
+> M‑12 sigue: FOL antes que RPP. Visto fallar: un commit sin CI empujado a master se rechaza («GH006 … Required status
+> check "lake build" is expected»).
+
 ---
 
 ## Lista de Cumplimiento
