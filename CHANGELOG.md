@@ -28,6 +28,12 @@ this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 * `[A2]` deja de ser un aviso y ROMPE: medido sin la fecha, el cuerpo de FOL tiene cero líneas con cifras viejas, así que
   no hace falta la tabla de deuda que lleva RPP. Visto fallar con tres mutantes (una cifra con fecha y negrita en la
   cabecera y otra con fecha en el cuerpo, rojas; la misma con «Histórico:», verde).
+* ✏️ La revisión adversarial de ADR‑169 (en RPP) encontró que los marcadores casaban DENTRO de una palabra («era» en
+  «fuera») y que «→», «~», un rango o una cita con un dígito eximían la línea entera. `[A]` y `[A2]`, rehechos: un awk,
+  el mismo que en RPP, línea a línea, con el marcador como palabra entera y la exención pegada a cada cifra; los
+  documentos, UTF-8 válido; autotest de salida exacta, visto en gawk y en mawk. El patrón de los axiomas ve también «en
+  el build», y con él salió `REFERENCE.md:31` («**4 `axiom`** en el build», con 0): marcado como de entonces. Visto
+  fallar con seis mutantes (`doc/registro/2026-10-19-t04b/fol-mutantes.txt` de RPP).
 
 ## 2026-10-19 — `master` protegido, como el de RPP (ADR‑168 de RPP)
 

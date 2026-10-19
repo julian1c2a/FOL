@@ -259,59 +259,102 @@ echo
 
 # ─── 2. CIFRAS OBSOLETAS ─────────────────────────────────────────────────────
 # CHANGELOG.md se excluye: es un diario, sus cifras son históricas por diseño.
-# Las líneas marcadas como históricas también (fecha ISO al principio, o marcador).
+# ⛔ 2026-10-19 (T04b, ADR-169 de RPP): REHECHO, como en RPP. Lo que había (un `grep -v` sobre la línea entera) tenía tres agujeros
+# medidos: la FECHA eximía la línea (y una fecha no dice que la cifra sea de ese día); la NEGRITA cegaba los patrones
+# («**1** axiom de Lean» no casaba con nada); y la cifra de los SONDEOS se calculaba y no se comparaba. La revisión
+# adversarial de ADR-169 encontró más: los marcadores casaban DENTRO de una palabra («era » en «fuera», «antes» en
+# «constantes»: un 13 % de las líneas, exentas, y entre ellas, en RPP, CURRENT-STATUS-PROJECT.md:48, «**1** `axiom` de Lean»
+# con 0), y «→», «~», un rango o una cita «…» con un dígito eximían la línea entera, estuvieran donde estuvieran.
+# Ahora lo hace un awk (A_AWK, el mismo que en RPP), en la configuración regional C, línea a línea:
+#   · lo citado entre «…» y lo tachado (~~…~~) se quita: lo dice otro, o está retirado; el resto de la línea cuenta;
+#   · un MARCADOR de historia, como PALABRA entera, exime la línea: histórico, previo, antes, era, fueron, entonces,
+#     «ya no», «en su momento», ejemplo, «p. ej», umbral (y en [A2], retirado);
+#   · cada aparición de cada patrón se mira por separado; la exime sólo lo que la toca: «~» justo delante (una
+#     aproximación), un rango corto que acaba en ella («40-50»), o una flecha justo detrás (es la cifra VIEJA de un
+#     «131 jobs → 133 jobs»);
+#   · los patrones admiten la negrita, y el número es el primero de lo que casa.
+# Los documentos tienen que ser UTF-8 válido y sin NUL: un byte malo escondía la línea a grep, y un NUL el resto.
 echo "════ [A] CIFRAS ════"
 A_FAIL=0
-# ALCANCE: sólo la REGIÓN DE CABECERA (primeras 100 líneas) de cada doc autoritativo.
-# Ahí viven el banner y las tablas resumen — lo que AFIRMA el estado actual. Más abajo
-# están los registros de logros, donde «93 jobs» es historia correcta, no un error.
-# Esta acotación es la que hace utilizable el control: sin ella, los diarios de
-# `NEXT-STEPS.md` disparan una docena de falsos positivos y nadie vuelve a mirarlo.
-HEADREGION=$(mktemp)
-: > "$HEADREGION"
+A_DIR=$(mktemp -d)
+A_DOCS=""
+A_MAL=""; A_SAL=""; A2_SAL=""
 for d in $DOCS; do
   [ -e "$d" ] || continue
-  head -100 "$d" | sed "s|^|$d:|" >> "$HEADREGION"
+  A_DOCS="$A_DOCS $d"
+  if ! iconv -f UTF-8 -t UTF-8 "$d" > /dev/null 2>&1 || ! tr -d '\000' < "$d" | cmp -s - "$d"; then A_MAL="$A_MAL $d"; fi
 done
-# Se descartan: menciones históricas, aproximaciones (~40), rangos (40-50), ejemplos y cifras citadas («…»).
-# ⭐ AÑADIDO al portar a FOL (2026-09-17): una cifra DENTRO de «comillas latinas» es una
-# CITA, no una afirmación. Los avisos de estado de FOL usan el formato
-# «lo que decía | lo medido», y sin esta exclusión los CUATRO daban falso positivo
-# citando textualmente el error que la propia fila está corrigiendo.
-# 🔑 Una cifra entrecomillada la está diciendo OTRO; el control mira lo que el doc AFIRMA.
-# ⛔ 2026-10-19 (T04b, ADR-169 de RPP): la FECHA ya no exime una línea (una fecha no dice que la cifra sea de ese día;
-# exime un MARCADOR explícito), un RANGO es de números cortos (`40-50`: el patrón de antes, `[0-9]+-[0-9]+`, casaba con
-# una fecha y la dejaba eximir por la puerta de atrás) y los patrones admiten la NEGRITA (`**0** sorry`). Como en RPP.
-# (`hist(o|ó)rico` y no `hist[oó]rico`: en la configuración regional C, `[oó]` es una clase de BYTES y no casa con «ó»)
-EXC_A='hist(o|ó)rico|previo|antes|era |fueron|→|->|en su momento|entonces|ya no|~|p\. ej|ejemplo|umbral|(^|[^0-9-])[0-9]{1,3}-[0-9]{1,3}([^0-9-]|$)|«[^»]*[0-9]'
-NB='(\*\*)?'   # la negrita que puede cerrar la cifra
-
-# ⚠️ Los patrones se pasan SIEMPRE entre comillas SIMPLES: un backtick dentro de
-#    comillas dobles lo ejecuta bash como sustitución de comando y el patrón queda roto.
-check_num () {   # $1 = regex con grupo numérico   $2 = valor correcto   $3 = etiqueta
-  local pat="$1" good="$2" label="$3" hits
-  hits=$(grep -nE "$pat" "$HEADREGION" 2>/dev/null | grep -viE "$EXC_A" || true)
-  while IFS= read -r line; do
-    [ -z "$line" ] && continue
-    local n; n=$(echo "$line" | grep -oE "$pat" | grep -oE "[0-9]+" | head -1)
-    if [ -n "$n" ] && [ "$n" != "$good" ]; then
-      echo "  ✗ $label: dice $n, real $good"
-      echo "      ${line:0:150}"
-      A_FAIL=1
-    fi
-  done <<< "$hits"
-  # ⚠️ Un patrón sin ninguna aparición NO está comprobando nada, y da verde. Es el peor
-  # resultado posible para un control cuyo cometido es que no te fibres de los docs: por eso
-  # se avisa en vez de callar. Si sale este aviso, o el fraseo del doc cambió, o el patrón
-  # está mal — en los dos casos hay que tocar algo.
-  [ -z "$hits" ] && echo "  ⚠️  $label: la frase no aparece en ningún doc autoritativo — control VACÍO"
-  return 0
+# las cifras: etiqueta<TAB>patrón (ERE en minúsculas; la cifra es el primer número de lo que casa)<TAB>valor de hoy
+# (vacío: no se midió, y la etiqueta no se compara)
+NB='([*][*])?'   # la negrita que puede cerrar la cifra: `**133** jobs`
+{
+  printf 'módulos activos\t%s\t%s\n' "[0-9]+$NB módulos activos" "$ACTIVE"
+  printf 'cuarentena\t%s\t%s\n' "[0-9]+$NB (módulos )?en \`cuarentena/\`" "$QUAR"
+  printf 'axiom de Lean\t%s\t%s\n' "[0-9]+$NB \`?axiom\`?$NB (de lean|en el build)" "$AXIOMS"
+  printf 'sorry\t%s\t%s\n' "[0-9]+$NB \`?sorrys?" "$SORRY"
+} > "$A_DIR/patrones"
+# los marcadores (palabra entera; la línea va en minúsculas y con un espacio a cada lado)
+A_MARC='[^a-z0-9_](hist(o|ó)ric(o|a|os|as)|previ(o|a|os|as)|antes|era|eran|fueron|entonces|ya no|en su momento|ejemplos?|p[.] ej|umbral)[^a-z0-9_]'
+A_MARC2='[^a-z0-9_](hist(o|ó)ric(o|a|os|as)|previ(o|a|os|as)|antes|era|eran|fueron|entonces|ya no|en su momento|ejemplos?|p[.] ej|umbral|retirad(o|a|os|as))[^a-z0-9_]'
+# (sin intervalos `{m,n}` ni `^` dentro de una alternativa: la CI usa mawk)
+A_AWK='
+function bajar(s) { s = tolower(s); gsub(/Á/, "á", s); gsub(/É/, "é", s); gsub(/Í/, "í", s); gsub(/Ó/, "ó", s)
+  gsub(/Ú/, "ú", s); gsub(/Ñ/, "ñ", s); gsub(/Ö/, "ö", s); return s }
+function fuera(s, a, b,   p, r, q) {
+  while ((p = index(s, a)) > 0) { r = substr(s, p + length(a)); q = index(r, b); if (!q) break
+    s = substr(s, 1, p - 1) " " substr(r, q + length(b)) }
+  return s }
+BEGIN { marc = ENVIRON["A_MARC_USO"] }
+FILENAME == ARGV[1] { split($0, z, "\t"); np++; ETQ[np] = z[1]; PAT[np] = z[2]; BUENO[np] = z[3]; next }
+FNR < desde || FNR > hasta { next }
+{ t = " " bajar(fuera(fuera($0, "«", "»"), "~~", "~~")) " "
+  if (t ~ marc) next
+  for (i = 1; i <= np; i++) {
+    if (BUENO[i] == "") continue
+    r = t
+    while (match(r, PAT[i])) {
+      m = RSTART; L = RLENGTH; seg = substr(r, m, L)
+      match(seg, /[0-9]+/); num = substr(seg, RSTART, RLENGTH); p0 = m + RSTART - 1
+      antes = " " substr(r, 1, p0 - 1); despues = substr(r, m + L)
+      exento = (antes ~ /~ *$/) || (despues ~ /^ *(→|->)/) || (length(num) <= 3 && antes ~ /[^0-9-][0-9][0-9]?[0-9]?-$/)
+      if (!exento) { visto[ETQ[i]] = 1; if (num + 0 != BUENO[i] + 0) print ETQ[i] "\t" FILENAME "\t" FNR "\t" num "\t" substr($0, 1, 150) }
+      r = substr(r, m + L)
+    }
+  }
 }
-check_num "[0-9]+$NB módulos activos" "$ACTIVE" "módulos activos"
-check_num "[0-9]+$NB (módulos )?en \`cuarentena/\`" "$QUAR" "cuarentena"
-[ -n "$AXIOMS" ] && check_num "[0-9]+$NB "'`?axiom`? de Lean' "$AXIOMS" "axiom de Lean"
-check_num "[0-9]+$NB sorrys?" "$SORRY" "sorry"
-rm -f "$HEADREGION"
+END { for (e in visto) print e > VISTO }'
+# autotest: cada exención y cada vía de las revisiones, con salida exacta
+printf 'jobs\t%s\t133\nconteo de Meta\t%s\t112\n' "[0-9]+$NB jobs" "meta $NB([0-9]+$NB [+]|[0-9]+$NB[)])" > "$A_DIR/pat-auto"
+printf '%s\n' 'Hay **120** jobs.' 'Fuera de esto, 121 jobs.' 'Histórico: 122 jobs.' 'Unos ~123 jobs.' 'De 40-124 jobs.' \
+  'El 2026-10-19: 125 jobs.' 'Pasó de 126 jobs → 133 jobs.' 'Se dijo «127 jobs».' '~~128 jobs~~ y 133 jobs.' \
+  'Antes, 129 jobs.' 'En la primera pasada, 130 jobs.' 'Constantes: 131 jobs.' 'HISTÓRICO: 132 jobs.' 'Meta **5** + 2.' \
+  'Son 134 jobs (ver «ADR-121»).' > "$A_DIR/doc-auto.md"
+A_AUTO=$(cd "$A_DIR" && LC_ALL=C A_MARC_USO="$A_MARC" awk -v desde=1 -v hasta=100 -v VISTO=/dev/null "$A_AWK" pat-auto doc-auto.md \
+  | LC_ALL=C awk -F'\t' '{ printf "%s:%s:%s;", $1, $3, $4 }')
+A_AUTO_OK='jobs:1:120;jobs:2:121;jobs:6:125;jobs:11:130;jobs:12:131;conteo de Meta:14:5;jobs:15:134;'
+if [ -n "$A_MAL" ]; then
+  echo "  ❌ NO PUDE MEDIR [A] ni [A2]: no son UTF-8 válido o llevan NUL:$A_MAL"; A_FAIL=1
+elif [ "$A_AUTO" != "$A_AUTO_OK" ]; then
+  echo "  ❌ NO PUDE MEDIR [A] ni [A2]: el autotest no da lo esperado ($A_AUTO_OK), da: $A_AUTO"; A_FAIL=1
+else
+  # ALCANCE: la REGIÓN DE CABECERA (las primeras 100 líneas) de cada documento autoritativo: el banner y las tablas
+  # resumen, lo que AFIRMA el estado actual. (✏️ ADR-169: los banners apilados se fueron a doc/historia/BANNERS.md con
+  # ADR-142, T33: la cabecera ya no se los come.) El cuerpo lo mira [A2].
+  if ! A_SAL=$(LC_ALL=C A_MARC_USO="$A_MARC" awk -v desde=1 -v hasta=100 -v VISTO="$A_DIR/visto" "$A_AWK" "$A_DIR/patrones" $A_DOCS); then
+    echo "  ❌ NO PUDE MEDIR [A]: el awk falló."; A_FAIL=1
+  fi
+  printf '%s\n' "$A_SAL" | while IFS=$'\t' read -r e d l n texto; do
+    [ -n "$e" ] || continue
+    echo "  ✗ $e: dice $n, real $(LC_ALL=C awk -F'\t' -v e="$e" '$1 == e { print $3 }' "$A_DIR/patrones")"
+    echo "      $d:$l: $texto"
+  done
+  [ -n "$A_SAL" ] && A_FAIL=1
+  # ⚠️ Un patrón sin ninguna aparición NO está comprobando nada, y da verde: se avisa en vez de callar. Si sale, o el
+  # fraseo del documento cambió, o el patrón está mal: en los dos casos hay que tocar algo.
+  LC_ALL=C awk -F'\t' '$3 != "" { print $1 }' "$A_DIR/patrones" | while IFS= read -r e; do
+    grep -qxF "$e" "$A_DIR/visto" 2>/dev/null || echo "  ⚠️  $e: la frase no aparece en ningún doc autoritativo — control VACÍO"
+  done
+fi
 [ "$A_FAIL" = "0" ] && echo "  ✓ sin cifras obsoletas" || FAIL=1
 
 # ─── 2bis. CIFRAS EN EL **CUERPO** ───────────────────────────────────────────
@@ -324,48 +367,34 @@ rm -f "$HEADREGION"
 #      control mira sólo el banner, y el banner es justamente la parte que sí se actualiza.
 #      Auditar el banner es auditar lo que ya está bien.»
 #
-# ⚠️ Y la acotación NO era un descuido: sin ella, los diarios de `NEXT-STEPS.md` disparan una
-# docena de falsos positivos y el control deja de usarse. Así que el cuerpo entra como **AVISO**,
-# igual que [B]: se ve, pide juicio, y no rompe. Lo que rompe sigue siendo la cabecera.
-# ⛔ 2026-10-19 (T04b, ADR-169 de RPP): deja de ser un AVISO y ROMPE. Medido ese día, sin la fecha como exención:
-# CERO líneas en el cuerpo de FOL, así que no hace falta la tabla de deuda de RPP (doc/control/a2-deuda.tsv allí):
-# una cifra vieja en el cuerpo es rojo, y se arregla en el documento (la cifra, o un marcador de historia en su línea).
+# ⛔ 2026-10-19 (T04b, ADR-169 de RPP): deja de ser un AVISO y ROMPE, con el mismo awk que [A] sobre las líneas 101 en
+# adelante (DECISIONS.md fuera: un ADR dice las cifras de su día, M-13). Medido ese día, CERO líneas en el cuerpo de FOL,
+# así que no hace falta la tabla de deuda de RPP: una cifra vieja en el cuerpo es rojo, y se arregla en el documento
+# (la cifra, o un marcador de historia en su línea).
 echo ""
 echo "════ [A2] CIFRAS EN EL CUERPO — ROJO (T04b, ADR-169 de RPP) ════"
-BODYREGION=$(mktemp)
-: > "$BODYREGION"
-for d in $DOCS; do
-  [ -e "$d" ] || continue
-  tail -n +101 "$d" | sed "s|^|$d:|" >> "$BODYREGION"
-done
-
-A2_HITS=0
-warn_num () {   # $1 = regex con grupo numérico   $2 = valor correcto   $3 = etiqueta
-  local pat="$1" good="$2" label="$3" hits
-  hits=$(grep -nE "$pat" "$BODYREGION" 2>/dev/null | grep -viE "$EXC_A|retirad" || true)
-  while IFS= read -r line; do
-    [ -z "$line" ] && continue
-    local n; n=$(echo "$line" | grep -oE "$pat" | grep -oE "[0-9]+" | head -1)
-    if [ -n "$n" ] && [ "$n" != "$good" ]; then
-      echo "  ✗ $label: dice $n, real $good"
-      echo "      ${line:0:150}"
-      A2_HITS=$((A2_HITS+1))
-    fi
-  done <<< "$hits"
-  return 0
-}
-warn_num "[0-9]+$NB módulos activos" "$ACTIVE" "módulos activos"
-[ -n "$AXIOMS" ] && warn_num "[0-9]+$NB "'`?axiom`? de Lean' "$AXIOMS" "axiom de Lean"
-warn_num "[0-9]+$NB sorrys?" "$SORRY" "sorry"
-rm -f "$BODYREGION"
-if [ "$A2_HITS" = "0" ]; then
-  echo "  ✓ el cuerpo tampoco tiene cifras obsoletas"
+A2_FAIL=0
+A2_DOCS=""
+for d in $A_DOCS; do [ "$d" = DECISIONS.md ] || A2_DOCS="$A2_DOCS $d"; done
+if [ -z "$A_MAL" ] && [ "$A_AUTO" = "$A_AUTO_OK" ]; then
+  if ! A2_SAL=$(LC_ALL=C A_MARC_USO="$A_MARC2" awk -v desde=101 -v hasta=999999999 -v VISTO=/dev/null "$A_AWK" "$A_DIR/patrones" $A2_DOCS); then
+    echo "  ❌ NO PUDE MEDIR [A2]: el awk falló."; A2_FAIL=1
+  fi
+  printf '%s\n' "$A2_SAL" | while IFS=$'\t' read -r e d l n texto; do
+    [ -n "$e" ] || continue
+    echo "  ✗ $e: dice $n, real $(LC_ALL=C awk -F'\t' -v e="$e" '$1 == e { print $3 }' "$A_DIR/patrones")"
+    echo "      $d:$l: $texto"
+  done
+  if [ -n "$A2_SAL" ]; then
+    echo "  ✗ $(printf '%s\n' "$A2_SAL" | grep -c .) línea(s) en el CUERPO con cifras que no cuadran: ¿una afirmación de estado ACTUAL"
+    echo "      (⇒ corregir) o un registro sin marcar (⇒ «previo», «era», «histórico»; la fecha no basta)?"
+    A2_FAIL=1
+  fi
 else
-  echo "  ✗ $A2_HITS línea(s) en el CUERPO con cifras que no cuadran."
-  echo "      ¿es una afirmación de estado ACTUAL (⇒ corregir) o un registro histórico"
-  echo "      sin marcar (⇒ marcarlo: «previo», «era», «histórico»; la fecha ya no basta)?"
-  FAIL=1
+  echo "  ❌ NO PUDE MEDIR [A2]: ver [A]."; A2_FAIL=1
 fi
+rm -rf "$A_DIR"
+[ "$A2_FAIL" = "0" ] && echo "  ✓ el cuerpo tampoco tiene cifras obsoletas" || FAIL=1
 
 echo ""
 echo "════ [E] FRESCURA DEL TITULAR — ROJO (objetivo: lo decide git) ════"
