@@ -457,11 +457,17 @@ echo "════ [B] CITAS MUERTAS — ROJO, con trinquete POR CITA (T04 y ADR
 # —siete prefijos (`prf_`, `pcc_`, `goedel_`…) que en FOL casan cuatro nombres, los cuatro de RPP— e imprimía «✓ ningún
 # símbolo muerto citado como vigente» habiendo mirado sólo esos cuatro. Ahora es el MISMO núcleo que RPP: `b-citas.awk`
 # y `b-control.bash`, idénticos byte a byte en los dos repos (RPP los compara). Los detalles, en su cabecera.
-# 🔑 La deuda es POR CITA (`doc/control/b-deuda.tsv`), con TECHO: el que sale de rehacer en git la historia de la tabla
-# desde que se creó; sólo baja, salvo lo que un cambio del núcleo vea de más (b-control.bash lo explica).
+# 🔑 La deuda es POR CITA (`doc/control/b-deuda.tsv`), con TECHO: la tabla de la BASE VERIFICADA, que tiene que ser
+# antepasado de HEAD; sólo baja, salvo lo que un cambio del núcleo vea de más sobre los documentos de la base
+# (b-control.bash lo explica; ADR-167 de RPP). En FOL el push va directo a master: en local la base es `origin/master`
+# (lo último subido); en la CI, el commit de ANTES del push (`B_BASE_REF`, que pone el workflow).
 # ⛔ M-3: el entorno de Lean lo vuelca `scripts/VolcarEntorno.lean`. En local, desde la raíz de RPP (que es donde se
 # construye FOL); en la CI de FOL, desde FOL, que acaba de construirse ahí. Si no se puede, no se mide, y es rojo.
-B_SUBE_ADR=""   # sólo si un ADR de RPP deja que la tabla CREZCA sin cambiar el núcleo: «ADR-NNN» (que las nombre)
+B_BASE_REF="${B_BASE_REF:-refs/remotes/origin/master}"
+export GIT_NO_REPLACE_OBJECTS=1
+# ⛔ En FOL NO hay subida por ADR (ADR-167 de RPP): sus ADR viven en RPP, que se sube DESPUÉS (M-12), así que aquí no se
+# puede comprobar que un ADR sea nuevo; la tabla de FOL sólo sube con un cambio del núcleo
+B_SUBE_ADR=""
 B_DOCS_LISTA="REFERENCE.md CURRENT-STATUS-PROJECT.md DEPENDENCIES.md DECISIONS.md README.md AXIOMS.md NEXT-STEPS.md AI-GUIDE.md"
 B_DOCS_LISTA="$B_DOCS_LISTA cuarentena/README.md"
 SIBLING="${RPP_DIR:-../ROBINSON_PlusPlus}"
@@ -469,8 +475,8 @@ SIBLING_OK=0
 [ -d "$SIBLING/ROBINSON_PlusPlus" ] && SIBLING_OK=1
 # la historia de los nombres: la de FOL (con lo que aún no está en git) y la de RPP (su HEAD: lo que ve la CI)
 B_GITS="."; [ "$SIBLING_OK" = "1" ] && B_GITS=". $SIBLING"
-b_adr_existe() { [ "$SIBLING_OK" = "1" ] && grep -qE "^## $1:" "$SIBLING/DECISIONS.md"; }
-b_adr_texto() { awk -v a="## $1:" '/^## / { en = (index($0, a) == 1) } en' "$SIBLING/DECISIONS.md"; }
+b_adr_texto() { :; }        # (sin subida por ADR en FOL: ver B_SUBE_ADR)
+b_adr_texto_base() { :; }
 if [ "$SIBLING_OK" = "1" ]; then
   # El alcance de RPP es su árbol ACTIVO —la librería y su cuarentena—, no sus sondeos ni `Probe/` (ADR-116 de RPP).
   SCOPE="FOL/ TheoryFramework/ FOL.lean cuarentena/ $SIBLING/ROBINSON_PlusPlus/ $SIBLING/ROBINSON_PlusPlus.lean $SIBLING/cuarentena/"
@@ -540,7 +546,17 @@ if [ "$B_MEDIDO" = "1" ]; then
 fi
 if [ "$B_MEDIDO" = "1" ]; then
   B_DECLS=$DECLS
+  # (✏️ ADR-167 de RPP: también FOL compara su núcleo con el de RPP, si está al lado. En local; en la CI de FOL no,
+  # porque allí RPP es su master, que por M-12 aún lleva la versión anterior: la comparación de la CI es la de RPP)
+  B_FAIL_PREVIO=0
+  if [ "$SIBLING_OK" = "1" ] && [ -z "${CI:-}" ]; then
+    for f in b-citas.awk b-control.bash; do
+      cmp -s <(tr -d '\r' < "$f") <(tr -d '\r' < "$SIBLING/$f" 2>/dev/null) \
+        || { echo "  ❌ $f y $SIBLING/$f ya no son el mismo fichero, byte a byte: unifícalos."; B_FAIL_PREVIO=1; }
+    done
+  fi
   source ./b-control.bash
+  [ "$B_FAIL_PREVIO" = "1" ] && B_FAIL=1
 fi
 rm -rf "$DECLS" "$B_SOND" "$B_ENV" "$B_MOD" "$B_RUT"
 [ "$B_FAIL" = "0" ] && [ "$B_MEDIDO" = "1" ] && echo "  ✓ ninguna cita muerta nueva, y la deuda por cita cuadra con la tabla" || FAIL=1

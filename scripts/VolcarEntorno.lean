@@ -28,7 +28,8 @@ elab "#volcar_entorno" : command => do
       | none => Name.anonymous
     (`FOL).isPrefixOf m || (`TheoryFramework).isPrefixOf m
   -- los ALIAS del proyecto: con `abbrev Formula := FormulaG (List Char)`, Lean resuelve `Formula.atom` como
-  -- `FormulaG.atom`, y los documentos lo citan así
+  -- `FormulaG.atom`, y los documentos lo citan así. Van con un tercer campo, «A»: valen enteros, pero sus componentes
+  -- no absuelven nombres sueltos (un `abbrev N := Nat` no revive `add_comm`; ADR‑167 de RPP)
   let mut alias : NameMap (Array Name) := {}
   for (n, ci) in env.constants.toList do
     if let .defnInfo d := ci then
@@ -45,7 +46,7 @@ elab "#volcar_entorno" : command => do
       let mut p := n.getPrefix
       while !p.isAnonymous do
         for a in (alias.find? p).getD #[] do
-          out := out.push s!"{n.replacePrefix p a}\tP"
+          out := out.push s!"{n.replacePrefix p a}\tP\tA"
         p := p.getPrefix
   for (n, _) in (← getOptionDecls).toList do
     out := out.push s!"{n}\tO"

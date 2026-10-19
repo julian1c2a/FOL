@@ -1,6 +1,6 @@
 # Changelog
 
-**Last updated:** 2026-10-18 — T04, segunda entrega (ADR‑166 de RPP): entrada nueva arriba. Antes, el mismo día — T15, T07 y T04 (ADR‑163, ADR‑165 y ADR‑166 de RPP). Antes, 2026-10-05 (D7, ADR‑129 de RPP).
+**Last updated:** 2026-10-19 — T04, cierre (ADR‑167 de RPP): entrada nueva arriba. Antes, 2026-10-18 — T04, segunda entrega (ADR‑166 de RPP). Antes, el mismo día — T15, T07 y T04 (ADR‑163, ADR‑165 y ADR‑166 de RPP). Antes, 2026-10-05 (D7, ADR‑129 de RPP).
 **Author**: Julián Calderón Almendros
 
 > ⛔⛔ **ESTE FICHERO ESTUVO CONGELADO EN 2026-05-16 CON 115 COMMITS DETRÁS**, y no fue un
@@ -18,6 +18,23 @@ All notable changes to this project will be documented in this file.
 
 Format based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+
+## 2026-10-19 — T04, cierre: el techo de `[B]` sobre la base VERIFICADA, y lo que encontraron la tercera y la cuarta revisión (ADR‑167 de RPP)
+
+* 🔒 `b-control.bash` (idéntico al de RPP): el techo es la tabla de la BASE VERIFICADA (`refs/remotes/origin/master`, que
+  tiene que ser antepasado de HEAD; en la CI de un push a master, el commit de antes), no la historia de la tabla. Un
+  cambio del núcleo va SOLO (los documentos de la lista no pueden cambiar con él) y sube o baja el techo con un delta con
+  signo, medido en el mismo directorio aparte que la deuda. Un documento renombrado lleva su deuda; fuera de la lista,
+  rojo. La base sin tabla con núcleo, rojo. Un clon superficial no se mide.
+* 🔒 `b-citas.awk`: el marcador es de la cita (o del grupo) de al lado, no cruza otra cita ni un fin de oración; los
+  negados y los usados como sustantivo no marcan; globs y abreviaturas con barra se examinan; tres desincronías con
+  CommonMark, arregladas (la valla de un ítem de lista, un `<!--` a media línea, la barra al final de una cita).
+* `check-doc-sync.bash` `[B]`: compara su núcleo con el de RPP (en local); en FOL no hay subida por ADR.
+* `.github/workflows/build.yml`: corre también en `ci/**` (la CI antes que master, como en RPP), con la base adecuada a
+  cada evento. ⚠️ El master de FOL no está protegido: propuesta, protegerlo como el de RPP.
+* `scripts/VolcarEntorno.lean`: los nombres por alias, con un tercer campo «A».
+* `doc/control/b-deuda.tsv`, rehecha: 360 entradas, 730 citas (82 más, las que el núcleo nuevo ve sobre los mismos
+  documentos).
 
 ## 2026-10-18 — T04, segunda entrega: el núcleo de las tres revisiones adversariales y el techo que rehace la historia de la tabla (ADR‑166 de RPP)
 

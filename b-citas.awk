@@ -4,12 +4,15 @@
 # Uso: LC_ALL=C awk -f b-citas.awk VIVOS ENV SONDEOS MODULOS RUTAS HIST DOC1.md [DOC2.md …]
 #   VIVOS    un nombre declarado por línea (el nombre entero y su último componente), del proyecto y de cuarentena/;
 #   ENV      «nombre<TAB>clase»: P (constante del proyecto), L (constante de Lean), O (opción), M (módulo de Lean), T (una
-#            orden: un token del analizador que empieza por «#», como `#print` o `#pureza_titulares`);
+#            orden: un token del analizador que empieza por «#», como `#print` o `#pureza_titulares`); un tercer campo
+#            «A» marca un nombre por un ALIAS del proyecto (`Formula.atom` por `FormulaG.atom`): vale entero o como
+#            sufijo, pero sus componentes no absuelven nombres sueltos;
 #   SONDEOS  «nombre|fichero» por cada declaración de un sondeo (también de los archivados: «etiqueta:sondeos/X.lean»);
 #   MODULOS  los módulos que existen (el cierre de las librerías, sondeos/ y scripts/), con puntos, y cada tramo de ellos;
 #   RUTAS    los ficheros versionados de RPP y de FOL (y con el repo delante), las etiquetas de git y «etiqueta:ruta»;
 #            una línea que empieza por «=» entra sólo entera, sin sus sufijos (las copias retiradas de cuarentena/);
-#   HIST     los nombres que el proyecto declaró ALGUNA VEZ y los módulos que tuvo (de la historia de git de los dos repos).
+#   HIST     los nombres que el proyecto declaró ALGUNA VEZ y los módulos que tuvo (de la historia de git de los dos repos);
+#            una línea «/X» es un directorio que tuvo un `.lean` (a ése sólo no lo absuelve un homónimo de Lean).
 # Emite, por cada cita no absuelta, «B|clave|cita|fichero:línea» (un identificador) o «B2|ruta|cita|fichero:línea» (un
 # fichero que no existe); y «V|fichero:línea» por cada valla de código o comentario HTML que queda ABIERTO al acabar un
 # documento (el resto del documento no se ha mirado: quien llama lo da por NO MEDIDO).
@@ -25,7 +28,9 @@
 #     de script (`T_UNIVERSO`), ni un hash (`f9941dc`), ni una hipótesis (`hPsiId`), ni la abreviatura o el patrón de
 #     un axioma (`ax21`, `ax_TagDescriptor`). ⛔ Salvo que esté en HIST: un nombre que el proyecto declaró alguna vez no
 #     se exime por su forma (`raa` murió con su regla, y sus citas saltan);
-#   · una RUTA: con `/` o con una extensión conocida; `etiqueta:ruta`; con `*` (cuenta su directorio).
+#   · una RUTA: con `/` o con una extensión conocida; `etiqueta:ruta`; con `*` (cuenta su directorio). Pero un glob sin
+#     directorio (`teo_1_13_*`) es una FAMILIA de nombres, y una «ruta» sin extensión con `_` que no existe
+#     (`imp_intro/gen/raa`) es una abreviatura de nombres: se mira cada uno.
 # QUÉ LA HACE VIVA. Un identificador sin punto: está en VIVOS, o es un componente del nombre de una constante del
 # PROYECTO (un constructor, un campo, un espacio de nombres), un módulo, una opción o vocabulario; o, si el proyecto no
 # lo declaró nunca, de Lean: un componente en Mayúscula (`CoreM`) o el último componente en camelCase (`getUsedConstants`).
@@ -35,10 +40,12 @@
 # nombre vivo empieza así. Una ruta: es un sufijo de un fichero, un directorio, una etiqueta o una «etiqueta:ruta». Una
 # orden (`#pureza_titulares`, `#print`): un token del analizador (T); si no lo es, se mira su nombre sin la «#».
 # QUÉ LA ABSUELVE. Un MARCADOR de ESTADO (retirado, borrado, archivado, propuesto, candidato, hipotético, descartado,
-# muerto, histórico, «falta», «pendiente», «por construir», «no existe»…), palabra entera, a 100 bytes o menos de la
-# cita, sin cruzar una celda de tabla, sobre la línea con las citas en blanco; o, si la declara un sondeo, que la línea
-# nombre ese sondeo (`sondeos/X` o `X.lean`). ⛔ La fecha NO es un marcador, ni los verbos corrientes («necesita»,
-# «pide», «exige», «abierta», «hace falta»): una cita muerta seguida de «hace falta» no está marcada.
+# muerto, histórico, «falta», «pendiente», «por construir», «no existe»…), palabra entera (no dentro de una ruta ni de
+# un compuesto: `librerias-retiradas/` no marca), a 100 bytes o menos, sin cruzar una celda de tabla NI OTRA CITA: el
+# marcador es de la cita (o del grupo de citas unidas sólo por comas, «y», «o» o barras) que tiene al lado, no de una
+# vecina; sobre la línea con las citas en blanco; o, si la declara un sondeo, que la línea nombre ese sondeo
+# (`sondeos/X` o `X.lean`). ⛔ La fecha NO es un marcador, ni los verbos corrientes («necesita», «pide», «exige»,
+# «abierta», «hace falta»), ni un marcador negado («no está retirado»).
 BEGIN {
   W = 100
   L = "([A-Za-z_]|[\303-\337][\200-\277]|\341[\265-\277][\200-\277]|\360\235[\200-\277][\200-\277])"
@@ -46,23 +53,31 @@ BEGIN {
   IDENT = "^" L C "*([.]" L C "*)*$"
   PALABRA = L C "*([.]" L C "*)*"
   EXT = "[.](lean|md|bash|sh|py|awk|ps1|txt|json|yml|yaml|tsv|csv|olean|tex|pdf|htm|html|toml)$"
-  NOLETRA = "(^|[^a-z\200-\377])"
-  FINP = "([^a-z\200-\377]|$)"
+  # una palabra ENTERA: ni dentro de otra, ni de una ruta o un compuesto (`librerias-retiradas/`, `muerto_e_`)
+  NOLETRA = "(^|[^-a-z0-9_/.\200-\377])"
+  FINP = "([^-a-z0-9_/\200-\377]|$)"
   # cada palabra entera, con sus terminaciones: «borrador» no es «borrado», ni «faltaban» es «falta»
-  MARK = NOLETRA "((retirad|borrad|eliminad|archivad|descartad|propuest|candidat|hipot(e|\303\251)tic|hist(o|\303\263)ric|muert|desaparecid|obsolet|renombrad|sustituid|reemplazad)(o|a|os|as)"
-  MARK = MARK "|legacy|inexistentes?|faltan?|pendientes?|sin materializar|sin medir|no existen?|ya no existen?|tampoco existen?"
-  MARK = MARK "|se (borr|retir|elimin|archiv|descart)(o|\303\263|aron)|desapareci(o|\303\263)"
-  MARK = MARK "|aqu(i|\303\255) viv(i|\303\255)a|habr(i|\303\255)a que|por (construir|hacer|medir|escribir|demostrar|decidir|probar))" FINP
-  MARK = MARK "|\342\217\263|\360\237\227\221"
+  MARKW = "((retirad|borrad|eliminad|archivad|descartad|propuest|candidat|hipot(e|\303\251)tic|hist(o|\303\263)ric|muert|desaparecid|obsolet|renombrad|sustituid|reemplazad)(o|a|os|as)"
+  MARKW = MARKW "|legacy|inexistentes?|faltan?|pendientes?|sin materializar|sin medir|no existen?|ya no existen?|tampoco existen?"
+  MARKW = MARKW "|se (borr|retir|elimin|archiv|descart)(o|\303\263|aron)|desapareci(o|\303\263)"
+  MARKW = MARKW "|aqu(i|\303\255) viv(i|\303\255)a|habr(i|\303\255)a que|por (construir|hacer|medir|escribir|demostrar|decidir|probar))"
+  MARK = NOLETRA MARKW FINP "|\342\217\263|\360\237\227\221"
   # «hace falta» (y sus formas) es «se necesita»: no marca nada
   HACERFALTA = NOLETRA "(hace|hac(i|\303\255)a|hacen|hac(i|\303\255)an|hizo|haciendo|har(a|\303\241)|har(i|\303\255)an?|haga|hagan|hubiera hecho) falta" FINP
+  # un marcador NEGADO («no está retirado», «nunca fue propuesto») no marca nada
+  # (con hasta dos palabras en medio: «no retirado», «no se ha retirado», «no es código muerto», «ya no falta»)
+  NEGADO = NOLETRA "(no|nunca|ni|tampoco)( [^ ]+)?( [^ ]+)? " MARKW FINP
+  # un marcador usado como SUSTANTIVO («la propuesta», «por falta de», «el histórico», «los 17 candidatos», «los 2
+  # últimos pendientes») no dice nada de la cita
+  NOMBRE = NOLETRA "(el|la|los|las|un|una|unos|unas|del|al|por|su|sus|este|esta|estos|estas)( [0-9]+)?( [^ ]+)? "
+  NOMBRE = NOMBRE "(propuestas?|pendientes?|candidat(o|a|os|as)|hist(o|\303\263)ric(o|a|os|as)|faltas?)" FINP
   nv = split("Prop Type Sort lean_lib leanOptions globs andSubmodules submodules default_target moreServerArgs", vz, " ")
   for (i = 1; i <= nv; i++) VOCAB[vz[i]] = 1
 }
 FILENAME == ARGV[1] { vivo[$0] = 1; next }
 FILENAME == ARGV[2] {
   if ($0 == "") next
-  split($0, e2, "\t"); n0 = e2[1]; c0 = e2[2]
+  e2[3] = ""; split($0, e2, "\t"); n0 = e2[1]; c0 = e2[2]
   if (c0 == "O") { opcion[n0] = 1; next }
   if (c0 == "T") { orden[n0] = 1; next }
   if (c0 == "M") { modulo[n0] = 1; next }
@@ -70,8 +85,11 @@ FILENAME == ARGV[2] {
   nc = split(n0, cz, ".")
   if (nc >= 2) suf[cz[nc - 1] "." cz[nc]] = 1
   if (nc >= 3) suf[cz[nc - 2] "." cz[nc - 1] "." cz[nc]] = 1
-  for (i = 1; i <= nc; i++) { if (c0 == "P") p1[cz[i]] = 1; else l1[cz[i]] = 1 }
-  if (c0 != "P") l1ult[cz[nc]] = 1
+  # (los componentes de un nombre por alias no absuelven nombres sueltos: `abbrev N := Nat` revive `Nat.*` sólo enteros)
+  if (e2[3] != "A") {
+    for (i = 1; i <= nc; i++) { if (c0 == "P") p1[cz[i]] = 1; else l1[cz[i]] = 1 }
+    if (c0 != "P") l1ult[cz[nc]] = 1
+  }
   u = n0; while (sub(/[.][^.]*$/, "", u)) { if (u in espacio) break; espacio[u] = 1 }
   next
 }
@@ -88,9 +106,9 @@ FILENAME == ARGV[5] {
     while (1) { ruta[dd] = 1; if (!sub(/^[^\/]*\//, "", dd)) break } }
   next
 }
-FILENAME == ARGV[6] { hist[$0] = 1; next }
+FILENAME == ARGV[6] { if (substr($0, 1, 1) == "/") histdir[substr($0, 2)] = 1; else hist[$0] = 1; next }
 # ── los documentos ──
-FNR == 1 { cierra_doc(); doc = FILENAME; valla = 0; vq = 0; abierta = 0; html = 0 }
+FNR == 1 { cierra_doc(); doc = FILENAME; valla = 0; vq = 0; vlista = 0; abierta = 0; html = 0 }
 {
   x = $0
   # la cita `>` (para las vallas dentro de una cita)
@@ -98,19 +116,22 @@ FNR == 1 { cierra_doc(); doc = FILENAME; valla = 0; vq = 0; abierta = 0; html = 
   if (valla) {
     if (vq && !cita_md) { valla = 0 }
     else {
-      if (q ~ ("^ {0,3}" vchar vchar vchar) && cierra_valla(q)) valla = 0
+      # (la de un ítem de lista se cierra con la sangría del ítem)
+      if (q ~ ((vlista ? "^ *" : "^ {0,3}") vchar vchar vchar) && cierra_valla(q)) valla = 0
       next
     }
   }
-  if (!html && q ~ /^ {0,3}(```|~~~)/) {
-    r = q; sub(/^ */, "", r); vchar = substr(r, 1, 1)
+  # una valla, también en la línea de un ítem de lista (`- ```lean`)
+  if (!html && (q ~ /^ {0,3}(```|~~~)/ || q ~ /^ {0,3}([-*+]|[0-9]+[.)]) +(```|~~~)/)) {
+    r = q; sub(/^ */, "", r); vl = 0
+    if (r ~ /^([-*+]|[0-9]+[.)]) +/) { sub(/^([-*+]|[0-9]+[.)]) +/, "", r); vl = 1 }
+    vchar = substr(r, 1, 1)
     match(r, (vchar == "`") ? "^`+" : "^~+"); vlen = RLENGTH; info = substr(r, vlen + 1)
-    if (!(vchar == "`" && index(info, "`"))) { valla = 1; vq = cita_md; vlin = FNR; abierta = 0; next }
+    if (!(vchar == "`" && index(info, "`"))) { valla = 1; vq = cita_md; vlista = vl; vlin = FNR; abierta = 0; next }
   }
   # un comentario HTML que viene de la línea anterior: hasta su cierre, no es prosa
   if (html) { p = index(x, "-->"); if (!p) next; x = sprintf("%" (p + 2) "s", "") substr(x, p + 3); html = 0 }
-  # las comillas escapadas (\`) son texto
-  gsub(/\\`/, "  ", x)
+  # (una comilla escapada, \`, es texto: lo mira escanea, sólo al buscar la comilla que ABRE una cita)
   # una cita no sigue a través de un párrafo nuevo, una tabla, un título, un ítem de lista nuevo o una línea `>` vacía
   if (x ~ /^[ \t]*$/ || x ~ /^\|/ || x ~ /^#/ || x ~ /^[ \t]*([-*+]|[0-9]+[.)])[ \t]/ || x ~ /^ {0,3}>[ \t]*$/) abierta = 0
   # una cita de UNA comilla que viene de la línea anterior: hasta su comilla de cierre, es código; se mira entera al
@@ -127,7 +148,10 @@ FNR == 1 { cierra_doc(); doc = FILENAME; valla = 0; vq = 0; abierta = 0; html = 
   while ((p = html_fuera(x)) > 0) {
     e = index(substr(x, p + 4), "-->")
     if (e) { x = substr(x, 1, p - 1) sprintf("%" (e + 6) "s", "") substr(x, p + e + 6) }
-    else { x = substr(x, 1, p - 1); html = 1; hlin = FNR }
+    # un comentario sin cerrar sólo sigue en las líneas siguientes si la línea EMPIEZA por él (un bloque HTML de
+    # CommonMark); a media línea y sin cierre, es texto
+    else if (substr(x, 1, p - 1) ~ /^ {0,3}$/) { x = substr(x, 1, p - 1); html = 1; hlin = FNR }
+    else break
     escanea(x)
   }
   # la línea con cada cita en BLANCO, del mismo largo: la ventana del marcador se corta de aquí
@@ -136,8 +160,64 @@ FNR == 1 { cierra_doc(); doc = FILENAME; valla = 0; vq = 0; abierta = 0; html = 
   if (abre1) { lb = lb substr(x, pos, abre1 - pos) sprintf("%" (length(x) - abre1 + 1) "s", ""); abierta = 1; pend = substr(x, abre1 + 1) }
   else lb = lb substr(x, pos)
   xs = x
-  if (pendiente_t != "") { ini = 1; fin = pendiente_fin; piezas(pendiente_t) }
-  for (i = 1; i <= ns; i++) { ini = sini[i]; fin = sfin[i]; piezas(scont[i]) }
+  # los tramos de TODAS las citas de la línea, en orden (la que viene de la anterior, las de la línea y la que sigue en
+  # la siguiente): el marcador de una cita no puede cruzar otra
+  nsp = 0
+  if (pendiente_t != "") { nsp++; SI[nsp] = 1; SF[nsp] = pendiente_fin }
+  for (i = 1; i <= ns; i++) { nsp++; SI[nsp] = sini[i]; SF[nsp] = sfin[i] }
+  if (abre1) { nsp++; SI[nsp] = abre1; SF[nsp] = length(x) }
+  s0 = 0
+  if (pendiente_t != "") { s0 = 1; ini = 1; fin = pendiente_fin; grupo(1); piezas(pendiente_t) }
+  for (i = 1; i <= ns; i++) { ini = sini[i]; fin = sfin[i]; grupo(i + s0); piezas(scont[i]) }
+}
+# el GRUPO de la cita s: las citas vecinas unidas sólo por comas, «y», «o», barras o paréntesis (`a`, `b` y `c`); de
+# él salen GI y GF (sus extremos), G1 y G2 (sus tramos primero y último) y LIMI y LIMD (hasta dónde llega su ventana:
+# la cita de al lado, sin cruzarla)
+function grupo(s) {
+  G1 = s; while (G1 > 1 && separa(SF[G1 - 1] + 1, SI[G1] - 1)) G1--
+  G2 = s; while (G2 < nsp && separa(SF[G2] + 1, SI[G2 + 1] - 1)) G2++
+  GI = SI[G1]; GF = SF[G2]
+  LIMI = (G1 > 1) ? SF[G1 - 1] + 1 : 1
+  LIMD = (G2 < nsp) ? SI[G2 + 1] - 1 : length(lb)
+}
+# (un paréntesis o un punto y coma SEPARAN grupos: en «`nuevo` (`viejo`, renombrado)» el marcador es de `viejo`)
+function separa(a, b,   t) {
+  if (b < a) return 1
+  t = tolower(substr(x, a, b - a + 1)); gsub(/[ \t,\/"'+&]/, "", t); gsub(/\302[\253\273\267]/, "", t)
+  return (t == "" || t == "y" || t == "o" || t == "e" || t == "u" || t == "ni" || t == "and" || t == "or")
+}
+# «hace falta», los marcadores negados y los usados como sustantivo, en blanco, sin mover las posiciones
+function limpia(t) {
+  while (match(t, HACERFALTA)) t = substr(t, 1, RSTART - 1) sprintf("%" RLENGTH "s", "") substr(t, RSTART + RLENGTH)
+  while (match(t, NEGADO)) t = substr(t, 1, RSTART - 1) sprintf("%" RLENGTH "s", "") substr(t, RSTART + RLENGTH)
+  while (match(t, NOMBRE)) t = substr(t, 1, RSTART - 1) sprintf("%" RLENGTH "s", "") substr(t, RSTART + RLENGTH)
+  return t
+}
+# ¿hay un marcador de ESTE grupo? En lb, a W bytes o menos de él, sin cruzar un `|`, otra cita ni un fin de oración
+# («. »), y si está entre él y una cita vecina de la misma oración y celda, más cerca de él que de ella («`a` toma `b`
+# … falta `c`»: el «falta» es de `c`; a igual distancia, de ninguna), salvo que lo presente con dos puntos («los tres,
+# retirados con esa capa: `a`, `b`»)
+function marcado(   a, e, seg, q2, p, off, P, Q, cort) {
+  a = GI - W; if (a < LIMI) a = LIMI
+  seg = substr(lb, a, GI - a); cort = 0
+  q2 = 0; while ((p = index(substr(seg, q2 + 1), "|")) > 0) q2 += p
+  while (match(substr(seg, q2 + 1), /[.!?] /)) q2 += RSTART + RLENGTH - 1
+  if (q2 > 0) { a += q2; seg = substr(seg, q2 + 1); cort = 1 }
+  seg = limpia(tolower(seg)); off = 0
+  while (match(substr(seg, off + 1), MARK)) {
+    P = a + off + RSTART - 1; Q = P + RLENGTH - 1; off += RSTART + RLENGTH - 1
+    if (G1 == 1 || cort || substr(lb, Q + 1, GI - Q - 1) ~ /:[ \t]*$/ || GI - Q - 1 < P - LIMI) return 1
+  }
+  e = GF + W; if (e > LIMD) e = LIMD
+  seg = substr(lb, GF + 1, e - GF); cort = 0
+  p = index(seg, "|"); if (p > 0) { seg = substr(seg, 1, p - 1); cort = 1 }
+  if (match(seg, /[.!?] /)) { seg = substr(seg, 1, RSTART); cort = 1 }
+  seg = limpia(tolower(seg)); off = 0
+  while (match(substr(seg, off + 1), MARK)) {
+    P = GF + off + RSTART; Q = P + RLENGTH - 1; off += RSTART + RLENGTH - 1
+    if (G2 == nsp || cort || P - GF - 1 < SI[G2 + 1] - Q - 1) return 1
+  }
+  return 0
 }
 END { cierra_doc() }
 function cierra_doc() {
@@ -158,10 +238,15 @@ function cierre1(x, i,   p, j) {
 }
 # las citas de la línea: sini, sfin (las comillas de los extremos) y scont, ns de ellas; abre1, la posición de una
 # comilla sola sin cierre (la cita sigue en la línea siguiente), o 0. Una tira de n ≥ 2 sin cierre es texto.
-function escanea(x,   i, p, j, n, k, m, hay, c) {
+function escanea(x,   i, p, j, n, k, m, hay, c, b) {
   ns = 0; abre1 = 0; i = 1
   while ((p = index(substr(x, i), "`")) > 0) {
-    p = i + p - 1; j = p; while (substr(x, j, 1) == "`") j++
+    p = i + p - 1
+    # una comilla escapada (\`, con un número impar de barras delante) no ABRE una cita: es texto. Dentro de una cita
+    # la barra no escapa nada (`C:\msys64\` se cierra en su comilla)
+    b = 0; while (p - b > 1 && substr(x, p - b - 1, 1) == "\\") b++
+    if (b % 2 == 1) { i = p + 1; continue }
+    j = p; while (substr(x, j, 1) == "`") j++
     n = j - p; k = j; hay = 0
     while ((m = index(substr(x, k), "`")) > 0) {
       m = k + m - 1; k = m; while (substr(x, k, 1) == "`") k++
@@ -188,7 +273,7 @@ function html_fuera(x,   p, d, i, dentro) {
   return 0
 }
 # las piezas de una cita: la cita entera si es un identificador o una ruta; si no, sus palabras con forma de declaración
-function piezas(t,   u, w, cab, nt, tz, it) {
+function piezas(t,   u, w, cab, nt, tz, it, ap) {
   gsub(/\342\200\221|\342\200\223/, "-", t)
   if (t ~ /:[0-9][0-9,:-]*$/) sub(/:[0-9][0-9,:-]*$/, "", t)
   if (t ~ /^[A-Za-z0-9_.\/*-]+(:[A-Za-z0-9_.\/*-]+)?$/ && (t ~ /\// || t ~ EXT || t ~ /\*/ || t ~ /:/)) { examina(t, 0); return }
@@ -198,10 +283,14 @@ function piezas(t,   u, w, cab, nt, tz, it) {
   # nombres con forma de declaración
   nt = split(t, tz, /[ \t]+/)
   for (it = 1; it <= nt; it++) {
-    u = tz[it]; sub(/^[[({"'@]+/, "", u); sub(/[])},;:."']+$/, "", u)
+    # (la comilla simple final sólo se quita si la palabra empezaba por una: `consistencyFormula'` lleva su prima)
+    u = tz[it]; ap = (u ~ /^[[({"@]*'/)
+    sub(/^[[({"'@]+/, "", u); sub(/[])},;:."]+$/, "", u)
+    if (ap) { sub(/'+$/, "", u); sub(/[])},;:."]+$/, "", u) }
     # una orden (`#pureza_titulares`) vive si el analizador la conoce; si no, se mira su nombre
     if (substr(u, 1, 1) == "#") { if (u in orden) continue; sub(/^#+/, "", u) }
     if (u ~ /^[A-Za-z0-9_.\/*-]+$/ && (u ~ /\// || u ~ EXT)) { examina(u, 1); continue }
+    if (u ~ /^[A-Za-z_][A-Za-z0-9_']*\*$/) { examina(u, 1); continue }
     while (match(u, PALABRA)) {
       w = substr(u, RSTART, RLENGTH); u = substr(u, RSTART + RLENGTH)
       sub(/[.]$/, "", w)
@@ -209,18 +298,40 @@ function piezas(t,   u, w, cab, nt, tz, it) {
     }
   }
 }
-function examina(t, enpieza,   r, k, k2, clase, pre) {
+function examina(t, enpieza,   r, k, k2, clase, pre, segs, nseg, j, base, ex) {
   if (t ~ /^[A-Za-z0-9_.\/*-]+:[A-Za-z0-9_.\/*-]+$/) {
     # «etiqueta:ruta» (`archivo/sondeos-2026-10:sondeos/X.lean`)
     if (t in ruta) return
     clase = "B2"; k = t
-  } else if (t ~ /^[A-Za-z0-9_.\/*-]+$/ && (t ~ /\// || t ~ EXT || t ~ /\*/) && !(t !~ EXT && t !~ /\*/ && t ~ /_[^\/]*$/)) {
-    # (sin extensión y con `_` en el último tramo, `prf_x_left/right` abrevia dos nombres: no es una ruta)
-    r = t; sub(/^(\.\.?\/)+/, "", r)
-    if (index(r, "*")) { r = substr(r, 1, index(r, "*") - 1); sub(/[^\/]*$/, "", r) }
-    sub(/\/$/, "", r)
-    if (r !~ /[A-Za-z0-9]/ || r ~ /^[.][A-Za-z]+$/) return
+  } else if (t ~ /^[A-Za-z_][A-Za-z0-9_']*\*$/) {
+    # un glob sin directorio (`teo_1_13_*`, `decodeRuleTag_*`): la FAMILIA de su prefijo
+    k = substr(t, 1, length(t) - 1)
+    if (length(k) < 3 || familia_viva(k)) return
+    clase = "B"; k = t
+  } else if (t ~ /^[A-Za-z_][A-Za-z0-9_.']*[.]\*$/) {
+    # un glob de un espacio de nombres (`FOL.*`, `Meta.Borrado.*`): su prefijo tiene que ser un espacio de nombres, un
+    # módulo o una constante
+    k = substr(t, 1, length(t) - 2)
+    if ((k in espacio) || (k in modulo) || (k in entero) || (k in vivo)) return
+    clase = "B"; k = t
+  } else if (t ~ /^[A-Za-z0-9_.\/*-]+$/ && t ~ /\// && t !~ EXT && t !~ /\*/ && t ~ /_/) {
+    # sin extensión y con `_`: una ruta, si existe o si existe su directorio (entonces es una ruta muerta); si no, una
+    # abreviatura de nombres (`imp_intro/gen/raa`, `ax_substfc_impl/_and/_or`, `prf_x_left/right`)
+    r = t; sub(/^(\.\.?\/)+/, "", r); sub(/\/$/, "", r)
     if ((r in ruta) || ((r ".lean") in ruta)) return
+    pre = r; sub(/\/[^\/]*$/, "", pre)
+    if (pre in ruta) { clase = "B2"; k = t }
+    else { abrevia(t); return }
+  } else if (t ~ /^[A-Za-z0-9_.\/*-]+$/ && (t ~ /\// || t ~ EXT || t ~ /\*/)) {
+    r = t; sub(/^(\.\.?\/)+/, "", r)
+    if (index(r, "*")) {
+      # un glob de ficheros (`Meta/*.lean`, `Viejo*.lean`): tiene que casar con algún fichero
+      if (glob_vivo(r)) return
+    } else {
+      sub(/\/$/, "", r)
+      if (r !~ /[A-Za-z0-9]/ || r ~ /^[.][A-Za-z]+$/) return
+      if ((r in ruta) || ((r ".lean") in ruta)) return
+    }
     clase = "B2"; k = t
   } else {
     if (t !~ IDENT) return
@@ -231,22 +342,49 @@ function examina(t, enpieza,   r, k, k2, clase, pre) {
     if (index(t, ".")) { pre = t; sub(/[.].*$/, "", pre); if (length(pre) < 3 || (exenta(pre) && !(pre in hist))) return }
     clase = "B"
     k = t; sub(/^([A-Z][A-Za-z0-9_]*[.])*/, "", k)
-    if (vive(t)) return
-    if (k ~ /_$/) {
-      if (!(k in fam)) { fam[k] = 0; for (v in vivo) if (index(v, k) == 1) { fam[k] = 1; break } }
-      if (fam[k]) return
-    }
+    # (un fichero sin extensión que existe, `Makefile`, también vale)
+    if (vive(t) || (!index(t, ".") && (t in ruta))) return
+    if (k ~ /_$/ && familia_viva(k)) return
   }
-  # el marcador, en la ventana [ini − W, fin + W] de la línea en blanco, sin cruzar un `|`, en minúsculas
-  a = ini - W; if (a < 1) a = 1
-  izq = substr(lb, a, ini - a); der = substr(lb, fin + 1, W)
-  q2 = 0; while ((p = index(substr(izq, q2 + 1), "|")) > 0) q2 += p
-  if (q2 > 0) izq = substr(izq, q2 + 1)
-  p = index(der, "|"); if (p > 0) der = substr(der, 1, p - 1)
-  ventana = tolower(izq " " der); gsub(HACERFALTA, " ", ventana)
-  if (ventana ~ MARK) return
+  # el marcador de su grupo, en la línea con las citas en blanco (ver marcado)
+  if (marcado()) return
   if (clase == "B" && (k in sond) && nombra_sondeo(k)) return
   print clase "|" t "|" t "|" FILENAME ":" FNR
+}
+# una ABREVIATURA de nombres: el primero, entero; cada uno de los demás, si empieza por `_` o es una palabra que el
+# proyecto no declaró nunca, sustituye el último tramo del primero (`ax_substfc_impl/_and` → `ax_substfc_and`,
+# `foo_left/right` → `foo_right`); si no, va entero (`imp_intro/gen/raa`). Sólo los absuelve el PROYECTO: un homónimo
+# de Lean no basta
+function abrevia(t,   segs, nseg, j, s, base, ex) {
+  nseg = split(t, segs, "/"); base = segs[1]
+  soloproy = 1
+  if (base != "") examina(base, 1)
+  for (j = 2; j <= nseg; j++) {
+    s = segs[j]; if (s == "") continue
+    if (s ~ /^_/ || (s !~ /_/ && !(s in hist))) {
+      ex = base; sub(/_[^_]*$/, "", ex)
+      if (ex == base) { examina(s, 1); continue }
+      examina(ex (s ~ /^_/ ? "" : "_") s, 1)
+    } else examina(s, 1)
+  }
+  soloproy = 0
+}
+# ¿casa el glob g (`Meta/*.lean`, `Viejo*.lean`) con algún fichero de RUTAS?
+function glob_vivo(g,   re, r) {
+  if (!(g in globv)) {
+    re = g; gsub(/[.]/, "[.]", re); gsub(/\*/, "[^/]*", re); re = "^" re "$"
+    globv[g] = 0; for (r in ruta) if (r ~ re) { globv[g] = 1; break }
+  }
+  return globv[g]
+}
+# ¿vive alguna declaración del proyecto que empiece por k? (un nombre declarado, o un componente de una constante)
+function familia_viva(k,   v) {
+  if (!(k in fam)) {
+    fam[k] = 0
+    for (v in vivo) if (index(v, k) == 1) { fam[k] = 1; break }
+    if (!fam[k]) for (v in p1) if (index(v, k) == 1) { fam[k] = 1; break }
+  }
+  return fam[k]
 }
 # ¿vive el identificador t? (sin el marcador ni el sondeo)
 function vive(t,   k2, pre) {
@@ -260,8 +398,9 @@ function vive(t,   k2, pre) {
     return 0
   }
   if ((t in p1) || (t in modulo) || (t in opcion) || (t in VOCAB)) return 1
-  # un nombre que el proyecto declaró alguna vez sólo lo absuelve el proyecto: un homónimo de Lean no basta
-  if (t in hist) return 0
+  # un nombre que el proyecto declaró alguna vez (o un directorio que tuvo) sólo lo absuelve el proyecto: un homónimo
+  # de Lean no basta (`Bounded`, `Intermediate`)
+  if ((t in hist) || (t in histdir) || soloproy) return 0
   if (t ~ /^[A-Z]/ && (t in l1)) return 1
   if (t ~ /^[a-z_][A-Za-z0-9_']*[A-Z]/ && (t in l1ult)) return 1
   return 0
