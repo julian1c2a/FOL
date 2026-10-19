@@ -273,18 +273,24 @@ for d in $DOCS; do
   [ -e "$d" ] || continue
   head -100 "$d" | sed "s|^|$d:|" >> "$HEADREGION"
 done
+# Se descartan: menciones históricas, aproximaciones (~40), rangos (40-50), ejemplos y cifras citadas («…»).
+# ⭐ AÑADIDO al portar a FOL (2026-09-17): una cifra DENTRO de «comillas latinas» es una
+# CITA, no una afirmación. Los avisos de estado de FOL usan el formato
+# «lo que decía | lo medido», y sin esta exclusión los CUATRO daban falso positivo
+# citando textualmente el error que la propia fila está corrigiendo.
+# 🔑 Una cifra entrecomillada la está diciendo OTRO; el control mira lo que el doc AFIRMA.
+# ⛔ 2026-10-19 (T04b, ADR-169 de RPP): la FECHA ya no exime una línea (una fecha no dice que la cifra sea de ese día;
+# exime un MARCADOR explícito), un RANGO es de números cortos (`40-50`: el patrón de antes, `[0-9]+-[0-9]+`, casaba con
+# una fecha y la dejaba eximir por la puerta de atrás) y los patrones admiten la NEGRITA (`**0** sorry`). Como en RPP.
+# (`hist(o|ó)rico` y no `hist[oó]rico`: en la configuración regional C, `[oó]` es una clase de BYTES y no casa con «ó»)
+EXC_A='hist(o|ó)rico|previo|antes|era |fueron|→|->|en su momento|entonces|ya no|~|p\. ej|ejemplo|umbral|(^|[^0-9-])[0-9]{1,3}-[0-9]{1,3}([^0-9-]|$)|«[^»]*[0-9]'
+NB='(\*\*)?'   # la negrita que puede cerrar la cifra
 
 # ⚠️ Los patrones se pasan SIEMPRE entre comillas SIMPLES: un backtick dentro de
 #    comillas dobles lo ejecuta bash como sustitución de comando y el patrón queda roto.
 check_num () {   # $1 = regex con grupo numérico   $2 = valor correcto   $3 = etiqueta
   local pat="$1" good="$2" label="$3" hits
-  # Se descartan: menciones históricas, aproximaciones (~40), rangos (40-50) y ejemplos.
-    # ⭐ AÑADIDO al portar a FOL (2026-09-17): una cifra DENTRO de «comillas latinas» es una
-  # CITA, no una afirmación. Los avisos de estado de FOL usan el formato
-  # «lo que decía | lo medido», y sin esta exclusión los CUATRO daban falso positivo
-  # citando textualmente el error que la propia fila está corrigiendo.
-  # 🔑 Una cifra entrecomillada la está diciendo OTRO; el control mira lo que el doc AFIRMA.
-hits=$(grep -nE "$pat" "$HEADREGION" 2>/dev/null          | grep -viE "hist[oó]rico|previo|antes|era |fueron|→|->|en su momento|entonces|ya no|20[0-9]{2}-[0-9]{2}-[0-9]{2}|~|p\. ej|ejemplo|umbral|[0-9]+-[0-9]+|«[^»]*[0-9]" || true)
+  hits=$(grep -nE "$pat" "$HEADREGION" 2>/dev/null | grep -viE "$EXC_A" || true)
   while IFS= read -r line; do
     [ -z "$line" ] && continue
     local n; n=$(echo "$line" | grep -oE "$pat" | grep -oE "[0-9]+" | head -1)
@@ -301,10 +307,10 @@ hits=$(grep -nE "$pat" "$HEADREGION" 2>/dev/null          | grep -viE "hist[oó]
   [ -z "$hits" ] && echo "  ⚠️  $label: la frase no aparece en ningún doc autoritativo — control VACÍO"
   return 0
 }
-check_num "[0-9]+ módulos activos" "$ACTIVE" "módulos activos"
-check_num "[0-9]+ (módulos )?en \`cuarentena/\`" "$QUAR" "cuarentena"
-[ -n "$AXIOMS" ] && check_num '[0-9]+ `?axiom`? de Lean' "$AXIOMS" "axiom de Lean"
-check_num '[0-9]+ sorrys?' "$SORRY" "sorry"
+check_num "[0-9]+$NB módulos activos" "$ACTIVE" "módulos activos"
+check_num "[0-9]+$NB (módulos )?en \`cuarentena/\`" "$QUAR" "cuarentena"
+[ -n "$AXIOMS" ] && check_num "[0-9]+$NB "'`?axiom`? de Lean' "$AXIOMS" "axiom de Lean"
+check_num "[0-9]+$NB sorrys?" "$SORRY" "sorry"
 rm -f "$HEADREGION"
 [ "$A_FAIL" = "0" ] && echo "  ✓ sin cifras obsoletas" || FAIL=1
 
@@ -321,8 +327,11 @@ rm -f "$HEADREGION"
 # ⚠️ Y la acotación NO era un descuido: sin ella, los diarios de `NEXT-STEPS.md` disparan una
 # docena de falsos positivos y el control deja de usarse. Así que el cuerpo entra como **AVISO**,
 # igual que [B]: se ve, pide juicio, y no rompe. Lo que rompe sigue siendo la cabecera.
+# ⛔ 2026-10-19 (T04b, ADR-169 de RPP): deja de ser un AVISO y ROMPE. Medido ese día, sin la fecha como exención:
+# CERO líneas en el cuerpo de FOL, así que no hace falta la tabla de deuda de RPP (doc/control/a2-deuda.tsv allí):
+# una cifra vieja en el cuerpo es rojo, y se arregla en el documento (la cifra, o un marcador de historia en su línea).
 echo ""
-echo "════ [A2] CIFRAS EN EL CUERPO — AVISO, requiere juicio ════"
+echo "════ [A2] CIFRAS EN EL CUERPO — ROJO (T04b, ADR-169 de RPP) ════"
 BODYREGION=$(mktemp)
 : > "$BODYREGION"
 for d in $DOCS; do
@@ -333,28 +342,29 @@ done
 A2_HITS=0
 warn_num () {   # $1 = regex con grupo numérico   $2 = valor correcto   $3 = etiqueta
   local pat="$1" good="$2" label="$3" hits
-  hits=$(grep -nE "$pat" "$BODYREGION" 2>/dev/null          | grep -viE "hist[oó]rico|previo|antes|era |fueron|→|->|en su momento|entonces|ya no|retirad|20[0-9]{2}-[0-9]{2}-[0-9]{2}|20[0-9]{2}‑[0-9]{2}‑[0-9]{2}|~|p\. ej|ejemplo|umbral|[0-9]+-[0-9]+|«[^»]*[0-9]" || true)
+  hits=$(grep -nE "$pat" "$BODYREGION" 2>/dev/null | grep -viE "$EXC_A|retirad" || true)
   while IFS= read -r line; do
     [ -z "$line" ] && continue
     local n; n=$(echo "$line" | grep -oE "$pat" | grep -oE "[0-9]+" | head -1)
     if [ -n "$n" ] && [ "$n" != "$good" ]; then
-      echo "  ⚠️  $label: dice $n, real $good"
+      echo "  ✗ $label: dice $n, real $good"
       echo "      ${line:0:150}"
       A2_HITS=$((A2_HITS+1))
     fi
   done <<< "$hits"
   return 0
 }
-warn_num "[0-9]+ módulos activos" "$ACTIVE" "módulos activos"
-[ -n "$AXIOMS" ] && warn_num '[0-9]+ `?axiom`? de Lean' "$AXIOMS" "axiom de Lean"
-warn_num '[0-9]+ sorrys?' "$SORRY" "sorry"
+warn_num "[0-9]+$NB módulos activos" "$ACTIVE" "módulos activos"
+[ -n "$AXIOMS" ] && warn_num "[0-9]+$NB "'`?axiom`? de Lean' "$AXIOMS" "axiom de Lean"
+warn_num "[0-9]+$NB sorrys?" "$SORRY" "sorry"
 rm -f "$BODYREGION"
 if [ "$A2_HITS" = "0" ]; then
   echo "  ✓ el cuerpo tampoco tiene cifras obsoletas"
 else
-  echo "  ⚠️  $A2_HITS línea(s) en el CUERPO con cifras que no cuadran."
+  echo "  ✗ $A2_HITS línea(s) en el CUERPO con cifras que no cuadran."
   echo "      ¿es una afirmación de estado ACTUAL (⇒ corregir) o un registro histórico"
-  echo "      sin marcar (⇒ marcarlo: fecha ISO, «previo», «era», «histórico»)?"
+  echo "      sin marcar (⇒ marcarlo: «previo», «era», «histórico»; la fecha ya no basta)?"
+  FAIL=1
 fi
 
 echo ""

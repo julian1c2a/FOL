@@ -1,6 +1,6 @@
 # Changelog
 
-**Last updated:** 2026-10-19 — master protegido (ADR‑168 de RPP): entrada nueva arriba. Antes, el mismo día — T04, cierre (ADR‑167 de RPP). Antes, 2026-10-18 — T04, segunda entrega (ADR‑166 de RPP). Antes, el mismo día — T15, T07 y T04 (ADR‑163, ADR‑165 y ADR‑166 de RPP). Antes, 2026-10-05 (D7, ADR‑129 de RPP).
+**Last updated:** 2026-10-19 — `[A]` sin la fecha como exención y `[A2]` rojo (T04b, ADR‑169 de RPP): entrada nueva arriba. Antes, el mismo día — master protegido (ADR‑168 de RPP). Antes, el mismo día — T04, cierre (ADR‑167 de RPP). Antes, 2026-10-18 — T04, segunda entrega (ADR‑166 de RPP). Antes, el mismo día — T15, T07 y T04 (ADR‑163, ADR‑165 y ADR‑166 de RPP). Antes, 2026-10-05 (D7, ADR‑129 de RPP).
 **Author**: Julián Calderón Almendros
 
 > ⛔⛔ **ESTE FICHERO ESTUVO CONGELADO EN 2026-05-16 CON 115 COMMITS DETRÁS**, y no fue un
@@ -18,6 +18,16 @@ All notable changes to this project will be documented in this file.
 
 Format based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+
+## 2026-10-19 — `[A]` sin la fecha como exención y `[A2]` rojo (T04b, ADR‑169 de RPP)
+
+* `check-doc-sync.bash` `[A]`: la FECHA ya no exime una línea (exime un marcador explícito: «histórico», «previo»,
+  «entonces»…); un rango es de números cortos (`40-50`: el patrón de antes casaba con una fecha y la dejaba eximir por la
+  puerta de atrás); «hist(o|ó)rico» en vez de una clase con «ó», que en la configuración regional C es de bytes; y los
+  patrones admiten la negrita (`**0** sorry`). Las exenciones, una sola lista para `[A]` y `[A2]`, como en RPP.
+* `[A2]` deja de ser un aviso y ROMPE: medido sin la fecha, el cuerpo de FOL tiene cero líneas con cifras viejas, así que
+  no hace falta la tabla de deuda que lleva RPP. Visto fallar con tres mutantes (una cifra con fecha y negrita en la
+  cabecera y otra con fecha en el cuerpo, rojas; la misma con «Histórico:», verde).
 
 ## 2026-10-19 — `master` protegido, como el de RPP (ADR‑168 de RPP)
 
