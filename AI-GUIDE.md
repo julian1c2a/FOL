@@ -319,7 +319,7 @@ Transición: 🔄 → 🔶 → ✅ → 🧊 (el estado 🧊 es final).
 | `bash git-lock.bash init` | Instala/reinstala el hook pre-commit |
 | `bash cierre-imports.bash` | El cierre de imports de las raíces: el universo de los módulos (`[L]`, `[A]` y `[C]` de `check-doc-sync.bash`; T15 y ADR‑163 de RPP). `--autotest` lo comprueba. (✏️ 2026‑10‑18: aquí estaban `new-module.bash` y `gen-root.bash`, retirados) |
 | `bash check-sorry.bash` | Localiza todos los `sorry` (excluyendo comentarios) |
-| `bash update-toolchain.bash vX.Y.Z` | Actualiza el toolchain de Lean con verificación de build |
+| ~~`bash update-toolchain.bash vX.Y.Z`~~ | ⛔ Retirado aquí (2026‑10‑20, T42, ADR‑176 de RPP): compilaba FOL desde este directorio (M‑3) y commiteaba solo. El par se prueba desde RPP: `cd ../ROBINSON_PlusPlus && bash update-toolchain.bash [vX.Y.Z]`, en árboles aparte y sin commit |
 | `make help` | Lista los targets del Makefile |
 
 ---

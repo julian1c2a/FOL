@@ -1,37 +1,13 @@
 #!/bin/bash
-# update-toolchain.bash — Update lean-toolchain to a new version and verify build
+# update-toolchain.bash — ⛔ RETIRADO aquí el 2026‑10‑20 (T42, ADR‑176 de RPP).
 #
-# Usage:
-#   bash update-toolchain.bash v4.29.0
-#   bash update-toolchain.bash v4.29.0-rc1
+# Compilaba FOL desde ESTE directorio (`lake build`, que usa el toolchain de FOL: lo prohíbe M‑3) y, si compilaba,
+# COMMITEABA él solo el `lean-toolchain`. El par (RPP, FOL) se prueba junto, con la misma versión, desde la raíz de
+# ROBINSON_PlusPlus y en árboles aparte, sin commit:
 #
-# On success: commits the updated lean-toolchain file.
-# On failure: restores the previous version.
-
-set -e
-
-if [ $# -eq 0 ]; then
-    echo "Usage: bash update-toolchain.bash v4.28.0"
-    echo "Current toolchain: $(cat lean-toolchain)"
-    exit 1
-fi
-
-NEW_VERSION="leanprover/lean4:$1"
-OLD_VERSION=$(cat lean-toolchain)
-
-echo "Updating toolchain: $OLD_VERSION → $NEW_VERSION"
-echo "$NEW_VERSION" > lean-toolchain
-
-echo "Running lake build..."
-if lake build; then
-    echo ""
-    echo "✅ Build passed with $NEW_VERSION"
-    git add lean-toolchain
-    git commit -m "chore: update lean toolchain to $1"
-    echo "✅ Committed lean-toolchain update."
-else
-    echo ""
-    echo "❌ Build failed. Restoring previous toolchain: $OLD_VERSION"
-    echo "$OLD_VERSION" > lean-toolchain
-    exit 1
-fi
+#     cd ../ROBINSON_PlusPlus && bash update-toolchain.bash [vX.Y.Z]
+#
+# El bump, si se decide, lo hace un ADR, a mano, en los dos repos (M‑12: FOL primero).
+echo "⛔ update-toolchain.bash está retirado en FOL (T42, ADR-176 de RPP)." >&2
+echo "   El par se prueba desde ROBINSON_PlusPlus: cd ../ROBINSON_PlusPlus && bash update-toolchain.bash ${1:-}" >&2
+exit 2

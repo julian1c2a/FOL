@@ -1,7 +1,7 @@
 # Development Workflow
 
 **Author**: Your Name
-*Last updated: 2026-04-20*
+*Last updated: 2026-10-20* — Part 4: `update-toolchain.bash`, retired here (T42, ADR-176 of RPP). Before: 2026-04-20.
 
 Complete guide for using this template — from initial setup to active development.
 
@@ -201,10 +201,11 @@ git push origin master
 ## Part 4: Updating the Lean Toolchain
 
 ```bash
-# Try a new version — automatically builds and commits on success
-bash update-toolchain.bash v4.29.0
+# ⛔ Retired here (2026-10-20, T42, ADR-176 of RPP): it built FOL from this directory (M-3) and committed on its own.
+# The pair (RPP, FOL) is probed together, from the root of ROBINSON_PlusPlus, in separate worktrees, never committing:
+cd ../ROBINSON_PlusPlus && bash update-toolchain.bash [vX.Y.Z]
 
-# On failure it restores the previous version automatically
+# A bump, if decided, is done by hand with an ADR, in both repos (M-12: FOL first).
 ```
 
 ---
@@ -248,7 +249,7 @@ bash git-lock.bash unlock File.lean  # unlock a file
 make build                           # compile
 make sorry                           # check for sorry
 make status                          # lock + sorry status
-bash update-toolchain.bash vX.Y.Z    # update Lean version
+# toolchain: cd ../ROBINSON_PlusPlus && bash update-toolchain.bash [vX.Y.Z]   (probe, no commit)
 ```
 n.bash vX.Y.Z    # update Lean version
 ```

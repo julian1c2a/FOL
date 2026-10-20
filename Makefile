@@ -65,9 +65,8 @@ init:
 #  estaba PROHIBIDO desde A-7. Un modulo nuevo se crea a mano y se importa desde su barril; [L] de
 #  check-doc-sync.bash dice si un fichero no esta en el cierre de imports.)
 
-## Update Lean toolchain: make update-toolchain VERSION=v4.29.0
+## Toolchain: ⛔ retirado aquí (T42, ADR-176 de RPP); el par se prueba desde ROBINSON_PlusPlus
 update-toolchain:
-	@[ -n "$(VERSION)" ] || (echo "Usage: make update-toolchain VERSION=v4.29.0" && exit 1)
 	@bash update-toolchain.bash $(VERSION)
 
 ## Show this help
