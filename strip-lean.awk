@@ -15,6 +15,8 @@
 # con gawk que con mawk y en cualquier locale. Si no está en modo byte, sale con 2 sin emitir nada,
 # y el autotest de quien lo llama da «SIN MEDIR».
 #
+# ✏️ T42b (ADR-181 de RPP): en v4.35.0 el lexer es el MISMO —las 25 funciones que se siguen aquí, idénticas en el
+# texto; la tabla de tokens gana 7 y pierde 3, ninguno con `/` ni `-`— («doc/registro/2026-10-21-t42b/» de RPP).
 # Sigue al lexer de Lean v4.31.0 (`Lean/Parser/Basic.lean`, `StrInterpolation.lean`, `Term.lean`,
 # `Init/Meta/Defs.lean`), comparado con un lexer de referencia escrito función a función:
 #   · cada línea, sin su `\r` final (Lean normaliza CRLF a LF): la salida es la misma con CRLF o sin él;

@@ -127,7 +127,8 @@ namespace Senuelo
 axiom habita : Nat
 def conSorry : Nat := sorry
 theorem conNativo : (2 + 2 : Nat) = 4 := by native_decide
-theorem conOfReduceBool : ∀ (a b : Bool), Lean.reduceBool a = b → a = b := Lean.ofReduceBool
+-- (✏️ v4.35, T42b: `Lean.ofReduceBool` ya no existe; el axioma AJENO del señuelo es `lcUnreachable`, del core)
+noncomputable unsafe def conAjeno : Nat := lcUnreachable
 def implReal (n : Nat) : Nat := n
 @[implemented_by implReal] def conImplementedBy (n : Nat) : Nat := n
 @[extern "senuelo_c"] opaque conExtern : Nat → Nat
@@ -148,8 +149,8 @@ def esSenuelo (env : Environment) (n : Name) : Bool :=
 
 run_cmd do
   let env ← Lean.getEnv
-  let mut nFOL := 0
-  let mut nTF := 0
+  let mut nFOL : Nat := 0
+  let mut nTF : Nat := 0
   -- los tres axiomas de Lean que el proyecto acepta; cualquier OTRO axioma ajeno que use una constante
   -- nuestra (`sorryAx`, `Lean.ofReduceBool`, `Lean.ofReduceNat`, `Lean.trustCompiler`, …) es @TRUST
   let estandar : NameSet := ((({} : NameSet).insert ``propext).insert ``Classical.choice).insert ``Quot.sound
@@ -175,7 +176,7 @@ run_cmd do
           -- de CONFIANZA: el ajeno que no es de los tres de Lean ni `sorryAx`, y —aunque sea del propio módulo— el
           -- auxiliar que fabrica `native_decide` (`…._native.native_decide.ax_…`): en v4.31 `native_decide` ya no
           -- nombra `Lean.ofReduceBool`, y ese auxiliar el censo lo absolvía (lo destapó el señuelo, 2026-10-21). Las del
-          -- señuelo cuentan aquí como nuestras: así `conNativo` prueba la segunda cláusula, y `conOfReduceBool`, la primera
+          -- señuelo cuentan aquí como nuestras: así `conNativo` prueba la segunda cláusula, y `conAjeno`, la primera
           if !estandar.contains u && u != ``sorryAx
               && ((!(esNuestro env u) && !(esSenuelo env u)) || u.components.contains `_native) then
             logInfo m!"@TRUST {lib} {n} {u}"
@@ -290,14 +291,16 @@ fi
 # ── 1quinquies · EL SEÑUELO: el censo se ve a sí mismo (T13, ADR-179 de RPP) ─────────────────────
 # Las marcas que el señuelo del fichero (namespace `Senuelo`, librería «SEN») TIENE que dar. Si falta una, el censo ya
 # no sabe ver esa clase; si sale otra, algo cambió en cómo Lean fabrica lo que el señuelo usa: se mira y se actualiza
-# esta tabla. MEDIDAS con v4.31.0 (2026-10-21). ⚠️ El nombre del auxiliar de `native_decide` es de Lean, no nuestro.
+# esta tabla. MEDIDAS con v4.31.0 (2026-10-21) y RE‑MEDIDAS con v4.35.0
+# (T42b, ADR-181 de RPP: el axioma ajeno pasa a ser `lcUnreachable`). ⚠️ El nombre del auxiliar de `native_decide` es de
+# Lean, no nuestro.
 read -r -d '' SENUELOS <<'EOF'
 @AX SEN Senuelo.habita
 @AX SEN Senuelo.conNativo._native.native_decide.ax_1_1
 @PARCIAL SEN Senuelo.conPartial
 @SORRY SEN Senuelo.conSorry
 @TRUST SEN Senuelo.conNativo Senuelo.conNativo._native.native_decide.ax_1_1
-@TRUST SEN Senuelo.conOfReduceBool Lean.ofReduceBool
+@TRUST SEN Senuelo.conAjeno lcUnreachable
 @NATIVO SEN Senuelo.conImplementedBy
 @NATIVO SEN Senuelo.conExtern
 EOF

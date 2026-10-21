@@ -262,11 +262,11 @@ theorem eq_substTerm {G : List Formula} {t1 t2 : Term} (h : G ⊢₂ Formula.eq 
       show G ⊢₂ Formula.eq (substTerm v t1 (Term.var n)) (substTerm v t2 (Term.var n))
       simp only [substTerm]
       by_cases hnv : n = v
-      · simp only [if_pos hnv]; exact h
-      · simp only [if_neg hnv]
+      · simp only [ite_eq_left hnv]; exact h
+      · simp only [ite_eq_right hnv]
         by_cases hgt : n > v
-        · simp only [if_pos hgt]; exact Derives₂.refl _ _
-        · simp only [if_neg hgt]; exact Derives₂.refl _ _
+        · simp only [ite_eq_left hgt]; exact Derives₂.refl _ _
+        · simp only [ite_eq_right hgt]; exact Derives₂.refl _ _
   | .func s us => by
       show G ⊢₂ Formula.eq (Term.func s (substTerms v t1 us)) (Term.func s (substTerms v t2 us))
       have hx := eq_func_pw (G := G) s (eq_substTerms h v us) []

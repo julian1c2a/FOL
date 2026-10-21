@@ -63,11 +63,11 @@ theorem subst_lift_cancel_formula : ∀ (f : Formula) (v : Nat),
   | eq t u => intro v; simp only [liftFormula, substFormula, substTerm_lift_cancel_var]
   | impl a b iha ihb => intro v; simp only [liftFormula, substFormula]; rw [iha, ihb]
   | «forall» a iha =>
-      intro v; simp only [liftFormula, substFormula, liftTerm, if_neg (Nat.not_lt_zero v)]; rw [iha]
+      intro v; simp only [liftFormula, substFormula, liftTerm, ite_eq_right (Nat.not_lt_zero v)]; rw [iha]
   | and a b iha ihb => intro v; simp only [liftFormula, substFormula]; rw [iha, ihb]
   | or a b iha ihb => intro v; simp only [liftFormula, substFormula]; rw [iha, ihb]
   | ex a iha =>
-      intro v; simp only [liftFormula, substFormula, liftTerm, if_neg (Nat.not_lt_zero v)]; rw [iha]
+      intro v; simp only [liftFormula, substFormula, liftTerm, ite_eq_right (Nat.not_lt_zero v)]; rw [iha]
 
 /-- Distributividad de `substFormula` sobre `∧` (definicional; antes `axiom`). -/
 theorem subst_distrib_and (A B : Formula) (v : Nat) (t : Term) :
