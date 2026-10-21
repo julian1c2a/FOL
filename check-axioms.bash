@@ -119,6 +119,33 @@ LEANFILE="$TMP/Axiomas.lean"
   cat <<'LEANEOF'
 open Lean
 
+/-! ⭐ 2026-10-21 (T13, ADR-179 de RPP): EL SEÑUELO PERMANENTE. Un censo que no ve nada imprime «✓ ninguno», igual que
+uno que ya no sabe mirar (un toolchain que cambia la API, una errata). Aquí, en el propio fichero del censo, una
+constante de cada clase que el censo busca; como no tienen módulo, se marcan con la librería «SEN», y el script exige
+EXACTAMENTE sus marcas (`SENUELOS`, abajo). -/
+namespace Senuelo
+axiom habita : Nat
+def conSorry : Nat := sorry
+theorem conNativo : (2 + 2 : Nat) = 4 := by native_decide
+theorem conOfReduceBool : ∀ (a b : Bool), Lean.reduceBool a = b → a = b := Lean.ofReduceBool
+def implReal (n : Nat) : Nat := n
+@[implemented_by implReal] def conImplementedBy (n : Nat) : Nat := n
+@[extern "senuelo_c"] opaque conExtern : Nat → Nat
+partial def conPartial (n : Nat) : Nat := if n = 0 then 0 else conPartial (n - 1)
+end Senuelo
+
+/-- ¿De FOL o de TheoryFramework? (por el módulo) -/
+def esNuestro (env : Environment) (u : Name) : Bool :=
+  match env.getModuleIdxFor? u with
+  | some j =>
+    let mu := env.header.moduleNames[j.toNat]!
+    (`FOL).isPrefixOf mu || (`TheoryFramework).isPrefixOf mu
+  | none => false
+
+/-- Las del señuelo de este fichero: sin módulo, y bajo `Senuelo`. -/
+def esSenuelo (env : Environment) (n : Name) : Bool :=
+  (env.getModuleIdxFor? n).isNone && (`Senuelo).isPrefixOf n
+
 run_cmd do
   let env ← Lean.getEnv
   let mut nFOL := 0
@@ -127,27 +154,32 @@ run_cmd do
   -- nuestra (`sorryAx`, `Lean.ofReduceBool`, `Lean.ofReduceNat`, `Lean.trustCompiler`, …) es @TRUST
   let estandar : NameSet := ((({} : NameSet).insert ``propext).insert ``Classical.choice).insert ``Quot.sound
   for (n, ci) in env.constants.toList do
-    match env.getModuleIdxFor? n with
-    | some idx =>
-      let m := env.header.moduleNames[idx.toNat]!
-      let lib := if (`FOL).isPrefixOf m then "FOL" else if (`TheoryFramework).isPrefixOf m then "TF" else ""
-      if lib == "FOL" then nFOL := nFOL + 1
-      if lib == "TF" then nTF := nTF + 1
-      if lib != "" then
-        if ci matches .axiomInfo _ then logInfo m!"@AX {lib} {n}"
-        -- tipo y valor, también el de un teorema (`getUsedConstantsAsSet` lee con `allowOpaque`)
-        let usadas := ci.getUsedConstantsAsSet
-        if usadas.contains ``sorryAx then logInfo m!"@SORRY {lib} {n}"
-        for u in usadas do
-          if let some (.axiomInfo _) := env.find? u then
-            if !estandar.contains u && u != ``sorryAx then
-              match env.getModuleIdxFor? u with
-              | some j =>
-                let mu := env.header.moduleNames[j.toNat]!
-                if !((`FOL).isPrefixOf mu || (`TheoryFramework).isPrefixOf mu) then logInfo m!"@TRUST {lib} {n} {u}"
-              | none => logInfo m!"@TRUST {lib} {n} {u}"
-        if (Lean.Compiler.getImplementedBy? env n).isSome || Lean.isExtern env n then logInfo m!"@NATIVO {lib} {n}"
-    | none => pure ()
+    let lib := match env.getModuleIdxFor? n with
+      | some idx =>
+        let m := env.header.moduleNames[idx.toNat]!
+        if (`FOL).isPrefixOf m then "FOL" else if (`TheoryFramework).isPrefixOf m then "TF" else ""
+      -- (las del señuelo de este fichero no tienen módulo)
+      | none => if (`Senuelo).isPrefixOf n then "SEN" else ""
+    if lib == "FOL" then nFOL := nFOL + 1
+    if lib == "TF" then nTF := nTF + 1
+    if lib != "" then
+      if ci matches .axiomInfo _ then logInfo m!"@AX {lib} {n}"
+      -- (un `partial def` es un `opaque` con su `…._unsafe_rec` al lado; T13)
+      if ci matches .opaqueInfo _ then
+        if env.contains (n ++ `_unsafe_rec) then logInfo m!"@PARCIAL {lib} {n}"
+      -- tipo y valor, también el de un teorema (`getUsedConstantsAsSet` lee con `allowOpaque`)
+      let usadas := ci.getUsedConstantsAsSet
+      if usadas.contains ``sorryAx then logInfo m!"@SORRY {lib} {n}"
+      for u in usadas do
+        if let some (.axiomInfo _) := env.find? u then
+          -- de CONFIANZA: el ajeno que no es de los tres de Lean ni `sorryAx`, y —aunque sea del propio módulo— el
+          -- auxiliar que fabrica `native_decide` (`…._native.native_decide.ax_…`): en v4.31 `native_decide` ya no
+          -- nombra `Lean.ofReduceBool`, y ese auxiliar el censo lo absolvía (lo destapó el señuelo, 2026-10-21). Las del
+          -- señuelo cuentan aquí como nuestras: así `conNativo` prueba la segunda cláusula, y `conOfReduceBool`, la primera
+          if !estandar.contains u && u != ``sorryAx
+              && ((!(esNuestro env u) && !(esSenuelo env u)) || u.components.contains `_native) then
+            logInfo m!"@TRUST {lib} {n} {u}"
+      if (Lean.Compiler.getImplementedBy? env n).isSome || Lean.isExtern env n then logInfo m!"@NATIVO {lib} {n}"
   logInfo m!"@CONST {nFOL} {nTF}"
   -- ¿alguna librería cargada que ningún censo mira? (una nueva, importada por FOL, quedaría fuera)
   for m in env.header.moduleNames do
@@ -231,6 +263,56 @@ for par in "TRUST|constante(s) usan un axioma de confianza" "NATIVO|constante(s)
     FAIL=1
   fi
 done
+
+# ── 1quater · `partial`, con IGUALDAD (T13, ADR-179 de RPP) ───────────────────────────────────
+# Un `partial def` es opaco para el núcleo: no es un agujero por sí solo, pero la cifra se vigila con igualdad. MEDIDOS
+# en el entorno (2026-10-21), cuatro, todos de FOL: los dos ayudantes de táctica (`FOL/Tactics.lean`) y, que el grep no
+# veía, los `Repr` y `BEq` DERIVADOS de `TermG` (`FOL/FOL.lean`: un inductivo anidado, y su `deriving` los hace `partial`).
+read -r -d '' PARCIALES <<'EOF'
+FOL getAllPositions
+FOL tryMem
+FOL instBEqTermG.beq
+FOL instReprTermG.repr
+EOF
+echo
+echo "════ partial (opacos para el núcleo; con igualdad) ════"
+PARC=$(printf '%s' "$PLANA" | grep -oE "@PARCIAL (FOL|TF) [^ ]+" | sed 's/@PARCIAL //' | LC_ALL=C sort -u)
+PARC_ESP=$(printf '%s\n' "$PARCIALES" | sed '/^$/d' | LC_ALL=C sort -u)
+if [ "$PARC" = "$PARC_ESP" ]; then
+  echo "  ✓ los $(cuenta "$PARC") declarados, y ninguno más"
+else
+  echo "  ✗ los \`partial\` del entorno no son los declarados:"
+  diff <(printf '%s\n' "$PARC_ESP" | sed '/^$/d') <(printf '%s\n' "$PARC" | sed '/^$/d') | grep -E '^[<>]' \
+    | sed 's/^</      · falta/; s/^>/      · sobra/'
+  FAIL=1
+fi
+
+# ── 1quinquies · EL SEÑUELO: el censo se ve a sí mismo (T13, ADR-179 de RPP) ─────────────────────
+# Las marcas que el señuelo del fichero (namespace `Senuelo`, librería «SEN») TIENE que dar. Si falta una, el censo ya
+# no sabe ver esa clase; si sale otra, algo cambió en cómo Lean fabrica lo que el señuelo usa: se mira y se actualiza
+# esta tabla. MEDIDAS con v4.31.0 (2026-10-21). ⚠️ El nombre del auxiliar de `native_decide` es de Lean, no nuestro.
+read -r -d '' SENUELOS <<'EOF'
+@AX SEN Senuelo.habita
+@AX SEN Senuelo.conNativo._native.native_decide.ax_1_1
+@PARCIAL SEN Senuelo.conPartial
+@SORRY SEN Senuelo.conSorry
+@TRUST SEN Senuelo.conNativo Senuelo.conNativo._native.native_decide.ax_1_1
+@TRUST SEN Senuelo.conOfReduceBool Lean.ofReduceBool
+@NATIVO SEN Senuelo.conImplementedBy
+@NATIVO SEN Senuelo.conExtern
+EOF
+echo
+echo "════ SEÑUELO (el censo tiene que verse a sí mismo: una constante de cada clase) ════"
+SEN=$(printf '%s\n' "$SALIDA" | grep -oE '@[A-Z]+ SEN .*' | sed 's/[[:space:]]*$//' | LC_ALL=C sort -u)
+SEN_ESP=$(printf '%s\n' "$SENUELOS" | sed '/^$/d' | LC_ALL=C sort -u)
+if [ -n "$SEN" ] && [ "$SEN" = "$SEN_ESP" ]; then
+  echo "  ✓ las $(cuenta "$SEN") marcas del señuelo, exactas: el censo ve axiomas, partial, sorry, confianza y nativo"
+else
+  echo "  ✗ el señuelo no da sus marcas: el censo NO está midiendo lo que dice"
+  diff <(printf '%s\n' "$SEN_ESP" | sed '/^$/d') <(printf '%s\n' "$SEN" | sed '/^$/d') | grep -E '^[<>]' \
+    | sed 's/^</      · falta/; s/^>/      · sobra/'
+  FAIL=1
+fi
 
 # ── 2 · La CUARENTENA, que no se compila: por grep, sin comentarios ──────────────────────────
 echo
