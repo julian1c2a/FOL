@@ -5,7 +5,7 @@
 > *(ADR‑115 de RPP, ejecutado en FOL el 2026‑10‑02. La cifra del titular la vigila `check-axioms.bash`, que
 > espera 0 en `FOL/`, en `TheoryFramework/` y en `cuarentena/`, y rompe si vuelve a aparecer uno.)*
 >
-> Ningún `axiom` del proyecto en los **54 módulos activos** (`FOL/` 43 + `FOL/Theorems/` 5 +
+> Ningún `axiom` del proyecto en los **55 módulos activos** (`FOL/` 44 + `FOL/Theorems/` 5 +
 > `TheoryFramework/` 6), y ninguno en `cuarentena/` fuera de las librerías muertas de
 > `cuarentena/librerias-retiradas/` (15, fuera del lakefile: `check-axioms.bash` las imprime y no las vigila).
 > Los cuatro últimos —`imp_intro`, `raa`, `or_elim` y `ex_elim`, las meta‑reglas con premisa‑FUNCIÓN de
@@ -92,7 +92,7 @@
 > `False` (§1). El módulo y su axioma se borraron el 2026‑09‑23 (registro de arriba).
 
 **Creado:** 2026‑09‑12 · **Autor:** Julián Calderón Almendros
-**Last updated:** 2026-10-27 — T53 (ADR‑193 de RPP): §4.1, re‑medida con el mismo `Audit.lean` (la frontera, la misma) y vigilada desde hoy por `check-choice.bash` de RPP. Antes, 2026-10-05 — D7 ejecutada (ADR‑129 de RPP): los símbolos son `List Char`; notas ✏️ en §2.4, §4.3 y §4.4, donde se daba por vigente lo de `String` (nombres retirados o renombrados; «no hacía falta»). Antes, sin marca: el último cambio fue el del 2026-10-03 (la deuda de los cinco módulos 🧊, saldada).
+**Last updated:** 2026-10-27 — T46 (ADR‑194 de RPP): §4.3, los once corolarios de `FOL.Estratos0`. Antes, el mismo día — T53 (ADR‑193 de RPP): §4.1, re‑medida con el mismo `Audit.lean` (la frontera, la misma) y vigilada desde hoy por `check-choice.bash` de RPP. Antes, 2026-10-05 — D7 ejecutada (ADR‑129 de RPP): los símbolos son `List Char`; notas ✏️ en §2.4, §4.3 y §4.4, donde se daba por vigente lo de `String` (nombres retirados o renombrados; «no hacía falta»). Antes, sin marca: el último cambio fue el del 2026-10-03 (la deuda de los cinco módulos 🧊, saldada).
 
 ---
 
@@ -520,6 +520,12 @@ y el teorema, y RPP retiró su capa `⊢` el mismo día.
 | semánticos sin clasificar | `compactness`, `loewenheim_skolem_down`, `infinite_model_of_large_fresh`, `infinite_model_of_large`, `countable_infinite_of_infinite` | 5 |
 | enunciado SINTÁCTICO; choice sólo por la ruta semántica | `skolem_conservative₀`, `skolem_conservative_n₀`, `skolem_conservative_nf₀`, `derives0_of_skolemNF`, `derives0_neg_iff_neg_skolemNF`, `herbrand_refutation₀`, `herbrand_validity₀`, `herbrand_validity_ctx₀` | 8 |
 | corolarios de RUTA conservados a propósito (ADR‑061), todos con variante sin choice medida | `derives0_em`, `derives0_peirce` (controles); `derives0_consistent`, `derives0_not_complete` (`Soundness0` 🧊); `lk0_not_empty`, `lk0_to_derives0`, `lk0_to_derives2` (`SequentSound0` 🧊) | 7 |
+
+✏️ *2026‑10‑27 (T46, ADR‑194 de RPP):* y once más, de RUTA, en `FOL.Estratos0`: la solidez y la completitud de cada
+cálculo con nombre, por los puentes ya demostrados (`derives_semantic_complete`, `derives1_soundness`, `derives1_complete`,
+`derives2_soundness`, `derives2_complete`, `lkc_complete`, `lk0_complete`, `lkh_sound`, `lkh_complete`, `lkp_sound`,
+`lkp_complete`). Las completitudes heredan el choice de `completeness₀`, y las solideces el de `derives0_soundness` o
+`lkc_sound`; ninguna es una prueba nueva.
 
 Los 27 primeros son los **irreducibles** de la auditoría, con la clasificación que dejó el escéptico:
 pasó `max_cons_neg` y `truth_lemma₀` de hipótesis a medidos, y `consistency_of_satisfiable₀`, que el
