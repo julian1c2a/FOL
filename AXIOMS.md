@@ -92,7 +92,7 @@
 > `False` (§1). El módulo y su axioma se borraron el 2026‑09‑23 (registro de arriba).
 
 **Creado:** 2026‑09‑12 · **Autor:** Julián Calderón Almendros
-**Last updated:** 2026-10-05 — D7 ejecutada (ADR‑129 de RPP): los símbolos son `List Char`; notas ✏️ en §2.4, §4.3 y §4.4, donde se daba por vigente lo de `String` (nombres retirados o renombrados; «no hacía falta»). Antes, sin marca: el último cambio fue el del 2026-10-03 (la deuda de los cinco módulos 🧊, saldada).
+**Last updated:** 2026-10-27 — T53 (ADR‑193 de RPP): §4.1, re‑medida con el mismo `Audit.lean` (la frontera, la misma) y vigilada desde hoy por `check-choice.bash` de RPP. Antes, 2026-10-05 — D7 ejecutada (ADR‑129 de RPP): los símbolos son `List Char`; notas ✏️ en §2.4, §4.3 y §4.4, donde se daba por vigente lo de `String` (nombres retirados o renombrados; «no hacía falta»). Antes, sin marca: el último cambio fue el del 2026-10-03 (la deuda de los cinco módulos 🧊, saldada).
 
 ---
 
@@ -466,17 +466,26 @@ ADR‑110 de `../ROBINSON_PlusPlus/DECISIONS.md`.
 
 ### 4.1 · Las cifras, antes y después de D1–D8
 
-| medida (`decls.tsv`) | antes (FOL `537cc20`) | después (2026‑09‑27) |
-|---|---:|---:|
-| constantes de FOL + TheoryFramework | 2978 | 3074 |
-| con `Classical.choice` | **157**, en 17 módulos | **84**, en 11 módulos (3 son código meta de `FOL.Tactics`) |
-| sólo `propext` y/o `Quot.sound` | 1002 | 1107 |
-| sin ningún axioma | 1814 | 1878 |
-| dependen de `MetaRules` (borrado el 2026‑10‑02, ADR‑115 de RPP) | 5 | 5 |
-| `noncomputable` | 8 | **1** (`SkolemN0.skF`) |
-| frontera: declaraciones lógicas por donde entra choice | 30 | **13** (y 3 de código meta, las dos veces) |
-| titulares de FOL con choice (filas de `check-footprints`) | 55 de 252 | **34** de 252 |
-| filas de `check-footprints` (RPP) | 513 | 517 (4 de `TheoryFramework.Instances`) |
+| medida (`decls.tsv`) | antes (FOL `537cc20`) | después (2026‑09‑27) | re‑medida (2026‑10‑27, T53) |
+|---|---:|---:|---:|
+| constantes de FOL + TheoryFramework | 2978 | 3074 | 3066 |
+| con `Classical.choice` | **157**, en 17 módulos | **84**, en 11 módulos (3 son código meta de `FOL.Tactics`) | **86**, en 12 módulos (los 3 meta, iguales) |
+| sólo `propext` y/o `Quot.sound` | 1002 | 1107 | 1064 |
+| sin ningún axioma | 1814 | 1878 | 1916 |
+| dependen de `MetaRules` (borrado el 2026‑10‑02, ADR‑115 de RPP) | 5 | 5 | 0 |
+| `noncomputable` | 8 | **1** (`SkolemN0.skF`) | 1 (el mismo) |
+| frontera: declaraciones lógicas por donde entra choice | 30 | **13** (y 3 de código meta, las dos veces) | 13 y 3: las mismas, constante a constante |
+| titulares de FOL con choice (filas de `check-footprints`) | 55 de 252 | **34** de 252 | 39 de 259 (abajo) |
+| filas de `check-footprints` (RPP) | 513 | 517 (4 de `TheoryFramework.Instances`) | 546 |
+
+✏️ *2026‑10‑27 (T53, ADR‑193 de RPP):* la última columna es el mismo `Audit.lean` y el mismo `analyze.py` sobre
+el árbol de hoy (`auditoria/constructividad-2026-09-27/remedida-2026-10-27/`). La frontera no cambió. Lo que sí:
+`MetaRules` ya no existe (ADR‑115 de RPP), y `FOL.Inconsistencia` (2 con choice: `derives_soundness` y
+`ex_elim_refutable`) la hereda de `derives0_soundness`, como `TheoryFramework.Instances` (3) de él y de
+`completeness₀`; por eso son 39 las filas: los 34 de §4.3, esos 2 y esos 3. Desde hoy estas cifras no se copian:
+las vigila `check-choice.bash` de RPP, en su CI, constante a constante y en los dos sentidos, contra
+`../ROBINSON_PlusPlus/doc/control/choice.tsv` (sin las constantes generadas: 70 con choice en FOL y
+TheoryFramework, por las 86 de aquí, que las cuentan).
 
 ### 4.2 · Por dónde entraba el 2026‑09‑27: las 13 declaraciones de la frontera, y las 3 meta
 

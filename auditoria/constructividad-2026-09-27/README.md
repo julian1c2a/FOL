@@ -1,6 +1,6 @@
 # La auditoría de constructividad de FOL — 2026‑09‑27
 
-**Last updated:** 2026-09-27 — creado con la auditoría y la ejecución de D1–D8.
+**Last updated:** 2026-10-27 — T53 (ADR‑193 de RPP): `remedida-2026-10-27/`, el mismo `Audit.lean` sobre el árbol de hoy; desde hoy lo vigila `check-choice.bash` de RPP. Antes, 2026-09-27 — creado con la auditoría y la ejecución de D1–D8.
 
 **Sobre:** FOL `537cc20` / RPP `7487ca1` (antes) y el árbol tras las decisiones D1–D8 (después) ·
 **Autor:** Julián Calderón Almendros ·
@@ -25,6 +25,7 @@ solidez). D1–D8 retiraron las evitables; lo que queda está en la tabla de aba
 | `analyze.py` | resume un directorio con esos dos TSV: clases de footprint, axiomas declarados, `noncomputable`, fuentes externas de `Classical.choice` y el reparto por módulo (sin las constantes generadas) |
 | `antes/` | FOL `537cc20`, antes de D1 |
 | `despues/` | el árbol tras D1–D8 (2026‑09‑27) |
+| `remedida-2026-10-27/` | el árbol de hoy (T53, ADR‑193 de RPP): 86 con choice en 12 módulos, la misma frontera; ver `../../AXIOMS.md` §4.1 |
 | `experimentos/` | los ficheros de experimento, compilados con `lake env lean` (abajo, uno por línea) |
 | `auditoria-juez-esceptico.json` | los informes: el de cada tarea, el del juez y el del escéptico |
 
