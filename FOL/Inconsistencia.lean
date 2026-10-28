@@ -236,7 +236,10 @@ private def PA : Formula := Formula.atom ['P'] [Term.var 0]
 /-- 🏁 **`ex_elim` es FALSO**: en `MB`, `∃x P(x)` es verdadera pero ningún TÉRMINO la testimonia
     (todos valen `false`), así que desde `[∃x P(x)]` no se deriva ningún `P(t)`, la continuación vale
     vacuamente hacia `⊥`, y `MB` refuta `⊥`. Una valuación booleana no distingue términos: aquí hace falta
-    un modelo, y con él `Classical.choice`. -/
+    un modelo. ✏️ 2026‑10‑28 (T19, ADR‑203 de RPP): pero NO `Classical.choice`. Decía «y con él `Classical.choice`»:
+    `MB` es DECIDIBLE (dominio finito, relación decidible), y con la solidez estable de `Derives₀` la misma
+    refutación sale `[propext, Quot.sound]`: `FOL.Esencialidad0.ExElimFin.ex_elim_refutable_fin`. Ésta se queda
+    como estaba (por `derives_soundness`). -/
 theorem ex_elim_refutable : Not ExElim := by
   intro hex
   have hΓ : contextSatisfies MB vB [Formula.ex PA] := by
@@ -272,7 +275,8 @@ es un testigo de su hipótesis, y la inducción que lo prueba no ve los axiomas.
 /-! ## FOOTPRINT (medido el 2026‑10‑02) — `derives_to_derives0`, `derives0_no_disjunction_property`,
 `imp_intro_refutable`, `raa_refutable` y `or_elim_refutable`: `[propext, Quot.sound]`, la vía finitaria,
 sin `Classical.choice`. `derives_soundness` y `ex_elim_refutable`: `[propext, Classical.choice,
-Quot.sound]`, porque pasan por los modelos de Tarski en `Prop`. Ningún axioma del proyecto: no queda
+Quot.sound]`, porque pasan por los modelos de Tarski en `Prop` (✏️ 2026‑10‑28, T19: la de `ex_elim` no lo
+necesita: `FOL.Esencialidad0.ExElimFin.ex_elim_refutable_fin`, por la solidez estable). Ningún axioma del proyecto: no queda
 ninguno. Los vigila `../ROBINSON_PlusPlus/check-footprints.bash`. -/
 #print axioms FOL.Inconsistencia.derives_to_derives0
 #print axioms FOL.Inconsistencia.derives_soundness

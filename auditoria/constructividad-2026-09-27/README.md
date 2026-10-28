@@ -75,6 +75,10 @@ Uno por tarea. Todo se compiló con `lake env lean` desde la raíz de RPP y se c
 | `exp-juez/` | el juez. `Comb.lean` combina todas las variantes y mide `lindenbaum_lemma₀` y `henkin_completion₀` con los MISMOS enunciados en `[propext, Quot.sound]` (el hallazgo); `Twins.lean`, los corolarios de ruta con variante sin choice y la esencialidad de `lk0_sound`; `scen.py`, los escenarios sobre el grafo; `edits_juez.*`, las 32 ediciones de documentación; `out/`, salidas |
 | `exp-esceptico/` | el escéptico. `Same.lean`: 24 comprobaciones `rfl` de que cada variante tiene el MISMO tipo que el original; `Esc2.lean`: esencialidad de `quotientOut` como constante (EM), de `max_cons_forall`, `max_cons_neg` y `truth_lemma₀` (`¬¬P → P`) y de `consistency_of_satisfiable₀`; `U2.lean`: una inversa GLOBAL de `shift` sin choice, sobre bytes (el origen de `Fresh0.unshift`); `mine.py`/`mine.out`, un recálculo independiente del grafo; `out/`, la recompilación de los 42 experimentos más tres sondas propias (45 salidas) |
 
+✏️ **2026‑10‑28 (T19, ADR‑203 de RPP):** los seis de `exp-esencial/` que dan la esencialidad (E1, E2, E2b, E3, E6, E7)
+están en el build, con los símbolos de hoy: `FOL/Esencialidad0.lean`, cada uno en su subespacio, con su fila de
+footprint en RPP. Los de aquí siguen siendo el registro de la medida de entonces.
+
 ⚠️ **Son el registro de la medida, no controles.** Se compilaron contra FOL `537cc20`: los que citan
 constantes que D1 retiró (`Rename.invOf`, `Canonical0.quotientOut`, …) o reprueban sobre la definición
 antigua de `LindenbaumStep` o de `bnd` no compilan contra el árbol de después, o miden otra cosa. Las

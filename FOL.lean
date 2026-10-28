@@ -44,6 +44,7 @@ import FOL.QFDecide0
 import FOL.BlockExtraction0
 import FOL.SkolemHerbrand0
 import FOL.Estratos0
+import FOL.Esencialidad0
 
 /-!
 # `FOL` — el barrel completo: núcleo **más** capa semántica
@@ -53,7 +54,7 @@ import FOL.Estratos0
 * **`FOL.Core`** — sintaxis, derivación, tácticas y teoremas lógicos. Es **exactamente** lo que
   ROBINSON_PlusPlus importa (medido el 2026‑10‑02: ocho módulos —eran nueve con `FOL.MetaRules`,
   🗑️ borrado con ADR‑115 de RPP—; nunca importa este barrel).
-* **`FOL`** (este fichero) — `FOL.Core` **más** `Semantics`, `Enumeration` y **toda la capa `₀`** (`Derives0` … `SkolemHerbrand0`, y la hoja `Estratos0`: la lista son los `import` de arriba).
+* **`FOL`** (este fichero) — `FOL.Core` **más** `Semantics`, `Enumeration` y **toda la capa `₀`** (`Derives0` … `SkolemHerbrand0`, y las hojas `Estratos0` y `Esencialidad0`: la lista son los `import` de arriba).
 
 ⭐⭐ **`FOL.Derives0` entró el 2026‑09‑14** — es el **Paso 0** de
 `../ROBINSON_PlusPlus/doc/PLAN-COMPLETITUD-FINITISTA.md`: `Derives₀`, los constructores de

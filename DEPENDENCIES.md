@@ -1,6 +1,6 @@
 # Diagrama de Dependencias — FOL
 
-**Last updated:** 2026-10-27 — GENERADO por `py gen-dependencies.py` desde las líneas `import`; no se edita a mano.
+**Last updated:** 2026-10-28 — GENERADO por `py gen-dependencies.py` desde las líneas `import`; no se edita a mano.
 **Autor**: Julián Calderón Almendros
 
 > ⚠️ Este fichero se **calcula**. Para actualizarlo: `py gen-dependencies.py`; para comprobar que
@@ -9,7 +9,7 @@
 
 ## Cifras
 
-* **55 módulos** (`FOL/` 44 + `FOL/Theorems/` 5 + `TheoryFramework/` 6), **104 aristas** `import` entre ellos, profundidad máxima **12**.
+* **56 módulos** (`FOL/` 45 + `FOL/Theorems/` 5 + `TheoryFramework/` 6), **110 aristas** `import` entre ellos, profundidad máxima **12**.
 * 2 `lean_lib`: `FOL` y `TheoryFramework`, las dos con `globs := #[.andSubmodules …]`: el build compila el barril y
   TODO su directorio (T15 de RPP, 2026-10-18). Que todo módulo esté además en el cierre de imports de las raíces
   (`cierre-imports.bash`: `FOL`, `TheoryFramework` y `TheoryFramework.Instances.FOL`) lo comprueba [L] de
@@ -29,7 +29,7 @@
 * **8** — `Canonical0`, `Finitary0`, `Hauptsatz0`
 * **9** — `BlockExtraction0`, `Inconsistencia`, `Interpolation0`, `Inversion0`, `QFDecide0`, `SequentSound0`, `Skolem0`, `TF.Instances.FOL`
 * **10** — `Compacity0`, `Estratos0`, `SkolemN0`
-* **11** — `SkolemNF0`
+* **11** — `Esencialidad0`, `SkolemNF0`
 * **12** — `SkolemHerbrand0`
 
 ## Grafo
@@ -68,6 +68,12 @@ graph BT
     Enumeration["Enumeration"] --> SymClasses["SymClasses"]
     Eq0["Eq0"] --> Derives0["Derives0"]
     Eq0["Eq0"] --> Thm_Eq["Thm.Eq"]
+    Esencialidad0["Esencialidad0"] --> Canonical0["Canonical0"]
+    Esencialidad0["Esencialidad0"] --> DecEq["DecEq"]
+    Esencialidad0["Esencialidad0"] --> Inconsistencia["Inconsistencia"]
+    Esencialidad0["Esencialidad0"] --> SequentSound0["SequentSound0"]
+    Esencialidad0["Esencialidad0"] --> SkolemN0["SkolemN0"]
+    Esencialidad0["Esencialidad0"] --> Soundness0["Soundness0"]
     Estratos0["Estratos0"] --> Canonical0["Canonical0"]
     Estratos0["Estratos0"] --> Derives2["Derives2"]
     Estratos0["Estratos0"] --> Hauptsatz0["Hauptsatz0"]
@@ -149,7 +155,7 @@ graph BT
 | `FOL.FOL` | 0 | — | `Complexity`, `Core`, `DecEq`, `Deduction`, `Derives0`, `Enumeration`, `Inconsistencia`, `Semantics`, `SymClasses`, `Tactics`, `Thm.Derived`, `Thm.Eq`, `Thm.Impl`, `Thm.Neg`, `Thm.Quantifiers` |
 | `TheoryFramework.Logic` | 0 | — | `TF.Theory` |
 | `FOL.Complexity` | 1 | `FOL.FOL` | `Canonical0` |
-| `FOL.DecEq` | 1 | `FOL.FOL` | `Propositional0` |
+| `FOL.DecEq` | 1 | `FOL.FOL` | `Esencialidad0`, `Propositional0` |
 | `FOL.Derives0` | 1 | `FOL.FOL` | `Eigenvariable`, `Eq0`, `Propositional0`, `Rename`, `Soundness0` |
 | `FOL.Semantics` | 1 | `FOL.FOL` | `Canonical0`, `Inconsistencia`, `Soundness0` |
 | `FOL.SymClasses` | 1 | `FOL.FOL` | `Enumeration`, `Fresh0` |
@@ -163,7 +169,7 @@ graph BT
 | `FOL.Eq0` | 2 | `Derives0`, `Thm.Eq` | `Canonical0`, `Herbrand0` |
 | `FOL.Propositional0` | 2 | `DecEq`, `Derives0` | `Herbrand0`, `Inconsistencia` |
 | `FOL.Rename` | 2 | `Derives0` | `Fresh0` |
-| `FOL.Soundness0` | 2 | `Derives0`, `Semantics` | `Canonical0`, `Inconsistencia` |
+| `FOL.Soundness0` | 2 | `Derives0`, `Semantics` | `Canonical0`, `Esencialidad0`, `Inconsistencia` |
 | `FOL.Theorems.Derived` | 2 | `FOL.FOL`, `Thm.Neg` | `Core`, `Thm.Quantifiers` |
 | `FOL.Theorems.Impl` | 2 | `FOL.FOL`, `Tactics` | `Core`, `Thm.Quantifiers` |
 | `TheoryFramework.Properties` | 2 | `TF.Theory` | `TF.MetaTheorems` |
@@ -185,25 +191,26 @@ graph BT
 | `FOL.HerbrandBlock0` | 7 | `Sequent0` | `BlockExtraction0` |
 | `FOL.Lindenbaum0` | 7 | `HenkinLimit0` | `Canonical0` |
 | `FOL.NDtoLK0` | 7 | `Sequent0` | `Estratos0`, `Finitary0`, `Hauptsatz0` |
-| `FOL.Canonical0` | 8 | `Complexity`, `Eq0`, `Lindenbaum0`, `Semantics`, `Soundness0` | `Compacity0`, `Estratos0`, `SequentSound0`, `Skolem0`, `TF.Instances.FOL` |
+| `FOL.Canonical0` | 8 | `Complexity`, `Eq0`, `Lindenbaum0`, `Semantics`, `Soundness0` | `Compacity0`, `Esencialidad0`, `Estratos0`, `SequentSound0`, `Skolem0`, `TF.Instances.FOL` |
 | `FOL.Finitary0` | 8 | `NDtoLK0` | `Inconsistencia` |
 | `FOL.Hauptsatz0` | 8 | `NDtoLK0`, `Sequent0` | `BlockExtraction0`, `Estratos0`, `Interpolation0`, `Inversion0`, `QFDecide0` |
 | `FOL.BlockExtraction0` | 9 | `Hauptsatz0`, `HerbrandBlock0` | `SkolemHerbrand0` |
-| `FOL.Inconsistencia` | 9 | `FOL.FOL`, `Finitary0`, `Fresh0`, `Propositional0`, `Semantics`, `Soundness0` | `Estratos0` |
+| `FOL.Inconsistencia` | 9 | `FOL.FOL`, `Finitary0`, `Fresh0`, `Propositional0`, `Semantics`, `Soundness0` | `Esencialidad0`, `Estratos0` |
 | `FOL.Interpolation0` | 9 | `Craig0`, `Hauptsatz0` | `Estratos0` |
 | `FOL.Inversion0` | 9 | `Hauptsatz0` | — |
 | `FOL.QFDecide0` | 9 | `Hauptsatz0` | — |
-| `FOL.SequentSound0` | 9 | `Canonical0`, `Sequent0` | `Estratos0` |
+| `FOL.SequentSound0` | 9 | `Canonical0`, `Sequent0` | `Esencialidad0`, `Estratos0` |
 | `FOL.Skolem0` | 9 | `Canonical0` | `Compacity0`, `SkolemN0` |
 | `TheoryFramework.Instances.FOL` | 9 | `Canonical0`, `TF.MetaTheorems` | — |
 | `FOL.Compacity0` | 10 | `Canonical0`, `Skolem0` | — |
 | `FOL.Estratos0` | 10 | `Canonical0`, `Derives2`, `Hauptsatz0`, `Inconsistencia`, `Interpolation0`, `NDtoLK0`, `SequentSound0` | — |
-| `FOL.SkolemN0` | 10 | `Skolem0` | `SkolemNF0` |
+| `FOL.SkolemN0` | 10 | `Skolem0` | `Esencialidad0`, `SkolemNF0` |
+| `FOL.Esencialidad0` | 11 | `Canonical0`, `DecEq`, `Inconsistencia`, `SequentSound0`, `SkolemN0`, `Soundness0` | — |
 | `FOL.SkolemNF0` | 11 | `PrenexNF0`, `Sequent0`, `SkolemN0` | `SkolemHerbrand0` |
 | `FOL.SkolemHerbrand0` | 12 | `BlockExtraction0`, `SkolemNF0` | — |
 
 ## Barriles
 
-* `FOL.lean` importa 40 módulos.
+* `FOL.lean` importa 41 módulos.
 * `TheoryFramework.lean` importa 5 módulos.
 

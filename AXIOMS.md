@@ -5,7 +5,7 @@
 > *(ADR‑115 de RPP, ejecutado en FOL el 2026‑10‑02. La cifra del titular la vigila `check-axioms.bash`, que
 > espera 0 en `FOL/`, en `TheoryFramework/` y en `cuarentena/`, y rompe si vuelve a aparecer uno.)*
 >
-> Ningún `axiom` del proyecto en los **55 módulos activos** (`FOL/` 44 + `FOL/Theorems/` 5 +
+> Ningún `axiom` del proyecto en los **56 módulos activos** (`FOL/` 45 + `FOL/Theorems/` 5 +
 > `TheoryFramework/` 6), y ninguno en `cuarentena/` fuera de las librerías muertas de
 > `cuarentena/librerias-retiradas/` (15, fuera del lakefile: `check-axioms.bash` las imprime y no las vigila).
 > Los cuatro últimos —`imp_intro`, `raa`, `or_elim` y `ex_elim`, las meta‑reglas con premisa‑FUNCIÓN de
@@ -92,7 +92,7 @@
 > `False` (§1). El módulo y su axioma se borraron el 2026‑09‑23 (registro de arriba).
 
 **Creado:** 2026‑09‑12 · **Autor:** Julián Calderón Almendros
-**Last updated:** 2026-10-27 — T46 (ADR‑194 de RPP): §4.3, los once corolarios de `FOL.Estratos0`. Antes, el mismo día — T53 (ADR‑193 de RPP): §4.1, re‑medida con el mismo `Audit.lean` (la frontera, la misma) y vigilada desde hoy por `check-choice.bash` de RPP. Antes, 2026-10-05 — D7 ejecutada (ADR‑129 de RPP): los símbolos son `List Char`; notas ✏️ en §2.4, §4.3 y §4.4, donde se daba por vigente lo de `String` (nombres retirados o renombrados; «no hacía falta»). Antes, sin marca: el último cambio fue el del 2026-10-03 (la deuda de los cinco módulos 🧊, saldada).
+**Last updated:** 2026-10-28 — T19 (ADR‑203 de RPP): §4, la esencialidad, recompilada en el build (`FOL.Esencialidad0`) y con su ámbito; «ex_elim» refutado sin `Classical.choice`; T71, abierta. Antes, 2026-10-27 — T46 (ADR‑194 de RPP): §4.3, los once corolarios de `FOL.Estratos0`. Antes, el mismo día — T53 (ADR‑193 de RPP): §4.1, re‑medida con el mismo `Audit.lean` (la frontera, la misma) y vigilada desde hoy por `check-choice.bash` de RPP. Antes, 2026-10-05 — D7 ejecutada (ADR‑129 de RPP): los símbolos son `List Char`; notas ✏️ en §2.4, §4.3 y §4.4, donde se daba por vigente lo de `String` (nombres retirados o renombrados; «no hacía falta»). Antes, sin marca: el último cambio fue el del 2026-10-03 (la deuda de los cinco módulos 🧊, saldada).
 
 ---
 
@@ -491,10 +491,10 @@ TheoryFramework, por las 86 de aquí, que las cuentan).
 
 | clase | entrada | por qué | medida |
 |---|---|---|---|
-| **esencial** · la semántica de Tarski en `Prop` | `Soundness0.derives0_soundness` | su enunciado implica `¬¬P → P` | ✅ `exp-esencial/E1`, sin ningún axioma |
+| **esencial** · la semántica de Tarski en `Prop` | `Soundness0.derives0_soundness` | su enunciado implica `¬¬P → P` | ✅ `exp-esencial/E1`, sin ningún axioma; en el build desde T19: `FOL.Esencialidad0.E1` |
 | | `SequentSound0.lkc_sound` | implica `P ∨ ¬P` (multiconclusión) | ✅ `E1` |
 | **esencial** · el lema de la verdad sobre un maximal ARBITRARIO | `Lindenbaum0.max_cons_contains`; `Canonical0.max_cons_impl_iff`, `max_cons_or`, `max_cons_complete`, `max_cons_forall` | cada enunciado implica `¬¬P → P` (testigo: un maximal consistente hecho a medida de `P`) | ✅ `E3`, `[propext, Quot.sound]`; `max_cons_forall`, en `exp-esceptico/Esc2` |
-| **esencial, como hipótesis** · Markov | `Canonical0.completeness₀`, su `byContradiction` final | la completitud para `Γ` finita implica MP (Kreisel; Forster–Kirst–Wehr 2021) | ⚠️ argumento, no compilado |
+| **esencial, como hipótesis** · Markov | `Canonical0.completeness₀`, su `byContradiction` final | la completitud para `Γ` finita implica MP (Kreisel; Forster–Kirst–Wehr 2021) | ⚠️ argumento, no compilado; ABIERTA (T71, ADR‑203 de RPP: la ruta sería Herbrand más la solidez decidible, y pide que un `Γ` finito codifique la función: no está) |
 | **esencial** · las funciones de Skolem semánticas | `SkolemN0.skF`, `skF_spec` | «todo modelo admite expansión de Skolem» implica AC (`∀∃ → ∃f`), y AC implica EM (Diaconescu) | ✅ `E6`, `[propext, Quot.sound]` |
 | **ruta semántica** de un enunciado SINTÁCTICO | `Skolem0.skolem_conservative₀` | la ruta por modelos pide un testigo `w` con `(∃A) → A[w]`, y eso implica EM; su caso Henkin (`t̄ = []`) ya sale sin choice, `henkin_conservative₀` | ✅ la ruta, `E6b`; la vía sintáctica general (Herbrand/ε), fuera de alcance |
 | **control** (ADR‑061) | `Canonical0.derives0_em`, `derives0_peirce` | controles de no vacuidad de `completeness₀`: se prueban POR ella, a propósito. Los gemelos sin choice existen: `Propositional0.derives0_em_ctx` (ningún axioma), `derives0_peirce_prop` | — |
@@ -514,10 +514,10 @@ y el teorema, y RPP retiró su capa `⊢` el mismo día.
 
 | grupo | titulares | nº |
 |---|---|---:|
-| esenciales, MEDIDO: el enunciado implica un principio clásico | `derives0_soundness`, `lkc_sound`, `lk0_sound`, `max_cons_contains`, `max_cons_complete`, `max_cons_neg`, `truth_lemma₀` (`¬¬P → P` o `P ∨ ¬P`); `model_existence_lemma₀` (`¬P ∨ ¬¬P`); `consistency_of_satisfiable₀` (`¬¬∀n (P n ∨ ¬P n)`); `eval_skolemAxN` (AC) | 10 |
+| esenciales, MEDIDO (contra FOL `537cc20`, con símbolos `String`; el argumento no depende del tipo de símbolo, y desde T19 se recompila en el build: `FOL.Esencialidad0`, ADR‑203 de RPP): el enunciado implica un principio clásico | `derives0_soundness`, `lkc_sound`, `lk0_sound`, `max_cons_contains`, `max_cons_complete`, `max_cons_neg`, `truth_lemma₀` (`¬¬P → P` o `P ∨ ¬P`); `model_existence_lemma₀` (`¬P ∨ ¬¬P`); `consistency_of_satisfiable₀` (`¬¬∀n (P n ∨ ¬P n)`); `eval_skolemAxN` (AC) | 10 |
 | esenciales por inclusión inmediata | `derives0_complete_iff`, `model_existence_iff₀`, `model_existence_countable₀` | 3 |
 | esencial como hipótesis (Markov) | `completeness₀` | 1 |
-| semánticos sin clasificar | `compactness`, `loewenheim_skolem_down`, `infinite_model_of_large_fresh`, `infinite_model_of_large`, `countable_infinite_of_infinite` | 5 |
+| semánticos sin clasificar (ABIERTA, T71) | `compactness`, `loewenheim_skolem_down`, `infinite_model_of_large_fresh`, `infinite_model_of_large`, `countable_infinite_of_infinite` | 5 |
 | enunciado SINTÁCTICO; choice sólo por la ruta semántica | `skolem_conservative₀`, `skolem_conservative_n₀`, `skolem_conservative_nf₀`, `derives0_of_skolemNF`, `derives0_neg_iff_neg_skolemNF`, `herbrand_refutation₀`, `herbrand_validity₀`, `herbrand_validity_ctx₀` | 8 |
 | corolarios de RUTA conservados a propósito (ADR‑061), todos con variante sin choice medida | `derives0_em`, `derives0_peirce` (controles); `derives0_consistent`, `derives0_not_complete` (`Soundness0` 🧊); `lk0_not_empty`, `lk0_to_derives0`, `lk0_to_derives2` (`SequentSound0` 🧊) | 7 |
 
