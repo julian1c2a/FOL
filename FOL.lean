@@ -46,6 +46,16 @@ import FOL.SkolemHerbrand0
 import FOL.Estratos0
 import FOL.Esencialidad0
 import FOL.Sentence
+import FOL.SymLit
+-- ✏️ 2026-10-28 (T51, ADR-218 de RPP): X1, la entrega de PeanoRF: `⊢ᵢ` (intuicionista), la sustitución paralela, el
+-- colapso, la igualdad y el slash de Kleene (la propiedad de disyunción y la de existencia).
+import FOL.Calculus.Subst
+import FOL.Calculus.DerivesI
+import FOL.Calculus.SubstDerives
+import FOL.Calculus.Consistency
+import FOL.Calculus.Eq
+import FOL.Calculus.Collapse
+import FOL.Calculus.Slash
 
 /-!
 # `FOL` — el barrel completo: núcleo **más** capa semántica

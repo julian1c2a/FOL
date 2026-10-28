@@ -20,6 +20,7 @@ import FOL.SequentSound0
 import FOL.NDtoLK0
 import FOL.Hauptsatz0
 import FOL.Interpolation0
+import FOL.Calculus.DerivesI
 
 /-!
 # `FOL.Estratos0` — la solidez y la completitud de CADA cálculo de FOL, por sus puentes (T46, ADR‑194 de RPP)
@@ -59,6 +60,12 @@ open FOL.Metamath.Semantics FOL.Sequent0 FOL.Hauptsatz0 FOL.Craig0 FOL.Interpola
 /-- `Derives` (`⊢`) es completo: lo válido se deriva en `Derives₀`, y `Derives₀` está dentro de `Derives`. -/
 theorem derives_semantic_complete {Γ : List Formula} {f : Formula} (h : satisfies Γ f) : Γ ⊢ f :=
   derives0_to_derives (FOL.Canonical0.completeness₀ h)
+
+/-- `Derivesᵢ` (`⊢ᵢ`, el intuicionista de X1, `FOL/Calculus/DerivesI.lean`; T51, ADR‑218 de RPP) es sólido para la
+semántica de Tarski: está dentro de `Derives₀`. (Su completitud no la tiene: con esta semántica es falsa —el tercero
+excluido es válido y `⊢ᵢ` no lo deriva, `FOL.Calculus.derivesI_ne_derives0`—.) -/
+theorem derivesI_soundness {Γ : List Formula} {f : Formula} (h : FOL.Calculus.Derivesᵢ Γ f) : satisfies Γ f :=
+  FOL.Metamath.Soundness0.derives0_soundness (FOL.Calculus.derivesI_to_derives0 h)
 
 theorem derives1_soundness {Γ : List Formula} {f : Formula} (h : Γ ⊢₁ f) : satisfies Γ f :=
   FOL.Metamath.Soundness0.derives0_soundness (FOL.Derives1.derives1_to_derives0 h)
@@ -106,6 +113,7 @@ theorem lkp_complete {Γ : List Formula} {f : Formula} (h : satisfies Γ f) :
 end FOL.Estratos0
 
 #print axioms FOL.Estratos0.derives_semantic_complete
+#print axioms FOL.Estratos0.derivesI_soundness
 #print axioms FOL.Estratos0.derives1_soundness
 #print axioms FOL.Estratos0.derives1_complete
 #print axioms FOL.Estratos0.derives2_soundness

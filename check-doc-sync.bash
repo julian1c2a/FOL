@@ -76,6 +76,8 @@ CIERRE_RC=$?
 cuenta_cierre() { printf '%s\n' "$CIERRE" | grep -cE "$1" || true; }
 CORE=$(cuenta_cierre '^FOL/[^/]*\.lean$')
 THEO=$(cuenta_cierre '^FOL/Theorems/')
+# ✏️ 2026-10-28 (T51, ADR-218 de RPP): y `FOL/Calculus/`, la entrega X1 de PeanoRF.
+CALC=$(cuenta_cierre '^FOL/Calculus/')
 TFW=$(cuenta_cierre '^TheoryFramework/')
 ACTIVE=$(cuenta_cierre '^(FOL|TheoryFramework)/')
 QUAR=$(ls cuarentena/*.lean 2>/dev/null | wc -l)
@@ -179,7 +181,7 @@ JOBS=""
 LAKE_MISSING=0
 
 echo "════ VERDAD DEL CÓDIGO ════"
-printf "  módulos activos : %s  (FOL/ %s + FOL/Theorems/ %s + TheoryFramework/ %s)\n" "$ACTIVE" "$CORE" "$THEO" "$TFW"
+printf "  módulos activos : %s  (FOL/ %s + FOL/Calculus/ %s + FOL/Theorems/ %s + TheoryFramework/ %s)\n" "$ACTIVE" "$CORE" "$CALC" "$THEO" "$TFW"
 printf "  cuarentena      : %s\n" "$QUAR"
 printf "  axiom de Lean   : %s\n" "$AXIOMS"
 printf "  sorry           : %s\n" "$SORRY"
@@ -235,7 +237,7 @@ else
   L_SUELTOS=$(printf '%s\n%s\n' "$L_GIT" "$L_DISCO" | sin_vacias | LC_ALL=C sort -u \
     | LC_ALL=C comm -23 - <(printf '%s\n' "$CIERRE"))
   L_SINGIT=$(printf '%s\n' "$CIERRE" | LC_ALL=C comm -23 - <(printf '%s\n' "$L_GIT"))
-  L_CUENTAS=$((CORE + THEO + TFW))
+  L_CUENTAS=$((CORE + CALC + THEO + TFW))
   while IFS= read -r f; do
     [ -n "$f" ] || continue
     echo "  ✗ $f está en el disco o en git y NO en el cierre de imports de las raíces: los globs lo compilan,"
@@ -248,8 +250,8 @@ else
     L_FAIL=1
   done <<< "$L_SINGIT"
   if [ "$L_CUENTAS" != "$ACTIVE" ]; then
-    echo "  ✗ hay módulos del cierre fuera de FOL/, FOL/Theorems/ y TheoryFramework/ ($ACTIVE módulos, $L_CUENTAS"
-    echo "      en las tres cuentas): [A] no los contaría. Añade la cuenta arriba."
+    echo "  ✗ hay módulos del cierre fuera de FOL/, FOL/Calculus/, FOL/Theorems/ y TheoryFramework/ ($ACTIVE módulos,"
+    echo "      $L_CUENTAS en las cuatro cuentas): [A] no los contaría. Añade la cuenta arriba."
     L_FAIL=1
   fi
   L_TOTAL=$(printf '%s\n' "$CIERRE" | grep -c .)
@@ -860,6 +862,7 @@ FOL/Skolem0.lean§la falsedad iba etiquetada§HISTORIAL§la paga `SkolemN0.skole
 FOL/Skolem0.lean§~~Lo que falta: el axioma bajo un PREFIJO§HISTORIAL§la paga `SkolemN0`
 FOL/Skolem0.lean§**MEDIDO que no existe nada de eso**§HISTORIAL§`envPush` resultó no hacer falta
 FOL/Skolem0.lean§~200 l., riesgo **medio**, y el riesgo§HISTORIAL§la estimación que `SkolemN0` refutó
+FOL/Calculus/Slash.lean§el esquema de inducción es precisamente el caso difícil, y no está hecho§DIFERIDA§(X1, T51) la DP de HA —barrar la inducción— es trabajo de PeanoRF, no de FOL: aquí, la de la lógica `⊢ᵢ`
 G2EOF
 
 grep -rnE "$G2PAT" $G2SRC --include=*.lean 2>/dev/null > "$G2CUR"

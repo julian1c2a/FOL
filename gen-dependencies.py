@@ -59,7 +59,9 @@ for b in ('FOL.lean', 'TheoryFramework.lean'):
         barrels[b] = re.findall(r'^\s*import\s+([A-Za-z0-9_.]+)', rd(b), re.M)
 
 n_edges = sum(len(v) for v in imports.values())
-n_fol = sum(1 for f in files if f.startswith('FOL/') and not f.startswith('FOL/Theorems/'))
+# ✏️ 2026-10-28 (T51, ADR-218 de RPP): `FOL/Calculus/` (X1) se cuenta aparte, como `FOL/Theorems/` (lo pide [L]).
+n_fol = sum(1 for f in files if f.startswith('FOL/') and not f.startswith('FOL/Theorems/') and not f.startswith('FOL/Calculus/'))
+n_calc = sum(1 for f in files if f.startswith('FOL/Calculus/'))
 n_thm = sum(1 for f in files if f.startswith('FOL/Theorems/'))
 n_tf = sum(1 for f in files if f.startswith('TheoryFramework/'))
 today = datetime.date.today().isoformat() if '--date' not in sys.argv else sys.argv[sys.argv.index('--date') + 1]
@@ -67,7 +69,9 @@ today = datetime.date.today().isoformat() if '--date' not in sys.argv else sys.a
 def short(m):
     if m == 'FOL.FOL':
         return 'FOL.FOL'
-    return m.replace('TheoryFramework.', 'TF.').replace('FOL.Theorems.', 'Thm.').replace('FOL.', '')
+    # ✏️ 2026-10-28 (T51, ADR-218 de RPP): `Theorems.` y no `Thm.`: `Thm.Eq` no nombra nada, y `[B]` lo contaba como cita
+    # muerta (26 en la deuda); `Theorems.Eq` es el final del nombre del módulo.
+    return m.replace('TheoryFramework.', 'TF.').replace('FOL.Theorems.', 'Theorems.').replace('FOL.', '')
 
 out = []
 w = out.append
@@ -82,11 +86,12 @@ w('> sustituyó el 2026-09-26: describía cinco `lean_lib`, tres nodos borrados 
 w('')
 w('## Cifras')
 w('')
-w(f'* **{len(mods)} módulos** (`FOL/` {n_fol} + `FOL/Theorems/` {n_thm} + `TheoryFramework/` {n_tf}), '
+w(f'* **{len(mods)} módulos** (`FOL/` {n_fol} + `FOL/Calculus/` {n_calc} + `FOL/Theorems/` {n_thm} + `TheoryFramework/` {n_tf}), '
   f'**{n_edges} aristas** `import` entre ellos, profundidad máxima **{max(level.values())}**.')
 w('* 2 `lean_lib`: `FOL` y `TheoryFramework`, las dos con `globs := #[.andSubmodules …]`: el build compila el barril y')
 w('  TODO su directorio (T15 de RPP, 2026-10-18). Que todo módulo esté además en el cierre de imports de las raíces')
-w('  (`cierre-imports.bash`: `FOL`, `TheoryFramework` y `TheoryFramework.Instances.FOL`) lo comprueba [L] de')
+w('  (`cierre-imports.bash`: `FOL`, `TheoryFramework`, `TheoryFramework.Instances.FOL` y `TheoryFramework.Instances.FOLModels`)')
+w('  lo comprueba [L] de')
 w('  `check-doc-sync.bash`.')
 ext = sorted({i for v in lean_imports.values() for i in v})
 w(f'* Imports externos a FOL: {", ".join("`" + i + "`" for i in ext) if ext else "ninguno"} '

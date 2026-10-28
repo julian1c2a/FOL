@@ -1,6 +1,6 @@
 # Consumidores de FOL — registro y política
 
-**Last updated:** 2026-10-28 — ADR‑216 de RPP: los cuatro consumidores viejos, FIJADOS en su propio `lakefile.lean` al
+**Last updated:** 2026-10-28 — T51 (ADR‑218 de RPP): la entrega X1 de PeanoRF y «sym!», en FOL (su fila). Antes, el mismo día — ADR‑216 de RPP: los cuatro consumidores viejos, FIJADOS en su propio `lakefile.lean` al
 commit de FOL que les corresponde, y los tres que tienen remoto, ARCHIVADOS también en GitHub (decisión del propietario).
 Antes, el mismo día — T50 (ADR‑214 de RPP): el registro, nuevo; los cuatro, archivados por decisión del propietario.
 
@@ -26,7 +26,7 @@ una versión fijada). Medido el 2026‑10‑28 en el disco y en git de cada uno.
 | consumidor | toolchain | último commit | FOL fijado | estado |
 |---|---|---|---|---|
 | ROBINSON_PlusPlus | v4.35.0 | — | el `master` (el par, en su «doc/control/fol-sha.txt») | ✅ vivo |
-| PeanoRF («../Peano-from-ROB-n-FOL») | v4.31.0 | `70d79fc`, 2026‑09‑28 | `b4db33d` (2026‑09‑28) | ⛔ bloqueado por el propietario (sólo lectura); no compila contra el FOL de hoy: la lista de lo que debe adaptar, en «../ROBINSON_PlusPlus/doc/registro/2026-10-28-t50/peanorf.txt» |
+| PeanoRF («../Peano-from-ROB-n-FOL») | v4.31.0 | `70d79fc`, 2026‑09‑28 | `b4db33d` (2026‑09‑28) | ⛔ bloqueado por el propietario (sólo lectura); no compila contra el FOL de hoy: la lista de lo que debe adaptar, en «../ROBINSON_PlusPlus/doc/registro/2026-10-28-t50/peanorf.txt». ✏️ 2026‑10‑28 (T51, ADR‑218 de RPP): su entrega X1 ya está en FOL (`FOL/Calculus/`), y «sym!» también (`FOL/SymLit.lean`): al adaptarse, los importa en vez de llevarlos |
 | FOL_Compiler | v4.30.0 | `3c94524`, 2026‑06‑05 | `4b262bf` (2026‑05‑28) | 🗄️ archivado: fijado en `b67e3cb`; archivado en GitHub |
 | FOL_CompStructs | v4.29.1 | `db17ff5`, 2026‑06‑11 (sin remoto) | `a16a111` (2026‑06‑09) | 🗄️ archivado: fijado en `ae959ec`, sólo local (no hay repositorio en GitHub) |
 | Lean4_vs_PureLogic (remoto: DeepArith) | v4.29.0 | `ef3a407`, 2026‑06‑27 | `cca78ac` (2026‑06‑24) | 🗄️ archivado: fijado en `a5afe48`; archivado en GitHub |

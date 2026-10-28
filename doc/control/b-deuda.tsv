@@ -7,7 +7,6 @@
 # clase	clave	documento	citas
 B	Canonical0.quotientOut	AXIOMS.md	1
 B	CanonicalDomain	REFERENCE.md	5
-B	Collapse	NEXT-STEPS.md	2
 B	Completeness	CURRENT-STATUS-PROJECT.md	1
 B	DautoImplicit	DECISIONS.md	1
 B	Derives.raa	REFERENCE.md	2
@@ -85,15 +84,9 @@ B	Rename.invOf	AXIOMS.md	1
 B	Rename.invOf	REFERENCE.md	2
 B	S_fin	REFERENCE.md	2
 B	S_fin.Finite	REFERENCE.md	1
-B	Slash	NEXT-STEPS.md	3
 B	Soundness	cuarentena/README.md	1
 B	Theorems.Deduction	DECISIONS.md	1
 B	Theorems.Soundness	DECISIONS.md	1
-B	Thm.Derived	DEPENDENCIES.md	5
-B	Thm.Eq	DEPENDENCIES.md	5
-B	Thm.Impl	DEPENDENCIES.md	5
-B	Thm.Neg	DEPENDENCIES.md	5
-B	Thm.Quantifiers	DEPENDENCIES.md	6
 B	UnInductivo	cuarentena/README.md	1
 B	UpperCamelCase	AI-GUIDE.md	1
 B	UpperCamelCase	README.md	3
@@ -124,7 +117,6 @@ B	axiom_system	DECISIONS.md	1
 B	choose_spec_unique	REFERENCE.md	1
 B	choose_uniq	REFERENCE.md	1
 B	choose_unique	REFERENCE.md	1
-B	collapseT	NEXT-STEPS.md	1
 B	compactness_theorem	NEXT-STEPS.md	1
 B	compactness_theorem	REFERENCE.md	1
 B	compactness_theorem	cuarentena/README.md	3
@@ -146,7 +138,6 @@ B	derive_rewrite	REFERENCE.md	2
 B	derive_weaken	NEXT-STEPS.md	1
 B	derive_weaken	README.md	2
 B	derive_weaken	REFERENCE.md	2
-B	derivesI_	NEXT-STEPS.md	1
 B	derives_complete	AXIOMS.md	3
 B	derives_tval	AXIOMS.md	1
 B	ex_elim	AXIOMS.md	4
@@ -273,7 +264,6 @@ B2	Algebra.lean	AI-GUIDE.md	1
 B2	Algebra/	AI-GUIDE.md	1
 B2	BLOQUEO-2026-10-01.md	NEXT-STEPS.md	1
 B2	Basic.lean	AI-GUIDE.md	1
-B2	Calculus/	NEXT-STEPS.md	2
 B2	Classical.lean	CURRENT-STATUS-PROJECT.md	2
 B2	Classical.lean	DECISIONS.md	1
 B2	Classical.lean	REFERENCE.md	2
