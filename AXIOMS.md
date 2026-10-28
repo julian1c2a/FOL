@@ -514,7 +514,7 @@ y el teorema, y RPP retiró su capa `⊢` el mismo día.
 
 | grupo | titulares | nº |
 |---|---|---:|
-| esenciales, MEDIDO (contra FOL `537cc20`, con símbolos `String`; el argumento no depende del tipo de símbolo, y desde T19 se recompila en el build: `FOL.Esencialidad0`, ADR‑203 de RPP): el enunciado implica un principio clásico | `derives0_soundness`, `lkc_sound`, `lk0_sound`, `max_cons_contains`, `max_cons_complete`, `max_cons_neg`, `truth_lemma₀` (`¬¬P → P` o `P ∨ ¬P`); `model_existence_lemma₀` (`¬P ∨ ¬¬P`); `consistency_of_satisfiable₀` (`¬¬∀n (P n ∨ ¬P n)`); `eval_skolemAxN` (AC) | 10 |
+| esenciales, MEDIDO (contra FOL `537cc20`, con símbolos `String`; el argumento no depende del tipo de símbolo): el enunciado implica un principio clásico. Desde T19 (ADR‑203 de RPP) se recompila en el build, en `FOL.Esencialidad0`, la medida de SEIS: `derives0_soundness`, `lkc_sound`, `max_cons_contains`, `max_cons_complete`, `model_existence_lemma₀` y `eval_skolemAxN`; la de los otros cuatro (`lk0_sound`, `max_cons_neg`, `truth_lemma₀`, `consistency_of_satisfiable₀`) sigue en `exp-juez/` y `exp-esceptico/`, que no compilan tras D7 (✏️ 2026‑10‑28, R3‑5‑04 de la ronda 3, ADR‑213 de RPP: decía «desde T19 se recompila» de los diez) | `derives0_soundness`, `lkc_sound`, `lk0_sound`, `max_cons_contains`, `max_cons_complete`, `max_cons_neg`, `truth_lemma₀` (`¬¬P → P` o `P ∨ ¬P`); `model_existence_lemma₀` (`¬P ∨ ¬¬P`); `consistency_of_satisfiable₀` (`¬¬∀n (P n ∨ ¬P n)`); `eval_skolemAxN` (AC) | 10 |
 | esenciales por inclusión inmediata | `derives0_complete_iff`, `model_existence_iff₀`, `model_existence_countable₀` | 3 |
 | esencial como hipótesis (Markov) | `completeness₀` | 1 |
 | semánticos sin clasificar (ABIERTA, T71) | `compactness`, `loewenheim_skolem_down`, `infinite_model_of_large_fresh`, `infinite_model_of_large`, `countable_infinite_of_infinite` | 5 |
@@ -525,7 +525,10 @@ y el teorema, y RPP retiró su capa `⊢` el mismo día.
 cálculo con nombre, por los puentes ya demostrados (`derives_semantic_complete`, `derives1_soundness`, `derives1_complete`,
 `derives2_soundness`, `derives2_complete`, `lkc_complete`, `lk0_complete`, `lkh_sound`, `lkh_complete`, `lkp_sound`,
 `lkp_complete`). Las completitudes heredan el choice de `completeness₀`, y las solideces el de `derives0_soundness` o
-`lkc_sound`; ninguna es una prueba nueva.
+`lkc_sound`; ninguna es una prueba nueva. ✏️ *2026‑10‑28 (R3‑4‑03 de la ronda 3, ADR‑213 de RPP):* «de RUTA» no en el
+sentido de la fila de arriba (con variante sin choice medida). Las cuatro solideces tienen un enunciado que implica un
+principio clásico (`Derives₁` y `Derives₂` tienen `dne_schema`; `lkh_sound` y `lkp_sound`, el enunciado multiconclusión
+de `lk0_sound`): por el argumento de E1 son esenciales. Las siete completitudes, tan esenciales como `completeness₀`.
 
 Los 27 primeros son los **irreducibles** de la auditoría, con la clasificación que dejó el escéptico:
 pasó `max_cons_neg` y `truth_lemma₀` de hipótesis a medidos, y `consistency_of_satisfiable₀`, que el

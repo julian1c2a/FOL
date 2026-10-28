@@ -27,6 +27,13 @@ jobs:
           # HEAD para todo => el control mediría basura.
           fetch-depth: 0
 
+      # ⭐ 2026-10-28 (R3-4-01 de la ronda 3, ADR-212 de RPP): ningún congelado cambia sin su thaw. El gancho local no
+      # bloqueaba nada (las listas en CRLF), y no hay gancho en el servidor: esto es lo que lo vigila de verdad.
+      - name: Congelados
+        run: bash check-congelados.bash
+        env:
+          B_BASE_REF: ${{ github.event_name == 'pull_request' && github.event.pull_request.base.sha || (github.ref == 'refs/heads/master' && github.event.before || '') }}
+
       # (✏️ 2026-10-28, T40: la caché, ANTES de instalar elan y el toolchain, que viven en `~/.elan`.)
       - name: Cache Lake packages
         uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
@@ -155,7 +162,9 @@ jobs:
         continue-on-error: true
 
       # ⭐ 2026-10-28 (T38 y T16, ADR-202 de RPP): FOL y RPP, en el MISMO toolchain: un bump mueve el par a la vez. Si el
-      # clon de RPP no está, el alcance es REDUCIDO y se dice (como en [B]); si está y difiere, rojo.
+      # clon de RPP no está, el alcance es REDUCIDO y se dice (como en [B]). ✏️ El mismo día (R3-3-02 de la ronda 3,
+      # ADR-212 de RPP): si difiere, AVISO, no rojo. Rojo aquí hacía imposible el bump con los dos master protegidos:
+      # FOL va primero (M-12) y compararía con el master viejo de RPP. Lo certifica la CI de RPP, que va después.
       - name: El mismo toolchain en FOL y en RPP
         run: |
           if [ ! -f _rpp/lean-toolchain ]; then
@@ -163,8 +172,7 @@ jobs:
           elif cmp -s <(tr -d '\r' < lean-toolchain) <(tr -d '\r' < _rpp/lean-toolchain); then
             echo "✓ el mismo toolchain: $(tr -d '\r' < lean-toolchain)"
           else
-            echo "❌ FOL en $(tr -d '\r' < lean-toolchain) y RPP en $(tr -d '\r' < _rpp/lean-toolchain): un bump mueve el par a la vez"
-            exit 1
+            echo "::warning::FOL en $(tr -d '\r' < lean-toolchain) y RPP en $(tr -d '\r' < _rpp/lean-toolchain): un bump mueve el par a la vez. Aquí es AVISO: rompe la comparación de la CI de RPP, que corre después (M-12)"
           fi
 
       # ⭐ 2026-10-19 (ADR-167 de RPP): el techo de la deuda de `[B]` es la tabla de la BASE VERIFICADA. En un push a una

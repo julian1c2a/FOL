@@ -243,10 +243,13 @@ case $COMMAND in
         cat > "$HOOK_FILE" << 'HOOKEOF'
 #!/bin/bash
 # Pre-commit hook: blocks commits touching locked/frozen files, warns about sorry.
+# ✏️ 2026-10-28 (R3-4-01 de la ronda 3, ADR-212 de RPP): las listas se leen SIN `\r` y los renombres salen como
+# borrado y alta (`--no-renames`). Con las listas en CRLF (core.autocrlf), cada entrada llevaba su `\r`, el
+# `grep -Fqx` no casaba ninguna y este gancho no bloqueaba nada. En la CI lo vigila además check-congelados.bash.
 
 LOCK_LIST="locked_files.txt"
 FROZEN_LIST="frozen_files.txt"
-STAGED_FILES=$(git diff --cached --name-only)
+STAGED_FILES=$(git diff --cached --name-only --no-renames)
 ERROR=0
 
 # ── Check 1: Frozen files (permanent — never allow) ───────────────────────────
@@ -261,7 +264,7 @@ if [ -f "$FROZEN_LIST" ]; then
             echo "  See AI-GUIDE.md section 21 for the extension protocol."
             ERROR=1
         fi
-    done < "$FROZEN_LIST"
+    done < <(tr -d '\r' < "$FROZEN_LIST")
 fi
 
 # ── Check 2: Locked files (temporary — unlock first) ─────────────────────────
@@ -269,15 +272,15 @@ if [ -f "$LOCK_LIST" ]; then
     while IFS= read -r LOCKED_FILE; do
         [ -z "$LOCKED_FILE" ] && continue
         # Skip if already caught by frozen check
-        if [ -f "$FROZEN_LIST" ] && grep -Fxq "$LOCKED_FILE" "$FROZEN_LIST"; then
+        if [ -f "$FROZEN_LIST" ] && tr -d '\r' < "$FROZEN_LIST" | grep -Fxq -- "$LOCKED_FILE"; then
             continue
         fi
-        if echo "$STAGED_FILES" | grep -Fqx "$LOCKED_FILE"; then
+        if echo "$STAGED_FILES" | grep -Fqx -- "$LOCKED_FILE"; then
             echo "ERROR LOCKED: $LOCKED_FILE"
             echo "  Unlock first: bash git-lock.bash unlock $LOCKED_FILE"
             ERROR=1
         fi
-    done < "$LOCK_LIST"
+    done < <(tr -d '\r' < "$LOCK_LIST")
 fi
 
 # ── Check 3: New sorry statements (warning only) ──────────────────────────────

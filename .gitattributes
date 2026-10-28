@@ -15,3 +15,8 @@
 *.yml  text eol=lf
 *.yaml text eol=lf
 *.py   text eol=lf
+# ✏️ 2026-10-28 (R3-4-01 de la ronda 3, ADR-212 de RPP): las listas de congelados y bloqueados, en LF también en el
+# árbol de trabajo. Con `core.autocrlf=true` se escribían en CRLF, el gancho de `git-lock.bash` leía cada entrada con
+# su `\r` y no casaba ninguna: no bloqueaba nada.
+frozen_files.txt text eol=lf
+locked_files.txt text eol=lf

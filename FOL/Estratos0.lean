@@ -43,7 +43,9 @@ de la solidez o la completitud de `Derives₀` con los puentes que ya estaban de
 ⚠️ **Lo que NO dice.** La completitud pasa por `completeness₀`, y con ella por su `Classical.choice` (esencial como
 hipótesis: Markov; `AXIOMS.md` §4.2): las siete completitudes lo llevan. Las solideces de `Derives₁`, `Derives₂`,
 `LKh` y `LKp` pasan por `derives0_soundness` o `lkc_sound`, que también lo llevan (esenciales: la semántica de Tarski
-en `Prop`). Son corolarios de RUTA, no pruebas nuevas: la vía sin choice, donde la hay, está en `FOL.Finitary0`.
+en `Prop`). Son corolarios, no pruebas nuevas: la vía sin choice, donde la hay, está en `FOL.Finitary0`. ✏️ 2026‑10‑28
+(R3‑4‑03 de la ronda 3, ADR‑213 de RPP): decía «de RUTA»; no lo son en el sentido de `AXIOMS.md` §4.3 (con variante sin
+choice medida): las cuatro solideces tienen un enunciado que implica un principio clásico (E1 de `FOL.Esencialidad0`).
 `LKp` es completo sólo con las instancias de igualdad que usa puestas delante del antecedente (`lk0_to_lkp`): no tiene
 regla de igualdad, y ésa es su forma de completitud.
 -/
