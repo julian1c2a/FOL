@@ -199,5 +199,11 @@ jobs:
             echo "::notice::sin el secreto RPP_DISPATCH_TOKEN: la CI de RPP no se lanza desde aquí (la cubre su cruzada diaria)"
             exit 0
           fi
-          gh workflow run build.yml -R julian1c2a/ROBINSON_PlusPlus --ref master
-          echo "✓ lanzada la CI de RPP contra el master de FOL $GITHUB_SHA"
+          # ✏️ 2026-10-28 (ADR-212 de RPP): si no se puede lanzar, AVISO y no rojo: el master de FOL está bien aunque el
+          # token no alcance (el primer intento dio «HTTP 403: Resource not accessible by personal access token» y dejó
+          # rojo un master correcto). La cruzada diaria de RPP lo sigue cubriendo.
+          if gh workflow run build.yml -R julian1c2a/ROBINSON_PlusPlus --ref master; then
+            echo "✓ lanzada la CI de RPP contra el master de FOL $GITHUB_SHA"
+          else
+            echo "::warning::no pude lanzar la CI de RPP: ¿el token de RPP_DISPATCH_TOKEN tiene «Actions: Read and write» SOBRE ROBINSON_PlusPlus?"
+          fi
