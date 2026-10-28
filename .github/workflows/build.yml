@@ -15,19 +15,37 @@ jobs:
     # (otro mawk, coreutils en Rust), y un verde que no dice contra qué entorno se midió no es reproducible
     # (ADR-073). Los controles se validaron también en 26.04 (WSL); el cambio de imagen se hará a propósito.
     runs-on: ubuntu-24.04
+    # ⭐ 2026-10-28 (T41, ADR-202 de RPP): un tope; medido, unos 2 min.
+    timeout-minutes: 30
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           # ⚠⚠ Ver ADR-072: [E] compara cada `**Last updated:**` con la fecha del ultimo
           # commit que toco ese fichero, y en un clon SUPERFICIAL `git log -1 -- <f>` devuelve
           # HEAD para todo => el control mediría basura.
           fetch-depth: 0
 
+      # (✏️ 2026-10-28, T40: la caché, ANTES de instalar elan y el toolchain, que viven en `~/.elan`.)
+      - name: Cache Lake packages
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: |
+            ~/.elan
+            .lake/packages
+          key: ${{ runner.os }}-lake-${{ hashFiles('lean-toolchain', 'lakefile.lean') }}
+          restore-keys: |
+            ${{ runner.os }}-lake-
+
+      # ⭐ 2026-10-28 (T40, ADR-202 de RPP): elan FIJADO (v4.2.4, con su sha256), no el `latest` que baja `elan-init.sh`
+      # desde la rama master del instalador.
       - name: Install elan (Lean version manager)
         run: |
-          curl https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh -sSf | sh -s -- -y --no-modify-path
+          curl -sSfL -o /tmp/elan.tar.gz https://github.com/leanprover/elan/releases/download/v4.2.4/elan-x86_64-unknown-linux-gnu.tar.gz
+          echo "42b94d4244e8353142c456ec0e4ca6528fd898a6c604d4059f494e706e431f63  /tmp/elan.tar.gz" | sha256sum -c -
+          tar -xzf /tmp/elan.tar.gz -C /tmp
+          /tmp/elan-init -y --no-modify-path --default-toolchain none
           echo "$HOME/.elan/bin" >> $GITHUB_PATH
 
       # ⚠️ Escalar de BLOQUE (`run: |`) a propósito. En una sola línea, el `-d:` de `cut`
@@ -42,15 +60,19 @@ jobs:
           # contesta «invalid toolchain name». Medido: su CI murió en 11 s por ese byte.
           elan toolchain install $(cut -d: -f2 lean-toolchain | tr -d '\r')
 
-      - name: Cache Lake packages
-        uses: actions/cache@v4
-        with:
-          path: |
-            ~/.elan
-            .lake/packages
-          key: ${{ runner.os }}-lake-${{ hashFiles('lean-toolchain', 'lakefile.lean') }}
-          restore-keys: |
-            ${{ runner.os }}-lake-
+      # ⭐ 2026-10-28 (T40, ADR-202 de RPP): las versiones de todo lo que mide, en el resumen del run.
+      - name: Versiones
+        run: |
+          {
+            echo "### Versiones"
+            echo '```'
+            echo "imagen: ${ImageOS:-?} ${ImageVersion:-?}"
+            elan --version
+            lean --version
+            lake --version
+            echo "awk: $( (awk -W version 2>/dev/null || awk --version) | head -1)"
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"
 
       # Los DOS `@[default_target]` del lakefile: `FOL` y `TheoryFramework`. El segundo
       # entró en el build el 2026-09-12 (A-5) precisamente porque, sin él,
@@ -109,7 +131,7 @@ jobs:
       # 🔑 Un control tiene TRES resultados — pasa, falla, no he podido comprobarlo — y el
       #    tercero se dice.
       - name: Checkout ROBINSON_PlusPlus (hermano, sólo para el bloque [B])
-        uses: actions/checkout@v4
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           repository: julian1c2a/ROBINSON_PlusPlus
           path: _rpp
@@ -131,6 +153,19 @@ jobs:
             echo "| ROBINSON_PlusPlus (\`_rpp\`) | \`$(git -C _rpp rev-parse HEAD 2>/dev/null || echo 'NO CLONADO — alcance REDUCIDO')\` |"
           } >> "$GITHUB_STEP_SUMMARY"
         continue-on-error: true
+
+      # ⭐ 2026-10-28 (T38 y T16, ADR-202 de RPP): FOL y RPP, en el MISMO toolchain: un bump mueve el par a la vez. Si el
+      # clon de RPP no está, el alcance es REDUCIDO y se dice (como en [B]); si está y difiere, rojo.
+      - name: El mismo toolchain en FOL y en RPP
+        run: |
+          if [ ! -f _rpp/lean-toolchain ]; then
+            echo "⚠️  sin el clon de RPP: no se compara el toolchain (alcance REDUCIDO)"
+          elif cmp -s <(tr -d '\r' < lean-toolchain) <(tr -d '\r' < _rpp/lean-toolchain); then
+            echo "✓ el mismo toolchain: $(tr -d '\r' < lean-toolchain)"
+          else
+            echo "❌ FOL en $(tr -d '\r' < lean-toolchain) y RPP en $(tr -d '\r' < _rpp/lean-toolchain): un bump mueve el par a la vez"
+            exit 1
+          fi
 
       # ⭐ 2026-10-19 (ADR-167 de RPP): el techo de la deuda de `[B]` es la tabla de la BASE VERIFICADA. En un push a una
       # rama `ci/…` (el flujo de RPP, que FOL adopta: la CI primero, master después), la base es `origin/master`, con su
