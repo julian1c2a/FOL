@@ -46,3 +46,6 @@ FOL/Inconsistencia.lean
 FOL/FOL.lean
 AXIOMS.md
 FOL/Semantics.lean
+FOL/Calculus/Eq.lean
+FOL/Calculus/Collapse.lean
+FOL/Calculus/Slash.lean
