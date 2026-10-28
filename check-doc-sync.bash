@@ -255,6 +255,27 @@ else
     "git ($((L_TOTAL - ACTIVE)) barriles y $ACTIVE módulos); el autotest del cierre pasa"
 fi
 [ "$L_FAIL" = "0" ] || FAIL=1
+
+# ─── [EOL] FINALES DE LÍNEA: ningún blob con CRLF en el índice — ROJO ──────────
+# ⭐ AÑADIDO el 2026-10-28 (T43, ADR-200 de RPP). Con `core.autocrlf=true` en local y LF en la CI, una medida anclada en
+# «$» da distinto en los dos sitios. El índice de RPP ya era todo LF; el de FOL guardaba 45 blobs con CRLF (nueve `.lean`
+# activos y treinta de la cuarentena), y se renormalizaron. Desde hoy, ninguno: lo mira `git ls-files --eol` (la
+# columna del ÍNDICE, no la del árbol de trabajo, que en Windows es CRLF a propósito).
+echo
+echo "════ [EOL] FINALES DE LÍNEA EN EL ÍNDICE — ROJO ════"
+if git rev-parse --git-dir > /dev/null 2>&1; then
+  EOL_MAL=$(git ls-files --eol | awk '$1 == "i/crlf" || $1 == "i/mixed" { print $NF }')
+  if [ -n "$EOL_MAL" ]; then
+    echo "  ✗ blobs con CRLF en el índice ($(printf '%s\n' "$EOL_MAL" | grep -c .)): renormaliza con «git add --renormalize .»"
+    printf '%s\n' "$EOL_MAL" | head -10 | sed 's/^/      /'
+    FAIL=1
+  else
+    echo "  ✓ ningún blob con CRLF en el índice ($(git ls-files --eol | grep -c '^i/lf') en LF)"
+  fi
+else
+  echo "  ❌ SIN MEDIR: esto no es un repositorio de git, y sin el índice no sé qué ve la CI."
+  FAIL=1
+fi
 echo
 
 # ─── 2. CIFRAS OBSOLETAS ─────────────────────────────────────────────────────
