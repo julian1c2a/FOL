@@ -45,6 +45,7 @@ import FOL.BlockExtraction0
 import FOL.SkolemHerbrand0
 import FOL.Estratos0
 import FOL.Esencialidad0
+import FOL.Sentence
 
 /-!
 # `FOL` — el barrel completo: núcleo **más** capa semántica

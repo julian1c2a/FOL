@@ -9,7 +9,7 @@
 
 ## Cifras
 
-* **56 módulos** (`FOL/` 45 + `FOL/Theorems/` 5 + `TheoryFramework/` 6), **110 aristas** `import` entre ellos, profundidad máxima **12**.
+* **57 módulos** (`FOL/` 46 + `FOL/Theorems/` 5 + `TheoryFramework/` 6), **111 aristas** `import` entre ellos, profundidad máxima **12**.
 * 2 `lean_lib`: `FOL` y `TheoryFramework`, las dos con `globs := #[.andSubmodules …]`: el build compila el barril y
   TODO su directorio (T15 de RPP, 2026-10-18). Que todo módulo esté además en el cierre de imports de las raíces
   (`cierre-imports.bash`: `FOL`, `TheoryFramework` y `TheoryFramework.Instances.FOL`) lo comprueba [L] de
@@ -20,7 +20,7 @@
 
 * **0** — `FOL.FOL`, `TF.Logic`
 * **1** — `Complexity`, `DecEq`, `Derives0`, `Semantics`, `SymClasses`, `Tactics`, `Thm.Eq`, `Thm.Neg`, `TF.Theory`
-* **2** — `Deduction`, `Eigenvariable`, `Enumeration`, `Eq0`, `Propositional0`, `Rename`, `Soundness0`, `Thm.Derived`, `Thm.Impl`, `TF.Properties`, `TF.Relations`
+* **2** — `Deduction`, `Eigenvariable`, `Enumeration`, `Eq0`, `Propositional0`, `Rename`, `Sentence`, `Soundness0`, `Thm.Derived`, `Thm.Impl`, `TF.Properties`, `TF.Relations`
 * **3** — `Herbrand0`, `Lift0`, `Thm.Quantifiers`, `TF.MetaTheorems`
 * **4** — `Core`, `Derives1`, `Henkin0`, `Prenex0`
 * **5** — `Derives2`, `Fresh0`, `PrenexNF0`
@@ -114,6 +114,7 @@ graph BT
     QFDecide0["QFDecide0"] --> Hauptsatz0["Hauptsatz0"]
     Rename["Rename"] --> Derives0["Derives0"]
     Semantics["Semantics"] --> FOL_FOL["FOL.FOL"]
+    Sentence["Sentence"] --> Semantics["Semantics"]
     Sequent0["Sequent0"] --> Derives2["Derives2"]
     Sequent0["Sequent0"] --> Herbrand0["Herbrand0"]
     SequentSound0["SequentSound0"] --> Canonical0["Canonical0"]
@@ -157,7 +158,7 @@ graph BT
 | `FOL.Complexity` | 1 | `FOL.FOL` | `Canonical0` |
 | `FOL.DecEq` | 1 | `FOL.FOL` | `Esencialidad0`, `Propositional0` |
 | `FOL.Derives0` | 1 | `FOL.FOL` | `Eigenvariable`, `Eq0`, `Propositional0`, `Rename`, `Soundness0` |
-| `FOL.Semantics` | 1 | `FOL.FOL` | `Canonical0`, `Inconsistencia`, `Soundness0` |
+| `FOL.Semantics` | 1 | `FOL.FOL` | `Canonical0`, `Inconsistencia`, `Sentence`, `Soundness0` |
 | `FOL.SymClasses` | 1 | `FOL.FOL` | `Enumeration`, `Fresh0` |
 | `FOL.Tactics` | 1 | `FOL.FOL` · externo: `Lean` | `Core`, `Deduction`, `Thm.Impl` |
 | `FOL.Theorems.Eq` | 1 | `FOL.FOL` | `Core`, `Derives2`, `Eq0` |
@@ -169,6 +170,7 @@ graph BT
 | `FOL.Eq0` | 2 | `Derives0`, `Thm.Eq` | `Canonical0`, `Herbrand0` |
 | `FOL.Propositional0` | 2 | `DecEq`, `Derives0` | `Herbrand0`, `Inconsistencia` |
 | `FOL.Rename` | 2 | `Derives0` | `Fresh0` |
+| `FOL.Sentence` | 2 | `Semantics` | — |
 | `FOL.Soundness0` | 2 | `Derives0`, `Semantics` | `Canonical0`, `Esencialidad0`, `Inconsistencia` |
 | `FOL.Theorems.Derived` | 2 | `FOL.FOL`, `Thm.Neg` | `Core`, `Thm.Quantifiers` |
 | `FOL.Theorems.Impl` | 2 | `FOL.FOL`, `Tactics` | `Core`, `Thm.Quantifiers` |
@@ -211,6 +213,6 @@ graph BT
 
 ## Barriles
 
-* `FOL.lean` importa 41 módulos.
+* `FOL.lean` importa 42 módulos.
 * `TheoryFramework.lean` importa 5 módulos.
 

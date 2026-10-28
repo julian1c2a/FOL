@@ -5,7 +5,7 @@
 > *(ADR‑115 de RPP, ejecutado en FOL el 2026‑10‑02. La cifra del titular la vigila `check-axioms.bash`, que
 > espera 0 en `FOL/`, en `TheoryFramework/` y en `cuarentena/`, y rompe si vuelve a aparecer uno.)*
 >
-> Ningún `axiom` del proyecto en los **56 módulos activos** (`FOL/` 45 + `FOL/Theorems/` 5 +
+> Ningún `axiom` del proyecto en los **57 módulos activos** (`FOL/` 46 + `FOL/Theorems/` 5 +
 > `TheoryFramework/` 6), y ninguno en `cuarentena/` fuera de las librerías muertas de
 > `cuarentena/librerias-retiradas/` (15, fuera del lakefile: `check-axioms.bash` las imprime y no las vigila).
 > Los cuatro últimos —`imp_intro`, `raa`, `or_elim` y `ex_elim`, las meta‑reglas con premisa‑FUNCIÓN de
@@ -92,7 +92,7 @@
 > `False` (§1). El módulo y su axioma se borraron el 2026‑09‑23 (registro de arriba).
 
 **Creado:** 2026‑09‑12 · **Autor:** Julián Calderón Almendros
-**Last updated:** 2026-10-28 — T19 (ADR‑203 de RPP): §4, la esencialidad, recompilada en el build (`FOL.Esencialidad0`) y con su ámbito; «ex_elim» refutado sin `Classical.choice`; T71, abierta. Antes, 2026-10-27 — T46 (ADR‑194 de RPP): §4.3, los once corolarios de `FOL.Estratos0`. Antes, el mismo día — T53 (ADR‑193 de RPP): §4.1, re‑medida con el mismo `Audit.lean` (la frontera, la misma) y vigilada desde hoy por `check-choice.bash` de RPP. Antes, 2026-10-05 — D7 ejecutada (ADR‑129 de RPP): los símbolos son `List Char`; notas ✏️ en §2.4, §4.3 y §4.4, donde se daba por vigente lo de `String` (nombres retirados o renombrados; «no hacía falta»). Antes, sin marca: el último cambio fue el del 2026-10-03 (la deuda de los cinco módulos 🧊, saldada).
+**Last updated:** 2026-10-28 — T72 (ADR‑215 de RPP): 57 módulos (entra `FOL/Sentence.lean`, sin ningún `axiom`). Antes, el mismo día — T19 (ADR‑203 de RPP): §4, la esencialidad, recompilada en el build (`FOL.Esencialidad0`) y con su ámbito; «ex_elim» refutado sin `Classical.choice`; T71, abierta. Antes, 2026-10-27 — T46 (ADR‑194 de RPP): §4.3, los once corolarios de `FOL.Estratos0`. Antes, el mismo día — T53 (ADR‑193 de RPP): §4.1, re‑medida con el mismo `Audit.lean` (la frontera, la misma) y vigilada desde hoy por `check-choice.bash` de RPP. Antes, 2026-10-05 — D7 ejecutada (ADR‑129 de RPP): los símbolos son `List Char`; notas ✏️ en §2.4, §4.3 y §4.4, donde se daba por vigente lo de `String` (nombres retirados o renombrados; «no hacía falta»). Antes, sin marca: el último cambio fue el del 2026-10-03 (la deuda de los cinco módulos 🧊, saldada).
 
 ---
 
