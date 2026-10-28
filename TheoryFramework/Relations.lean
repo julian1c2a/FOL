@@ -49,9 +49,24 @@ def TheoryEquivalent (T₁ T₂ : Theory F) : Prop :=
     - T₁ ≤ T₂ (extension of axioms), and
     - T₂ does not prove anything that T₁ cannot already prove.
     In the propositional / first-order setting without a built-in language
-    distinction, this collapses to deductive equivalence over T₁. -/
+    distinction, this collapses to deductive equivalence over T₁.
+
+⚠️ 2026‑10‑28 (T58, ADR‑217 de RPP): es el caso de lenguaje TOTAL, y por eso
+`equiv_of_conservative` es la definición leída al revés. La conservatividad de libro es RELATIVA A UN
+LENGUAJE —`T₂` puede probar fórmulas nuevas, pero ninguna nueva del lenguaje de `T₁`—: es
+`IsConservativeOver`, aquí abajo, y ésta es su caso `L = todo`
+(`isConservativeExtension_iff_over_all`, en `TheoryFramework/Conservativity.lean`). -/
 def IsConservativeExtension (T₁ T₂ : Theory F) : Prop :=
   T₁ ≤ T₂ ∧ ∀ f : F, T₂.proves f → T₁.proves f
+
+/-- ⭐ **Conservatividad RELATIVA A UN LENGUAJE** (2026‑10‑28, T58, ADR‑217 de RPP): `T₂` extiende `T₁`, y
+toda fórmula de `L` que `T₂` prueba ya la probaba `T₁`. `L` es el lenguaje de `T₁` como predicado sobre las
+fórmulas (en FOL⁼, «sus símbolos están en un conjunto dado»: `Instances.LangFormula`). Fuera de `L`, `T₂`
+puede probar lo que quiera: una extensión por definición prueba la definición. Los teoremas, en
+`TheoryFramework/Conservativity.lean`: el criterio semántico (`conservativeOver_of_expansion`) y, en FOL⁼, que
+una extensión por definición es conservativa (`Instances.fol0_extDef_conservative`). -/
+def IsConservativeOver (L : F → Prop) (T₁ T₂ : Theory F) : Prop :=
+  T₁ ≤ T₂ ∧ ∀ f : F, L f → T₂.proves f → T₁.proves f
 
 -- ============================================================
 -- Theory union and intersection
@@ -66,16 +81,17 @@ def TheoryIntersection (T₁ T₂ : Theory F) : Theory F where
   axioms f := T₁.axioms f ∧ T₂.axioms f
 
 -- Basic monotonicity lemmas for union
+-- (✏️ 2026‑10‑28, T58: `_` en vez de `f`, que no se usaba: los cuatro avisos de la auditoría.)
 theorem le_union_left (T₁ T₂ : Theory F) : T₁ ≤ TheoryUnion T₁ T₂ :=
-  fun f hf => Or.inl hf
+  fun _ hf => Or.inl hf
 
 theorem le_union_right (T₁ T₂ : Theory F) : T₂ ≤ TheoryUnion T₁ T₂ :=
-  fun f hf => Or.inr hf
+  fun _ hf => Or.inr hf
 
 theorem intersection_le_left (T₁ T₂ : Theory F) : TheoryIntersection T₁ T₂ ≤ T₁ :=
-  fun f ⟨h, _⟩ => h
+  fun _ ⟨h, _⟩ => h
 
 theorem intersection_le_right (T₁ T₂ : Theory F) : TheoryIntersection T₁ T₂ ≤ T₂ :=
-  fun f ⟨_, h⟩ => h
+  fun _ ⟨_, h⟩ => h
 
 end TheoryFramework

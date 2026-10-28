@@ -9,7 +9,7 @@
 
 ## Cifras
 
-* **57 módulos** (`FOL/` 46 + `FOL/Theorems/` 5 + `TheoryFramework/` 6), **111 aristas** `import` entre ellos, profundidad máxima **12**.
+* **60 módulos** (`FOL/` 46 + `FOL/Theorems/` 5 + `TheoryFramework/` 9), **117 aristas** `import` entre ellos, profundidad máxima **12**.
 * 2 `lean_lib`: `FOL` y `TheoryFramework`, las dos con `globs := #[.andSubmodules …]`: el build compila el barril y
   TODO su directorio (T15 de RPP, 2026-10-18). Que todo módulo esté además en el cierre de imports de las raíces
   (`cierre-imports.bash`: `FOL`, `TheoryFramework` y `TheoryFramework.Instances.FOL`) lo comprueba [L] de
@@ -21,15 +21,15 @@
 * **0** — `FOL.FOL`, `TF.Logic`
 * **1** — `Complexity`, `DecEq`, `Derives0`, `Semantics`, `SymClasses`, `Tactics`, `Thm.Eq`, `Thm.Neg`, `TF.Theory`
 * **2** — `Deduction`, `Eigenvariable`, `Enumeration`, `Eq0`, `Propositional0`, `Rename`, `Sentence`, `Soundness0`, `Thm.Derived`, `Thm.Impl`, `TF.Properties`, `TF.Relations`
-* **3** — `Herbrand0`, `Lift0`, `Thm.Quantifiers`, `TF.MetaTheorems`
-* **4** — `Core`, `Derives1`, `Henkin0`, `Prenex0`
+* **3** — `Herbrand0`, `Lift0`, `Thm.Quantifiers`, `TF.MetaTheorems`, `TF.Semantics`
+* **4** — `Core`, `Derives1`, `Henkin0`, `Prenex0`, `TF.Conservativity`
 * **5** — `Derives2`, `Fresh0`, `PrenexNF0`
 * **6** — `HenkinLimit0`, `Sequent0`
 * **7** — `Craig0`, `HerbrandBlock0`, `Lindenbaum0`, `NDtoLK0`
 * **8** — `Canonical0`, `Finitary0`, `Hauptsatz0`
 * **9** — `BlockExtraction0`, `Inconsistencia`, `Interpolation0`, `Inversion0`, `QFDecide0`, `SequentSound0`, `Skolem0`, `TF.Instances.FOL`
 * **10** — `Compacity0`, `Estratos0`, `SkolemN0`
-* **11** — `Esencialidad0`, `SkolemNF0`
+* **11** — `Esencialidad0`, `SkolemNF0`, `TF.Instances.FOLModels`
 * **12** — `SkolemHerbrand0`
 
 ## Grafo
@@ -140,12 +140,18 @@ graph BT
     Thm_Quantifiers["Thm.Quantifiers"] --> Thm_Derived["Thm.Derived"]
     Thm_Quantifiers["Thm.Quantifiers"] --> Thm_Impl["Thm.Impl"]
     Thm_Quantifiers["Thm.Quantifiers"] --> Thm_Neg["Thm.Neg"]
+    TF_Conservativity["TF.Conservativity"] --> TF_MetaTheorems["TF.MetaTheorems"]
+    TF_Conservativity["TF.Conservativity"] --> TF_Semantics["TF.Semantics"]
     TF_Instances_FOL["TF.Instances.FOL"] --> Canonical0["Canonical0"]
     TF_Instances_FOL["TF.Instances.FOL"] --> TF_MetaTheorems["TF.MetaTheorems"]
+    TF_Instances_FOLModels["TF.Instances.FOLModels"] --> Compacity0["Compacity0"]
+    TF_Instances_FOLModels["TF.Instances.FOLModels"] --> TF_Conservativity["TF.Conservativity"]
+    TF_Instances_FOLModels["TF.Instances.FOLModels"] --> TF_Instances_FOL["TF.Instances.FOL"]
     TF_MetaTheorems["TF.MetaTheorems"] --> TF_Properties["TF.Properties"]
     TF_MetaTheorems["TF.MetaTheorems"] --> TF_Relations["TF.Relations"]
     TF_Properties["TF.Properties"] --> TF_Theory["TF.Theory"]
     TF_Relations["TF.Relations"] --> TF_Theory["TF.Theory"]
+    TF_Semantics["TF.Semantics"] --> TF_Properties["TF.Properties"]
     TF_Theory["TF.Theory"] --> TF_Logic["TF.Logic"]
 ```
 
@@ -174,16 +180,18 @@ graph BT
 | `FOL.Soundness0` | 2 | `Derives0`, `Semantics` | `Canonical0`, `Esencialidad0`, `Inconsistencia` |
 | `FOL.Theorems.Derived` | 2 | `FOL.FOL`, `Thm.Neg` | `Core`, `Thm.Quantifiers` |
 | `FOL.Theorems.Impl` | 2 | `FOL.FOL`, `Tactics` | `Core`, `Thm.Quantifiers` |
-| `TheoryFramework.Properties` | 2 | `TF.Theory` | `TF.MetaTheorems` |
+| `TheoryFramework.Properties` | 2 | `TF.Theory` | `TF.MetaTheorems`, `TF.Semantics` |
 | `TheoryFramework.Relations` | 2 | `TF.Theory` | `TF.MetaTheorems` |
 | `FOL.Herbrand0` | 3 | `Eq0`, `Propositional0` | `Prenex0`, `Sequent0` |
 | `FOL.Lift0` | 3 | `Eigenvariable` | `Craig0`, `Derives1`, `Henkin0`, `Prenex0` |
 | `FOL.Theorems.Quantifiers` | 3 | `FOL.FOL`, `Thm.Derived`, `Thm.Impl`, `Thm.Neg` | `Core` |
-| `TheoryFramework.MetaTheorems` | 3 | `TF.Properties`, `TF.Relations` | `TF.Instances.FOL` |
+| `TheoryFramework.MetaTheorems` | 3 | `TF.Properties`, `TF.Relations` | `TF.Conservativity`, `TF.Instances.FOL` |
+| `TheoryFramework.Semantics` | 3 | `TF.Properties` | `TF.Conservativity` |
 | `FOL.Core` | 4 | `Deduction`, `FOL.FOL`, `Tactics`, `Thm.Derived`, `Thm.Eq`, `Thm.Impl`, `Thm.Neg`, `Thm.Quantifiers` | — |
 | `FOL.Derives1` | 4 | `Lift0` | `Derives2`, `PrenexNF0` |
 | `FOL.Henkin0` | 4 | `Lift0` | `Fresh0` |
 | `FOL.Prenex0` | 4 | `Herbrand0`, `Lift0` | `PrenexNF0` |
+| `TheoryFramework.Conservativity` | 4 | `TF.MetaTheorems`, `TF.Semantics` | `TF.Instances.FOLModels` |
 | `FOL.Derives2` | 5 | `Derives1`, `Thm.Eq` | `Estratos0`, `Sequent0` |
 | `FOL.Fresh0` | 5 | `Henkin0`, `Rename`, `SymClasses` | `HenkinLimit0`, `Inconsistencia` |
 | `FOL.PrenexNF0` | 5 | `Derives1`, `Prenex0` | `SkolemNF0` |
@@ -203,16 +211,17 @@ graph BT
 | `FOL.QFDecide0` | 9 | `Hauptsatz0` | — |
 | `FOL.SequentSound0` | 9 | `Canonical0`, `Sequent0` | `Esencialidad0`, `Estratos0` |
 | `FOL.Skolem0` | 9 | `Canonical0` | `Compacity0`, `SkolemN0` |
-| `TheoryFramework.Instances.FOL` | 9 | `Canonical0`, `TF.MetaTheorems` | — |
-| `FOL.Compacity0` | 10 | `Canonical0`, `Skolem0` | — |
+| `TheoryFramework.Instances.FOL` | 9 | `Canonical0`, `TF.MetaTheorems` | `TF.Instances.FOLModels` |
+| `FOL.Compacity0` | 10 | `Canonical0`, `Skolem0` | `TF.Instances.FOLModels` |
 | `FOL.Estratos0` | 10 | `Canonical0`, `Derives2`, `Hauptsatz0`, `Inconsistencia`, `Interpolation0`, `NDtoLK0`, `SequentSound0` | — |
 | `FOL.SkolemN0` | 10 | `Skolem0` | `Esencialidad0`, `SkolemNF0` |
 | `FOL.Esencialidad0` | 11 | `Canonical0`, `DecEq`, `Inconsistencia`, `SequentSound0`, `SkolemN0`, `Soundness0` | — |
 | `FOL.SkolemNF0` | 11 | `PrenexNF0`, `Sequent0`, `SkolemN0` | `SkolemHerbrand0` |
+| `TheoryFramework.Instances.FOLModels` | 11 | `Compacity0`, `TF.Conservativity`, `TF.Instances.FOL` | — |
 | `FOL.SkolemHerbrand0` | 12 | `BlockExtraction0`, `SkolemNF0` | — |
 
 ## Barriles
 
 * `FOL.lean` importa 42 módulos.
-* `TheoryFramework.lean` importa 5 módulos.
+* `TheoryFramework.lean` importa 7 módulos.
 

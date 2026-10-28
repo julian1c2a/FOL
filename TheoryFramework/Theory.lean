@@ -29,7 +29,12 @@ variable {F : Type} [LogicSystem F]
 def proves (T : Theory F) (f : F) : Prop :=
   DerivesSet T.axioms f
 
-/-- A theory models `f` if some finite subset of its axioms semantically entails `f`. -/
+/-- A theory models `f` if some finite subset of its axioms semantically entails `f`.
+
+⚠️ 2026‑10‑28 (T58, ADR‑217 de RPP): es la consecuencia FINITA, no la semántica de la teoría —«todo modelo de
+TODOS sus axiomas satisface `f`»—, que el marco no podía decir sin modelos. Ésa es `Theory.entails`
+(`TheoryFramework/Semantics.lean`), y coinciden exactamente cuando la lógica es compacta
+(`Theory.models_iff_entails`). -/
 def models (T : Theory F) (f : F) : Prop :=
   EntailsSet T.axioms f
 

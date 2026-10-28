@@ -5,11 +5,14 @@ License: MIT
 -/
 import FOL
 import TheoryFramework.Instances.FOL
+-- ✏️ 2026-10-28 (T58, ADR-217 de RPP): y la de los modelos, que trae `Semantics` y `Conservativity`; sin ella, `[B]`
+-- daba por muertas las citas de sus declaraciones (lo vio en su primera ejecución).
+import TheoryFramework.Instances.FOLModels
 
 /-! `scripts/VolcarEntorno.lean` — el entorno de Lean de FOL, para `[B]` de `check-doc-sync.bash` (T04 y ADR‑166 de RPP).
 
 Escribe en el fichero de la variable `VOLCADO` (sin ella, en la salida estándar), una por línea, cada constante no
-interna del entorno de `import FOL` y de la instancia de TheoryFramework (con «P» si su módulo es de FOL o de
+interna del entorno de `import FOL` y de las instancias de TheoryFramework (con el marco entero) (con «P» si su módulo es de FOL o de
 TheoryFramework, y «L» si no), cada opción registrada (con «O»), cada módulo importado (con «M») y cada orden, un token
 del analizador que empieza por «#» (con «T»).
 No está en el build: necesita el build hecho. ⛔ M‑3: en local se ejecuta desde la raíz de RPP

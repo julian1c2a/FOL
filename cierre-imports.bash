@@ -15,10 +15,11 @@
 # ⛔ Una definición delicada vive en UN sitio: las raíces de FOL están AQUÍ y en ningún otro fichero. El código es
 # el mismo que el de `../ROBINSON_PlusPlus/cierre-imports.bash`, salvo `RAICES` y `PREFIJOS` (RPP lo comprueba). La
 # tercera raíz, `TheoryFramework.Instances.FOL`, la compila el `globs` y el barril `TheoryFramework.lean` NO la importa
-# a propósito (arrastraría toda la capa clásica de FOL; ver su comentario).
+# a propósito (arrastraría toda la capa clásica de FOL; ver su comentario). ✏️ 2026-10-28 (T58, ADR-217 de RPP): la
+# cuarta, `TheoryFramework.Instances.FOLModels` (FOL⁼ con sus modelos), por lo mismo: importa `FOL.Compacity0`.
 
 export PATH="/usr/bin:$PATH"
-RAICES="FOL TheoryFramework TheoryFramework.Instances.FOL"
+RAICES="FOL TheoryFramework TheoryFramework.Instances.FOL TheoryFramework.Instances.FOLModels"
 PREFIJOS="FOL TheoryFramework"
 
 cd "$(dirname "$0")" || exit 2

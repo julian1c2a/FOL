@@ -60,7 +60,13 @@ class SoundLogic (F : Type) [LogicSystem F] : Prop where
   sound : ∀ {Γ : List F} {f : F},
     LogicSystem.derives Γ f → LogicSystem.semanticEntails Γ f
 
-/-- **Completitud (fuerte)** — una PROPIEDAD, no parte de «ser un sistema lógico».
+/-- **Completitud para premisas FINITAS** — una PROPIEDAD, no parte de «ser un sistema lógico».
+
+⚠️ 2026‑10‑28 (T58, ADR‑217 de RPP): este título decía «Completitud (fuerte)», y `Γ` es una LISTA: es la
+completitud para premisas finitas. La fuerte —para una teoría cualquiera, `T.entails f → T.proves f`, con la
+consecuencia semántica de TODOS sus axiomas— es ésta más la compacidad: `Theory.proves_of_entails`
+(`TheoryFramework/Semantics.lean`); y con la solidez, la compacidad es exactamente la diferencia
+(`compact_of_strongComplete`). En FOL⁼, `Instances.fol0_proves_iff_entails`.
 
 ⛔ **Corrección 2026‑09‑18 (ADR‑072)**: la nota que había aquí —«`FOL/Completeness.lean`
 prueba `completeness` apoyándose en **cinco `axiom`**»— era **falsa por partida doble** y ésta

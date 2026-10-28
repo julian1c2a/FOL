@@ -25,6 +25,10 @@ variable {F : Type} [LogicSystem F]
 
 /-- For any theory, proving and modeling coincide — lifted from the logic base.
 
+✏️ 2026‑10‑28 (T58, ADR‑217 de RPP): `models` es la consecuencia FINITA (una parte finita de los axiomas). Con la
+consecuencia semántica de la teoría entera, `Theory.proves_iff_entails` (`TheoryFramework/Semantics.lean`), que
+pide además la compacidad.
+
 ⚠️ **CONDICIONAL desde 2026‑09‑12 (A‑6)**: pide `[SoundLogic F]` y `[CompleteLogic F]`
 **explícitamente**. Antes las obtenía «gratis» porque eran campos de `LogicSystem` — es
 decir, el marco las **postulaba** para toda instancia. ⛔ Para `FOL` sobre `Derives`, la
@@ -78,7 +82,11 @@ theorem consistent_of_le {T₁ T₂ : Theory F} (hle : T₁ ≤ T₂)
 -- Extension and equivalence
 -- ============================================================
 
-/-- Conservative extension implies deductive equivalence. -/
+/-- Conservative extension implies deductive equivalence.
+
+⚠️ 2026‑10‑28 (T58, ADR‑217 de RPP): sin lenguaje, es la definición de `IsConservativeExtension` leída al revés.
+La de libro, relativa a un lenguaje, es `IsConservativeOver`, y su versión de esto, `IsConservativeOver.proves_iff`
+(`TheoryFramework/Conservativity.lean`). -/
 theorem equiv_of_conservative {T₁ T₂ : Theory F}
     (hCons : IsConservativeExtension T₁ T₂) : TheoryEquivalent T₁ T₂ :=
   fun f => ⟨fun h => proves_monotone hCons.left h, fun h => hCons.right f h⟩
