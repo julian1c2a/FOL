@@ -19,7 +19,7 @@ cd MyProject
 ### Step 2 — Run setup
 
 ```bash
-bash setup.bash MyProject "Your Full Name" your-github-username
+bash setup.bash MyProject "Your Full Name" your-github-username   # ⛔ en ESTE repositorio, retirado (T52, ADR-201 de RPP): era el paso 2 de la plantilla
 ```
 
 This single command:
@@ -241,7 +241,7 @@ make sorry                          # any sorry left?
 ## Quick Reference
 
 ```bash
-bash setup.bash Name "Author" user   # initialize new project
+bash setup.bash Name "Author" user   # initialize new project (⛔ retirado aquí: T52, ADR-201 de RPP)
 bash git-lock.bash init              # install git hook (once per clone)
 bash git-lock.bash list              # show locked files
 bash git-lock.bash lock File.lean    # lock a file

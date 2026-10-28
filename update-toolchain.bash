@@ -8,6 +8,7 @@
 #     cd ../ROBINSON_PlusPlus && bash update-toolchain.bash [vX.Y.Z]
 #
 # El bump, si se decide, lo hace un ADR, a mano, en los dos repos (M‑12: FOL primero).
+export PATH="/usr/bin:$PATH"
 echo "⛔ update-toolchain.bash está retirado en FOL (T42, ADR-176 de RPP)." >&2
 echo "   El par se prueba desde ROBINSON_PlusPlus: cd ../ROBINSON_PlusPlus && bash update-toolchain.bash ${1:-}" >&2
 exit 2

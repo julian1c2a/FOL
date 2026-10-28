@@ -276,6 +276,29 @@ else
   echo "  ❌ SIN MEDIR: esto no es un repositorio de git, y sin el índice no sé qué ve la CI."
   FAIL=1
 fi
+
+# ─── [H] PATH HIGIÉNICO EN TODO SCRIPT — ROJO ──────────────────────────────────
+# ⭐ AÑADIDO el 2026-10-28 (T52, ADR-201 de RPP). Lanzado desde una consola de Windows, `bash` hereda su PATH, y `head`,
+# `grep`, `sort` o `find` pueden resolver a otro programa (le pasó a este script el 2026-09-09: cuatro controles vacíos y
+# verde). Todo `.bash` versionado antepone el /usr/bin de MSYS2 (`export PATH="/usr/bin…`) antes de su código. Salvo
+# `b-control.bash`, que no se ejecuta (lo carga este script con `source` y hereda su PATH), y lo de `doc/registro/`,
+# que es registro tal cual.
+echo
+echo "════ [H] PATH HIGIÉNICO EN TODO SCRIPT — ROJO ════"
+H_TODOS=$(git ls-files '*.bash' | grep -v '^doc/registro/' | grep -vx 'b-control.bash')
+H_SIN=$(printf '%s\n' "$H_TODOS" | while IFS= read -r f; do
+  [ -n "$f" ] || continue
+  grep -q '^[^#]*export PATH="/usr/bin' "$f" || echo "$f"; done)
+if [ -z "$H_TODOS" ]; then
+  echo "  ❌ SIN MEDIR: git no lista ningún .bash."
+  FAIL=1
+elif [ -n "$H_SIN" ]; then
+  echo "  ✗ scripts sin el PATH higiénico:"
+  printf '%s\n' "$H_SIN" | sed 's/^/      /'
+  FAIL=1
+else
+  echo "  ✓ los $(printf '%s\n' "$H_TODOS" | grep -c .) scripts lo llevan (b-control.bash se carga con source)"
+fi
 echo
 
 # ─── 2. CIFRAS OBSOLETAS ─────────────────────────────────────────────────────

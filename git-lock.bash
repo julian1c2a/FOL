@@ -31,6 +31,7 @@
 #   - Create ModuleExt.lean, import the frozen module, reopen its namespace.
 #   - See AI-GUIDE.md section 21 for the full extension protocol.
 
+export PATH="/usr/bin:$PATH"
 LOCK_LIST="locked_files.txt"
 FROZEN_LIST="frozen_files.txt"
 

@@ -17,6 +17,7 @@
 # tercera raíz, `TheoryFramework.Instances.FOL`, la compila el `globs` y el barril `TheoryFramework.lean` NO la importa
 # a propósito (arrastraría toda la capa clásica de FOL; ver su comentario).
 
+export PATH="/usr/bin:$PATH"
 RAICES="FOL TheoryFramework TheoryFramework.Instances.FOL"
 PREFIJOS="FOL TheoryFramework"
 
