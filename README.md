@@ -117,7 +117,7 @@ repo/
 └── TheoryFramework.lean     # Barrel TheoryFramework
 ```
 
-## Installation — ⛔ FOL NO se construye desde FOL (M-3): `lake build "@FOL/FOL" "@FOL/TheoryFramework"` desde la raíz de `../ROBINSON_PlusPlus`; lo de abajo es de 2026-05-16
+## Installation — FOL se construye desde la raíz de `../ROBINSON_PlusPlus` (`lake build "@FOL/FOL" "@FOL/TheoryFramework"`), o desde aquí con el MISMO toolchain que RPP (M‑1, T16: `make build` lo comprueba con `guarda-toolchain.bash`); lo de abajo es de 2026-05-16
 
 ```bash
 git clone https://github.com/julian1c2a/ProjectName.git
@@ -150,7 +150,7 @@ import TheoryFramework.Instances.FOL   -- el barril `TheoryFramework` no importa
 ## Development Workflow
 
 ```bash
-make build      # ⛔ es `lake build` DESDE FOL: prohibido por M-3 (ver Installation); el Makefile no lo impide
+make build      # `lake build` desde FOL, tras `guarda-toolchain.bash` (M‑1: el mismo toolchain que RPP; si no, se niega)
 make build-all  # TODAS las librerias del lakefile, explicitamente
 make sorry      # check-sorry.bash
 make axioms     # check-axioms.bash  ← el censo de `axiom` (A-1)

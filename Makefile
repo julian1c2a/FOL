@@ -6,6 +6,7 @@
 
 ## Build the project (los DOS `@[default_target]`: FOL y TheoryFramework)
 build:
+	@bash guarda-toolchain.bash
 	lake build
 
 ## Build TODAS las librerías del lakefile, explícitamente.
@@ -15,6 +16,7 @@ build:
 ## `TheoryFramework`, entró al build y su `Instances/FOL.lean` resultó estar roto.
 ## ⇒ Si se añade una `lean_lib`, AÑADIRLA AQUÍ.
 build-all:
+	@bash guarda-toolchain.bash
 	lake build FOL TheoryFramework
 
 ## Censo de `axiom` de Lean (A-1)

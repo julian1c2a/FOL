@@ -34,7 +34,7 @@
 > «control VACÍO» — y sale **verde sin haber comprobado nada**. 🔑 *Un control sin nada que
 > contrastar no aprueba: se abstiene, y la abstención se lee como aprobado.*
 >
-> ⛔ La cifra de **jobs** NO se publica aquí: FOL no se construye desde FOL (M‑3), y quien la
+> ⛔ La cifra de **jobs** NO se publica aquí: con el mismo toolchain FOL puede construirse desde aquí (M‑1, T16), pero quien la
 > mide es `../ROBINSON_PlusPlus`: `lake build "@FOL/FOL" "@FOL/TheoryFramework"` desde su raíz (⚠️ el `lake build` a secas de RPP sólo compila lo que RPP importa, y deja fuera la capa `₀`).
 
 ---

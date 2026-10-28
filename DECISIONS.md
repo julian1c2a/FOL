@@ -1,6 +1,6 @@
 # Decisiones de Diseño — FOL
 
-**Última actualización:** 2026-07-12
+**Última actualización:** 2026-10-28 — §MANDATORIES: M-1, el mismo toolchain que RPP (T16, ADR-205 de RPP), y M-2, ramas, stash y worktrees (T79, ADR-204 de RPP). Antes, 2026-07-12
 **Autor**: Julián Calderón Almendros
 
 Registro de decisiones arquitectónicas (ADR) de este proyecto. Cada entrada documenta
@@ -15,11 +15,14 @@ Registro de decisiones arquitectónicas (ADR) de este proyecto. Cada entrada doc
 
 ## ⚠️ MANDATORIES (reglas vinculantes de este proyecto)
 
-**Sin MANDATORIES declaradas** — este proyecto no tiene directivas fundacionales no
-negociables más allá de los ADR de abajo. En particular, a diferencia de proyectos
-hermanos como AczelSetTheory, **FOL no prohíbe `Classical.*`**: se usa con normalidad
-(42 usos verificados en 2026-07-12) en las pruebas de completitud (`Completeness.lean`)
-y en los módulos `Classical.lean` de cada sub-librería.
+| # | MANDATORY | Origen | Verificación |
+|---|---|---|---|
+| **M-1** | ⛔ **FOL, ROBINSON_PlusPlus y todo consumidor de FOL por ruta, en el MISMO toolchain: un bump mueve el par a la vez** (FOL primero: M‑12 de RPP). Con el mismo toolchain da lo mismo construir FOL desde aquí o desde la raíz de RPP (MEDIDO en un par clonado: código 0, ningún módulo reconstruido, ningún «incompatible header»; `doc/registro/2026-10-28-t16/` de RPP); con toolchains distintos, los dos escribirían en el mismo .lake de FOL | T16; ADR‑202 y ADR‑205 de RPP (es su M‑3, reescrita) | la CI compara los dos toolchains (el paso «El mismo toolchain en FOL y en RPP» de `.github/workflows/build.yml`); en local, `guarda-toolchain.bash` antes de cada lake del `Makefile` y de `check-axioms.bash`; el bump, sólo desde RPP (el `update-toolchain.bash` de aquí está retirado) |
+| **M-2** | **Ramas, stash y worktrees.** Una rama se borra, local y remota, en cuanto su punta está en `master`; una rama que se abandona sin fusionar se archiva antes en una etiqueta anotada `archivo/<rama>-<fecha de su último commit>`, subida, y después se borra, cada paso en su propia orden; un stash o un worktree no sobreviven a la sesión que los crea | T79; ADR‑204 de RPP | a mano al cerrar una sesión: `git branch -a --no-merged master`, `git stash list` y `git worktree list` |
+
+> **Sobre `Classical.*`:** a diferencia de proyectos hermanos como AczelSetTheory, **FOL no lo prohíbe**; la frontera
+> exacta del `Classical.choice`, MEDIDA, está en `AXIOMS.md` §4. *(✏️ 2026‑10‑28, T16: aquí decía «Sin MANDATORIES
+> declaradas» y «42 usos verificados en 2026-07-12», una cifra de entonces que nadie re‑ejecuta.)*
 
 ---
 

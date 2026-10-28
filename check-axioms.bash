@@ -39,9 +39,12 @@ ESPERADO_TF=0
 # 5 a 3 y luego a 1 axioma (2026-09-13: la enumeración de fórmulas, y los dos `termEqv_*_congr`),
 # y la cifra quedó escrita en SEIS documentos sin que NADA la comprobara. Un número escrito y no
 # medido se pudre.
-# ⚠️ NO incluye `cuarentena/librerias-retiradas/` (15 axiomas): son librerías MUERTAS, fuera del
-# lakefile, y su cifra no es una promesa de nadie.
+# ⚠️ NO incluye `cuarentena/librerias-retiradas/`: son librerías MUERTAS, fuera del lakefile.
 ESPERADO_CUAR=0
+# ⭐ 2026-10-28 (T57, ADR-207 de RPP): y las librerías retiradas, con su cifra EXACTA. Hasta hoy sus 15 `axiom` se
+# contaban y no se comparaban con nada («su cifra no es una promesa de nadie»); el propietario decide vigilarlos, no
+# borrarlos (cuarentena/README.md decidió no tocarlos). Uno más o uno menos, rojo.
+ESPERADO_RET=15
 
 STRIP_AWK="$PWD/strip-lean.awk"
 if [ ! -f "$STRIP_AWK" ]; then
@@ -101,6 +104,8 @@ if ! command -v lake >/dev/null 2>&1; then
   echo "      Lánzalo desde PowerShell. Un control que no se ejecuta NO es un control."
   exit 2
 fi
+# ⭐ 2026-10-28 (T16, ADR-205 de RPP): el `lake env` de abajo corre desde FOL; con otro toolchain que RPP, se niega (M-1).
+bash guarda-toolchain.bash || exit 2
 # ⚠️ ÁMBITO (ADR-116): el entorno lee los `.olean` que haya; la cifra es la del ÚLTIMO build, y se dice
 # de cuándo es. (Se probó a comprobar la frescura por fechas y daba falsos «caducados»: tras cambiar de
 # rama, git toca ficheros que Lake no recompila porque el contenido es el mismo.) En la CI el build es
@@ -326,9 +331,15 @@ if [ -d cuarentena ]; then
   NC=$(( $(cuenta "$TODO_C") - $(cuenta "$RET_C") ))
   NR=$(cuenta "$RET_C")
   if [ "$NC" = "$ESPERADO_CUAR" ]; then
-    printf "  ✓ %-18s %2s axiom  (+%s en librerias-retiradas, muertas)\n" "cuarentena" "$NC" "$NR"
+    printf "  ✓ %-18s %2s axiom\n" "cuarentena" "$NC"
   else
     printf "  ✗ %-18s %2s axiom — este script dice %s\n" "cuarentena" "$NC" "$ESPERADO_CUAR"
+    FAIL=1
+  fi
+  if [ "$NR" = "$ESPERADO_RET" ]; then
+    printf "  ✓ %-18s %2s axiom  (librerías muertas: vigilados, no borrados; T57)\n" "librerias-retiradas" "$NR"
+  else
+    printf "  ✗ %-18s %2s axiom — este script dice %s (T57: se vigilan con cifra exacta)\n" "librerias-retiradas" "$NR" "$ESPERADO_RET"
     FAIL=1
   fi
 else

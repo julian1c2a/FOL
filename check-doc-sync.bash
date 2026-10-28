@@ -18,11 +18,13 @@
 # [A], [C] y [D] son OBJETIVOS y rompen el check. [A2], [B] y [E] son AVISOS que piden
 # juicio: hay menciones legítimas de símbolos inexistentes y cifras históricas.
 #
-# ⛔⛔ ESTE SCRIPT **NO EJECUTA `lake build`**, y no es un olvido — es la regla M-3 del
-# proyecto: FOL **no se construye desde FOL** (mezcla oleans con los que ROBINSON_PlusPlus
-# genera al compilarlo como dependencia, y produce «incompatible header»). La cifra de jobs
-# de FOL la mide y la publica RPP, que sí puede construirlo. Aquí, por tanto, NO hay control
+# ⛔⛔ ESTE SCRIPT **NO EJECUTA `lake build`**: la cifra de jobs de FOL la mide y la publica RPP
+# (`lake build "@FOL/FOL" "@FOL/TheoryFramework"` desde su raíz). Aquí, por tanto, NO hay control
 # [A] de jobs, y `--quick` se conserva sólo por compatibilidad de invocación.
+# ✏️ 2026-10-28 (T16, ADR-205 de RPP): decía que era la regla M-3, «FOL no se construye desde FOL»
+# (que mezcla oleans con los de RPP y da «incompatible header»). Medido en un par clonado: con el
+# MISMO toolchain no pasa nada. La regla de hoy es ésa, el mismo toolchain (M-1 de DECISIONS.md,
+# y `guarda-toolchain.bash` en las entradas que ejecutan lake desde aquí).
 #
 # Uso:
 #   bash check-doc-sync.bash            # comprobación completa
@@ -171,7 +173,7 @@ else
   SORRY_MISSING=1
 fi
 
-# ⛔ M-3: aquí NO se ejecuta `lake build`. Ver la cabecera. `JOBS` queda vacío a propósito
+# Aquí NO se ejecuta `lake build` (ver la cabecera). `JOBS` queda vacío a propósito
 # y el control [A] de jobs no existe en esta copia — lo hace RPP, que sí construye FOL.
 JOBS=""
 LAKE_MISSING=0
@@ -181,7 +183,7 @@ printf "  módulos activos : %s  (FOL/ %s + FOL/Theorems/ %s + TheoryFramework/ 
 printf "  cuarentena      : %s\n" "$QUAR"
 printf "  axiom de Lean   : %s\n" "$AXIOMS"
 printf "  sorry           : %s\n" "$SORRY"
-echo "  build jobs      : no se mide aquí (M-3: FOL no se construye desde FOL)"
+echo "  build jobs      : no se mide aquí (la mide RPP, que construye los dos objetivos de FOL)"
 [ "$SORRY_MISSING" = "1" ] && echo "  ⚠️  sorry         : SIN MEDIR — check-sorry.bash no dijo ni 'No sorry found' ni 'Total: N sorry'."
 [ "$AXIOMS_MISSING" = "1" ] && echo "  ⚠️  axiom de Lean : SIN MEDIR — el autotest de cuenta_axiomas no dio 9 (¿strip-lean.awk, LC_ALL?)."
 echo
@@ -544,8 +546,8 @@ echo "════ [B] CITAS MUERTAS — ROJO, con trinquete POR CITA (T04 y ADR
 # antepasado de HEAD; sólo baja, salvo lo que un cambio del núcleo vea de más sobre los documentos de la base
 # (b-control.bash lo explica; ADR-167 de RPP). En FOL el push va directo a master: en local la base es `origin/master`
 # (lo último subido); en la CI, el commit de ANTES del push (`B_BASE_REF`, que pone el workflow).
-# ⛔ M-3: el entorno de Lean lo vuelca `scripts/VolcarEntorno.lean`. En local, desde la raíz de RPP (que es donde se
-# construye FOL); en la CI de FOL, desde FOL, que acaba de construirse ahí. Si no se puede, no se mide, y es rojo.
+# El entorno de Lean lo vuelca `scripts/VolcarEntorno.lean`. En local, desde la raíz de RPP (que es donde se
+# construye FOL; con el mismo toolchain daría lo mismo desde aquí: M-1, T16); en la CI de FOL, desde FOL, que acaba de construirse ahí. Si no se puede, no se mide, y es rojo.
 B_BASE_REF="${B_BASE_REF:-refs/remotes/origin/master}"
 export GIT_NO_REPLACE_OBJECTS=1
 # ⛔ En FOL NO hay subida por ADR (ADR-167 de RPP): sus ADR viven en RPP, que se sube DESPUÉS (M-12), así que aquí no se
@@ -606,7 +608,7 @@ if [ "$(wc -l < "$DECLS" | tr -d ' ')" -lt "$B_SUELO" ] || [ -n "$B_FALTA" ]; th
   echo "  ❌ NO PUDE MEDIR [B]: $(wc -l < "$DECLS" | tr -d ' ') declaraciones (suelo $B_SUELO), y faltan:${B_FALTA:- ninguna} (¿strip-lean.awk?)."
   B_FAIL=1; B_MEDIDO=0
 fi
-# el entorno de Lean (M-3: en local, desde la raíz de RPP; en la CI de FOL, desde FOL)
+# el entorno de Lean (en local, desde la raíz de RPP; en la CI de FOL, desde FOL)
 if [ "$B_MEDIDO" = "1" ]; then
   B_VOLCADO=0
   # (Lean es un programa de Windows en la máquina de desarrollo: la ruta del volcado, en su forma; en Linux, tal cual)
@@ -618,7 +620,7 @@ if [ "$B_MEDIDO" = "1" ]; then
   elif [ -n "${CI:-}" ]; then
     VOLCADO="$B_ENV_W" lake env lean scripts/VolcarEntorno.lean > /dev/null 2>&1 && B_VOLCADO=1
   else
-    echo "  ❌ NO PUDE MEDIR [B]: sin RPP construido al lado ni la CI, no vuelco el entorno de Lean (M-3)."
+    echo "  ❌ NO PUDE MEDIR [B]: sin RPP construido al lado ni la CI, no vuelco el entorno de Lean."
   fi
   if [ "$B_VOLCADO" = "1" ] && { [ "$(wc -l < "$B_ENV" | tr -d ' ')" -lt 50000 ] || ! grep -q '^FOL\.Canonical0\.completeness₀	P$' "$B_ENV" \
        || ! grep -q '^Init\.Classical	M$' "$B_ENV"; }; then

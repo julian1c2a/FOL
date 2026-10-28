@@ -1,7 +1,7 @@
 #!/bin/bash
 # update-toolchain.bash — ⛔ RETIRADO aquí el 2026‑10‑20 (T42, ADR‑176 de RPP).
 #
-# Compilaba FOL desde ESTE directorio (`lake build`, que usa el toolchain de FOL: lo prohíbe M‑3) y, si compilaba,
+# Compilaba FOL desde ESTE directorio (`lake build`, con el toolchain de FOL, sin mirar el de RPP) y, si compilaba,
 # COMMITEABA él solo el `lean-toolchain`. El par (RPP, FOL) se prueba junto, con la misma versión, desde la raíz de
 # ROBINSON_PlusPlus y en árboles aparte, sin commit:
 #

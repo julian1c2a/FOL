@@ -119,7 +119,7 @@ jobs:
       # «✅ Complete (1 sorry pendiente)» en la tabla de fases) y los SEIS módulos de
       # `TheoryFramework/` sin proyectar en REFERENCE.md — de los cuales CUATRO quedaban
       # absueltos por SUBCADENA con el matcher que traía RPP.
-      # ⛔ No ejecuta `lake build` (M-3: FOL no se construye desde FOL); la cifra de jobs
+      # No ejecuta `lake build` (lo hace el paso «Build» de arriba); la cifra de jobs
       # la mide y la publica ROBINSON_PlusPlus.
       # ⚠️ [B] mira el repo hermano por si los docs de FOL citan símbolos VIVOS de RPP con sus
       # prefijos; medido el 2026‑10‑02, hoy no hay ninguno (los cuatro `ax_` citados están
@@ -176,3 +176,20 @@ jobs:
         env:
           RPP_DIR: _rpp
           B_BASE_REF: ${{ github.event_name == 'pull_request' && github.event.pull_request.base.sha || (github.ref == 'refs/heads/master' && github.event.before || '') }}
+
+      # ⭐ 2026-10-28 (T38; ADR-207 de RPP): un push a master de FOL, ya en verde, lanza la CI de RPP, que construye contra
+      # el master de FOL (ADR-073); hasta hoy, una regresión de FOL la veía la cruzada diaria de RPP, o su push siguiente.
+      # Pide un token de grano fino del propietario con «Actions: Read and write» SÓLO sobre ROBINSON_PlusPlus, en el
+      # secreto RPP_DISPATCH_TOKEN (workflow_dispatch, no repository_dispatch: éste pediría «Contents: write», que deja
+      # subir código). Sin el secreto, lo DICE y no hace nada: un control tiene tres resultados.
+      - name: Lanzar la CI de RPP contra este master de FOL
+        if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+        env:
+          GH_TOKEN: ${{ secrets.RPP_DISPATCH_TOKEN }}
+        run: |
+          if [ -z "$GH_TOKEN" ]; then
+            echo "::notice::sin el secreto RPP_DISPATCH_TOKEN: la CI de RPP no se lanza desde aquí (la cubre su cruzada diaria)"
+            exit 0
+          fi
+          gh workflow run build.yml -R julian1c2a/ROBINSON_PlusPlus --ref master
+          echo "✓ lanzada la CI de RPP contra el master de FOL $GITHUB_SHA"
