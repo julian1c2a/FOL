@@ -185,6 +185,34 @@ jobs:
           RPP_DIR: _rpp
           B_BASE_REF: ${{ github.event_name == 'pull_request' && github.event.pull_request.base.sha || (github.ref == 'refs/heads/master' && github.event.before || '') }}
 
+      # ⭐ 2026-10-28 (ADR-216 de RPP): la CADUCIDAD del token de RPP_DISPATCH_TOKEN, a la vista. El paso de abajo sólo
+      # AVISA si no puede lanzar (a propósito: un master correcto no se pone rojo por un token), y un token caducado se
+      # quedaría en un aviso que nadie lee. GitHub devuelve la fecha en la cabecera «github-authentication-token-expiration»
+      # de cada respuesta a un token personal con caducidad: se imprime, va al resumen del run, y a menos de 30 días es
+      # AVISO. Corre en todo push, también en las ramas `ci/…` (ven el secreto): se ve antes de llegar a master.
+      - name: La caducidad del token de RPP
+        if: github.event_name == 'push'
+        env:
+          GH_TOKEN: ${{ secrets.RPP_DISPATCH_TOKEN }}
+        run: |
+          if [ -z "$GH_TOKEN" ]; then
+            echo "sin el secreto RPP_DISPATCH_TOKEN: no hay caducidad que medir"
+            exit 0
+          fi
+          # (`|| true`: sin la cabecera, el `grep` falla, y eso es un resultado, no un error del paso.)
+          CAB=$(gh api -i rate_limit 2>/dev/null | tr -d '\r' | grep -i '^github-authentication-token-expiration:' | cut -d: -f2- | sed 's/^ *//' || true)
+          if [ -z "$CAB" ]; then
+            echo "::warning::no pude leer la caducidad del token de RPP_DISPATCH_TOKEN (la respuesta no trae la cabecera: ¿caducado, revocado o sin fecha?)"
+            exit 0
+          fi
+          FIN=$(date -u -d "$CAB" +%s) || { echo "::warning::la caducidad del token de RPP_DISPATCH_TOKEN, ilegible: «$CAB»"; exit 0; }
+          DIAS=$(( (FIN - $(date -u +%s)) / 86400 ))
+          echo "el token de RPP_DISPATCH_TOKEN caduca el $CAB (quedan $DIAS días)"
+          printf '\n### El token de RPP_DISPATCH_TOKEN\n\ncaduca el **%s** (quedan %s días)\n' "$CAB" "$DIAS" >> "$GITHUB_STEP_SUMMARY"
+          if [ "$DIAS" -lt 30 ]; then
+            echo "::warning::el token de RPP_DISPATCH_TOKEN caduca el $CAB (quedan $DIAS días): renuévalo (Settings → Developer settings → Fine-grained tokens) o la CI de RPP dejará de lanzarse desde aquí"
+          fi
+
       # ⭐ 2026-10-28 (T38; ADR-207 de RPP): un push a master de FOL, ya en verde, lanza la CI de RPP, que construye contra
       # el master de FOL (ADR-073); hasta hoy, una regresión de FOL la veía la cruzada diaria de RPP, o su push siguiente.
       # Pide un token de grano fino del propietario con «Actions: Read and write» SÓLO sobre ROBINSON_PlusPlus, en el
@@ -205,5 +233,5 @@ jobs:
           if gh workflow run build.yml -R julian1c2a/ROBINSON_PlusPlus --ref master; then
             echo "✓ lanzada la CI de RPP contra el master de FOL $GITHUB_SHA"
           else
-            echo "::warning::no pude lanzar la CI de RPP: ¿el token de RPP_DISPATCH_TOKEN tiene «Actions: Read and write» SOBRE ROBINSON_PlusPlus?"
+            echo "::warning::no pude lanzar la CI de RPP: ¿el token de RPP_DISPATCH_TOKEN tiene «Actions: Read and write» SOBRE ROBINSON_PlusPlus, y no ha caducado (el paso de la caducidad, arriba)?"
           fi
