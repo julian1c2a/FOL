@@ -1,0 +1,140 @@
+# Medidas del 2026-10-29: «lake env lean <fichero>» desde la raíz de RPP, Lean v4.35.0, FOL fa0b1f1 construido.
+# Cada bloque es la salida literal de un fichero (las rutas, recortadas al nombre).
+
+== b1-Colapso.lean
+'T71Sem.B1.eval_pos' does not depend on any axioms
+'T71Sem.B1.positive_sat' does not depend on any axioms
+'T71Sem.B1.info_negativa' does not depend on any axioms
+'T71Sem.B1.least_unique' does not depend on any axioms
+'T71Sem.B1.eq_or_ne_q' depends on axioms: [propext, Quot.sound]
+'T71Sem.B1.countable_q' does not depend on any axioms
+'T71Sem.B1.infinite_q' depends on axioms: [propext]
+'T71Sem.B1.exists_least' does not depend on any axioms
+'T71Sem.B1.disj_of' does not depend on any axioms
+'T71Sem.B1.sat_T_iff' does not depend on any axioms
+'T71Sem.B1.modelo_SM' depends on axioms: [propext, Quot.sound]
+'T71Sem.B1.colapso_MP' depends on axioms: [propext, Quot.sound]
+'T71Sem.B1.sat_SM' depends on axioms: [propext, Quot.sound]
+'T71Sem.B1.large_SM' depends on axioms: [propext, Quot.sound]
+'T71Sem.B1.nombrado_iff' depends on axioms: [propext, Quot.sound]
+'T71Sem.B1.testigo_nombrado' does not depend on any axioms
+'T71Sem.B1.wlpo_of_sat_SL' does not depend on any axioms
+'T71Sem.B1.sat_SL_of_wlpo' depends on axioms: [propext, Quot.sound]
+'T71Sem.B1.sat_SL_iff_wlpo' depends on axioms: [propext, Quot.sound]
+'T71Sem.B1.ctrl_compacidad_SM' depends on axioms: [propext, Classical.choice, Quot.sound]
+'T71Sem.B1.ctrl_infinito_SM' depends on axioms: [propext, Classical.choice, Quot.sound]
+'T71Sem.B1.SM_restringe' does not depend on any axioms
+'T71Sem.B1.T_split' does not depend on any axioms
+'T71Sem.B1.finSat_T_iff' does not depend on any axioms
+'T71Sem.B1.deMorgan_of_compactness_mpr' does not depend on any axioms
+'T71Sem.B1.ctl_deMorgan' depends on axioms: [propext, Classical.choice, Quot.sound]
+
+== b1-Sandwich.lean
+'T71Sem.B1.Sandwich.fresh_SP' does not depend on any axioms
+'T71Sem.B1.Sandwich.large_SP' depends on axioms: [propext]
+'T71Sem.B1.Sandwich.sandwich_of_large_fresh' depends on axioms: [propext]
+'T71Sem.B1.Sandwich.sandwich_of_wlem' does not depend on any axioms
+'T71Sem.B1.Sandwich.ctrl_sandwich_fresh' depends on axioms: [propext, Classical.choice, Quot.sound]
+'T71Sem.B1.Sandwich.ctrl_sandwich' depends on axioms: [propext, Classical.choice, Quot.sound]
+'T71Sem.S1B1.wks_of_sandw' does not depend on any axioms
+'T71Sem.S1B1.wlem_of_sandw_wlpop' does not depend on any axioms
+
+== b2-Reticulo.lean
+'FOL.T71Sem.B2.em_implies_wlem' does not depend on any axioms
+'FOL.T71Sem.B2.em_implies_ks' does not depend on any axioms
+'FOL.T71Sem.B2.ks_implies_bksm' does not depend on any axioms
+'FOL.T71Sem.B2.bksm_implies_wks' does not depend on any axioms
+'FOL.T71Sem.B2.ks_implies_ksneg' does not depend on any axioms
+'FOL.T71Sem.B2.wlem_implies_ksneg' does not depend on any axioms
+'FOL.T71Sem.B2.ksneg_implies_wks' does not depend on any axioms
+'FOL.T71Sem.B2.wlem_implies_wks' does not depend on any axioms
+'FOL.T71Sem.B2.ksneg_iff_ksst' does not depend on any axioms
+'FOL.T71Sem.B2.wks_iff_nn' does not depend on any axioms
+'FOL.T71Sem.B2.wlem_implies_wlpop' does not depend on any axioms
+'FOL.T71Sem.B2.wlem_implies_llpop' depends on axioms: [propext, Quot.sound]
+'FOL.T71Sem.B2.wks_wlpop_implies_wlem' does not depend on any axioms
+'FOL.T71Sem.B2.bdec' does not depend on any axioms
+'FOL.T71Sem.B2.least' does not depend on any axioms
+'FOL.T71Sem.B2.mix_even' depends on axioms: [propext, Quot.sound]
+'FOL.T71Sem.B2.mix_odd' depends on axioms: [propext, Quot.sound]
+'FOL.T71Sem.B2.mix_dec' does not depend on any axioms
+'FOL.T71Sem.B2.first_dec' does not depend on any axioms
+'FOL.T71Sem.B2.first_uniq' does not depend on any axioms
+'FOL.T71Sem.B2.wks_llpop_implies_wlem' depends on axioms: [propext, Quot.sound]
+'FOL.T71Sem.B2.wks_collapse' depends on axioms: [propext, Quot.sound]
+'FOL.T71Sem.B2.bksm_mpp_implies_dne' does not depend on any axioms
+'FOL.T71Sem.B2.ks_lpop_implies_em' does not depend on any axioms
+'FOL.T71Sem.B2.llpop_implies_llpo' does not depend on any axioms
+'FOL.T71Sem.B2.wlpop_implies_wlpo' does not depend on any axioms
+'FOL.T71Sem.B2.mpp_implies_mp' does not depend on any axioms
+'FOL.T71Sem.B2.wlem_classical' depends on axioms: [propext, Classical.choice, Quot.sound]
+'FOL.T71Sem.B2.mpp_classical' depends on axioms: [propext, Classical.choice, Quot.sound]
+
+== a2-LSWKS.lean
+'FOL.T71Sem.A2.eval_Aq' does not depend on any axioms
+'FOL.T71Sem.A2.M0_sat' does not depend on any axioms
+'FOL.T71Sem.A2.sat_SP' does not depend on any axioms
+'FOL.T71Sem.A2.infiniteDom_D0' does not depend on any axioms
+'FOL.T71Sem.A2.extract' does not depend on any axioms
+'FOL.T71Sem.A2.ls_down_stmt_implies_ksdn' does not depend on any axioms
+'FOL.T71Sem.A2.countable_infinite_stmt_implies_ksdn' does not depend on any axioms
+'FOL.T71Sem.A2.ksdn_implies_wks' does not depend on any axioms
+'FOL.T71Sem.A2.ksdn_implies_ksneg' does not depend on any axioms
+'FOL.T71Sem.A2.ksneg_implies_ksdn' does not depend on any axioms
+'FOL.T71Sem.A2.wks_mpp_implies_ksdn' does not depend on any axioms
+'FOL.T71Sem.A2.wks_wlpop_implies_wlem' does not depend on any axioms
+'FOL.T71Sem.A2.ls_down_stmt_implies_wks' does not depend on any axioms
+'FOL.T71Sem.A2.countable_infinite_stmt_implies_wks' does not depend on any axioms
+'FOL.T71Sem.A2.symq_length' does not depend on any axioms
+'FOL.T71Sem.A2.Ms_sat' does not depend on any axioms
+'FOL.T71Sem.A2.extractSeq' does not depend on any axioms
+'FOL.T71Sem.A2.ls_down_stmt_implies_ksdnSeq' does not depend on any axioms
+'FOL.T71Sem.A2.countable_infinite_stmt_implies_ksdnSeq' does not depend on any axioms
+'FOL.T71Sem.A2.ksdnSeq_implies_ksdn' does not depend on any axioms
+'FOL.T71Sem.A2.wks_classical' depends on axioms: [propext, Classical.choice, Quot.sound]
+'FOL.T71Sem.A2.wks_classical'' depends on axioms: [propext, Classical.choice, Quot.sound]
+'FOL.T71Sem.A2.ksdnSeq_classical' depends on axioms: [propext, Classical.choice, Quot.sound]
+'S2Sigma.bsearch' does not depend on any axioms
+'S2Sigma.ksdnSeq_ksSigma' depends on axioms: [propext]
+'S2Sigma.ksSigma_classical' depends on axioms: [propext, Classical.choice, Quot.sound]
+
+== s2-Trampas.lean
+'S2Trampas.relSolap' depends on axioms: [propext]
+'S2Trampas.relDisj' does not depend on any axioms
+'S2Trampas.usaSolap' depends on axioms: [propext]
+'S2Trampas.usaDisj' does not depend on any axioms
+'List.length_replicate' depends on axioms: [propext]
+'Nat.mod_eq_of_lt' depends on axioms: [propext]
+'List.Nodup.length_le_of_subset' depends on axioms: [propext, Classical.choice, Quot.sound]
+
+== s1-MutTypeOf.lean
+s1-MutTypeOf.lean:14:97: error: Type mismatch
+  rfl
+has type
+  ?m.11 = ?m.11
+but is expected to have type
+  (∀ (S : Formula → Prop),
+      (∀ (Γ : List Formula), (∀ (f : Formula), f ∈ Γ → S f) → IsSatisfiable fun x => x ∈ Γ) → IsSatisfiable S) =
+    ∀ (S : Formula → Prop),
+      IsSatisfiable S ↔ ∀ (Γ : List Formula), (∀ (f : Formula), f ∈ Γ → S f) → IsSatisfiable fun x => x ∈ Γ
+s1-MutTypeOf.lean:20:64: error: Type mismatch
+  rfl
+has type
+  ?m.12 = ?m.12
+but is expected to have type
+  (∀ {S : Formula → Prop},
+      (∀ (f : Formula), S f → ∀ (m : Nat), ¬occursFormula (cst m) f) →
+        HasLargeModels S → ∃ D M v, CountableDom D ∧ ∀ (f : Formula), S f → evalFormula M v f) =
+    ∀ {S : Formula → Prop},
+      (∀ (f : Formula), S f → ∀ (m : Nat), ¬occursFormula (cst m) f) →
+        HasLargeModels S → ∃ D M v, (CountableDom D ∧ InfiniteDom D) ∧ ∀ (f : Formula), S f → evalFormula M v f
+s1-MutTypeOf.lean:32:64: error: Type mismatch
+  rfl
+has type
+  ?m.9 = ?m.9
+but is expected to have type
+  (∀ {S : Formula → Prop},
+      HasLargeModels S → ∃ D M v, (CountableDom D ∧ InfiniteDom D) ∧ ∀ (f : Formula), S f → evalFormula M v f) =
+    ∀ {S : Formula → Prop},
+      (∀ (f : Formula), S f → ∀ (m : Nat), ¬occursFormula (cst m) f) →
+        HasLargeModels S → ∃ D M v, (CountableDom D ∧ InfiniteDom D) ∧ ∀ (f : Formula), S f → evalFormula M v f

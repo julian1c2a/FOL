@@ -49,6 +49,9 @@ import FOL.Sentence
 import FOL.SymLit
 -- ✏️ 2026-10-29 (T71, ADR-220 de RPP): el enunciado de la completitud implica Markov para las ecuaciones diofánticas.
 import FOL.Markov0
+-- ✏️ 2026-10-29 (T71, ADR-221 de RPP): los cinco semánticos de `Compacity0`, clasificados: sus enunciados implican,
+-- sin ningún axioma, WLEM o el esquema de Kripke para las proposiciones ¬¬-estables.
+import FOL.EsencialidadSem0
 -- ✏️ 2026-10-28 (T51, ADR-218 de RPP): X1, la entrega de PeanoRF: `⊢ᵢ` (intuicionista), la sustitución paralela, el
 -- colapso, la igualdad y el slash de Kleene (la propiedad de disyunción y la de existencia).
 import FOL.Calculus.Subst

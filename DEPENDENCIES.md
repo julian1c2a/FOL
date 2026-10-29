@@ -9,7 +9,7 @@
 
 ## Cifras
 
-* **69 módulos** (`FOL/` 48 + `FOL/Calculus/` 7 + `FOL/Theorems/` 5 + `TheoryFramework/` 9), **138 aristas** `import` entre ellos, profundidad máxima **12**.
+* **70 módulos** (`FOL/` 49 + `FOL/Calculus/` 7 + `FOL/Theorems/` 5 + `TheoryFramework/` 9), **140 aristas** `import` entre ellos, profundidad máxima **12**.
 * 2 `lean_lib`: `FOL` y `TheoryFramework`, las dos con `globs := #[.andSubmodules …]`: el build compila el barril y
   TODO su directorio (T15 de RPP, 2026-10-18). Que todo módulo esté además en el cierre de imports de las raíces
   (`cierre-imports.bash`: `FOL`, `TheoryFramework`, `TheoryFramework.Instances.FOL` y `TheoryFramework.Instances.FOLModels`)
@@ -31,7 +31,7 @@
 * **9** — `BlockExtraction0`, `Calculus.Consistency`, `Inconsistencia`, `Interpolation0`, `Inversion0`, `QFDecide0`, `SequentSound0`, `Skolem0`, `TF.Instances.FOL`
 * **10** — `Calculus.Slash`, `Compacity0`, `Estratos0`, `Markov0`, `SkolemN0`
 * **11** — `Esencialidad0`, `SkolemNF0`, `TF.Instances.FOLModels`
-* **12** — `SkolemHerbrand0`
+* **12** — `EsencialidadSem0`, `SkolemHerbrand0`
 
 ## Grafo
 
@@ -92,6 +92,8 @@ graph BT
     Esencialidad0["Esencialidad0"] --> SequentSound0["SequentSound0"]
     Esencialidad0["Esencialidad0"] --> SkolemN0["SkolemN0"]
     Esencialidad0["Esencialidad0"] --> Soundness0["Soundness0"]
+    EsencialidadSem0["EsencialidadSem0"] --> Compacity0["Compacity0"]
+    EsencialidadSem0["EsencialidadSem0"] --> Esencialidad0["Esencialidad0"]
     Estratos0["Estratos0"] --> Calculus_DerivesI["Calculus.DerivesI"]
     Estratos0["Estratos0"] --> Canonical0["Canonical0"]
     Estratos0["Estratos0"] --> Derives2["Derives2"]
@@ -242,17 +244,18 @@ graph BT
 | `FOL.Skolem0` | 9 | `Canonical0` | `Compacity0`, `SkolemN0` |
 | `TheoryFramework.Instances.FOL` | 9 | `Canonical0`, `TF.MetaTheorems` | `TF.Instances.FOLModels` |
 | `FOL.Calculus.Slash` | 10 | `Calculus.Collapse`, `Calculus.Consistency`, `Calculus.Eq`, `Calculus.SubstDerives`, `Complexity` | — |
-| `FOL.Compacity0` | 10 | `Canonical0`, `Skolem0` | `TF.Instances.FOLModels` |
+| `FOL.Compacity0` | 10 | `Canonical0`, `Skolem0` | `EsencialidadSem0`, `TF.Instances.FOLModels` |
 | `FOL.Estratos0` | 10 | `Calculus.DerivesI`, `Canonical0`, `Derives2`, `Hauptsatz0`, `Inconsistencia`, `Interpolation0`, `NDtoLK0`, `SequentSound0` | — |
 | `FOL.Markov0` | 10 | `BlockExtraction0`, `Canonical0`, `SymLit` | — |
 | `FOL.SkolemN0` | 10 | `Skolem0` | `Esencialidad0`, `SkolemNF0` |
-| `FOL.Esencialidad0` | 11 | `Canonical0`, `DecEq`, `Inconsistencia`, `SequentSound0`, `SkolemN0`, `Soundness0` | — |
+| `FOL.Esencialidad0` | 11 | `Canonical0`, `DecEq`, `Inconsistencia`, `SequentSound0`, `SkolemN0`, `Soundness0` | `EsencialidadSem0` |
 | `FOL.SkolemNF0` | 11 | `PrenexNF0`, `Sequent0`, `SkolemN0` | `SkolemHerbrand0` |
 | `TheoryFramework.Instances.FOLModels` | 11 | `Compacity0`, `TF.Conservativity`, `TF.Instances.FOL` | — |
+| `FOL.EsencialidadSem0` | 12 | `Compacity0`, `Esencialidad0` | — |
 | `FOL.SkolemHerbrand0` | 12 | `BlockExtraction0`, `SkolemNF0` | — |
 
 ## Barriles
 
-* `FOL.lean` importa 51 módulos.
+* `FOL.lean` importa 52 módulos.
 * `TheoryFramework.lean` importa 7 módulos.
 
