@@ -171,7 +171,7 @@ theorem skF_spec {D : Type} (M : Model D) (A : Formula) (v : Nat → D) (d0 : D)
     (@dite D (∃ d : D, evalFormula M (shiftEnv (envPush v ds) d) A)
       (Classical.propDecidable (∃ d : D, evalFormula M (shiftEnv (envPush v ds) d) A))
       (fun h => Exists.choose h) (fun _ => d0))) A
-  rw [dif_pos h]
+  rw [dite_eq_left h]
   exact h.choose_spec
 
 -- ═══════════════════════════════════════════════════════════════════════════
@@ -203,7 +203,7 @@ theorem eval_skolemAxN {D : Type} (M : Model D) (c : List Char) (n : Nat) (A : F
             (evalTerms (updateFunc M c (skF M A v d0)) (envPush v ds) (vars n))
           else M.func c (evalTerms (updateFunc M c (skF M A v d0)) (envPush v ds) (vars n)))
          = skF M A v d0 ds
-    rw [if_pos rfl,
+    rw [ite_eq_left rfl,
         evalTerms_updateFunc M c _ (vars n) (envPush v ds) (not_occurs_vars c n),
         show n = ds.length from hlen.symm, evalTerms_vars M v ds]
   rw [hval]

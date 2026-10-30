@@ -256,8 +256,8 @@ theorem evalTerm_updateCsts {D : Type} (M : Model D) (e : Nat → D) (v : Nat �
   | n + 1, i, h => by
       show (if cst i = cst n then e n else (updateCsts M e n).func (cst i) []) = e i
       by_cases hin : i = n
-      · subst hin; rw [if_pos rfl]
-      · rw [if_neg (fun h' => hin (cst_inj i n h'))]
+      · subst hin; rw [ite_eq_left rfl]
+      · rw [ite_eq_right (fun h' => hin (cst_inj i n h'))]
         exact evalTerm_updateCsts M e v n i (Nat.lt_of_le_of_ne (Nat.le_of_lt_succ h) hin)
 
 /-- ⭐ La teoría ampliada es FINITAMENTE satisfacible. -/

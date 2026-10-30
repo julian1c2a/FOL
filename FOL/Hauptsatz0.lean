@@ -394,8 +394,8 @@ theorem substTerm_subst_le : ∀ (t : Term) (w v : Nat), w ≤ v → ∀ (s u : 
         · have hn : n = v + 1 := by omega
           subst hn
           simp only [substTerm,
-            if_neg (show ¬ v + 1 = w from by omega),
-            if_pos (show v + 1 > w from by omega)]
+            ite_eq_right (show ¬ v + 1 = w from by omega),
+            ite_eq_left (show v + 1 > w from by omega)]
           simp only [show v + 1 - 1 = v from by omega]
           exact (substTerm_liftTerm s w (substTerm v s u)).symm
         · simp [substTerm,

@@ -164,7 +164,7 @@ theorem evalTerm_updateFunc {D : Type} (M : Model D) (c : List Char) (F : List D
       have hs : Not (s = c) := fun he => h (Or.inl he)
       show (if s = c then F (evalTerms (updateFunc M c F) v ts)
             else M.func s (evalTerms (updateFunc M c F) v ts)) = M.func s (evalTerms M v ts)
-      rw [if_neg hs, evalTerms_updateFunc M c F ts v (fun ht => h (Or.inr ht))]
+      rw [ite_eq_right hs, evalTerms_updateFunc M c F ts v (fun ht => h (Or.inr ht))]
 
 theorem evalTerms_updateFunc {D : Type} (M : Model D) (c : List Char) (F : List D → D) :
     ∀ (ts : List Term) (v : Nat → D), Not (occursTerms c ts) →
@@ -229,7 +229,7 @@ theorem evalFormula_updateFunc {D : Type} (M : Model D) (c : List Char) (F : Lis
 theorem evalTerm_new {D : Type} (M : Model D) (c : List Char) (w : D) (v : Nat → D) :
     evalTerm (updateFunc M c (fun _ => w)) v (Term.func c []) = w := by
   show (if c = c then w else M.func c (evalTerms (updateFunc M c (fun _ => w)) v [])) = w
-  rw [if_pos rfl]
+  rw [ite_eq_left rfl]
 
 -- ── 🏁 LA CONSERVATIVIDAD ───────────────────────────────────────────────────
 
@@ -245,7 +245,7 @@ theorem evalTerm_newT {D : Type} (M : Model D) (c : List Char) (w : D) (v : Nat 
     (ts : List Term) : evalTerm (updateFunc M c (fun _ => w)) v (Term.func c ts) = w := by
   show (if c = c then w
         else M.func c (evalTerms (updateFunc M c (fun _ => w)) v ts)) = w
-  rw [if_pos rfl]
+  rw [ite_eq_left rfl]
 
 /-- 🏁🏁 **El axioma de Skolem no inventa teoremas** — con el término de Skolem aplicado a
 argumentos **cualesquiera**. Si `c` es fresco para el contexto, el cuerpo y la conclusión, todo lo

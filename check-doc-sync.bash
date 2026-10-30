@@ -397,11 +397,17 @@ else
     echo "      $d:$l: $texto"
   done
   [ -n "$A_SAL" ] && A_FAIL=1
-  # ⚠️ Un patrón sin ninguna aparición NO está comprobando nada, y da verde: se avisa en vez de callar. Si sale, o el
-  # fraseo del documento cambió, o el patrón está mal: en los dos casos hay que tocar algo.
-  LC_ALL=C awk -F'\t' '$3 != "" { print $1 }' "$A_DIR/patrones" | while IFS= read -r e; do
-    grep -qxF "$e" "$A_DIR/visto" 2>/dev/null || echo "  ⚠️  $e: la frase no aparece en ningún doc autoritativo — control VACÍO"
-  done
+  # ⚠️ Un patrón sin ninguna aparición NO está comprobando nada, y da verde. Si sale, o el fraseo del documento cambió,
+  # o el patrón está mal: en los dos casos hay que tocar algo.
+  # ✏️ 2026-10-30 (ADR-231 de RPP; el mismo arreglo que T45, ADR-223, hizo en RPP): ROJO. Era un aviso, y un aviso no
+  # para nada; visto fallar con un patrón que no casa con ningún documento.
+  A_VACIOS=$(LC_ALL=C awk -F'\t' '$3 != "" { print $1 }' "$A_DIR/patrones" | while IFS= read -r e; do
+    grep -qxF "$e" "$A_DIR/visto" 2>/dev/null || echo "$e"
+  done)
+  if [ -n "$A_VACIOS" ]; then
+    printf '%s\n' "$A_VACIOS" | sed 's/$/: la frase no aparece en ningún doc autoritativo — control VACÍO/; s/^/  ❌ /'
+    A_FAIL=1
+  fi
 fi
 [ "$A_FAIL" = "0" ] && echo "  ✓ sin cifras obsoletas" || FAIL=1
 

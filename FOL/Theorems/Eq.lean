@@ -202,9 +202,8 @@ theorem substFormula_lift_comm : ∀ (f : Formula) (c : Nat) (s : Term),
       rw [show liftTerm 0 (liftTerm c s) = liftTerm (c+1) (liftTerm 0 s) from liftTerm_comm_zero s c,
           iha (c+1) (liftTerm 0 s)]
 
-set_option linter.unusedSimpArgs false
-
 -- Conmutación subst/lift con lift en 0 y subst en `v+1` (nivel término).
+set_option linter.unusedSimpArgs false in
 mutual
 theorem substTerm_lift_comm_zero (s : Term) (n : Term) (v : Nat) :
     substTerm (v + 1) (liftTerm 0 n) (liftTerm 0 s) = liftTerm 0 (substTerm v n s) := by
@@ -271,6 +270,7 @@ theorem subst_subst_lift_gen : ∀ (f : Formula) (n s : Term) (v : Nat),
 -- Lema de sustitución (Barendregt) para niveles consecutivos `j+1`/`j` (convención
 -- decremental): conmuta dos sustituciones anidadas. Casos de binder vía
 -- `substTerm_lift_comm_zero` + `liftTerm_comm_zero`.
+set_option linter.unusedSimpArgs false in
 mutual
 theorem substTerm_subst_comm_succ (u : Term) (a b : Term) (j : Nat) :
     substTerm (j+1) a (substTerm j b u)

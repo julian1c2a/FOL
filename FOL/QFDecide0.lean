@@ -83,10 +83,10 @@ theorem pick_some {α : Type} {r : α → Bool} : ∀ {l : List α} {a : α},
   | s :: l, a, h => by
       unfold pick at h
       by_cases hs : r s = true
-      · rw [if_pos hs] at h
+      · rw [ite_eq_left hs] at h
         cases h
         exact ⟨List.Mem.head _, hs⟩
-      · rw [if_neg hs] at h
+      · rw [ite_eq_right hs] at h
         obtain ⟨h1, h2⟩ := pick_some h
         exact ⟨List.Mem.tail _ h1, h2⟩
 
@@ -96,8 +96,8 @@ theorem pick_exists {α : Type} {r : α → Bool} : ∀ {l : List α} {s : α},
   | x :: l, s, hs, hr => by
       unfold pick
       by_cases hx : r x = true
-      · exact ⟨x, if_pos hx⟩
-      · rw [if_neg hx]
+      · exact ⟨x, ite_eq_left hx⟩
+      · rw [ite_eq_right hx]
         cases hs with
         | head => exact absurd hr hx
         | tail _ h => exact pick_exists h hr
@@ -131,11 +131,11 @@ theorem mem_dedup {α : Type} [DecidableEq α] {x : α} : ∀ {l : List α}, x �
   | y :: ys, h => by
       unfold dedup
       by_cases hy : memB y ys = true
-      · rw [if_pos hy]
+      · rw [ite_eq_left hy]
         cases h with
         | head => exact mem_dedup (mem_of_memB hy)
         | tail _ h' => exact mem_dedup h'
-      · rw [if_neg hy]
+      · rw [ite_eq_right hy]
         cases h with
         | head => exact List.Mem.head _
         | tail _ h' => exact List.Mem.tail _ (mem_dedup h')
@@ -145,8 +145,8 @@ theorem dedup_sub {α : Type} [DecidableEq α] {x : α} : ∀ {l : List α}, x �
   | y :: ys, h => by
       unfold dedup at h
       by_cases hy : memB y ys = true
-      · rw [if_pos hy] at h; exact List.Mem.tail _ (dedup_sub h)
-      · rw [if_neg hy] at h
+      · rw [ite_eq_left hy] at h; exact List.Mem.tail _ (dedup_sub h)
+      · rw [ite_eq_right hy] at h
         cases h with
         | head => exact List.Mem.head _
         | tail _ h' => exact List.Mem.tail _ (dedup_sub h')

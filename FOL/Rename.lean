@@ -460,8 +460,8 @@ theorem locInv_spec {ρ : List Char → List Char} (hinj : ∀ s t, ρ s = ρ t 
   | t :: L, s, hs => by
       show (if ρ t = ρ s then t else locInv ρ L (ρ s)) = s
       by_cases h : ρ t = ρ s
-      · rw [if_pos h]; exact hinj t s h
-      · rw [if_neg h]
+      · rw [ite_eq_left h]; exact hinj t s h
+      · rw [ite_eq_right h]
         cases hs with
         | head => exact absurd rfl h
         | tail _ hs' => exact locInv_spec hinj hs'
