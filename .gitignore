@@ -31,3 +31,7 @@ Thumbs.db
 # Lock file temp
 locked_files.txt.tmp
 build_report.txt
+
+# La configuración local de Claude Code (no se versiona, como en RPP desde 2c0479b)
+.claude/settings.json
+.claude/settings.local.json
