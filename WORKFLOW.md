@@ -1,7 +1,7 @@
 # Development Workflow
 
 **Author**: Your Name
-*Last updated: 2026-10-20* — Part 4: `update-toolchain.bash`, retired here (T42, ADR-176 of RPP). Before: 2026-04-20.
+*Last updated: 2026-11-01* — Step 3: the versioned hooks, `.githooks/` and `core.hooksPath` (T14, ADR-234 of RPP). Before: 2026-10-20 — Part 4: `update-toolchain.bash`, retired here (T42, ADR-176 of RPP). Before: 2026-04-20.
 
 Complete guide for using this template — from initial setup to active development.
 
@@ -35,12 +35,16 @@ This single command:
 bash git-lock.bash init
 ```
 
-This installs the pre-commit hook that:
+This activates the versioned hooks in `.githooks/` (`git config core.hooksPath .githooks`):
 
-- Blocks commits that touch locked `.lean` files
-- Warns about `sorry` statements in staged files
+- `pre-commit` blocks commits that touch locked or frozen files (a rename of a frozen file too) and warns about
+  `sorry` statements in staged files;
+- `commit-msg` blocks a thaw (an entry leaving `frozen_files.txt`) whose message does not cite the RPP ADR that
+  authorizes it («ADR-NNN de RPP»).
 
-> **Note**: Run this once per machine/clone. The hook lives in `.git/hooks/` which is not versioned.
+> **Note**: Run this once per clone (git never activates hooks by itself). ✏️ 2026-10-31 (T14, ADR-234 of RPP):
+> the hooks are versioned now; until then `init` copied a heredoc into .git/hooks/, which is not versioned. The CI
+> does not rely on them: `check-congelados.bash` and `check-gancho.bash` (the hooks, tested in a toy repository).
 
 > **Do NOT run `git init` or `lake init`.**
 >

@@ -20,3 +20,5 @@
 # su `\r` y no casaba ninguna: no bloqueaba nada.
 frozen_files.txt text eol=lf
 locked_files.txt text eol=lf
+# los ganchos versionados (T14, ADR-234 de RPP): sin extensión, y bash los lee; LF siempre
+.githooks/* text eol=lf

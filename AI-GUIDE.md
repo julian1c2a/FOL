@@ -267,7 +267,7 @@ Como máximo un `.lean` desbloqueado en cada momento.
 bash git-lock.bash lock   ProjectName/Module.lean   # bloqueo temporal
 bash git-lock.bash unlock ProjectName/Module.lean   # desbloqueo temporal
 bash git-lock.bash list                             # lista bloqueados y congelados
-bash git-lock.bash init                             # instala/reinstala el hook pre-commit
+bash git-lock.bash init                             # activa los ganchos versionados (.githooks/, core.hooksPath)
 ```
 
 Protocolo de sesión:
@@ -277,6 +277,13 @@ Protocolo de sesión:
 3. **Fin de sesión**: bloquear todos los ficheros modificados. Commitear
    `locked_files.txt`.
 4. El hook `pre-commit` bloquea commits que toquen ficheros bloqueados o congelados.
+   ✏️ 2026‑10‑31 (T14, ADR‑234 de RPP): los ganchos están VERSIONADOS en `.githooks/` —`pre-commit`, el
+   de los congelados y bloqueados, y `commit-msg`: un thaw cita en su mensaje el ADR de RPP que lo autoriza,
+   «ADR-NNN de RPP»— y `init` los activa con `core.hooksPath` (una vez por clon: git no activa ganchos
+   solo). Corre el fichero versionado, no una copia en .git/hooks/. La CI no depende de que estén
+   activos: `check-congelados.bash` (el thaw y su ADR) y `check-gancho.bash` (los ganchos, probados en un
+   repositorio de juguete); que el ADR exista y recoja la decisión del propietario, la CI de RPP
+   (su scripts/thaws-fol.bash).
 
 ### (21.) Protocolo de congelado (freeze) de módulos completos
 
@@ -316,7 +323,7 @@ Transición: 🔄 → 🔶 → ✅ → 🧊 (el estado 🧊 es final).
 | `bash git-lock.bash lock/unlock <file>` | Bloqueo temporal |
 | `bash git-lock.bash freeze/thaw <file>` | Congelado permanente / deshielo de emergencia |
 | `bash git-lock.bash list` | Lista de bloqueados y congelados |
-| `bash git-lock.bash init` | Instala/reinstala el hook pre-commit |
+| `bash git-lock.bash init` | Activa los ganchos versionados (`.githooks/`, `core.hooksPath`; T14, ADR‑234 de RPP) |
 | `bash cierre-imports.bash` | El cierre de imports de las raíces: el universo de los módulos (`[L]`, `[A]` y `[C]` de `check-doc-sync.bash`; T15 y ADR‑163 de RPP). `--autotest` lo comprueba. (✏️ 2026‑10‑18: aquí estaban `new-module.bash` y `gen-root.bash`, retirados) |
 | `bash check-sorry.bash` | Localiza todos los `sorry` (excluyendo comentarios) |
 | ~~`bash update-toolchain.bash vX.Y.Z`~~ | ⛔ Retirado aquí (2026‑10‑20, T42, ADR‑176 de RPP): compilaba FOL desde este directorio (M‑3) y commiteaba solo. El par se prueba desde RPP: `cd ../ROBINSON_PlusPlus && bash update-toolchain.bash [vX.Y.Z]`, en árboles aparte y sin commit |

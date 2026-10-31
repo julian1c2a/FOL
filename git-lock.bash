@@ -1,6 +1,6 @@
 #!/bin/bash
 # git-lock.bash — File locking and freezing system for Lean 4 projects
-# Prevents accidental edits to completed modules via git pre-commit hook.
+# Prevents accidental edits to completed modules via the versioned git hooks in .githooks/ (core.hooksPath).
 #
 # Two protection levels:
 #
@@ -18,7 +18,7 @@
 #   bash git-lock.bash freeze ProjectName/Module.lean   # permanent freeze (Complete -> Frozen)
 #   bash git-lock.bash thaw   ProjectName/Module.lean --confirm  # emergency unfreeze
 #   bash git-lock.bash list                             # show all locked and frozen files
-#   bash git-lock.bash init                             # install/reinstall pre-commit hook
+#   bash git-lock.bash init                             # activate the versioned hooks (.githooks/, core.hooksPath)
 #
 # Protocol — session:
 #   1. Session start : run 'list'. Unlock only the target file.
@@ -59,7 +59,7 @@ show_help() {
     echo "  freeze <file>           Permanently freeze a completed module"
     echo "  thaw   <file> --confirm Emergency unfreeze (requires --confirm)"
     echo "  list                    Show all locked and frozen files"
-    echo "  init                    Install/reinstall the pre-commit hook"
+    echo "  init                    Activate the versioned hooks (.githooks/, core.hooksPath)"
     echo ""
     echo "Frozen modules cannot be unlocked. Extend them via *Ext.lean files."
     echo "See AI-GUIDE.md section 21 for the extension protocol."
@@ -230,83 +230,38 @@ case $COMMAND in
         ;;
 
     # ── init ──────────────────────────────────────────────────────────────────
+    # ✏️ 2026-10-31 (T14, ADR-234 de RPP): los ganchos están VERSIONADOS en .githooks/ (pre-commit: congelados y
+    # bloqueados; commit-msg: un thaw cita el ADR de RPP que lo autoriza) y `init` los ACTIVA con `core.hooksPath`: el
+    # gancho que corre es el fichero versionado, no una copia. Hasta hoy `init` escribía en .git/hooks/pre-commit un
+    # heredoc de este script, y cada clon guardaba la copia de su día (la de antes de R3-4-01 no bloqueaba nada). Git no
+    # activa ganchos solo (es su regla de seguridad): `init`, una vez por clon; la CI no depende de él
+    # (check-congelados.bash, check-gancho.bash).
     init)
-        touch "$LOCK_LIST"
-        touch "$FROZEN_LIST"
-        HOOK_DIR=".git/hooks"
-        HOOK_FILE="$HOOK_DIR/pre-commit"
-        if [ ! -d ".git" ]; then
-            echo "Error: not in a git repository root."
+        if ! git rev-parse --show-toplevel > /dev/null 2>&1; then
+            echo "Error: not in a git repository."
             exit 1
         fi
-        echo "Installing hook at $HOOK_FILE..."
-        cat > "$HOOK_FILE" << 'HOOKEOF'
-#!/bin/bash
-# Pre-commit hook: blocks commits touching locked/frozen files, warns about sorry.
-# ✏️ 2026-10-28 (R3-4-01 de la ronda 3, ADR-212 de RPP): las listas se leen SIN `\r` y los renombres salen como
-# borrado y alta (`--no-renames`). Con las listas en CRLF (core.autocrlf), cada entrada llevaba su `\r`, el
-# `grep -Fqx` no casaba ninguna y este gancho no bloqueaba nada. En la CI lo vigila además check-congelados.bash.
-
-LOCK_LIST="locked_files.txt"
-FROZEN_LIST="frozen_files.txt"
-STAGED_FILES=$(git diff --cached --name-only --no-renames)
-ERROR=0
-
-# ── Check 1: Frozen files (permanent — never allow) ───────────────────────────
-if [ -f "$FROZEN_LIST" ]; then
-    while IFS= read -r FROZEN_FILE; do
-        [ -z "$FROZEN_FILE" ] && continue
-        if echo "$STAGED_FILES" | grep -Fqx "$FROZEN_FILE"; then
-            echo "ERROR FROZEN (immutable): $FROZEN_FILE"
-            EXT="$(dirname "$FROZEN_FILE")/$(basename "${FROZEN_FILE%.lean}")Ext.lean"
-            echo "  This module is permanently frozen. Create an extension instead:"
-            echo "  -> $EXT"
-            echo "  See AI-GUIDE.md section 21 for the extension protocol."
-            ERROR=1
+        cd "$(git rev-parse --show-toplevel)" || exit 1
+        touch "$LOCK_LIST"
+        touch "$FROZEN_LIST"
+        for h in .githooks/pre-commit .githooks/commit-msg; do
+            if [ ! -f "$h" ]; then
+                echo "Error: falta $h (los ganchos versionados)."
+                exit 1
+            fi
+            chmod +x "$h"
+        done
+        git config core.hooksPath .githooks
+        # la copia vieja de .git/hooks/ (la escribía el `init` de antes): con core.hooksPath ya no corre; se quita
+        # para que nadie la tome por el gancho activo
+        LEGACY="$(git rev-parse --git-common-dir)/hooks/pre-commit"
+        if [ -f "$LEGACY" ] && grep -q 'blocks commits touching locked/frozen files' "$LEGACY"; then
+            rm -f "$LEGACY"
+            echo "Removed the legacy copy $LEGACY."
         fi
-    done < <(tr -d '\r' < "$FROZEN_LIST")
-fi
-
-# ── Check 2: Locked files (temporary — unlock first) ─────────────────────────
-if [ -f "$LOCK_LIST" ]; then
-    while IFS= read -r LOCKED_FILE; do
-        [ -z "$LOCKED_FILE" ] && continue
-        # Skip if already caught by frozen check
-        if [ -f "$FROZEN_LIST" ] && tr -d '\r' < "$FROZEN_LIST" | grep -Fxq -- "$LOCKED_FILE"; then
-            continue
-        fi
-        if echo "$STAGED_FILES" | grep -Fqx -- "$LOCKED_FILE"; then
-            echo "ERROR LOCKED: $LOCKED_FILE"
-            echo "  Unlock first: bash git-lock.bash unlock $LOCKED_FILE"
-            ERROR=1
-        fi
-    done < <(tr -d '\r' < "$LOCK_LIST")
-fi
-
-# ── Check 3: New sorry statements (warning only) ──────────────────────────────
-SORRY_COUNT=0
-for F in $STAGED_FILES; do
-    if [[ "$F" == *.lean ]] && [ -f "$F" ]; then
-        N=$(grep -c 'sorry' "$F" 2>/dev/null || true)
-        N="${N//[^0-9]/}"   # strip any non-numeric chars (MSYS safety)
-        N="${N:-0}"
-        if [ "$N" -gt 0 ] 2>/dev/null; then
-            echo "WARNING: $N sorry in $F"
-            SORRY_COUNT=$((SORRY_COUNT + N))
-        fi
-    fi
-done
-[ "$SORRY_COUNT" -gt 0 ] && echo "  Total sorry statements in staged files: $SORRY_COUNT"
-
-if [ $ERROR -eq 1 ]; then
-    exit 1
-fi
-exit 0
-HOOKEOF
-        chmod +x "$HOOK_FILE"
-        echo "Lock/freeze system initialized. Pre-commit hook installed."
+        echo "Lock/freeze system initialized: core.hooksPath = $(git config --get core.hooksPath)"
+        echo "  Hooks: .githooks/pre-commit (frozen/locked files), .githooks/commit-msg (a thaw cites its RPP ADR)"
         echo "  Tracking: $LOCK_LIST (locks), $FROZEN_LIST (frozen modules)"
-        echo "  Run 'bash git-lock.bash init' again after pulling to reinstall the hook."
         ;;
 
     *)

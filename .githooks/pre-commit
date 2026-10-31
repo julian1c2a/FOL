@@ -1,0 +1,67 @@
+#!/bin/bash
+# .githooks/pre-commit — rechaza un commit que toque un fichero CONGELADO o BLOQUEADO; avisa de los `sorry`.
+#
+# ✏️ 2026-10-31 (T14, ADR-234 de RPP): VERSIONADO aquí y ACTIVO por `core.hooksPath` (`bash git-lock.bash init`). Era un
+# heredoc de git-lock.bash que `init` copiaba a .git/hooks/, sin versionar: la copia de cada clon podía quedarse vieja
+# sin que nadie lo viera. Ahora el gancho que corre es este fichero, el mismo que la CI prueba (check-gancho.bash).
+# ✏️ 2026-10-28 (R3-4-01 de la ronda 3, ADR-212 de RPP): las listas se leen SIN `\r` y los renombres salen como
+# borrado y alta (`--no-renames`). Con las listas en CRLF (core.autocrlf), cada entrada llevaba su `\r`, el
+# `grep -Fqx` no casaba ninguna y este gancho no bloqueaba nada. En la CI lo vigila además check-congelados.bash.
+# El THAW (una entrada que sale de frozen_files.txt) lo mira el gancho hermano, .githooks/commit-msg.
+export PATH="/usr/bin:$PATH"
+
+LOCK_LIST="locked_files.txt"
+FROZEN_LIST="frozen_files.txt"
+STAGED_FILES=$(git diff --cached --name-only --no-renames)
+ERROR=0
+
+# ── Check 1: Frozen files (permanent — never allow) ───────────────────────────
+if [ -f "$FROZEN_LIST" ]; then
+    while IFS= read -r FROZEN_FILE; do
+        [ -z "$FROZEN_FILE" ] && continue
+        if echo "$STAGED_FILES" | grep -Fqx -- "$FROZEN_FILE"; then
+            echo "ERROR FROZEN (immutable): $FROZEN_FILE"
+            EXT="$(dirname "$FROZEN_FILE")/$(basename "${FROZEN_FILE%.lean}")Ext.lean"
+            echo "  This module is permanently frozen. Create an extension instead:"
+            echo "  -> $EXT"
+            echo "  See AI-GUIDE.md section 21 for the extension protocol."
+            ERROR=1
+        fi
+    done < <(tr -d '\r' < "$FROZEN_LIST")
+fi
+
+# ── Check 2: Locked files (temporary — unlock first) ─────────────────────────
+if [ -f "$LOCK_LIST" ]; then
+    while IFS= read -r LOCKED_FILE; do
+        [ -z "$LOCKED_FILE" ] && continue
+        # Skip if already caught by frozen check
+        if [ -f "$FROZEN_LIST" ] && tr -d '\r' < "$FROZEN_LIST" | grep -Fxq -- "$LOCKED_FILE"; then
+            continue
+        fi
+        if echo "$STAGED_FILES" | grep -Fqx -- "$LOCKED_FILE"; then
+            echo "ERROR LOCKED: $LOCKED_FILE"
+            echo "  Unlock first: bash git-lock.bash unlock $LOCKED_FILE"
+            ERROR=1
+        fi
+    done < <(tr -d '\r' < "$LOCK_LIST")
+fi
+
+# ── Check 3: New sorry statements (warning only) ──────────────────────────────
+SORRY_COUNT=0
+for F in $STAGED_FILES; do
+    if [[ "$F" == *.lean ]] && [ -f "$F" ]; then
+        N=$(grep -c 'sorry' "$F" 2>/dev/null || true)
+        N="${N//[^0-9]/}"   # strip any non-numeric chars (MSYS safety)
+        N="${N:-0}"
+        if [ "$N" -gt 0 ] 2>/dev/null; then
+            echo "WARNING: $N sorry in $F"
+            SORRY_COUNT=$((SORRY_COUNT + N))
+        fi
+    fi
+done
+[ "$SORRY_COUNT" -gt 0 ] && echo "  Total sorry statements in staged files: $SORRY_COUNT"
+
+if [ $ERROR -eq 1 ]; then
+    exit 1
+fi
+exit 0

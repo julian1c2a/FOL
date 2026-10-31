@@ -1,0 +1,23 @@
+#!/bin/bash
+# .githooks/commit-msg — un THAW (una entrada que sale de frozen_files.txt en este commit) tiene que citar en su mensaje
+# el ADR de RPP que lo autoriza: «ADR-NNN de RPP» (T14, ADR-234 de RPP).
+#
+# Un congelado se descongela sólo por decisión del propietario, y esa decisión se escribe en un ADR de RPP (como los
+# thaws de ADR-116, ADR-129 y ADR-227). Este gancho no puede saber si el propietario decidió: exige que el commit diga
+# DÓNDE está escrito. Que ese ADR exista y recoja la decisión lo comprueba la CI de RPP (scripts/thaws-fol.bash), y que
+# el mensaje lo cite, también la de FOL (check-congelados.bash), por si este gancho no estaba activo.
+# THAW_RE es la misma expresión que la de check-congelados.bash (check-gancho.bash lo comprueba).
+export PATH="/usr/bin:$PATH"
+
+THAW_RE='ADR(-|‑)[0-9]+(( y |, )ADR(-|‑)[0-9]+)* de RPP'
+FROZEN_LIST="frozen_files.txt"
+QUITADAS=$(git diff --cached --no-renames --unified=0 -- "$FROZEN_LIST" | tr -d '\r' | grep '^-[^-]' | sed 's/^-//')
+[ -z "$QUITADAS" ] && exit 0
+TEXTO=$(grep -v '^#' "$1")
+if grep -qE "$THAW_RE" <<< "$TEXTO"; then
+    exit 0
+fi
+echo "ERROR THAW sin autorización citada: este commit saca de $FROZEN_LIST"
+printf '%s\n' "$QUITADAS" | sed 's/^/    /'
+echo "  y su mensaje no cita el ADR de RPP que lo autoriza («ADR-NNN de RPP»). Un thaw lo decide el propietario."
+exit 1

@@ -34,6 +34,12 @@ jobs:
         env:
           B_BASE_REF: ${{ github.event_name == 'pull_request' && github.event.pull_request.base.sha || (github.ref == 'refs/heads/master' && github.event.before || '') }}
 
+      # ⭐ 2026-10-31 (T14, ADR-234 de RPP): los ganchos VERSIONADOS (.githooks/, activos en cada clon por core.hooksPath con
+      # `bash git-lock.bash init`), probados en un repositorio de juguete: siete casos (un congelado, un bloqueado, un
+      # renombre, uno libre, un thaw sin y con su ADR de RPP, el re-freeze), con las listas en CRLF.
+      - name: Los ganchos versionados
+        run: bash check-gancho.bash
+
       # (✏️ 2026-10-28, T40: la caché, ANTES de instalar elan y el toolchain, que viven en `~/.elan`.)
       - name: Cache Lake packages
         uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0

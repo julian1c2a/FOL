@@ -92,7 +92,7 @@
 > `False` (§1). El módulo y su axioma se borraron el 2026‑09‑23 (registro de arriba).
 
 **Creado:** 2026‑09‑12 · **Autor:** Julián Calderón Almendros
-**Last updated:** 2026-10-29 — T71 (ADR‑221 de RPP): §4.3, los cinco semánticos CLASIFICADOS (`FOL/EsencialidadSem0.lean`): esenciales, medidos sin ningún axioma; 70 módulos. Antes, el mismo día — T71 (ADR‑220 de RPP): §4.2 y §4.3, el Markov de `completeness₀`, COMPILADO (`FOL/Markov0.lean`); 69 módulos. Antes, 2026-10-28 — T51 (ADR‑218 de RPP): 68 módulos (entran X1 y `SymLit`, sin ningún `axiom`; X1, `[propext, Quot.sound]`). Antes, el mismo día — T58 (ADR‑217 de RPP): 60 módulos (entran tres de `TheoryFramework`, sin ningún `axiom`). Antes, el mismo día — T72 (ADR‑215 de RPP): 57 módulos (entra `FOL/Sentence.lean`, sin ningún `axiom`). Antes, el mismo día — T19 (ADR‑203 de RPP): §4, la esencialidad, recompilada en el build (`FOL.Esencialidad0`) y con su ámbito; «ex_elim» refutado sin `Classical.choice`; T71, abierta. Antes, 2026-10-27 — T46 (ADR‑194 de RPP): §4.3, los once corolarios de `FOL.Estratos0`. Antes, el mismo día — T53 (ADR‑193 de RPP): §4.1, re‑medida con el mismo `Audit.lean` (la frontera, la misma) y vigilada desde hoy por `check-choice.bash` de RPP. Antes, 2026-10-05 — D7 ejecutada (ADR‑129 de RPP): los símbolos son `List Char`; notas ✏️ en §2.4, §4.3 y §4.4, donde se daba por vigente lo de `String` (nombres retirados o renombrados; «no hacía falta»). Antes, sin marca: el último cambio fue el del 2026-10-03 (la deuda de los cinco módulos 🧊, saldada).
+**Last updated:** 2026-11-01 — T73 (ADR‑232 de RPP): §3, la semántica sólo habla de modelos en `Type`. Antes, 2026-10-29 — T71 (ADR‑221 de RPP): §4.3, los cinco semánticos CLASIFICADOS (`FOL/EsencialidadSem0.lean`): esenciales, medidos sin ningún axioma; 70 módulos. Antes, el mismo día — T71 (ADR‑220 de RPP): §4.2 y §4.3, el Markov de `completeness₀`, COMPILADO (`FOL/Markov0.lean`); 69 módulos. Antes, 2026-10-28 — T51 (ADR‑218 de RPP): 68 módulos (entran X1 y `SymLit`, sin ningún `axiom`; X1, `[propext, Quot.sound]`). Antes, el mismo día — T58 (ADR‑217 de RPP): 60 módulos (entran tres de `TheoryFramework`, sin ningún `axiom`). Antes, el mismo día — T72 (ADR‑215 de RPP): 57 módulos (entra `FOL/Sentence.lean`, sin ningún `axiom`). Antes, el mismo día — T19 (ADR‑203 de RPP): §4, la esencialidad, recompilada en el build (`FOL.Esencialidad0`) y con su ámbito; «ex_elim» refutado sin `Classical.choice`; T71, abierta. Antes, 2026-10-27 — T46 (ADR‑194 de RPP): §4.3, los once corolarios de `FOL.Estratos0`. Antes, el mismo día — T53 (ADR‑193 de RPP): §4.1, re‑medida con el mismo `Audit.lean` (la frontera, la misma) y vigilada desde hoy por `check-choice.bash` de RPP. Antes, 2026-10-05 — D7 ejecutada (ADR‑129 de RPP): los símbolos son `List Char`; notas ✏️ en §2.4, §4.3 y §4.4, donde se daba por vigente lo de `String` (nombres retirados o renombrados; «no hacía falta»). Antes, sin marca: el último cambio fue el del 2026-10-03 (la deuda de los cinco módulos 🧊, saldada).
 
 ---
 
@@ -356,6 +356,12 @@ al borrarse el módulo.
 * ⚠️ **No mide constructividad.** `Classical.choice`, `propext` y `Quot.sound` son axiomas del
   núcleo de Lean, no del proyecto, y un footprint no dice de dónde viene un `Classical.choice`.
   Eso lo mide §4 (2026‑09‑27).
+* ⚠️ **La semántica sólo habla de modelos en `Type`.** `ModelG (S D : Type)`, y `satisfies` cuantifica sobre
+  `D : Type` (`FOL/Semantics.lean`): la solidez, la compacidad y Löwenheim–Skolem están enunciadas para esos
+  modelos y para ningún universo mayor. La completitud (`completeness₀`) no pierde nada: lo válido en todo modelo,
+  de cualquier universo, lo es en los de `Type`, y su modelo canónico vive ahí. `TheoryFramework` sube esos modelos
+  a `Type 1` (`ModelSemantics.Interp`). Generalizar a `Type u`, sólo si un consumidor lo pide: hoy ninguno (RPP
+  usa dominio `Nat`). ✏️ 2026‑10‑31 (T73, ADR‑232 de RPP): ningún documento lo decía.
 
 ---
 

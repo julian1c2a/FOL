@@ -59,7 +59,7 @@ unlock:
 list:
 	@bash git-lock.bash list
 
-## Initialize lock system (install git hook)
+## Initialize lock system (activate the versioned hooks: .githooks/, core.hooksPath; T14, ADR-234 de RPP)
 init:
 	@bash git-lock.bash init
 
