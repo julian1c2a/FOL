@@ -92,7 +92,7 @@
 > `False` (§1). El módulo y su axioma se borraron el 2026‑09‑23 (registro de arriba).
 
 **Creado:** 2026‑09‑12 · **Autor:** Julián Calderón Almendros
-**Last updated:** 2026-11-01 — T73 (ADR‑232 de RPP): §3, la semántica sólo habla de modelos en `Type`. Antes, 2026-10-29 — T71 (ADR‑221 de RPP): §4.3, los cinco semánticos CLASIFICADOS (`FOL/EsencialidadSem0.lean`): esenciales, medidos sin ningún axioma; 70 módulos. Antes, el mismo día — T71 (ADR‑220 de RPP): §4.2 y §4.3, el Markov de `completeness₀`, COMPILADO (`FOL/Markov0.lean`); 69 módulos. Antes, 2026-10-28 — T51 (ADR‑218 de RPP): 68 módulos (entran X1 y `SymLit`, sin ningún `axiom`; X1, `[propext, Quot.sound]`). Antes, el mismo día — T58 (ADR‑217 de RPP): 60 módulos (entran tres de `TheoryFramework`, sin ningún `axiom`). Antes, el mismo día — T72 (ADR‑215 de RPP): 57 módulos (entra `FOL/Sentence.lean`, sin ningún `axiom`). Antes, el mismo día — T19 (ADR‑203 de RPP): §4, la esencialidad, recompilada en el build (`FOL.Esencialidad0`) y con su ámbito; «ex_elim» refutado sin `Classical.choice`; T71, abierta. Antes, 2026-10-27 — T46 (ADR‑194 de RPP): §4.3, los once corolarios de `FOL.Estratos0`. Antes, el mismo día — T53 (ADR‑193 de RPP): §4.1, re‑medida con el mismo `Audit.lean` (la frontera, la misma) y vigilada desde hoy por `check-choice.bash` de RPP. Antes, 2026-10-05 — D7 ejecutada (ADR‑129 de RPP): los símbolos son `List Char`; notas ✏️ en §2.4, §4.3 y §4.4, donde se daba por vigente lo de `String` (nombres retirados o renombrados; «no hacía falta»). Antes, sin marca: el último cambio fue el del 2026-10-03 (la deuda de los cinco módulos 🧊, saldada).
+**Last updated:** 2026-11-02 — T56 (ADR‑245 de RPP): el orden de §2, el de su numeración (§2.3 iba tras §2.5, y §2.6‑§2.7 tras §3); el texto, sin cambios. Antes, 2026-11-01 — T73 (ADR‑232 de RPP): §3, la semántica sólo habla de modelos en `Type`. Antes, 2026-10-29 — T71 (ADR‑221 de RPP): §4.3, los cinco semánticos CLASIFICADOS (`FOL/EsencialidadSem0.lean`): esenciales, medidos sin ningún axioma; 70 módulos. Antes, el mismo día — T71 (ADR‑220 de RPP): §4.2 y §4.3, el Markov de `completeness₀`, COMPILADO (`FOL/Markov0.lean`); 69 módulos. Antes, 2026-10-28 — T51 (ADR‑218 de RPP): 68 módulos (entran X1 y `SymLit`, sin ningún `axiom`; X1, `[propext, Quot.sound]`). Antes, el mismo día — T58 (ADR‑217 de RPP): 60 módulos (entran tres de `TheoryFramework`, sin ningún `axiom`). Antes, el mismo día — T72 (ADR‑215 de RPP): 57 módulos (entra `FOL/Sentence.lean`, sin ningún `axiom`). Antes, el mismo día — T19 (ADR‑203 de RPP): §4, la esencialidad, recompilada en el build (`FOL.Esencialidad0`) y con su ámbito; «ex_elim» refutado sin `Classical.choice`; T71, abierta. Antes, 2026-10-27 — T46 (ADR‑194 de RPP): §4.3, los once corolarios de `FOL.Estratos0`. Antes, el mismo día — T53 (ADR‑193 de RPP): §4.1, re‑medida con el mismo `Audit.lean` (la frontera, la misma) y vigilada desde hoy por `check-choice.bash` de RPP. Antes, 2026-10-05 — D7 ejecutada (ADR‑129 de RPP): los símbolos son `List Char`; notas ✏️ en §2.4, §4.3 y §4.4, donde se daba por vigente lo de `String` (nombres retirados o renombrados; «no hacía falta»). Antes, sin marca: el último cambio fue el del 2026-10-03 (la deuda de los cinco módulos 🧊, saldada).
 
 ---
 
@@ -234,6 +234,17 @@ día que sus cinco postulados se paguen o se justifiquen.
 el 2026‑09‑16 hay Teorema de Completitud, `Canonical0.completeness₀`, sobre el cálculo sólido `Derives₀` y
 sin ningún axioma del proyecto; y `cuarentena/Completeness.lean` no volvió: se borró el 2026‑09‑23.
 
+### 2.3 · Lo que se fue antes
+
+| | cuándo | qué |
+|---|---|---|
+| 6 axiomas | 2026‑09‑12 (`ef54c6f`) | `FOLPure` y `FOL_poli` — **el enunciado era FALSO** y la corrección de junio nunca se propagó |
+| 15 axiomas | 2026‑09‑12 (D‑1) | retiradas `FOLPure`, `PropLogic`, `FOL_poli` |
+
+⇒ **34 → 28 → 13 → 4** en un día. Y **4 → 0** el 2026‑10‑02: `FOL/MetaRules.lean` borrado (§1, ADR‑115
+de RPP). Los de `cuarentena/Completeness.lean` bajaron aparte: de 5 a 1 el 2026‑09‑13 y a 0 el 2026‑09‑23,
+al borrarse el módulo.
+
 ### 2.4 · 2026‑09‑13 · los dos «construibles» quedan CONSTRUIDOS (5 → 3 en cuarentena)
 
 `FOL/Enumeration.lean` — **nuevo, dentro del build**, cero axiomas — construye
@@ -328,51 +339,6 @@ sobre `PointwiseEqv`, que es un inductivo **sin axiomas habitándolo** ⇒ M‑1
 medido**»*. Estaba bien dicho —era una estimación declarada como tal— y al medirla resultó cierta.
 🔑 *Una estimación etiquetada como estimación no hace daño; la que se publica como medición, sí.*
 
-### 2.3 · Lo que se fue antes
-
-| | cuándo | qué |
-|---|---|---|
-| 6 axiomas | 2026‑09‑12 (`ef54c6f`) | `FOLPure` y `FOL_poli` — **el enunciado era FALSO** y la corrección de junio nunca se propagó |
-| 15 axiomas | 2026‑09‑12 (D‑1) | retiradas `FOLPure`, `PropLogic`, `FOL_poli` |
-
-⇒ **34 → 28 → 13 → 4** en un día. Y **4 → 0** el 2026‑10‑02: `FOL/MetaRules.lean` borrado (§1, ADR‑115
-de RPP). Los de `cuarentena/Completeness.lean` bajaron aparte: de 5 a 1 el 2026‑09‑13 y a 0 el 2026‑09‑23,
-al borrarse el módulo.
-
-## 3 · Lo que este censo NO dice
-
-* ⚠️ **No dice que un `axiom` sea CONSISTENTE con el resto**, y `#print axioms` tampoco: los dos cuentan
-  postulados, no los juzgan. ✏️ Esta viñeta decía que `#print axioms` no detecta «la clase M‑11»: *«un
-  teorema probado por inducción sobre un inductivo habitado tiene footprint limpio y es injustificado»*.
-  Era al revés (rectificado el 2026‑10‑02, ADR‑114/115 de RPP): esa inducción es **correcta**, porque el
-  recursor cubre a todo habitante, y lo que la contradice es el axioma. El riesgo es un `axiom` sobre un
-  inductivo, que puede ser **refutable por el propio recursor**: los cuatro de `MetaRules` lo eran (§1.1).
-* ⚠️ **ROBINSON_PlusPlus tiene su propio censo** (`../ROBINSON_PlusPlus/AXIOMS.md`), hoy sin ningún
-  `axiom` de Lean. Fabricaba tres habitantes más de `Derives`, hoy retirados: `ax_induction_prim`, `ax_list_induction` y
-  `ax_axiomsCodeT_eq` (ADR‑114 §5 de RPP), retirados con la capa `⊢` (ADR‑115). `ax_list_induction`
-  (retirado; con premisa‑función hasta ADR‑029, 2026‑09‑13; después con premisa objeto, positiva). También era refutable: su `φ : Term → Formula`
-  mira la sintaxis del término y su `Γ` es libre, y él solo daba `[] ⊢ ⊥` (ADR‑114 L1‑2,
-  `sondeos/ListInductionAxiomRefutable.lean`). Se retiró con la capa `⊢` de RPP (ADR‑115, 2026‑10‑02).
-* ⚠️ **No mide constructividad.** `Classical.choice`, `propext` y `Quot.sound` son axiomas del
-  núcleo de Lean, no del proyecto, y un footprint no dice de dónde viene un `Classical.choice`.
-  Eso lo mide §4 (2026‑09‑27).
-* ⚠️ **La semántica sólo habla de modelos en `Type`.** `ModelG (S D : Type)`, y `satisfies` cuantifica sobre
-  `D : Type` (`FOL/Semantics.lean`): la solidez, la compacidad y Löwenheim–Skolem están enunciadas para esos
-  modelos y para ningún universo mayor. La completitud (`completeness₀`) no pierde nada: lo válido en todo modelo,
-  de cualquier universo, lo es en los de `Type`, y su modelo canónico vive ahí. `TheoryFramework` sube esos modelos
-  a `Type 1` (`ModelSemantics.Interp`). Generalizar a `Type u`, sólo si un consumidor lo pide: hoy ninguno (RPP
-  usa dominio `Nat`). ✏️ 2026‑10‑31 (T73, ADR‑232 de RPP): ningún documento lo decía.
-
----
-
-**Véase también:** `FOL/Inconsistencia.lean` (§1: `derives_to_derives0` y `derives_soundness`; §3: las cuatro
-refutaciones), ADR‑114 y ADR‑115 de `../ROBINSON_PlusPlus/DECISIONS.md` (la auditoría de la base y el
-borrado), `../ROBINSON_PlusPlus/doc/AUDITORIA-BASE-2026-10-02.md` y
-`../ROBINSON_PlusPlus/sondeos/MetaReglasRefutables.lean` (la primera medición), `cuarentena/README.md` (el
-registro de por qué se apartó `soundness`, escrito con el diagnóstico que ADR‑115 invirtió),
-`../ROBINSON_PlusPlus/doc/AUDITORIA-FOL-2026-09-12.md` (de dónde sale este documento).
-🗑️ Aquí se citaba `FOL/MetaRules.lean` como «la doctrina corregida»: se borró el 2026‑10‑02 (ADR‑115 de RPP).
-
 ### 2.6 · ⚠️⚠️ 2026‑09‑13 · `henkin_extension_lemma` SALE — y por eso no se ha tocado
 
 `sondeos/HenkinSaleDeRaa.lean` (ROBINSON_PlusPlus), compilado el 2026‑09‑13. 🗑️ No compila
@@ -452,6 +418,40 @@ después ve un axioma, ve que es demostrable, y lo «arregla». Tres guardas:
 
 ⭐ **El control no hubo que cambiarlo**: compara con una cifra **exacta**, no con una cota. Un
 contador exacto convierte *«no pagar este axioma»* en algo que el build vigila **solo**.
+
+## 3 · Lo que este censo NO dice
+
+* ⚠️ **No dice que un `axiom` sea CONSISTENTE con el resto**, y `#print axioms` tampoco: los dos cuentan
+  postulados, no los juzgan. ✏️ Esta viñeta decía que `#print axioms` no detecta «la clase M‑11»: *«un
+  teorema probado por inducción sobre un inductivo habitado tiene footprint limpio y es injustificado»*.
+  Era al revés (rectificado el 2026‑10‑02, ADR‑114/115 de RPP): esa inducción es **correcta**, porque el
+  recursor cubre a todo habitante, y lo que la contradice es el axioma. El riesgo es un `axiom` sobre un
+  inductivo, que puede ser **refutable por el propio recursor**: los cuatro de `MetaRules` lo eran (§1.1).
+* ⚠️ **ROBINSON_PlusPlus tiene su propio censo** (`../ROBINSON_PlusPlus/AXIOMS.md`), hoy sin ningún
+  `axiom` de Lean. Fabricaba tres habitantes más de `Derives`, hoy retirados: `ax_induction_prim`, `ax_list_induction` y
+  `ax_axiomsCodeT_eq` (ADR‑114 §5 de RPP), retirados con la capa `⊢` (ADR‑115). `ax_list_induction`
+  (retirado; con premisa‑función hasta ADR‑029, 2026‑09‑13; después con premisa objeto, positiva). También era refutable: su `φ : Term → Formula`
+  mira la sintaxis del término y su `Γ` es libre, y él solo daba `[] ⊢ ⊥` (ADR‑114 L1‑2,
+  `sondeos/ListInductionAxiomRefutable.lean`). Se retiró con la capa `⊢` de RPP (ADR‑115, 2026‑10‑02).
+* ⚠️ **No mide constructividad.** `Classical.choice`, `propext` y `Quot.sound` son axiomas del
+  núcleo de Lean, no del proyecto, y un footprint no dice de dónde viene un `Classical.choice`.
+  Eso lo mide §4 (2026‑09‑27).
+* ⚠️ **La semántica sólo habla de modelos en `Type`.** `ModelG (S D : Type)`, y `satisfies` cuantifica sobre
+  `D : Type` (`FOL/Semantics.lean`): la solidez, la compacidad y Löwenheim–Skolem están enunciadas para esos
+  modelos y para ningún universo mayor. La completitud (`completeness₀`) no pierde nada: lo válido en todo modelo,
+  de cualquier universo, lo es en los de `Type`, y su modelo canónico vive ahí. `TheoryFramework` sube esos modelos
+  a `Type 1` (`ModelSemantics.Interp`). Generalizar a `Type u`, sólo si un consumidor lo pide: hoy ninguno (RPP
+  usa dominio `Nat`). ✏️ 2026‑10‑31 (T73, ADR‑232 de RPP): ningún documento lo decía.
+
+---
+
+**Véase también:** `FOL/Inconsistencia.lean` (§1: `derives_to_derives0` y `derives_soundness`; §3: las cuatro
+refutaciones), ADR‑114 y ADR‑115 de `../ROBINSON_PlusPlus/DECISIONS.md` (la auditoría de la base y el
+borrado), `../ROBINSON_PlusPlus/doc/AUDITORIA-BASE-2026-10-02.md` y
+`../ROBINSON_PlusPlus/sondeos/MetaReglasRefutables.lean` (la primera medición), `cuarentena/README.md` (el
+registro de por qué se apartó `soundness`, escrito con el diagnóstico que ADR‑115 invirtió),
+`../ROBINSON_PlusPlus/doc/AUDITORIA-FOL-2026-09-12.md` (de dónde sale este documento).
+🗑️ Aquí se citaba `FOL/MetaRules.lean` como «la doctrina corregida»: se borró el 2026‑10‑02 (ADR‑115 de RPP).
 
 ## 4 · ⭐ Lo no constructivo (auditoría del 2026‑09‑27)
 

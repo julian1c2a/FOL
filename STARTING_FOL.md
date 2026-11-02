@@ -1,5 +1,7 @@
 # Esquema de Inicio: Lógica de Primer Orden (FOL)
 
+**Last updated:** 2026-04-21 — la de su última revisión con diez líneas nuevas o más (`182473b`; sin contar los cambios de fin de línea), puesta el 2026‑11‑02 (T56, ADR‑245 de RPP), que NO revisó el cuerpo: es deuda de contenido de `[E]`.
+
 Este documento detalla las reglas de inferencia fundamentales y los primeros teoremas que formarán la base de nuestro desarrollo en Lean 4. Servirá como hoja de ruta para la implementación del sistema deductivo.
 
 ## 1. Reglas de Inferencia Básicas (Deducción Natural)

@@ -1,5 +1,7 @@
 # El Engarce Fundacional: FOL, ROBINSON++ y los Tipos Inductivos de Lean 4
 
+**Last updated:** 2026-06-12 — la de su última revisión con diez líneas nuevas o más (`db24399`; sin contar los cambios de fin de línea), puesta el 2026‑11‑02 (T56, ADR‑245 de RPP), que NO revisó el cuerpo: es deuda de contenido de `[E]`.
+
 Este documento detalla la arquitectura lógica y metamatemática necesaria para conectar la sintaxis de primer orden (en `FOL`), la aritmética recursiva (en `ROBINSON++`) y los tipos inductivos nativos de Lean 4 (especialmente listas, tuplas y tipos inductivos bien fundados o W-Types).
 
 El objetivo es establecer un puente de **Interpretabilidad Relativa** que permita justificar formalmente cómo las estructuras de datos inductivas de Lean 4 pueden ser recreadas, interpretadas y demostradas de manera rigurosa dentro de una teoría aritmética de primer orden clásica con inducción restringida.

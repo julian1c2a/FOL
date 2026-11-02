@@ -1,6 +1,6 @@
 # Guía Maestra de la IA — Estándares de Documentación y Desarrollo
 
-**Última actualización:** 2026-07-12
+**Last updated:** 2026-07-12
 **Autor:** Julián Calderón Almendros
 
 > Este documento define lo **universal**: aplica a cualquier proyecto Lean 4 que nazca

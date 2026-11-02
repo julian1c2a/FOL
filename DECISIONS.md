@@ -1,6 +1,6 @@
 # Decisiones de Diseño — FOL
 
-**Última actualización:** 2026-10-28 — §MANDATORIES: M-1, el mismo toolchain que RPP (T16, ADR-205 de RPP), y M-2, ramas, stash y worktrees (T79, ADR-204 de RPP). Antes, 2026-07-12
+**Last updated:** 2026-11-02 — T56 (ADR‑245 de RPP): el cuerpo, revisado contra el árbol; ADR‑004, 005, 006, 007, 008 y 010, con su estado de hoy (las sub-librerías retiradas el 2026‑09‑12, la propuesta nunca hecha, las anotaciones en desuso); ADR‑003, con lo que hay hoy; el aviso de fichero dormido, con el número de hoy. Antes, 2026-10-28 — §MANDATORIES: M-1, el mismo toolchain que RPP (T16, ADR-205 de RPP), y M-2, ramas, stash y worktrees (T79, ADR-204 de RPP). Antes, 2026-07-12
 **Autor**: Julián Calderón Almendros
 
 Registro de decisiones arquitectónicas (ADR) de este proyecto. Cada entrada documenta
@@ -77,13 +77,14 @@ vacío desde siempre pese a tener módulos "✅ Completos" — el protocolo no s
 aplicando en la práctica. Se corrige aquí también un bug real en `git-lock.bash`
 (`unlock`/`thaw` no vaciaban la lista al quitar el último fichero, por el exit code 1
 de `grep -Fv` cortocircuitando el `&&` previo al `mv`).
+✏️ *Nota del 2026-11-02 (T56, ADR‑245 de RPP)*: hoy hay 51 entradas en `locked_files.txt` y 39 en `frozen_files.txt`; el gancho es `.githooks/pre-commit`, versionado y activo por `core.hooksPath` (T14, ADR‑234 de RPP), con su hermano `.githooks/commit-msg`, que exige el ADR de cada thaw; y la CI lo vigila con `check-congelados.bash` y `check-gancho.bash`.
 
 ---
 
 ## ADR-004: Convenciones de nombres Mathlib
 
 **Fecha**: 2026-04-20
-**Estado**: Aceptado
+**Estado**: Aceptado — ✏️ 2026‑11‑02 (T56, ADR‑245 de RPP): la decisión sigue (`NAMING-CONVENTIONS.md`); lo que dice de `MetaRules.lean`, borrado el 2026‑10‑02, es registro
 
 **Decisión**: todos los identificadores siguen las convenciones de nombres de
 Mathlib4, documentadas en `NAMING-CONVENTIONS.md`.
@@ -106,7 +107,7 @@ entrada vigente es `NAMING-CONVENTIONS.md` §9.
 ## ADR-005: Namespaces alineados con directorios
 
 **Fecha**: 2026-04-20
-**Estado**: Aceptado
+**Estado**: Aceptado, con excepciones — ✏️ 2026‑11‑02 (T56, ADR‑245 de RPP): FOLPure, PropLogic y FOL_poli se retiraron el 2026‑09‑12 (FOL `b97ee6d`; `cuarentena/librerias-retiradas/`). Y la regla no se cumple en todo el árbol: `Theorems/Eq.lean` y `SymClasses.lean` declaran en `FOL`, y los módulos de `Calculus/` en `FOL.Calculus`. El espacio de nombres de cada módulo, el de hoy, lo da la §6 de `REFERENCE.md`, que se genera de las fuentes
 
 **Decisión**: cada subdirectorio corresponde a un sub-namespace:
 `FOL/Theorems/Eq.lean` → `namespace FOL.Theorems.Eq` (y análogamente para
@@ -124,7 +125,7 @@ namespaces.
 ## ADR-006: Subdirectorios temáticos para la organización de módulos
 
 **Fecha**: 2026-04-20
-**Estado**: Aceptado
+**Estado**: Obsoleto en lo que dice de las sub-librerías — ✏️ 2026‑11‑02 (T56, ADR‑245 de RPP): de las cinco quedan dos (`FOL` y `TheoryFramework`, desde el 2026‑09‑12). `FOL/Theorems/` conserva los cinco módulos del núcleo de `Derives`; la metateoría vive en los `FOL/*0.lean` y en `FOL/Calculus/`, y `TheoryFramework/Instances/` tiene sus dos instancias. El barril de cada subdirectorio, como pedía: `FOL/Core.lean` para el núcleo
 
 **Decisión**: cada sub-librería (`FOL`, `FOLPure`, `PropLogic`, `FOL_poli`,
 `TheoryFramework`) agrupa sus teoremas derivados en un subdirectorio `Theorems/`
@@ -141,7 +142,7 @@ teoremas derivados facilita localizar cada pieza.
 > ## ⛔⛔ ESTE FICHERO ESTÁ DORMIDO DESDE ADR‑010 — aviso añadido el 2026‑09‑23
 >
 > **El log de decisiones VIVO de FOL es `../ROBINSON_PlusPlus/DECISIONS.md`**, que iba por
-> ADR‑098 al escribir este aviso (por ADR‑115 el 2026‑10‑02). Todas las decisiones sobre este repositorio desde el 2026‑09‑12 están ahí — entre
+> ADR‑098 al escribir este aviso (por ADR‑115 el 2026‑10‑02; por ADR‑245 el 2026‑11‑02). Todas las decisiones sobre este repositorio desde el 2026‑09‑12 están ahí — entre
 > ellas ADR‑047 (la corrección de PeanoRF), ADR‑061 (`check-doc-sync` adoptado), ADR‑065,
 > ADR‑072 (el control `[E]` rearmado y `[G.1]`), ADR‑083 (`ModelG`) y ADR‑098 (el cierre); y,
 > el 2026‑10‑02, ADR‑114 (la auditoría de la base) y ADR‑115 (la capa `⊢` retirada de RPP y,
@@ -157,7 +158,7 @@ teoremas derivados facilita localizar cada pieza.
 ## ADR-007: Árbol de documentación `doc/REFERENCE-{tema}.md`
 
 **Fecha**: 2026-04-20
-**Estado**: Propuesto (no implementado)
+**Estado**: Obsoleto — ✏️ 2026‑11‑02 (T56, ADR‑245 de RPP): nunca se implementó, y tres de las cuatro sub-librerías para las que se proponía se retiraron el 2026‑09‑12. `REFERENCE.md` documenta las dos `lean_lib` vivas; su §6, el catálogo de lo que exporta cada módulo, se genera de las fuentes (`gen-reference.py`, con `--check` en la CI)
 
 **Decisión**: `REFERENCE.md` debería ser solo el índice raíz, con el detalle de cada
 sub-librería en nodos temáticos bajo `doc/REFERENCE-{tema}.md`.
@@ -176,7 +177,7 @@ DEPENDENCIES.md para el estado real de las 5 sub-librerías mientras tanto.
 ## ADR-008: Sistema de anotaciones en REFERENCE.md
 
 **Fecha**: 2026-04-20
-**Estado**: Aceptado
+**Estado**: En desuso — ✏️ 2026‑11‑02 (T56, ADR‑245 de RPP): las llevan sólo las entradas de §3 de los módulos de abril (y las del apéndice R de `REFERENCE.md`); ningún módulo de la capa ₀ ni posterior las tiene, y nada las lee
 
 **Decisión**: las entradas de REFERENCE.md incluyen anotaciones `@axiom_system` y
 `@importance`.
@@ -206,7 +207,7 @@ dedicado, con un resumen en `AI-GUIDE.md`.
 ## ADR-010: Cinco sub-librerías independientes, no una jerarquía de extensión
 
 **Fecha**: 2026-07-12
-**Estado**: Aceptado (decisión retroactiva — documenta una arquitectura ya existente)
+**Estado**: Obsoleto — ✏️ 2026‑11‑02 (T56, ADR‑245 de RPP): desde el 2026‑09‑12 (FOL `b97ee6d`) el lakefile declara dos `lean_lib`, `FOL` y `TheoryFramework`; FOLPure, PropLogic y FOL_poli están en `cuarentena/librerias-retiradas/`, fuera del lakefile (`cuarentena/README.md` §7: dos de ellas eran inconsistentes). Lo de abajo es registro de la arquitectura de julio. *(Era: «Aceptado (decisión retroactiva — documenta una arquitectura ya existente)».)*
 
 **Contexto**: el proyecto declara 5 `lean_lib` en `lakefile.lean`: `FOL` (con
 igualdad), `FOLPure` (sin igualdad), `PropLogic` (proposicional, sin cuantificadores
@@ -235,6 +236,7 @@ existentes en disco y no wireados en el barrel de cada una. No está claro si es
 intencional (variantes experimentales) o un olvido; **pendiente de decidir y
 documentar** en una revisión posterior — no se ha tocado el barrel en esta sesión
 para no alterar el comportamiento del build sin confirmación del autor.
+✏️ *Nota del 2026-11-02 (T56)*: de aquellos cinco módulos sin barril, `Classical.lean` y `Tactics2.lean` ya no existen (el segundo se borró en D1, 2026‑09‑27), y `Theorems/Eq.lean` entra por `FOL/Core.lean`; desde T15 (ADR‑163 de RPP) los `globs` del lakefile compilan todo el directorio, y [L] de `check-doc-sync.bash` comprueba que todo módulo esté en el cierre de imports de un barril.
 
 ---
 

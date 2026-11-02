@@ -1,7 +1,7 @@
 # Development Workflow
 
-**Author**: Your Name
-*Last updated: 2026-11-01* — Step 3: the versioned hooks, `.githooks/` and `core.hooksPath` (T14, ADR-234 of RPP). Before: 2026-10-20 — Part 4: `update-toolchain.bash`, retired here (T42, ADR-176 of RPP). Before: 2026-04-20.
+**Author**: Julián Calderón Almendros
+**Last updated:** 2026-11-02 — T56 (ADR-245 of RPP): the author (it said «Your Name», a leftover of the template) and this stamp, in the form that `[E]` of `check-doc-sync.bash` reads (it was in italics); the body, as it was. Before: 2026-11-01 — Step 3: the versioned hooks, `.githooks/` and `core.hooksPath` (T14, ADR-234 of RPP). Before: 2026-10-20 — Part 4: `update-toolchain.bash`, retired here (T42, ADR-176 of RPP). Before: 2026-04-20.
 
 Complete guide for using this template — from initial setup to active development.
 

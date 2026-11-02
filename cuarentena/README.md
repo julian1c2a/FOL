@@ -1,5 +1,7 @@
 # `cuarentena/` — ⛔ **tres módulos apartados el 2026‑09‑11**, **VACIADA el 2026‑09‑23**, y su diagnóstico **RECTIFICADO el 2026‑10‑02**
 
+**Last updated:** 2026-10-02 — la de su última revisión con diez líneas nuevas o más (`3b355d7`; sin contar los cambios de fin de línea), puesta el 2026‑11‑02 (T56, ADR‑245 de RPP), que NO revisó el cuerpo: es deuda de contenido de `[E]`.
+
 > ## ✏️✏️ RECTIFICACIÓN — 2026‑10‑02 · el diagnóstico de este README estaba **AL REVÉS**
 >
 > `soundness : Γ ⊢ f → Γ ⊨ f` **no era falso: es un teorema**, hoy `FOL.Inconsistencia.derives_soundness`

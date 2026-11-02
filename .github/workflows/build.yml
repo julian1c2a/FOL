@@ -197,6 +197,11 @@ jobs:
       - name: DEPENDENCIES.md al día
         run: python3 gen-dependencies.py --check
 
+      # ⭐ 2026-11-02 (T56, ADR-245 de RPP): el §6 de REFERENCE.md («Exports») también se CALCULA, de las declaraciones de
+      # las fuentes (`gen-reference.py`); rojo si lo versionado no es lo que se generaría.
+      - name: REFERENCE.md §6 al día
+        run: python3 gen-reference.py --check
+
       # ⭐ 2026-10-28 (ADR-216 de RPP): la CADUCIDAD del token de RPP_DISPATCH_TOKEN, a la vista. El paso de abajo sólo
       # AVISA si no puede lanzar (a propósito: un master correcto no se pone rojo por un token), y un token caducado se
       # quedaría en un aviso que nadie lee. GitHub devuelve la fecha en la cabecera «github-authentication-token-expiration»

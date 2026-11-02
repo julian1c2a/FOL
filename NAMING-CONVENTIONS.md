@@ -9,7 +9,7 @@
 > La prosa de este documento (explicaciones, motivación) va en español para que quede
 > clara sin ambigüedad.
 
-**Última actualización:** 2026-10-02 — §9: la entrada de axiomas (FOL ya no tiene ninguno: `FOL/MetaRules.lean` borrado, ADR‑115 de RPP) y la razón de la excepción histórica de `Derives` (tabla y regla 4). Antes (2026-09-27): §9: N5 (qué es titular: el resultado que la cabecera entrega; las piezas técnicas son auxiliares). Antes, el mismo día: §9: N1 (las definiciones por derivabilidad, sin excepción) y N2 (qué es titular). Antes (2026-09-26): subíndices de cálculo (D6, decidida) y entrada de axiomas corregida
+**Last updated:** 2026-10-02 — §9: la entrada de axiomas (FOL ya no tiene ninguno: `FOL/MetaRules.lean` borrado, ADR‑115 de RPP) y la razón de la excepción histórica de `Derives` (tabla y regla 4). Antes (2026-09-27): §9: N5 (qué es titular: el resultado que la cabecera entrega; las piezas técnicas son auxiliares). Antes, el mismo día: §9: N1 (las definiciones por derivabilidad, sin excepción) y N2 (qué es titular). Antes (2026-09-26): subíndices de cálculo (D6, decidida) y entrada de axiomas corregida
 **Autor**: Julián Calderón Almendros
 
 ---

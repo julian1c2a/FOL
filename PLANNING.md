@@ -28,7 +28,7 @@
 > **Fuentes:** `cuarentena/README.md` · `AXIOMS.md` ·
 > `../ROBINSON_PlusPlus/doc/AUDITORIA-FOL-2026-09-12.md`
 
-**Última actualización:** 2026-05-16 (el cuerpo) · 2026-10-02 (el aviso y el estado de la librería 1, en §2: `FOL/MetaRules.lean` borrado, ADR‑115 de RPP)
+**Last updated:** 2026-05-16 (el cuerpo) · 2026-10-02 (el aviso y el estado de la librería 1, en §2: `FOL/MetaRules.lean` borrado, ADR‑115 de RPP)
 **Autor**: Julián Calderón Almendros
 
 > Este documento describe la visión estratégica y la planificación a largo plazo **de mayo de 2026**, y es HISTÓRICO: la arquitectura de §2 (cuatro `lean_lib`) ya no existe. Hoy hay **2 `lean_lib`** (`FOL`, `TheoryFramework`); el estado vigente, en `CURRENT-STATUS-PROJECT.md`.

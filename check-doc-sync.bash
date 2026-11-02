@@ -484,21 +484,21 @@ echo "════ [E] FRESCURA DEL TITULAR — ROJO (objetivo: lo decide git) �
 read -r -d '' E_DEUDA <<'EOF'
 THOUGHTS.md
 auditoria/constructividad-2026-09-27/README.md
-EOF
-read -r -d '' E_DEUDA_FORMATO <<'EOF'
-# ── medido el 2026-11-02 (T39): sin `**Last updated:**`. Las cuatro primeras llevan otra (en español o en cursiva): se
-#    pagan como en RPP (T24), con la fecha de su última revisión REAL, nunca la de hoy, y pasan a la de contenido.
+# ── ✏️ 2026-11-02 (T56, ADR-245 de RPP): la de FORMATO de T39, pagada como en RPP (T24): con la fecha de su última
+#    revisión REAL, nunca la de hoy —la suya, en las tres que la llevaban en español; en las cuatro sin marca, la de su
+#    último commit con diez líneas nuevas o más, sin contar los de fin de línea—, y pasan aquí: su cuerpo no se ha
+#    revisado desde entonces. DECISIONS.md y WORKFLOW.md, revisados ese día, salen con la marca de hoy; PROCESANDO.md
+#    (0 bytes, un resto de la plantilla), borrado.
 AI-GUIDE.md
-DECISIONS.md
 NAMING-CONVENTIONS.md
-WORKFLOW.md
-ENGARCE-ROBINSON-FOL.md
 PLANNING.md
-# (PROCESANDO.md tiene 0 bytes: un resto de la plantilla, T56)
-PROCESANDO.md
+ENGARCE-ROBINSON-FOL.md
 STARTING_FOL.md
 TuplasFuncionesYListas.md
 cuarentena/README.md
+EOF
+read -r -d '' E_DEUDA_FORMATO <<'EOF'
+# ── vacía desde el 2026-11-02 (T56, ADR-245 de RPP): la de T39, pagada (arriba).
 EOF
 
 # ⛔ GUARDA DEL CLON SUPERFICIAL (2026-09-18, ADR-072). En `--depth 1`, `git log -1 -- <f>`

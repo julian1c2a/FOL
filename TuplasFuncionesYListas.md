@@ -1,3 +1,5 @@
+**Last updated:** 2026-05-07 — la de su última revisión con diez líneas nuevas o más (`057515a`; sin contar los cambios de fin de línea), puesta el 2026‑11‑02 (T56, ADR‑245 de RPP), que NO revisó el cuerpo: es deuda de contenido de `[E]`.
+
 > **Nota de Contexto:** Este documento es la especificación formal para el sistema axiomático "Minimal" que se desarrollará como parte del proyecto `ROBINSON_PlusPlus`.
 >
 > El objetivo de este sistema es construir tuplas, listas y funciones discretas desde una base aritmética muy débil, sin un principio de inducción generalizado. Sirve como la primera etapa en una serie de sistemas axiomáticos de fortaleza creciente.
