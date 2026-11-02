@@ -191,6 +191,12 @@ jobs:
           RPP_DIR: _rpp
           B_BASE_REF: ${{ github.event_name == 'pull_request' && github.event.pull_request.base.sha || (github.ref == 'refs/heads/master' && github.event.before || '') }}
 
+      # ⭐ 2026-11-02 (T30, ADR-238 de RPP): DEPENDENCIES.md se CALCULA (`gen-dependencies.py`, desde el 2026-09-26), pero
+      # su `--check` no corría en ninguna CI: que estuviera al día dependía de acordarse. Rojo si lo versionado no es lo
+      # que se generaría (la marca `**Last updated:**` aparte).
+      - name: DEPENDENCIES.md al día
+        run: python3 gen-dependencies.py --check
+
       # ⭐ 2026-10-28 (ADR-216 de RPP): la CADUCIDAD del token de RPP_DISPATCH_TOKEN, a la vista. El paso de abajo sólo
       # AVISA si no puede lanzar (a propósito: un master correcto no se pone rojo por un token), y un token caducado se
       # quedaría en un aviso que nadie lee. GitHub devuelve la fecha en la cabecera «github-authentication-token-expiration»

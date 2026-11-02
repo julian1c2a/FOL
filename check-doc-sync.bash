@@ -474,9 +474,30 @@ echo "════ [E] FRESCURA DEL TITULAR — ROJO (objetivo: lo decide git) �
 # falso. Se declara, como en `check-warnings.bash` (ADR-065), y el control **ROMPE EN LOS DOS
 # SENTIDOS**: si un doc NO declarado falla, rojo; y si un doc declarado ya está bien, también
 # rojo — *la deuda se saldó, quítala de la tabla*. Así la cifra sólo puede BAJAR.
+# ✏️ 2026-11-02 (T39, ADR-239 de RPP): el [E] de RPP, portado. (1) El UNIVERSO son TODOS los `.md` versionados (ADR-084
+# de RPP), no los 9 autoritativos: los otros 16 no los miraba nadie, y 9 no tenían marca. (2) Un documento con cambios
+# sin commitear se mide con la fecha de HOY (ADR-121 de RPP: [E] estaba ciego antes del commit). (3) La marca es el sello
+# de CABECERA, a mitad de línea también (ADR-177 de RPP). (4) DOS tablas (ADR-233 de RPP): E_DEUDA, la de CONTENIDO (la
+# marca es más vieja que el último commit) y E_DEUDA_FORMATO, la de FORMATO (sin marca `**Last updated:**`; una en
+# español o en cursiva no cuenta); cada documento tiene que fallar por la razón de su tabla. (5) Un TECHO: las dos
+# tablas juntas no pueden tener un documento que no tengan las de la base verificada.
 read -r -d '' E_DEUDA <<'EOF'
-DECISIONS.md
+THOUGHTS.md
+auditoria/constructividad-2026-09-27/README.md
+EOF
+read -r -d '' E_DEUDA_FORMATO <<'EOF'
+# ── medido el 2026-11-02 (T39): sin `**Last updated:**`. Las cuatro primeras llevan otra (en español o en cursiva): se
+#    pagan como en RPP (T24), con la fecha de su última revisión REAL, nunca la de hoy, y pasan a la de contenido.
 AI-GUIDE.md
+DECISIONS.md
+NAMING-CONVENTIONS.md
+WORKFLOW.md
+ENGARCE-ROBINSON-FOL.md
+PLANNING.md
+# (PROCESANDO.md tiene 0 bytes: un resto de la plantilla, T56)
+PROCESANDO.md
+STARTING_FOL.md
+TuplasFuncionesYListas.md
 cuarentena/README.md
 EOF
 
@@ -490,19 +511,33 @@ if [ "$(git rev-parse --is-shallow-repository 2>/dev/null)" = "true" ]; then
   echo "      Arreglo: \`fetch-depth: 0\` en el paso de checkout del workflow."
   FAIL=1
 fi
+E_UNIVERSO="$DOCS $(git ls-files '*.md' 2>/dev/null)"
 E_BAD=0      # documentos que fallan y NO estaban declarados
 E_SALDADA=0  # documentos declarados que ya están bien ⇒ hay que quitarlos de la tabla
-E_DECL=0     # deuda declarada que sigue vigente
-for d in $DOCS; do
+E_DECL=0     # deuda declarada que sigue vigente (de contenido)
+E_DECL_F=0   # deuda declarada que sigue vigente (de formato)
+E_N=0        # documentos medidos
+for d in $(printf '%s\n' $E_UNIVERSO | LC_ALL=C sort -u); do
   [ -e "$d" ] || continue
+  E_N=$((E_N+1))
   GIT_DATE=$(git log -1 --format=%ad --date=short -- "$d" 2>/dev/null)
-  LU=$(grep -m1 -iE "^\*\*Last updated" "$d" 2>/dev/null \
+  # (con cambios sin commitear, la fecha que cuenta es la de HOY: la que va a tener el commit; ADR-121 de RPP)
+  if [ -n "$(git status --porcelain -- "$d" 2>/dev/null)" ]; then GIT_DATE=$(date +%F); fi
+  # (el sello de CABECERA, el primero del documento aunque vaya a mitad de línea, y la fecha que le sigue; uno citado
+  # entre comillas invertidas no es un sello: ADR-177 de RPP)
+  LU=$(grep -m1 -iE '(^|[^`])\*\*Last updated' "$d" 2>/dev/null \
+       | grep -oiE '(^|[^`])\*\*Last updated[^0-9]{0,12}20[0-9]{2}[-‑][0-9]{2}[-‑][0-9]{2}' | head -1 \
        | grep -ohE "20[0-9]{2}[-‑][0-9]{2}[-‑][0-9]{2}" | sed "s/‑/-/g" | head -1)
   EN_TABLA=0
   while IFS= read -r t; do
     [ -n "$t" ] || continue
     [ "$t" = "$d" ] && EN_TABLA=1
   done <<< "$E_DEUDA"
+  EN_FORMATO=0
+  while IFS= read -r t; do
+    [ -n "$t" ] || continue
+    [ "$t" = "$d" ] && EN_FORMATO=1
+  done <<< "$E_DEUDA_FORMATO"
 
   ESTADO="ok"
   MOTIVO=""
@@ -511,20 +546,66 @@ for d in $DOCS; do
   elif [ -z "$GIT_DATE" ]; then
     ESTADO="mal"; MOTIVO="sin historia en git"
   elif [ "$LU" \< "$GIT_DATE" ]; then
-    ESTADO="mal"; MOTIVO="la marca dice $LU y el último commit que lo tocó es $GIT_DATE"
+    ESTADO="mal"; MOTIVO="la marca dice $LU y el último commit que lo tocó es $GIT_DATE (hoy, si tiene cambios sin commitear)"
   fi
 
-  if [ "$ESTADO" = "mal" ] && [ "$EN_TABLA" = "0" ]; then
+  if [ "$ESTADO" = "mal" ] && [ "$EN_TABLA" = "0" ] && [ "$EN_FORMATO" = "0" ]; then
     echo "  ❌ $d: $MOTIVO"
     E_BAD=$((E_BAD+1))
+  elif [ "$ESTADO" = "mal" ] && [ "$EN_TABLA" = "1" ] && [ -z "$LU" ]; then
+    echo "  ❌ $d: no tiene marca: es deuda de FORMATO, no de contenido. Pásalo a E_DEUDA_FORMATO, o ponle la de su última revisión real."
+    E_BAD=$((E_BAD+1))
+  elif [ "$ESTADO" = "mal" ] && [ "$EN_FORMATO" = "1" ] && [ -n "$LU" ]; then
+    echo "  ❌ $d: ya tiene marca: su deuda es de CONTENIDO. Pásalo de E_DEUDA_FORMATO a E_DEUDA."
+    E_BAD=$((E_BAD+1))
+  elif [ "$ESTADO" = "mal" ] && [ "$EN_FORMATO" = "1" ]; then
+    E_DECL_F=$((E_DECL_F+1))
   elif [ "$ESTADO" = "mal" ]; then
     E_DECL=$((E_DECL+1))
-  elif [ "$EN_TABLA" = "1" ]; then
-    echo "  ❌ $d: la deuda ESTÁ SALDADA — quítalo de la tabla E_DEUDA de este script."
+  elif [ "$EN_TABLA" = "1" ] || [ "$EN_FORMATO" = "1" ]; then
+    echo "  ❌ $d: la deuda ESTÁ SALDADA — quítalo de su tabla (E_DEUDA o E_DEUDA_FORMATO) de este script."
     E_SALDADA=$((E_SALDADA+1))
   fi
 done
-echo "  deuda declarada: $E_DECL   ·   sin declarar: $E_BAD   ·   saldadas sin quitar: $E_SALDADA"
+if [ "$E_N" -lt 10 ]; then
+  echo "  ❌ NO PUDE MEDIR [E]: sólo $E_N documentos (¿git ls-files?)."; E_BAD=$((E_BAD+1))
+fi
+# el TECHO: las dos tablas juntas, contenidas en las de la base verificada (la de [B]: B_BASE_REF, por omisión
+# `origin/master` con su nombre entero); sin base, rojo. Una base sin E_DEUDA_FORMATO es la de antes de T39 (el universo
+# de 9 documentos): las tablas se crean hoy y no se comparan con nada; desde la siguiente, sí.
+e_lista() { LC_ALL=C awk -v v="$1" '$0 ~ ("^read -r -d .. " v " <<") { f = 1; next } f && /^EOF$/ { exit } f' \
+              | grep -v '^#' | grep . | LC_ALL=C sort -u; }
+E_HOY=$( { printf '%s\n' "$E_DEUDA" | grep -v '^#'; printf '%s\n' "$E_DEUDA_FORMATO" | grep -v '^#'; } | grep . | LC_ALL=C sort -u)
+E_BASE_REF="${B_BASE_REF:-refs/remotes/origin/master}"
+case "$E_BASE_REF" in 0000000*) E_BASE_REF=refs/remotes/origin/master ;; esac
+E_BASE=$(GIT_NO_REPLACE_OBJECTS=1 git rev-parse -q --verify "$E_BASE_REF^{commit}" 2>/dev/null)
+E_TECHO_TXT=""
+if [ -z "$E_BASE" ]; then
+  echo "  ❌ no hay BASE VERIFICADA ($E_BASE_REF): sin ella la deuda de [E] no tiene techo (¿falta un git fetch?)."
+  E_BAD=$((E_BAD+1))
+elif ! git merge-base --is-ancestor "$E_BASE" HEAD 2>/dev/null; then
+  echo "  ❌ HEAD no desciende de la base verificada ($E_BASE_REF): rebase sobre ella."
+  E_BAD=$((E_BAD+1))
+else
+  E_BASE_SCRIPT=$(GIT_NO_REPLACE_OBJECTS=1 git show "$E_BASE:check-doc-sync.bash" 2>/dev/null)
+  if ! grep -q "^read -r -d '' E_DEUDA <<" <<< "$E_BASE_SCRIPT"; then
+    echo "  ❌ NO PUDE MEDIR el techo: la base verificada $(git rev-parse --short "$E_BASE") no tiene la tabla E_DEUDA."
+    E_BAD=$((E_BAD+1))
+  elif ! grep -q "^read -r -d '' E_DEUDA_FORMATO <<" <<< "$E_BASE_SCRIPT"; then
+    echo "  ⚠️  la base verificada ($(git rev-parse --short "$E_BASE")) es de antes de T39: las dos tablas se crean hoy, y no se comparan con nada."
+  else
+    E_TECHO=$( { printf '%s\n' "$E_BASE_SCRIPT" | e_lista E_DEUDA; printf '%s\n' "$E_BASE_SCRIPT" | e_lista E_DEUDA_FORMATO; } \
+               | grep . | LC_ALL=C sort -u)
+    E_SUBE=$(LC_ALL=C comm -23 <(printf '%s\n' "$E_HOY") <(printf '%s\n' "$E_TECHO"))
+    if [ -n "$E_SUBE" ]; then
+      echo "  ❌ la deuda de [E] SUBE: estos documentos no están en las tablas de la base verificada ($(git rev-parse --short "$E_BASE")):"
+      printf '%s\n' "$E_SUBE" | sed 's/^/      /'
+      E_BAD=$((E_BAD+1))
+    fi
+    E_TECHO_TXT=" · techo: los $(printf '%s\n' "$E_TECHO" | grep -c .) de la base verificada, $(git rev-parse --short "$E_BASE")"
+  fi
+fi
+echo "  $E_N documentos · deuda declarada: $E_DECL de contenido y $E_DECL_F de formato$E_TECHO_TXT   ·   sin declarar: $E_BAD   ·   saldadas sin quitar: $E_SALDADA"
 if [ "$E_BAD" = "0" ] && [ "$E_SALDADA" = "0" ]; then
   echo "  ✓ ninguna marca de tiempo miente fuera de la deuda declarada"
 else
@@ -802,8 +883,10 @@ while IFS= read -r gp; do
 $GBLK"; gi=$((gi-1))
     [ $((GL-gi)) -gt 40 ] && break
   done
-  printf '%s' "$GBLK" | grep -qE "$GDEBT" || continue
-  printf '%s' "$GBLK" | grep -qE "$GPAID" && continue
+  # ✏️ 2026-11-02 (T32, ADR-237 de RPP): LC_ALL=C. El grep 3.0 de msys, en UTF-8, no casa 🏁 (fuera del plano básico) y el
+  # de la CI sí: una cabecera pagada sólo con 🏁 salía roja en local. Byte a byte, igual en los dos.
+  printf '%s' "$GBLK" | LC_ALL=C grep -qE "$GDEBT" || continue
+  printf '%s' "$GBLK" | LC_ALL=C grep -qE "$GPAID" && continue
   GWIT=$(grep -rnE "^theorem +[A-Za-z_][A-Za-z0-9_'₀₁₂ⁿ]* *: *$GNAME *:=" $GSRC --include=*.lean 2>/dev/null | head -1)
   if [ -n "$GWIT" ]; then
     echo "  ❌ $GF:$GL — \`$GNAME\` se anuncia como DEUDA y YA TIENE TESTIGO INCONDICIONAL:"
@@ -871,7 +954,7 @@ FOL/Skolem0.lean§~200 l., riesgo **medio**, y el riesgo§HISTORIAL§la estimaci
 FOL/Calculus/Slash.lean§el esquema de inducción es precisamente el caso difícil, y no está hecho§DIFERIDA§(X1, T51) la DP de HA —barrar la inducción— es trabajo de PeanoRF, no de FOL: aquí, la de la lógica `⊢ᵢ`
 G2EOF
 
-grep -rnE "$G2PAT" $G2SRC --include=*.lean 2>/dev/null > "$G2CUR"
+LC_ALL=C grep -rnE "$G2PAT" $G2SRC --include=*.lean 2>/dev/null > "$G2CUR"
 G2N=$(wc -l < "$G2CUR" | tr -d ' ')
 G2D=$(grep -c . "$G2TAB" | tr -d ' ')
 
@@ -881,7 +964,7 @@ while IFS= read -r g2row; do
   g2f=$(printf '%s' "$g2row" | awk -F'§' '{print $1}')
   g2a=$(printf '%s' "$g2row" | awk -F'§' '{print $2}')
   g2c=$(printf '%s' "$g2row" | awk -F'§' '{print $3}')
-  g2hits=$(grep -F -- "$g2a" "$G2CUR" | grep -c "^$g2f:" | tr -d ' ')
+  g2hits=$(LC_ALL=C grep -F -- "$g2a" "$G2CUR" | grep -c "^$g2f:" | tr -d ' ')   # (LC_ALL=C: ver [G])
   if [ "$g2hits" = "0" ]; then
     echo "  ❌ $g2f — la fila declarada ($g2c) YA NO CASA con ningún marcador:"
     echo "        ancla: $g2a"
