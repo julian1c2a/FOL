@@ -203,7 +203,6 @@ theorem substFormula_lift_comm : ∀ (f : Formula) (c : Nat) (s : Term),
           iha (c+1) (liftTerm 0 s)]
 
 -- Conmutación subst/lift con lift en 0 y subst en `v+1` (nivel término).
-set_option linter.unusedSimpArgs false in
 mutual
 theorem substTerm_lift_comm_zero (s : Term) (n : Term) (v : Nat) :
     substTerm (v + 1) (liftTerm 0 n) (liftTerm 0 s) = liftTerm 0 (substTerm v n s) := by
@@ -211,11 +210,11 @@ theorem substTerm_lift_comm_zero (s : Term) (n : Term) (v : Nat) :
   | var k =>
       rw [show liftTerm 0 (.var k) = .var (k+1) from by simp [liftTerm]]
       by_cases h1 : k = v
-      · subst h1; simp [substTerm, liftTerm]
+      · subst h1; simp [substTerm]
       · by_cases h2 : k > v
-        · simp [substTerm, liftTerm, show k + 1 ≠ v + 1 from by omega, show k + 1 > v + 1 from by omega,
+        · simp [substTerm, liftTerm, show k + 1 > v + 1 from by omega,
             h1, h2, show k - 1 + 1 = k from by omega]
-        · simp [substTerm, liftTerm, show k + 1 ≠ v + 1 from by omega, show ¬ k + 1 > v + 1 from by omega,
+        · simp [substTerm, liftTerm, show ¬ k + 1 > v + 1 from by omega,
             h1, h2]
   | func f ts => simp only [liftTerm, substTerm]; congr 1; exact substTerms_lift_comm_zero ts n v
 theorem substTerms_lift_comm_zero (ts : List Term) (n : Term) (v : Nat) :
@@ -270,7 +269,6 @@ theorem subst_subst_lift_gen : ∀ (f : Formula) (n s : Term) (v : Nat),
 -- Lema de sustitución (Barendregt) para niveles consecutivos `j+1`/`j` (convención
 -- decremental): conmuta dos sustituciones anidadas. Casos de binder vía
 -- `substTerm_lift_comm_zero` + `liftTerm_comm_zero`.
-set_option linter.unusedSimpArgs false in
 mutual
 theorem substTerm_subst_comm_succ (u : Term) (a b : Term) (j : Nat) :
     substTerm (j+1) a (substTerm j b u)
@@ -291,17 +289,17 @@ theorem substTerm_subst_comm_succ (u : Term) (a b : Term) (j : Nat) :
           subst hk
           simp [-Nat.left_eq_add, -Nat.add_eq_left, substTerm,
             show ¬ j+1 = j from by omega, show j+1 > j from by omega,
-            show ¬ j+1 = j+2 from by omega, show ¬ j+1 > j+2 from by omega,
+            show ¬ j+1 > j+2 from by omega,
             show ¬ j = j+1 from by omega, show ¬ j > j+1 from by omega]
         · subst h2
           simp [-Nat.left_eq_add, -Nat.add_eq_left, substTerm,
             show ¬ j+2 = j from by omega, show j+2 > j from by omega,
-            show j+2 = j+2 from rfl, substTerm_liftTerm]
+            substTerm_liftTerm]
         · simp [substTerm, show ¬ k = j from by omega, show k > j from hgt,
             show ¬ k = j+2 from by omega, show k > j+2 from h2,
             show ¬ k - 1 = j from by omega, show k - 1 > j from by omega,
             show ¬ k - 1 = j+1 from by omega, show k - 1 > j+1 from by omega]
-  | func f ts => simp only [substTerm, liftTerm]; congr 1; exact substTerms_subst_comm_succ ts a b j
+  | func f ts => simp only [substTerm]; congr 1; exact substTerms_subst_comm_succ ts a b j
 theorem substTerms_subst_comm_succ (ts : List Term) (a b : Term) (j : Nat) :
     substTerms (j+1) a (substTerms j b ts)
       = substTerms j (substTerm (j+1) a b) (substTerms (j+2) (liftTerm j a) ts) := by

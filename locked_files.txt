@@ -37,7 +37,6 @@ FOL/Eq0.lean
 FOL/Eigenvariable.lean
 FOL/Derives2.lean
 FOL/Herbrand0.lean
-FOL/Theorems/Eq.lean
 FOL/SymClasses.lean
 FOL/Finitary0.lean
 FOL/DecEq.lean
