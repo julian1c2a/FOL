@@ -2,7 +2,8 @@
 #
 # `* text=auto`, como RPP: el índice guarda LF, y el árbol de trabajo de cada plataforma, el suyo. Hasta el 2026-10-28
 # sólo se forzaban los scripts, porque se creía que renormalizar tocaría módulos CONGELADOS; medido ese día, ninguno de
-# los 45 blobs con CRLF lo era (nueve `.lean` activos, uno de ellos bloqueado, treinta de la cuarentena y seis más), y
+# los 45 blobs con CRLF lo era (nueve `.lean` activos, uno de ellos bloqueado, veintiséis de la cuarentena y diez más;
+# ✏️ 2026-11-04, R3-5-11 y ADR-256 de RPP: decía «treinta y seis más», re-medido en el padre de 800261b), y
 # se renormalizaron. `[EOL]` de `check-doc-sync.bash` no deja que vuelva uno.
 #
 # Los `.bash` se ejecutan con Git Bash en Windows y con bash en el runner de la CI, y `strip-lean.awk` lo leen awk de
