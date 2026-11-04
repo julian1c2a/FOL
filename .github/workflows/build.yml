@@ -202,6 +202,13 @@ jobs:
       - name: REFERENCE.md §6 al día
         run: python3 gen-reference.py --check
 
+      # ⭐ 2026-11-04 (L5-11, ADR-254 de RPP): el ÍNDICE de las constantes declaradas de FOL y de TheoryFramework (nombre,
+      # clase, módulo y enunciado, del entorno de Lean: `doc/indice.tsv`, para buscar antes de construir); rojo si lo
+      # versionado no es lo que se genera. Con calibración. Aquí se carga el entorno desde FOL, que acaba de
+      # construirse (`CI` está puesta); en local, desde la raíz de RPP (M-3). Medido en local: unos 20 s.
+      - name: El índice de las constantes al día
+        run: bash check-indice.bash
+
       # ⭐ 2026-10-28 (ADR-216 de RPP): la CADUCIDAD del token de RPP_DISPATCH_TOKEN, a la vista. El paso de abajo sólo
       # AVISA si no puede lanzar (a propósito: un master correcto no se pone rojo por un token), y un token caducado se
       # quedaría en un aviso que nadie lee. GitHub devuelve la fecha en la cabecera «github-authentication-token-expiration»

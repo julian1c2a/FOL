@@ -2,7 +2,7 @@
 # Usage: make <target>
 # Requires: bash, lake, git
 
-.PHONY: build build-all clean rebuild sorry axioms status lock unlock list init help
+.PHONY: build build-all clean rebuild sorry axioms indice status lock unlock list init help
 
 ## Build the project (los DOS `@[default_target]`: FOL y TheoryFramework)
 build:
@@ -22,6 +22,11 @@ build-all:
 ## Censo de `axiom` de Lean (A-1)
 axioms:
 	@bash check-axioms.bash
+
+## El índice de las constantes de FOL y TheoryFramework (doc/indice.tsv), contra lo que se genera (L5-11, ADR-254 de
+## RPP); «bash check-indice.bash --rehacer» lo reescribe
+indice:
+	@bash check-indice.bash
 
 ## Clean build artifacts
 clean:
