@@ -269,7 +269,13 @@ echo
 echo "════ [EOL] FINALES DE LÍNEA EN EL ÍNDICE — ROJO ════"
 if git rev-parse --git-dir > /dev/null 2>&1; then
   EOL_MAL=$(git ls-files --eol | awk '$1 == "i/crlf" || $1 == "i/mixed" { print $NF }')
-  if [ -n "$EOL_MAL" ]; then
+  # ✏️ 2026-11-04 (R3-3-10 de la ronda 3, ADR-255 de RPP): sobre un universo vacío aprobaba; con menos de 100 blobs en
+  # LF, el índice no es el de este repositorio (o git no lo lee): no se puede medir
+  EOL_LF=$(git ls-files --eol | grep -c '^i/lf')
+  if [ "$EOL_LF" -lt 100 ]; then
+    echo "  ❌ NO PUDE MEDIR [EOL]: sólo $EOL_LF blobs en LF en el índice."
+    FAIL=1
+  elif [ -n "$EOL_MAL" ]; then
     echo "  ✗ blobs con CRLF en el índice ($(printf '%s\n' "$EOL_MAL" | grep -c .)): renormaliza con «git add --renormalize .»"
     printf '%s\n' "$EOL_MAL" | head -10 | sed 's/^/      /'
     FAIL=1
@@ -815,9 +821,18 @@ done
 echo
 echo "════ [F] ARTEFACTOS HUÉRFANOS (.olean sin fuente) ════"
 F_FAIL=0
+# ✏️ 2026-11-04 (R3-3-10 de la ronda 3, ADR-255 de RPP): sin build («[ -d … ] || continue») aprobaba sin mirar nada.
+# Ahora cuenta los `.olean` que mira, y con menos de 50, no puede medir
+F_VISTOS=""
 for ROOT in "."; do
   LAKEDIR="$ROOT/.lake/build/lib/lean"
-  [ -d "$LAKEDIR" ] || continue
+  F_N=$(find "$LAKEDIR" -name '*.olean' 2>/dev/null | grep -c .)
+  F_VISTOS="$F_VISTOS $F_N"
+  if [ "$F_N" -lt 50 ]; then
+    echo "  ❌ NO PUDE MEDIR [F]: $F_N .olean en $LAKEDIR (¿está construido?)."
+    F_FAIL=1
+    continue
+  fi
   while IFS= read -r O; do
     [ -n "$O" ] || continue
     REL="${O#$LAKEDIR/}"
@@ -830,7 +845,7 @@ for ROOT in "."; do
   done <<< "$(find "$LAKEDIR" -name '*.olean' 2>/dev/null)"
 done
 if [ "$F_FAIL" = "0" ]; then
-  echo "  ✓ ningún .olean sin fuente"
+  echo "  ✓ ningún .olean sin fuente (mirados:$F_VISTOS)"
 else
   echo "  ⚠️  un .olean sin fuente SIGUE SIENDO IMPORTABLE. Bórralo:"
   echo "      rm -f <ruta>.olean <ruta>.olean.hash <ruta>.ilean <ruta>.ilean.hash <ruta>.trace"
@@ -977,22 +992,30 @@ while IFS= read -r g2row; do
   fi
 done < "$G2TAB"
 
-# (ii) ningún marcador sin declarar  — y el recuento tiene que CUADRAR
+# (ii) ✏️ 2026-11-04 (R3-3-13 de la ronda 3, ADR-255 de RPP): la CORRESPONDENCIA, no sólo el recuento: cada marcador
+# lo casa EXACTAMENTE una fila. Antes sólo se miraba si los recuentos cuadraban, y con dos filas sobre un mismo marcador
+# otro quedaba sin declarar, con los recuentos iguales y en verde.
+while IFS= read -r g2l; do
+  [ -z "$g2l" ] && continue
+  g2lf=${g2l%%:*}
+  g2n=0
+  while IFS= read -r g2row; do
+    [ -z "$g2row" ] && continue
+    g2f=$(printf '%s' "$g2row" | awk -F'§' '{print $1}')
+    [ "$g2f" = "$g2lf" ] || continue
+    g2a=$(printf '%s' "$g2row" | awk -F'§' '{print $2}')
+    case "$g2l" in *"$g2a"*) g2n=$((g2n + 1)) ;; esac
+  done < "$G2TAB"
+  if [ "$g2n" = "0" ]; then
+    echo "  ❌ SIN DECLARAR → $(printf '%s' "$g2l" | cut -c1-118)"
+    G2_FAIL=1
+  elif [ "$g2n" != "1" ]; then
+    echo "  ❌ $g2n filas casan con el MISMO marcador → $(printf '%s' "$g2l" | cut -c1-110)"
+    G2_FAIL=1
+  fi
+done < "$G2CUR"
 if [ "$G2N" != "$G2D" ]; then
   echo "  ❌ marcadores en el árbol: $G2N · filas declaradas: $G2D"
-  while IFS= read -r g2l; do
-    [ -z "$g2l" ] && continue
-    g2lf=${g2l%%:*}
-    g2found=0
-    while IFS= read -r g2row; do
-      [ -z "$g2row" ] && continue
-      g2f=$(printf '%s' "$g2row" | awk -F'§' '{print $1}')
-      [ "$g2f" = "$g2lf" ] || continue
-      g2a=$(printf '%s' "$g2row" | awk -F'§' '{print $2}')
-      case "$g2l" in *"$g2a"*) g2found=1; break ;; esac
-    done < "$G2TAB"
-    [ "$g2found" = "0" ] && echo "        SIN DECLARAR → $(printf '%s' "$g2l" | cut -c1-118)"
-  done < "$G2CUR"
   G2_FAIL=1
 fi
 

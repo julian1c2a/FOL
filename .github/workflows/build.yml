@@ -209,6 +209,12 @@ jobs:
       - name: El índice de las constantes al día
         run: bash check-indice.bash
 
+      # ⭐ 2026-11-04 (R3-5-14 y R3-3-09 de la ronda 3, ADR-255 de RPP): el autotest de `guarda_y_bloquea.bash` (el mismo
+      # fichero que el de RPP): en un repositorio de prueba, rechaza un congelado, también si ya está en el índice, y
+      # commitea un bloqueado.
+      - name: Autotest de guarda_y_bloquea.bash
+        run: bash guarda_y_bloquea.bash --autotest
+
       # ⭐ 2026-10-28 (ADR-216 de RPP): la CADUCIDAD del token de RPP_DISPATCH_TOKEN, a la vista. El paso de abajo sólo
       # AVISA si no puede lanzar (a propósito: un master correcto no se pone rojo por un token), y un token caducado se
       # quedaría en un aviso que nadie lee. GitHub devuelve la fecha en la cabecera «github-authentication-token-expiration»

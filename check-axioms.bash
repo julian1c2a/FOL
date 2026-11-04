@@ -109,8 +109,9 @@ bash guarda-toolchain.bash || exit 2
 # ⚠️ ÁMBITO (ADR-116): el entorno lee los `.olean` que haya; la cifra es la del ÚLTIMO build, y se dice
 # de cuándo es. (Se probó a comprobar la frescura por fechas y daba falsos «caducados»: tras cambiar de
 # rama, git toca ficheros que Lake no recompila porque el contenido es el mismo.) En la CI el build es
-# siempre nuevo, y el contraste con el grep mira el árbol ACTUAL. El barrel `TheoryFramework.lean` no se
-# importa: el build no lo compila (`globs := .submodules`).
+# siempre nuevo, y el contraste con el grep mira el árbol ACTUAL. ✏️ 2026-11-04 (R3-3-07 de la ronda 3, ADR-255 de
+# RPP): decía que el barril `TheoryFramework.lean` no se importaba porque el build no lo compilaba (`globs :=
+# .submodules`); desde T15 (`.andSubmodules`) sí lo compila, y aquí se importa, y se exige cargado.
 ULTIMO=$(ls -t .lake/build/lib/lean/FOL.olean .lake/build/lib/lean/FOL/*.olean .lake/build/lib/lean/TheoryFramework/*.olean 2>/dev/null | head -1)
 BUILD_FECHA=$([ -n "$ULTIMO" ] && date -r "$ULTIMO" '+%Y-%m-%d %H:%M' 2>/dev/null || echo '¿?')
 TMP=$(mktemp -d)
@@ -118,6 +119,7 @@ LEANFILE="$TMP/Axiomas.lean"
 {
   echo "import Lean"
   echo "import FOL"
+  echo "import TheoryFramework"
   for f in $(lean_de TheoryFramework); do
     m="${f%.lean}"; echo "import ${m//\//.}"
   done
@@ -134,6 +136,9 @@ def conSorry : Nat := sorry
 theorem conNativo : (2 + 2 : Nat) = 4 := by native_decide
 -- (✏️ v4.35, T42b: `Lean.ofReduceBool` ya no existe; el axioma AJENO del señuelo es `lcUnreachable`, del core)
 noncomputable unsafe def conAjeno : Nat := lcUnreachable
+-- ✏️ 2026-11-04 (R3-3-06, ADR-255 de RPP): una que NO nombra el axioma de confianza, sino un teorema que lo usa: el
+-- censo @TRUST la veía sólo si lo nombraba directamente
+theorem usaNativo : (2 + 2 : Nat) = 4 := conNativo
 def implReal (n : Nat) : Nat := n
 @[implemented_by implReal] def conImplementedBy (n : Nat) : Nat := n
 @[extern "senuelo_c"] opaque conExtern : Nat → Nat
@@ -176,7 +181,11 @@ run_cmd do
       -- tipo y valor, también el de un teorema (`getUsedConstantsAsSet` lee con `allowOpaque`)
       let usadas := ci.getUsedConstantsAsSet
       if usadas.contains ``sorryAx then logInfo m!"@SORRY {lib} {n}"
-      for u in usadas do
+      -- ✏️ 2026-11-04 (R3-3-06, ADR-255 de RPP): los axiomas de su CIERRE (`collectAxioms`, lo que da `#print axioms`),
+      -- no sólo los que nombra: uno de confianza que usa una constante ajena no lo nombra la nuestra. (Un axioma no se
+      -- «usa» a sí mismo: ése es @AX.)
+      for u in (← Lean.collectAxioms n) do
+        if u == n then continue
         if let some (.axiomInfo _) := env.find? u then
           -- de CONFIANZA: el ajeno que no es de los tres de Lean ni `sorryAx`, y —aunque sea del propio módulo— el
           -- auxiliar que fabrica `native_decide` (`…._native.native_decide.ax_…`): en v4.31 `native_decide` ya no
@@ -187,6 +196,9 @@ run_cmd do
             logInfo m!"@TRUST {lib} {n} {u}"
       if (Lean.Compiler.getImplementedBy? env n).isSome || Lean.isExtern env n then logInfo m!"@NATIVO {lib} {n}"
   logInfo m!"@CONST {nFOL} {nTF}"
+  -- ✏️ 2026-11-04 (R3-3-07, ADR-255 de RPP): los dos barriles, cargados; si falta uno, error, y no se puede medir
+  for b in [`FOL, `TheoryFramework] do
+    unless env.header.moduleNames.contains b do logError m!"el barril {b} no está cargado"
   -- ¿alguna librería cargada que ningún censo mira? (una nueva, importada por FOL, quedaría fuera)
   for m in env.header.moduleNames do
     if !([`Init, `Std, `Lean, `Lake, `FOL, `TheoryFramework].contains m.getRoot) then logInfo m!"@AJENO {m}"
@@ -306,6 +318,7 @@ read -r -d '' SENUELOS <<'EOF'
 @SORRY SEN Senuelo.conSorry
 @TRUST SEN Senuelo.conNativo Senuelo.conNativo._native.native_decide.ax_1_1
 @TRUST SEN Senuelo.conAjeno lcUnreachable
+@TRUST SEN Senuelo.usaNativo Senuelo.conNativo._native.native_decide.ax_1_1
 @NATIVO SEN Senuelo.conImplementedBy
 @NATIVO SEN Senuelo.conExtern
 EOF
