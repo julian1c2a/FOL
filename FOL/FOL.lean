@@ -117,9 +117,18 @@ def iff {Sym : Type} (f1 f2 : FormulaG Sym) : FormulaG Sym :=
 -- Notaciones para hacer las fórmulas legibles
 notation "⊥" => Formula.bottom
 notation "⊤" => top
-prefix:75 "¬ " => neg
-infixr:70 " ∧ " => Formula.and
-infixr:65 " ∨ " => Formula.or
+-- ✏️ 2026‑11‑05 (L5‑08 de la auditoría de la base de RPP, ADR‑258 de RPP): `¬ ∧ ∨` de las fórmulas, `scoped` en `FOL`.
+-- Eran globales, y sombreaban los de Lean en todo módulo que importara éste: `k = 5 ∨ k = 7` no se leía (el `∨` de las
+-- fórmulas tiene precedencia 65, el de Lean 30) y un `∧` en el tipo de un `have` era `Formula.and`. Dentro de un
+-- `namespace FOL…` siguen activos (todos los módulos de FOL lo están); fuera, con `open scoped FOL`. MEDIDO: FOL compila
+-- sin tocar nada más, y de los 119 módulos de RPP sólo 6 la necesitan. Las demás (`⇒ ⇔ ≐ ∀. ∃. ⊥ ⊤ #`) no chocan con
+-- ninguna de Lean y siguen globales.
+namespace FOL
+scoped prefix:75 "¬ " => neg
+scoped infixr:70 " ∧ " => Formula.and
+scoped infixr:65 " ∨ " => Formula.or
+end FOL
+open scoped FOL
 infix:50 " ≐ " => Formula.eq
 infixr:60 " ⇒ " => Formula.impl
 infix:55 " ⇔ " => iff
@@ -345,19 +354,7 @@ inductive Derives : List Formula → Formula → Prop where
 
 infix:50 " ⊢ " => Derives
 
--- 5. EJEMPLO DE USO
--- Vamos a ver cómo se vería la estructura de una fórmula y su manipulación.
-
-def formula_ejemplo : Formula :=
-  .impl (.atom ['P'] []) (neg (neg (.atom ['Q'] [])))
-
--- Queremos aplicar Doble Negación sólo al átomo Q, que está en la posición:
--- Raíz -> Derecha (lado derecho de la implicación)
-def posicion_Q : Pos := .right .root
-
--- La fórmula resultante tras aplicar la regla en esa posición exacta sería:
-def formula_simplificada : Formula :=
-  replaceAt formula_ejemplo posicion_Q (.atom ['Q'] [])
-
--- Comprobación:
--- formula_simplificada es P → Q
+-- 5. EJEMPLO DE USO — ✏️ 2026‑11‑05 (M‑5 de la auditoría de FOL del 2026‑09‑12, ADR‑258 de RPP): aquí había tres
+-- definiciones de ejemplo (`formula_ejemplo`, `posicion_Q` y `formula_simplificada`), en la raíz del entorno de todo
+-- consumidor y sin ningún uso (medido: doc/control/fol-sin-uso.tsv de RPP); se borran. El resto de este fichero
+-- sigue sin `namespace`: meterlo en uno renombraría `Term`, `Formula`, `substFormula`… en los dos repos (ADR‑258).

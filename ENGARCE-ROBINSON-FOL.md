@@ -1,6 +1,6 @@
 # El Engarce Fundacional: FOL, ROBINSON++ y los Tipos Inductivos de Lean 4
 
-**Last updated:** 2026-11-05 — FOL0912:M‑3 de la auditoría de FOL (ADR‑257 de RPP): el engarce que HAY, medido (§A), y el texto de junio, rotulado como lo que es: una hoja de ruta, nada formalizado (§B). Antes, 2026-06-12 —su última revisión con diez líneas nuevas o más, `db24399`—, sin el cuerpo revisado: deuda de contenido de `[E]`, saldada hoy.
+**Last updated:** 2026-11-05 — ADR‑258 de RPP: §A, con `FOL.DecEq` entre lo que RPP importa y sin `Lean` en su cierre. Antes, el mismo día — FOL0912:M‑3 de la auditoría de FOL (ADR‑257 de RPP): el engarce que HAY, medido (§A), y el texto de junio, rotulado como lo que es: una hoja de ruta, nada formalizado (§B). Antes, 2026-06-12 —su última revisión con diez líneas nuevas o más, `db24399`—, sin el cuerpo revisado: deuda de contenido de `[E]`, saldada hoy.
 
 > ⛔ **Hasta el 2026‑11‑05 este documento describía un engarce que NO EXISTE.** encodeList, encodeList_bijective,
 > IsList, el lema β y los W‑types no aparecen en ningún `.lean` de FOL ni de ROBINSON_PlusPlus (medido con grep ese
@@ -13,14 +13,15 @@
 1. **La dependencia.** ROBINSON_PlusPlus declara `require FOL from "../FOL"` en su `lakefile.lean`: FOL es una
    dependencia local, construida con el mismo toolchain (M‑1 de aquí, M‑3 de RPP), y RPP registra el FOL que certifica
    en `../ROBINSON_PlusPlus/doc/control/fol-sha.txt`.
-2. **Lo que RPP importa**: nueve módulos de FOL —`FOL.FOL` (en 20 módulos de RPP), `FOL.Theorems.Eq` (17),
-   `FOL.Theorems.Quantifiers` (10), `FOL.Semantics` (2), y `FOL.SymLit`, `FOL.Sentence`, `FOL.Lift0`, `FOL.Derives1` y
-   `FOL.Canonical0` (uno cada uno)—; de TheoryFramework, ninguno.
+2. **Lo que RPP importa**: diez módulos de FOL —`FOL.FOL` (en 20 módulos de RPP), `FOL.Theorems.Eq` (17),
+   `FOL.Theorems.Quantifiers` (10), `FOL.Semantics` (2), y `FOL.SymLit`, `FOL.Sentence`, `FOL.Lift0`, `FOL.Derives1`,
+   `FOL.Canonical0` y `FOL.DecEq` (uno cada uno; ✏️ éste, desde ADR‑258 de RPP, que retiró su copia)—; de TheoryFramework,
+   ninguno. Ninguno le trae ya `Lean` (ADR‑258 de RPP: `FOL.Theorems.Impl` dejó de importar `FOL.Tactics`).
 3. **Lo que toma de FOL**: la sintaxis (`Formula`, los términos, la sustitución y el lift), la semántica de Tarski con
    la que construye sus modelos (`evalFormula` y `Model`), la noción de sentencia, los literales de símbolo («sym!») y,
    para el puente, `Derives₀`, `Derives₁` y la existencia de modelo. Las declaraciones de FOL y TheoryFramework que
-   alguna constante de RPP nombra directamente son 56 de 1402 (`../ROBINSON_PlusPlus/doc/control/fol-sin-uso.tsv`,
-   ADR‑254 de RPP).
+   alguna constante de RPP nombra directamente son 58 de 1399 (`../ROBINSON_PlusPlus/doc/control/fol-sin-uso.tsv`,
+   ADR‑254 de RPP; ✏️ ADR‑258: eran 56 de 1402).
 4. **El puente de las derivaciones** (`../ROBINSON_PlusPlus/ROBINSON_PlusPlus/Meta/PuenteFOL.lean`): una derivación de
    FOL desde la teoría da una del cálculo `Prf` de RPP (`prf_of_derivesSet`, T67, ADR‑195 de RPP), y al revés sobre
    las clausuras universales de sus axiomas (`prf_iff_derivesSet_clausuras`, ADR‑253 de RPP); con él, Gödel I y II

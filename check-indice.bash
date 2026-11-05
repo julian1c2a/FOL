@@ -72,6 +72,9 @@ fi
   sed 's/^/import /' "$MODS"
   cat <<'EOF'
 open Lean Meta
+-- (las notaciones de las fórmulas de FOL, `¬ ∧ ∨`, son `scoped` desde ADR-258: se abren para que los enunciados se
+-- impriman como se escriben)
+open scoped FOL
 
 namespace IndiceCalib
 -- la calibración: el índice tiene que ver estas ocho declaraciones (con los dos constructores), y no lo que Lean

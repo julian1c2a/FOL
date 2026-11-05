@@ -13,7 +13,9 @@ License: MIT
 -- @importance: high
 
 import FOL.FOL
-import FOL.Tactics
+-- ✏️ 2026‑11‑05 (R2‑4‑5 de la auditoría de la base de RPP, ADR‑258 de RPP): sin `import FOL.Tactics`. Se usaba una vez
+-- (`derive_hyp`, en `id_impl`, ahora con `Derives.hyp` a mano), y por esta línea los 118 módulos de RPP que importan
+-- `FOL.Theorems.Quantifiers` cargaban `Lean` entero (`FOL.Tactics` lo importa) sin usar ninguna táctica suya.
 
 namespace FOL.Theorems.Impl
 
@@ -24,7 +26,8 @@ namespace FOL.Theorems.Impl
 -- 1. Identidad: A ⇒ A
 theorem id_impl {Γ A} : Γ ⊢ .impl A A := by
   apply Derives.intro_impl
-  derive_hyp
+  apply Derives.hyp
+  exact List.Mem.head _
 
 -- 2. Afirmación del Consecuente (K): A ⇒ (B ⇒ A)
 theorem k_impl {Γ A B} : Γ ⊢ .impl A (.impl B A) := by

@@ -1,6 +1,6 @@
 # Diagrama de Dependencias — FOL
 
-**Last updated:** 2026-10-29 — GENERADO por `py gen-dependencies.py` desde las líneas `import`; no se edita a mano.
+**Last updated:** 2026-11-05 — GENERADO por `py gen-dependencies.py` desde las líneas `import`; no se edita a mano.
 **Autor**: Julián Calderón Almendros
 
 > ⚠️ Este fichero se **calcula**. Para actualizarlo: `py gen-dependencies.py`; para comprobar que
@@ -9,7 +9,7 @@
 
 ## Cifras
 
-* **70 módulos** (`FOL/` 49 + `FOL/Calculus/` 7 + `FOL/Theorems/` 5 + `TheoryFramework/` 9), **140 aristas** `import` entre ellos, profundidad máxima **12**.
+* **70 módulos** (`FOL/` 49 + `FOL/Calculus/` 7 + `FOL/Theorems/` 5 + `TheoryFramework/` 9), **139 aristas** `import` entre ellos, profundidad máxima **12**.
 * 2 `lean_lib`: `FOL` y `TheoryFramework`, las dos con `globs := #[.andSubmodules …]`: el build compila el barril y
   TODO su directorio (T15 de RPP, 2026-10-18). Que todo módulo esté además en el cierre de imports de las raíces
   (`cierre-imports.bash`: `FOL`, `TheoryFramework`, `TheoryFramework.Instances.FOL` y `TheoryFramework.Instances.FOLModels`)
@@ -20,8 +20,8 @@
 ## Por niveles (camino de imports más largo hasta una raíz)
 
 * **0** — `FOL.FOL`, `SymLit`, `TF.Logic`
-* **1** — `Calculus.Subst`, `Complexity`, `DecEq`, `Derives0`, `Semantics`, `SymClasses`, `Tactics`, `Theorems.Eq`, `Theorems.Neg`, `TF.Theory`
-* **2** — `Calculus.DerivesI`, `Deduction`, `Eigenvariable`, `Enumeration`, `Eq0`, `Propositional0`, `Rename`, `Sentence`, `Soundness0`, `Theorems.Derived`, `Theorems.Impl`, `TF.Properties`, `TF.Relations`
+* **1** — `Calculus.Subst`, `Complexity`, `DecEq`, `Derives0`, `Semantics`, `SymClasses`, `Tactics`, `Theorems.Eq`, `Theorems.Impl`, `Theorems.Neg`, `TF.Theory`
+* **2** — `Calculus.DerivesI`, `Deduction`, `Eigenvariable`, `Enumeration`, `Eq0`, `Propositional0`, `Rename`, `Sentence`, `Soundness0`, `Theorems.Derived`, `TF.Properties`, `TF.Relations`
 * **3** — `Calculus.Collapse`, `Calculus.Eq`, `Calculus.SubstDerives`, `Herbrand0`, `Lift0`, `Theorems.Quantifiers`, `TF.MetaTheorems`, `TF.Semantics`
 * **4** — `Core`, `Derives1`, `Henkin0`, `Prenex0`, `TF.Conservativity`
 * **5** — `Derives2`, `Fresh0`, `PrenexNF0`
@@ -158,7 +158,6 @@ graph BT
     Theorems_Derived["Theorems.Derived"] --> Theorems_Neg["Theorems.Neg"]
     Theorems_Eq["Theorems.Eq"] --> FOL_FOL["FOL.FOL"]
     Theorems_Impl["Theorems.Impl"] --> FOL_FOL["FOL.FOL"]
-    Theorems_Impl["Theorems.Impl"] --> Tactics["Tactics"]
     Theorems_Neg["Theorems.Neg"] --> FOL_FOL["FOL.FOL"]
     Theorems_Quantifiers["Theorems.Quantifiers"] --> FOL_FOL["FOL.FOL"]
     Theorems_Quantifiers["Theorems.Quantifiers"] --> Theorems_Derived["Theorems.Derived"]
@@ -192,8 +191,9 @@ graph BT
 | `FOL.Derives0` | 1 | `FOL.FOL` | `Calculus.DerivesI`, `Eigenvariable`, `Eq0`, `Propositional0`, `Rename`, `Soundness0` |
 | `FOL.Semantics` | 1 | `FOL.FOL` | `Canonical0`, `Inconsistencia`, `Sentence`, `Soundness0` |
 | `FOL.SymClasses` | 1 | `FOL.FOL` | `Enumeration`, `Fresh0` |
-| `FOL.Tactics` | 1 | `FOL.FOL` · externo: `Lean` | `Core`, `Deduction`, `Theorems.Impl` |
+| `FOL.Tactics` | 1 | `FOL.FOL` · externo: `Lean` | `Core`, `Deduction` |
 | `FOL.Theorems.Eq` | 1 | `FOL.FOL` | `Calculus.Eq`, `Core`, `Derives2`, `Eq0` |
+| `FOL.Theorems.Impl` | 1 | `FOL.FOL` | `Core`, `Theorems.Quantifiers` |
 | `FOL.Theorems.Neg` | 1 | `FOL.FOL` | `Core`, `Theorems.Derived`, `Theorems.Quantifiers` |
 | `TheoryFramework.Theory` | 1 | `TF.Logic` | `TF.Properties`, `TF.Relations` |
 | `FOL.Calculus.DerivesI` | 2 | `Derives0`, `FOL.FOL` | `Calculus.Collapse`, `Calculus.Consistency`, `Calculus.Eq`, `Calculus.SubstDerives`, `Estratos0` |
@@ -206,7 +206,6 @@ graph BT
 | `FOL.Sentence` | 2 | `Semantics` | — |
 | `FOL.Soundness0` | 2 | `Derives0`, `Semantics` | `Canonical0`, `Esencialidad0`, `Inconsistencia` |
 | `FOL.Theorems.Derived` | 2 | `FOL.FOL`, `Theorems.Neg` | `Core`, `Theorems.Quantifiers` |
-| `FOL.Theorems.Impl` | 2 | `FOL.FOL`, `Tactics` | `Core`, `Theorems.Quantifiers` |
 | `TheoryFramework.Properties` | 2 | `TF.Theory` | `TF.MetaTheorems`, `TF.Semantics` |
 | `TheoryFramework.Relations` | 2 | `TF.Theory` | `TF.MetaTheorems` |
 | `FOL.Calculus.Collapse` | 3 | `Calculus.DerivesI`, `Calculus.Subst` | `Calculus.Slash` |

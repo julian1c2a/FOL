@@ -1409,6 +1409,9 @@ FOL.substTerms_subst_comm_succ	teorema	FOL.Theorems.Eq	∀ (ts : List _root_.Ter
 FOL.substTerms_subst_lift_gen	teorema	FOL.Theorems.Eq	∀ (ts : List _root_.Term) (n s : _root_.Term) (v : Nat), substTerms v n (substTerms v s (liftTerms (v + 1) ts)) = substTerms v (substTerm v n s) ts
 FOL.subst_subst_comm_succ	teorema	FOL.Theorems.Eq	∀ (f : Formula) (a b : _root_.Term) (j : Nat), substFormula (j + 1) a (substFormula j b f) = substFormula j (substTerm (j + 1) a b) (substFormula (j + 2) (liftTerm j a) f)
 FOL.subst_subst_lift_gen	teorema	FOL.Theorems.Eq	∀ (f : Formula) (n s : _root_.Term) (v : Nat), substFormula v n (substFormula v s (liftFormula (v + 1) f)) = substFormula v (substTerm v n s) f
+FOL.«term_∧_»	meta	FOL.FOL	Lean.TrailingParserDescr
+FOL.«term_∨_»	meta	FOL.FOL	Lean.TrailingParserDescr
+FOL.«term¬_»	meta	FOL.FOL	Lean.ParserDescr
 Formula	def	FOL.FOL	Type
 Formula.ex.inj	teorema	FOL.FOL	∀ {a b : Formula}, ∃. a = ∃. b → a = b
 Formula.noConfusion	teorema	FOL.FOL	∀ {P : Prop} {t t' : Formula}, t = t' → FormulaG.noConfusionType P t t'
@@ -1594,8 +1597,6 @@ TheoryFramework.proves_monotone	teorema	TheoryFramework.MetaTheorems	∀ {F : Ty
 TheoryFramework.satCompact_of_compact	teorema	TheoryFramework.Semantics	∀ {F : Type} [inst : TheoryFramework.LogicSystem F] [inst_1 : TheoryFramework.ModelSemantics F] [TheoryFramework.CompactLogic F], (∀ (I : TheoryFramework.ModelSemantics.Interp F), ¬TheoryFramework.ModelSemantics.sat I TheoryFramework.LogicSystem.bottom) → TheoryFramework.SatCompact F
 derives0_raa	teorema	FOL.Derives0	∀ {Γ : List Formula} {A : Formula}, A :: Γ ⊢₀ ⊥ → Γ ⊢₀ ¬ A
 derives0_to_derives	teorema	FOL.Derives0	∀ {Γ : List Formula} {f : Formula}, Γ ⊢₀ f → Γ ⊢ f
-formula_ejemplo	def	FOL.FOL	Formula
-formula_simplificada	def	FOL.FOL	Formula
 getAllPositions	opaca	FOL.Tactics	Formula → List Pos
 getAt?	def	FOL.FOL	{Sym : Type} → FormulaG Sym → Pos → Option (FormulaG Sym)
 iff	def	FOL.FOL	{Sym : Type} → FormulaG Sym → FormulaG Sym → FormulaG Sym
@@ -1616,7 +1617,6 @@ liftFormula	def	FOL.FOL	{Sym : Type} → Nat → FormulaG Sym → FormulaG Sym
 liftTerm	def	FOL.FOL	{Sym : Type} → Nat → TermG Sym → TermG Sym
 liftTerms	def	FOL.FOL	{Sym : Type} → Nat → List (TermG Sym) → List (TermG Sym)
 neg	def	FOL.FOL	{Sym : Type} → FormulaG Sym → FormulaG Sym
-posicion_Q	def	FOL.FOL	Pos
 replaceAt	def	FOL.FOL	{Sym : Type} → FormulaG Sym → Pos → FormulaG Sym → FormulaG Sym
 substFormula	def	FOL.FOL	{Sym : Type} → Nat → TermG Sym → FormulaG Sym → FormulaG Sym
 substTerm	def	FOL.FOL	{Sym : Type} → Nat → TermG Sym → TermG Sym → TermG Sym
@@ -1629,14 +1629,11 @@ tryMem	opaca	FOL.Tactics	Lean.MVarId → Lean.Meta.MetaM Unit
 «term#_»	meta	FOL.FOL	Lean.ParserDescr
 «term_⇒_»	meta	FOL.FOL	Lean.TrailingParserDescr
 «term_⇔_»	meta	FOL.FOL	Lean.TrailingParserDescr
-«term_∧__1»	meta	FOL.FOL	Lean.TrailingParserDescr
-«term_∨__1»	meta	FOL.FOL	Lean.TrailingParserDescr
 «term_≐_»	meta	FOL.FOL	Lean.TrailingParserDescr
 «term_⊢_»	meta	FOL.FOL	Lean.TrailingParserDescr
 «term_⊢₀_»	meta	FOL.Derives0	Lean.TrailingParserDescr
 «term_⊢₁_»	meta	FOL.Derives1	Lean.TrailingParserDescr
 «term_⊢₂_»	meta	FOL.Derives2	Lean.TrailingParserDescr
-«term¬__1»	meta	FOL.FOL	Lean.ParserDescr
 «term∀._»	meta	FOL.FOL	Lean.ParserDescr
 «term∃._»	meta	FOL.FOL	Lean.ParserDescr
 «term⊤»	meta	FOL.FOL	Lean.ParserDescr

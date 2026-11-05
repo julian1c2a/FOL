@@ -28,7 +28,6 @@ FOL/Derives1.lean
 FOL/Derives2.lean
 FOL/Eigenvariable.lean
 FOL/Eq0.lean
-FOL/FOL.lean
 FOL/Finitary0.lean
 FOL/Herbrand0.lean
 FOL/Lift0.lean
