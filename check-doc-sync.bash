@@ -498,7 +498,6 @@ auditoria/constructividad-2026-09-27/README.md
 AI-GUIDE.md
 NAMING-CONVENTIONS.md
 PLANNING.md
-ENGARCE-ROBINSON-FOL.md
 STARTING_FOL.md
 TuplasFuncionesYListas.md
 cuarentena/README.md

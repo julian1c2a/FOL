@@ -1,6 +1,37 @@
 # El Engarce Fundacional: FOL, ROBINSON++ y los Tipos Inductivos de Lean 4
 
-**Last updated:** 2026-06-12 — la de su última revisión con diez líneas nuevas o más (`db24399`; sin contar los cambios de fin de línea), puesta el 2026‑11‑02 (T56, ADR‑245 de RPP), que NO revisó el cuerpo: es deuda de contenido de `[E]`.
+**Last updated:** 2026-11-05 — FOL0912:M‑3 de la auditoría de FOL (ADR‑257 de RPP): el engarce que HAY, medido (§A), y el texto de junio, rotulado como lo que es: una hoja de ruta, nada formalizado (§B). Antes, 2026-06-12 —su última revisión con diez líneas nuevas o más, `db24399`—, sin el cuerpo revisado: deuda de contenido de `[E]`, saldada hoy.
+
+> ⛔ **Hasta el 2026‑11‑05 este documento describía un engarce que NO EXISTE.** encodeList, encodeList_bijective,
+> IsList, el lema β y los W‑types no aparecen en ningún `.lean` de FOL ni de ROBINSON_PlusPlus (medido con grep ese
+> día), y su última frase —«cada flecha es una reducción formalmente demostrada en Lean»— era falsa. No mencionaba lo
+> que sí existe: la sintaxis, la semántica y el puente de derivaciones. Lo que existe está en §A; el texto de antes,
+> sin tocar, en §B.
+
+## §A · El engarce que HAY (medido el 2026‑11‑05)
+
+1. **La dependencia.** ROBINSON_PlusPlus declara `require FOL from "../FOL"` en su `lakefile.lean`: FOL es una
+   dependencia local, construida con el mismo toolchain (M‑1 de aquí, M‑3 de RPP), y RPP registra el FOL que certifica
+   en `../ROBINSON_PlusPlus/doc/control/fol-sha.txt`.
+2. **Lo que RPP importa**: nueve módulos de FOL —`FOL.FOL` (en 20 módulos de RPP), `FOL.Theorems.Eq` (17),
+   `FOL.Theorems.Quantifiers` (10), `FOL.Semantics` (2), y `FOL.SymLit`, `FOL.Sentence`, `FOL.Lift0`, `FOL.Derives1` y
+   `FOL.Canonical0` (uno cada uno)—; de TheoryFramework, ninguno.
+3. **Lo que toma de FOL**: la sintaxis (`Formula`, los términos, la sustitución y el lift), la semántica de Tarski con
+   la que construye sus modelos (`evalFormula` y `Model`), la noción de sentencia, los literales de símbolo («sym!») y,
+   para el puente, `Derives₀`, `Derives₁` y la existencia de modelo. Las declaraciones de FOL y TheoryFramework que
+   alguna constante de RPP nombra directamente son 56 de 1402 (`../ROBINSON_PlusPlus/doc/control/fol-sin-uso.tsv`,
+   ADR‑254 de RPP).
+4. **El puente de las derivaciones** (`../ROBINSON_PlusPlus/ROBINSON_PlusPlus/Meta/PuenteFOL.lean`): una derivación de
+   FOL desde la teoría da una del cálculo `Prf` de RPP (`prf_of_derivesSet`, T67, ADR‑195 de RPP), y al revés sobre
+   las clausuras universales de sus axiomas (`prf_iff_derivesSet_clausuras`, ADR‑253 de RPP); con él, Gödel I y II
+   también en la lógica de primer orden de aquí (`goedel_I_fol`).
+5. **La aritmetización vive en RPP, no aquí.** El código de una fórmula es `codeNat`
+   (`../ROBINSON_PlusPlus/ROBINSON_PlusPlus/Minimal/Axioms.lean`), con el par de Cantor (`consN`: `cons a b = σ (pair a
+   b)`, ADR‑113 de RPP) y su inyectividad (`codeNat_inj`, `consN_inj`); en el lenguaje objeto, las funciones sobre
+   códigos las dan sus ecuaciones —los 85 axiomas de codificación—, y la inducción de listas es una regla de `Prf`
+   (`listInd`), admisible desde la inducción aritmética (ADR‑244 de RPP). Ni lema β ni W‑types.
+
+## §B · PROYECTADO: hoja de ruta, NADA formalizado (el texto de junio de 2026, tal cual)
 
 Este documento detalla la arquitectura lógica y metamatemática necesaria para conectar la sintaxis de primer orden (en `FOL`), la aritmética recursiva (en `ROBINSON++`) y los tipos inductivos nativos de Lean 4 (especialmente listas, tuplas y tipos inductivos bien fundados o W-Types).
 
@@ -90,4 +121,4 @@ Al haber demostrado la existencia y la inducción de listas/árboles en `ROBINSO
 La correspondencia fundacional queda así unificada:
 $$\text{FOL} \longrightarrow \text{ROBINSON++} \longrightarrow \text{W-Types / Bisimilitud} \longrightarrow \text{ZFC / CZF Model}$$
 
-Donde cada flecha es una reducción formalmente demostrada en Lean, garantizando que todo el edificio matemático se apoya de forma explícita y transparente sobre los axiomas lógicos mínimos de primer orden.
+Donde cada flecha es una reducción formalmente demostrada en Lean, garantizando que todo el edificio matemático se apoya de forma explícita y transparente sobre los axiomas lógicos mínimos de primer orden. *(✏️ 2026‑11‑05, FOL0912:M‑3: FALSO. Ninguna de estas flechas está formalizada; lo formalizado, en §A.)*

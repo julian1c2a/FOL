@@ -440,6 +440,13 @@ Al entregar PeanoRF (propuesta C), la regla 3 pide además `derivesI_` en
 `Slash.derives_empty_of_slashed`, `derives_rewrite_subst` y `derives_rewrite_back`, y marca en
 `disjunction_property`/`existence_property`.
 
+### `≐` y el `=eq` de ROBINSON_PlusPlus: el MISMO `Formula.eq` (escrita el 2026‑11‑05, FOL0912:R‑9, ADR‑257 de RPP)
+
+`≐` es la notación de FOL (`infix:50 " ≐ " => Formula.eq`, global, en `FOL/FOL.lean`); RPP tiene la suya, `=eq`,
+`scoped` en `ROBINSON_PlusPlus.Minimal.Axioms`. Las dos elaboran al mismo término. **Aquí se escribe `≐` o
+`Formula.eq`**; en RPP, `=eq` para las ecuaciones entre términos objeto y `≐` sólo en las reglas lógicas de la
+igualdad, que son de FOL. La regla entera, con lo medido, en `../ROBINSON_PlusPlus/NAMING-CONVENTIONS.md` §9.
+
 ---
 
 ## 10. Nota de Migración
