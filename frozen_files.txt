@@ -28,6 +28,7 @@ FOL/Derives1.lean
 FOL/Derives2.lean
 FOL/Eigenvariable.lean
 FOL/Eq0.lean
+FOL/FOL.lean
 FOL/Finitary0.lean
 FOL/Herbrand0.lean
 FOL/Lift0.lean
@@ -36,3 +37,11 @@ FOL/Propositional0.lean
 FOL/Sequent0.lean
 FOL/Theorems/Eq.lean
 FOL/Inconsistencia.lean
+FOL/Semantics.lean
+FOL/Enumeration.lean
+FOL/SymClasses.lean
+TheoryFramework/Logic.lean
+TheoryFramework/MetaTheorems.lean
+TheoryFramework/Properties.lean
+TheoryFramework/Relations.lean
+TheoryFramework/Theory.lean

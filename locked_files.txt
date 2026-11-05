@@ -43,8 +43,12 @@ FOL/Finitary0.lean
 FOL/DecEq.lean
 FOL/Enumeration.lean
 FOL/Inconsistencia.lean
+FOL/FOL.lean
 AXIOMS.md
 FOL/Semantics.lean
 FOL/Calculus/Eq.lean
 FOL/Calculus/Collapse.lean
 FOL/Calculus/Slash.lean
+TheoryFramework/Properties.lean
+TheoryFramework/Relations.lean
+TheoryFramework/Theory.lean
