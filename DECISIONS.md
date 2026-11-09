@@ -1,6 +1,6 @@
 # Decisiones de Diseño — FOL
 
-**Last updated:** 2026-11-05 — M‑3, la M‑11 de RPP copiada (FOL0912:R‑9, ADR‑257 de RPP). Antes, 2026-11-02 — T56 (ADR‑245 de RPP): el cuerpo, revisado contra el árbol; ADR‑004, 005, 006, 007, 008 y 010, con su estado de hoy (las sub-librerías retiradas el 2026‑09‑12, la propuesta nunca hecha, las anotaciones en desuso); ADR‑003, con lo que hay hoy; el aviso de fichero dormido, con el número de hoy. Antes, 2026-10-28 — §MANDATORIES: M-1, el mismo toolchain que RPP (T16, ADR-205 de RPP), y M-2, ramas, stash y worktrees (T79, ADR-204 de RPP). Antes, 2026-07-12
+**Last updated:** 2026-11-09 — ADR‑262 de RPP: en los ADR, que son registro, las citas de lo retirado o borrado (las meta‑reglas y su módulo, las tres sub‑librerías, los dos scripts de T15, los módulos sin barril de la nota de ADR‑010), con su marcador detrás; lo que no es un nombre del entorno (el FirstOrder de Mathlib, los ejemplos addZ/mulQ, las anotaciones de ADR‑008), en texto plano; y una fecha de la nota de ADR‑010, corregida. Antes, 2026-11-05 — M‑3, la M‑11 de RPP copiada (FOL0912:R‑9, ADR‑257 de RPP). Antes, 2026-11-02 — T56 (ADR‑245 de RPP): el cuerpo, revisado contra el árbol; ADR‑004, 005, 006, 007, 008 y 010, con su estado de hoy (las sub-librerías retiradas el 2026‑09‑12, la propuesta nunca hecha, las anotaciones en desuso); ADR‑003, con lo que hay hoy; el aviso de fichero dormido, con el número de hoy. Antes, 2026-10-28 — §MANDATORIES: M-1, el mismo toolchain que RPP (T16, ADR-205 de RPP), y M-2, ramas, stash y worktrees (T79, ADR-204 de RPP). Antes, 2026-07-12
 **Autor**: Julián Calderón Almendros
 
 Registro de decisiones arquitectónicas (ADR) de este proyecto. Cada entrada documenta
@@ -36,9 +36,9 @@ Registro de decisiones arquitectónicas (ADR) de este proyecto. Cada entrada doc
 
 **Justificación**: objetivo educativo — formalizar lógica de primer orden desde cero,
 incluyendo su propia infraestructura de sustitución/elevación de De Bruijn, sin
-apoyarse en el `FirstOrder` de Mathlib.
+apoyarse en el FirstOrder de Mathlib.
 
-**Consecuencias**: toda la infraestructura necesaria (`ExistsUnique`, sustitución,
+**Consecuencias**: toda la infraestructura necesaria (`ExistsUnique` (borrado el 2026‑05‑05), sustitución,
 decidibilidad, etc.) se construye desde cero en cada sub-librería.
 
 ---
@@ -93,11 +93,11 @@ Mathlib4, documentadas en `NAMING-CONVENTIONS.md`.
 **Justificación**: consistencia con el ecosistema Lean 4 más amplio.
 
 **Consecuencias**: ver `NAMING-CONVENTIONS.md` para el diccionario completo y las 12
-reglas de formación. **Nota**: la antigua "REGLA 13" (sufijos de dominio `addZ`/`mulQ`)
-no se sigue en este proyecto — los axiomas de `MetaRules.lean` (`imp_intro`, `gen`,
-`raa`, `dne`, `or_elim`, `ex_elim`) usaban nombres descriptivos planos, sin prefijo de
+reglas de formación. **Nota**: la antigua "REGLA 13" (sufijos de dominio addZ/mulQ)
+no se sigue en este proyecto — los axiomas de `MetaRules.lean` (borrado el 2026‑10‑02)
+(`imp_intro`, `gen`, `raa`, `dne`, `or_elim`, `ex_elim`, retirados todos) usaban nombres descriptivos planos, sin prefijo de
 dominio (`TAG_`) ni sufijo de estructura.
-✏️ *Nota del 2026-10-02*: `gen` y `dne` dejaron de ser axiomas el 2026-09-12 —pasaron a
+✏️ *Nota del 2026-10-02*: `gen` y `dne` (los de MetaRules, borrados con el módulo el 2026-10-02) dejaron de ser axiomas el 2026-09-12 —pasaron a
 teoremas que envolvían los constructores `gen_rule` y `dne_rule` (D‑2 de ADR‑028 de RPP)—; los
 cuatro restantes, refutables sin usarlos, se borraron con `FOL/MetaRules.lean` el 2026-10-02
 (ADR‑115 de RPP), y aquellos dos envoltorios con ellos. Hoy FOL no tiene ningún `axiom`; la
@@ -112,13 +112,13 @@ entrada vigente es `NAMING-CONVENTIONS.md` §9.
 
 **Decisión**: cada subdirectorio corresponde a un sub-namespace:
 `FOL/Theorems/Eq.lean` → `namespace FOL.Theorems.Eq` (y análogamente para
-`FOLPure`, `PropLogic`, `FOL_poli`, `TheoryFramework`).
+`FOLPure`, `PropLogic`, `FOL_poli` (retiradas el 2026‑09‑12), `TheoryFramework`).
 
 **Justificación**: mapeo 1:1 claro entre sistema de ficheros y jerarquía de
 namespaces.
 
-**Consecuencias**: `new-module.bash` debe soportar creación en subdirectorios;
-`gen-root.bash` debe escanear recursivamente. Ver ADR-010 sobre la relación entre las
+**Consecuencias**: `new-module.bash` (retirado el 2026‑10‑18) debe soportar creación en subdirectorios;
+`gen-root.bash` (retirado el mismo día) debe escanear recursivamente. Ver ADR-010 sobre la relación entre las
 5 sub-librerías.
 
 ---
@@ -128,7 +128,7 @@ namespaces.
 **Fecha**: 2026-04-20
 **Estado**: Obsoleto en lo que dice de las sub-librerías — ✏️ 2026‑11‑02 (T56, ADR‑245 de RPP): de las cinco quedan dos (`FOL` y `TheoryFramework`, desde el 2026‑09‑12). `FOL/Theorems/` conserva los cinco módulos del núcleo de `Derives`; la metateoría vive en los `FOL/*0.lean` y en `FOL/Calculus/`, y `TheoryFramework/Instances/` tiene sus dos instancias. El barril de cada subdirectorio, como pedía: `FOL/Core.lean` para el núcleo
 
-**Decisión**: cada sub-librería (`FOL`, `FOLPure`, `PropLogic`, `FOL_poli`,
+**Decisión**: cada sub-librería (`FOL`, `FOLPure`, `PropLogic`, `FOL_poli` [estas tres, retiradas el 2026‑09‑12],
 `TheoryFramework`) agrupa sus teoremas derivados en un subdirectorio `Theorems/`
 (o `Instances/` para `TheoryFramework`).
 
@@ -165,12 +165,11 @@ teoremas derivados facilita localizar cada pieza.
 sub-librería en nodos temáticos bajo `doc/REFERENCE-{tema}.md`.
 
 **Justificación**: `REFERENCE.md` actual (617 líneas) solo documenta la librería
-`FOL`; `FOLPure`, `PropLogic`, `TheoryFramework` y `FOL_poli` no tienen sección propia
+`FOL`; `FOLPure` (retirada), `PropLogic` (retirada), `TheoryFramework` y `FOL_poli` (retirada) no tienen sección propia
 pese a estar "✅ Completos". No existe todavía directorio `doc/` en este proyecto.
 
-**Consecuencias**: **pendiente de implementar** — crear `doc/REFERENCE-FOLPure.md`,
-`doc/REFERENCE-PropLogic.md`, `doc/REFERENCE-TheoryFramework.md` y
-`doc/REFERENCE-FOL_poli.md`, y reducir `REFERENCE.md` a índice con enlaces. Ver
+**Consecuencias**: **pendiente de implementar** — crear `doc/REFERENCE-FOLPure.md`, `doc/REFERENCE-PropLogic.md`, `doc/REFERENCE-TheoryFramework.md` y `doc/REFERENCE-FOL_poli.md`,
+y reducir `REFERENCE.md` a índice con enlaces. Ver
 DEPENDENCIES.md para el estado real de las 5 sub-librerías mientras tanto.
 
 ---
@@ -180,8 +179,8 @@ DEPENDENCIES.md para el estado real de las 5 sub-librerías mientras tanto.
 **Fecha**: 2026-04-20
 **Estado**: En desuso — ✏️ 2026‑11‑02 (T56, ADR‑245 de RPP): las llevan sólo las entradas de §3 de los módulos de abril (y las del apéndice R de `REFERENCE.md`); ningún módulo de la capa ₀ ni posterior las tiene, y nada las lee
 
-**Decisión**: las entradas de REFERENCE.md incluyen anotaciones `@axiom_system` y
-`@importance`.
+**Decisión**: las entradas de REFERENCE.md incluyen anotaciones @axiom_system y
+@importance.
 
 **Justificación**: ayuda a los asistentes de IA a priorizar qué módulos/teoremas
 cargar como contexto.
@@ -211,17 +210,17 @@ dedicado, con un resumen en `AI-GUIDE.md`.
 **Estado**: Obsoleto — ✏️ 2026‑11‑02 (T56, ADR‑245 de RPP): desde el 2026‑09‑12 (FOL `b97ee6d`) el lakefile declara dos `lean_lib`, `FOL` y `TheoryFramework`; FOLPure, PropLogic y FOL_poli están en `cuarentena/librerias-retiradas/`, fuera del lakefile (`cuarentena/README.md` §7: dos de ellas eran inconsistentes). Lo de abajo es registro de la arquitectura de julio. *(Era: «Aceptado (decisión retroactiva — documenta una arquitectura ya existente)».)*
 
 **Contexto**: el proyecto declara 5 `lean_lib` en `lakefile.lean`: `FOL` (con
-igualdad), `FOLPure` (sin igualdad), `PropLogic` (proposicional, sin cuantificadores
-ni términos), `FOL_poli` (variante paralela de `FOL`) y `TheoryFramework` (marco
+igualdad), `FOLPure` (retirada; sin igualdad), `PropLogic` (retirada; proposicional, sin cuantificadores
+ni términos), `FOL_poli` (retirada; variante paralela de `FOL`) y `TheoryFramework` (marco
 abstracto sobre cualquier `LogicSystem`).
 
-**Decisión**: `FOL`, `FOLPure`, `PropLogic` y `FOL_poli` son implementaciones
+**Decisión**: `FOL`, `FOLPure`, `PropLogic` y `FOL_poli` [estas tres, retiradas el 2026‑09‑12] son implementaciones
 paralelas independientes (cada una define su propio `Formula`, `Term`, etc. a nivel
 raíz), no una jerarquía donde una extienda a otra. `TheoryFramework` es agnóstico y
 se instancia por separado sobre cada una vía `TheoryFramework/Instances/*.lean`.
 
 **Justificación**: `TheoryFramework.lean` (el barrel raíz) documenta explícitamente
-por qué **no** importa `Instances/`: `FOLPure` y `FOL` definen ambas un `Formula` a
+por qué **no** importa `Instances/`: `FOLPure` (retirada) y `FOL` definen ambas un `Formula` a
 nivel raíz, y hacerlo produciría colisión de nombres. Mantener las instancias como
 imports opt-in (`import TheoryFramework.Instances.FOL`, etc.) evita el conflicto sin
 sacrificar la genericidad del marco.
@@ -230,14 +229,14 @@ sacrificar la genericidad del marco.
 importar explícitamente la instancia correspondiente, nunca `TheoryFramework` +
 `Instances/` a la vez para dos lógicas distintas en el mismo fichero.
 
-**Nota de auditoría (2026-07-12)**: `FOL.lean` y `FOL_poli.lean` (los barrels raíz de
-esas dos sub-librerías) no importan actualmente `Classical.lean`, `Tactics2.lean` (o,
-en `FOL`, `Theorems.Deduction`/`Theorems.Eq`/`Theorems.Soundness`) — 5 módulos
+**Nota de auditoría (2026-07-12)**: `FOL.lean` y `FOL_poli.lean` —el segundo, retirado el 2026‑09‑12— (los barrels raíz de
+esas dos sub-librerías) no importan actualmente `Classical.lean`, `Tactics2.lean` (hoy borrados o retirados) (o,
+en `FOL`, `Theorems.Deduction`/`Theorems.Eq`/`Theorems.Soundness`, hoy borrados el primero y el tercero) — 5 módulos
 existentes en disco y no wireados en el barrel de cada una. No está claro si es
 intencional (variantes experimentales) o un olvido; **pendiente de decidir y
 documentar** en una revisión posterior — no se ha tocado el barrel en esta sesión
 para no alterar el comportamiento del build sin confirmación del autor.
-✏️ *Nota del 2026-11-02 (T56)*: de aquellos cinco módulos sin barril, `Classical.lean` y `Tactics2.lean` ya no existen (el segundo se borró en D1, 2026‑09‑27), y `Theorems/Eq.lean` entra por `FOL/Core.lean`; desde T15 (ADR‑163 de RPP) los `globs` del lakefile compilan todo el directorio, y [L] de `check-doc-sync.bash` comprueba que todo módulo esté en el cierre de imports de un barril.
+✏️ *Nota del 2026-11-02 (T56)*: de aquellos cinco módulos sin barril, `Classical.lean` y `Tactics2.lean` ya no existen (el segundo se borró en D1, 2026‑09‑26, FOL `9804fcd`; ✏️ 2026‑11‑09, ADR‑262 de RPP: aquí decía 2026‑09‑27, el día de las D1–D8 de la auditoría de constructividad), y `Theorems/Eq.lean` entra por `FOL/Core.lean`; desde T15 (ADR‑163 de RPP) los `globs` del lakefile compilan todo el directorio, y [L] de `check-doc-sync.bash` comprueba que todo módulo esté en el cierre de imports de un barril.
 
 ---
 

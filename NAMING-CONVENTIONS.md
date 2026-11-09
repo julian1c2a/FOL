@@ -9,7 +9,7 @@
 > La prosa de este documento (explicaciones, motivación) va en español para que quede
 > clara sin ambigüedad.
 
-**Last updated:** 2026-10-02 — §9: la entrada de axiomas (FOL ya no tiene ninguno: `FOL/MetaRules.lean` borrado, ADR‑115 de RPP) y la razón de la excepción histórica de `Derives` (tabla y regla 4). Antes (2026-09-27): §9: N5 (qué es titular: el resultado que la cabecera entrega; las piezas técnicas son auxiliares). Antes, el mismo día: §9: N1 (las definiciones por derivabilidad, sin excepción) y N2 (qué es titular). Antes (2026-09-26): subíndices de cálculo (D6, decidida) y entrada de axiomas corregida
+**Last updated:** 2026-11-09 — revisado contra el árbol ([ADR‑262 de RPP](../ROBINSON_PlusPlus/DECISIONS.md)): §9, al día con notas fechadas —`Derivesᵢ` y los nombres de X1, que ya están (ADR‑218 de RPP); la retirada de las sub‑librerías, en ADR‑010; la cuenta de filas de footprint, con su fecha—. Antes, 2026-10-02 — §9: la entrada de axiomas (FOL ya no tiene ninguno: `FOL/MetaRules.lean` borrado, ADR‑115 de RPP) y la razón de la excepción histórica de `Derives` (tabla y regla 4). Antes (2026-09-27): §9: N5 (qué es titular: el resultado que la cabecera entrega; las piezas técnicas son auxiliares). Antes, el mismo día: §9: N1 (las definiciones por derivabilidad, sin excepción) y N2 (qué es titular). Antes (2026-09-26): subíndices de cálculo (D6, decidida) y entrada de axiomas corregida
 **Autor**: Julián Calderón Almendros
 
 ---
@@ -340,8 +340,9 @@ se borraron con él; `subst_lift_cancel_formula`, hoy teorema en la `FOLPure` re
 `formula_enum`, sustituido por la construcción
 `Enumeration.natToFormula`; y `henkin_extension_lemma`, borrado con la cuarentena en
 `62dc2d5`. Las sub-librerías `FOLPure`/`PropLogic`/`FOL_poli` están retiradas en
-`cuarentena/librerias-retiradas/` (ver `DECISIONS.md` ADR-004). No introducir un prefijo de dominio nuevo sin discutirlo antes
-en `DECISIONS.md`.
+`cuarentena/librerias-retiradas/` desde el 2026‑09‑12 (`b97ee6d`; ver el estado de ADR‑010 en `DECISIONS.md`;
+✏️ 2026‑11‑09, ADR‑262 de RPP: decía «ver ADR-004», que es la convención de nombres). No introducir un prefijo de
+dominio nuevo sin discutirlo antes en `DECISIONS.md`.
 
 ### Subíndices de cálculo — `₀`, `₁`, `₂`, `ᵢ` (DECIDIDA por el propietario el 2026-09-26, D6)
 
@@ -358,13 +359,14 @@ ordinal de plan: `Derives₀` es el «PASO 0» de
 | `₁`, `₂` | `Derives₁`, `Derives₂`: presentaciones **equivalentes** a `Derives₀` (`derives0_iff_derives1`, `derives0_iff_derives2`) | `⊢₁`, `⊢₂` | `derives1_…`, `derives2_…` |
 | `₀` en `LK₀` | secuentes clásicos **sin corte** (`LKc` = `LK₀` + corte; `LKh`, `LKp` son variantes con letra normal) | — | `lk0_…` |
 | `ₚ` | `LKp`: el fragmento **puro** de `LK₀` (sin `eqAx`), el de Maehara y Craig sin igualdad (`FOL.Craig0`) | — | `lkp_…` |
-| `ᵢ` | `Derivesᵢ`: deducción natural **intuicionista** (los 18 constructores no clásicos de `Derives₀`), cuando llegue de PeanoRF | `⊢ᵢ` | `derivesI_…`; `DerivesI.lean` |
+| `ᵢ` | `Derivesᵢ`: deducción natural **intuicionista** (los 18 constructores no clásicos de `Derives₀`), cuando llegue de PeanoRF (✏️ 2026‑11‑09, ADR‑262 de RPP: llegó el 2026‑10‑28, con X1, ADR‑218 de RPP: `FOL.Calculus.Derivesᵢ`, con sus 18 constructores) | `⊢ᵢ` | `derivesI_…`; `FOL/Calculus/DerivesI.lean` |
 
 **Reglas.**
 
 1. **Nociones relativas a un cálculo** —definiciones que clasifican conjuntos, contextos o
    enunciados POR DERIVABILIDAD— llevan el subíndice de su cálculo: `DerivesSet₀`,
-   `IsConsistent₀`, `IsMaximalConsistent₀` (y sus análogos `ᵢ`). Motivo medido: sus homónimos
+   `IsConsistent₀`, `IsMaximalConsistent₀` (y sus análogos `ᵢ`: hoy, `Slashᵢ`, la `Prop` del slash de Kleene
+   definida por `⊢ᵢ`, ADR‑218 de RPP). Motivo medido: sus homónimos
    sin subíndice están VIVOS en `TheoryFramework` (`LogicSystem.DerivesSet`,
    `TheoryFramework.IsConsistent`, `TheoryFramework.IsMaximalConsistent`) con OTRA definición.
    Las construcciones que sólo reciben una prueba de esas nociones (`canonicalModel`,
@@ -394,7 +396,9 @@ ordinal de plan: `Derives₀` es el «PASO 0» de
    (`SkolemNF0.skolemizeF_impAll`), las pasadas de una inducción (`Hauptsatz0.cutPrinAux`, `cutLeftAux`,
    y el transporte de su dato, `leftPrin_mono`, `leftPrin_lift`) y los consumidores condicionales (`Hauptsatz0.cutElim_of`,
    `HerbrandBlock0.herbrand_block_iff`, `Herbrand0.herbrand_iff`). ⚠️ «Titular = lo que tiene fila de
-   footprint» no sirve como regla: 220 de las 256 filas de FOL no llevan marca, y más de la mitad tampoco prefijo de cálculo.
+   footprint» no sirve como regla: el 2026‑09‑27, 220 de las 256 filas de FOL no llevaban marca, y más de la mitad
+   tampoco prefijo de cálculo (✏️ 2026‑11‑09, ADR‑262 de RPP: la cuenta, con su fecha; la tabla de
+   `../ROBINSON_PlusPlus/check-footprints.bash` ha crecido desde entonces).
    - **Coherencia de familia**: un teorema que empaqueta teoremas marcados (el `iff` de dos
      mitades) lleva la misma marca que ellas.
    - `derives_…` sin dígito ni letra queda reservado a `Derives` (`⊢`).
@@ -439,6 +443,9 @@ ordinal de plan: `Derives₀` es el «PASO 0» de
 Al entregar PeanoRF (propuesta C), la regla 3 pide además `derivesI_` en
 `Slash.derives_empty_of_slashed`, `derives_rewrite_subst` y `derives_rewrite_back`, y marca en
 `disjunction_property`/`existence_property`.
+✏️ 2026‑11‑09 (ADR‑262 de RPP): hecho. La propuesta C llegó el 2026‑10‑28 como X1 (ADR‑218 de RPP), en
+`FOL/Calculus/` y con esos renombres: hoy son `derivesI_empty_of_slashed`, `derivesI_rewrite_subst`,
+`derivesI_rewrite_back`, `derivesI_disjunction_property` y `derivesI_existence_property` (`FOL/Calculus/Slash.lean`).
 
 ### `≐` y el `=eq` de ROBINSON_PlusPlus: el MISMO `Formula.eq` (escrita el 2026‑11‑05, FOL0912:R‑9, ADR‑257 de RPP)
 

@@ -1,6 +1,13 @@
 # La auditoría de constructividad de FOL — 2026‑09‑27
 
-**Last updated:** 2026-10-27 — T53 (ADR‑193 de RPP): `remedida-2026-10-27/`, el mismo `Audit.lean` sobre el árbol de hoy; desde hoy lo vigila `check-choice.bash` de RPP. Antes, 2026-09-27 — creado con la auditoría y la ejecución de D1–D8.
+**Last updated:** 2026-11-09 — revisado como HISTÓRICO (ADR‑262 de RPP): la cabecera y las notas posteriores a la marca anterior, comprobadas contra el árbol; el cuerpo es registro de su fecha y no se ha re‑medido. Antes, 2026-10-27 — T53 (ADR‑193 de RPP): `remedida-2026-10-27/`, el mismo `Audit.lean` sobre el árbol de hoy; desde hoy lo vigila `check-choice.bash` de RPP. Antes, 2026-09-27 — creado con la auditoría y la ejecución de D1–D8.
+
+> 🗄️ **HISTÓRICO** (✏️ 2026‑11‑09, ADR‑262 de RPP): la medida de la auditoría de constructividad del 2026‑09‑27
+> (antes y después de D1–D8, ADR‑110 de RPP) y su re‑medida del 2026‑10‑27 (T53, `remedida-2026-10-27/`); cada cifra
+> es la de su fecha, y el «árbol de hoy» de la tabla de abajo es el del 2026‑10‑27. Desde entonces FOL tiene módulos
+> nuevos (entre ellos `FOL/Esencialidad0.lean`, T19, que lleva al build los seis de `exp-esencial/`: la nota de abajo), y
+> la constructividad la vigila, constante a constante, `check-choice.bash` de RPP, con su tabla
+> `../../../ROBINSON_PlusPlus/doc/control/choice.tsv`. Lo de abajo es registro; lo vigente, `../../AXIOMS.md` §4.
 
 **Sobre:** FOL `537cc20` / RPP `7487ca1` (antes) y el árbol tras las decisiones D1–D8 (después) ·
 **Autor:** Julián Calderón Almendros ·

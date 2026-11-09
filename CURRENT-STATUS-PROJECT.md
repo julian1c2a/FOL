@@ -8,26 +8,27 @@
 >
 > | lo que decía | lo medido |
 > |---|---|
-> | «Teorema de Corrección (Soundness): `Γ ⊢ A → Γ ⊨ A`» ✅ | 🏁 **Sí, sobre `Derives₀`** (2026-09-14): `derives0_soundness : Γ ⊢₀ f → Γ ⊨ f` (`FOL/Soundness0.lean`), y con ella `derives0_consistent`. 🏁 **Y sobre `Derives`**, el enunciado de la columna izquierda, desde el 2026-10-02: `derives_soundness : Γ ⊢ f → Γ ⊨ f` (`FOL/Inconsistencia.lean` §1), porque sin meta‑reglas `Derives` se traduce a `Derives₀` (`derives_to_derives0`: `gen_rule` es admisible). Hasta ese día esta celda decía que la de `Derives` era «FALSA en presencia de `FOL/MetaRules.lean`»: lo falso era `raa` (`raa_refutable`, §3), y el módulo se borró (ADR‑115 de RPP) |
+> | «Teorema de Corrección (Soundness): `Γ ⊢ A → Γ ⊨ A`» ✅ | 🏁 **Sí, sobre `Derives₀`** (2026-09-14): `derives0_soundness : Γ ⊢₀ f → Γ ⊨ f` (`FOL/Soundness0.lean`), y con ella `derives0_consistent`. 🏁 **Y sobre `Derives`**, el enunciado de la columna izquierda, desde el 2026-10-02: `derives_soundness : Γ ⊢ f → Γ ⊨ f` (`FOL/Inconsistencia.lean` §1), porque sin meta‑reglas `Derives` se traduce a `Derives₀` (`derives_to_derives0`: `gen_rule` es admisible). Hasta ese día esta celda decía que la de `Derives` era «FALSA en presencia de `FOL/MetaRules.lean` [borrado]»: lo falso era `raa` (retirado: lo refuta `raa_refutable`, §3), y el módulo se borró (ADR‑115 de RPP) |
 > | «Compacidad» ✅ | 🏁 `compactness`, `loewenheim_skolem_down` y el modelo infinito `infinite_model_of_large`, en `FOL/Compacity0.lean`. El `Compacity.lean` vacuo **se borró** el 2026-09-23 |
-> | «Completitud» ✅ / «1 sorry» | 🏁 `completeness₀ : Γ ⊨ f → Γ ⊢₀ f` (`FOL/Canonical0.lean`, 2026-09-16), con **cero axiomas del proyecto**: `[propext, Classical.choice, Quot.sound]`. Ese `Classical.choice` viene del lema de la verdad sobre un maximal arbitrario (`max_cons_*`) y del `byContradiction` final de `completeness₀`; **no** del `if` de `Lindenbaum0`, que ya no decide nada (`lindenbaum_lemma₀` es `[propext, Quot.sound]`). Hasta el 2026-09-27 esta celda decía que era «el WKL de `Lindenbaum0`» (ADR-041): refutado, ADR-110 y `AXIOMS.md` §4. `Completeness.lean` y su último postulado, `henkin_extension_lemma`, **se borraron** el 2026-09-23. Ver **`AXIOMS.md`** |
-> | «4 `lean_lib`, ~43 módulos, 1 sorry, v4.28.0» | **2 `lean_lib`** (`FOL`, `TheoryFramework`) · **0 `axiom`**: los cuatro de `FOL/MetaRules.lean` (`imp_intro`, `raa`, `or_elim`, `ex_elim`), refutables sin usarlos (`FOL/Inconsistencia.lean` §3), se borraron con el módulo el 2026-10-02 (ADR‑115 de RPP). Esta celda decía «4 `axiom`, los de `MetaRules` que el kernel obliga»: el kernel sólo impedía que fueran constructores (premisa‑función, ocurrencia no positiva), no obligaba a tenerlos · **0 sorry** · **v4.31.0**. `FOLPure`, `PropLogic` y `FOL_poli` **retiradas** el 2026-09-12 a `cuarentena/librerias-retiradas/` |
+> | «Completitud» ✅ / «1 sorry» | 🏁 `completeness₀ : Γ ⊨ f → Γ ⊢₀ f` (`FOL/Canonical0.lean`, 2026-09-16), con **cero axiomas del proyecto**: `[propext, Classical.choice, Quot.sound]`. Ese `Classical.choice` viene del lema de la verdad sobre un maximal arbitrario (`max_cons_*`) y del `byContradiction` final de `completeness₀`; **no** del `if` de `Lindenbaum0`, que ya no decide nada (`lindenbaum_lemma₀` es `[propext, Quot.sound]`). Hasta el 2026-09-27 esta celda decía que era «el WKL de `Lindenbaum0`» (ADR-041): refutado, ADR-110 y `AXIOMS.md` §4. `Completeness.lean` y `henkin_extension_lemma`, su último postulado, **se borraron** el 2026-09-23. Ver **`AXIOMS.md`** |
+> | «4 `lean_lib`, ~43 módulos, 1 sorry, v4.28.0» | **2 `lean_lib`** (`FOL`, `TheoryFramework`) · **0 `axiom`**: los cuatro de `FOL/MetaRules.lean` (borrado): `imp_intro`, `raa`, `or_elim`, `ex_elim`, refutables sin usarlos (`FOL/Inconsistencia.lean` §3), se borraron con el módulo el 2026-10-02 (ADR‑115 de RPP). Esta celda decía «4 `axiom`, los de `MetaRules` [borrado] que el kernel obliga»: el kernel sólo impedía que fueran constructores (premisa‑función, ocurrencia no positiva), no obligaba a tenerlos · **0 sorry** · ~~**v4.31.0**~~ **v4.35.0** (✏️ 2026-11-09, ADR‑262 de RPP: el par subió a v4.35.0 el 2026-10-21, ADR‑181 de RPP; medido en `lean-toolchain`). `FOLPure`, `PropLogic` y `FOL_poli` **retiradas** el 2026-09-12 a `cuarentena/librerias-retiradas/` |
 >
 > ⭐ **Los seis teoremas del cierre (T1 a T6, 2026-09-23 y 2026-09-26) están en el árbol**, sobre `Derives₀`; el catálogo, en `CURRENT-STATUS-PROJECT.md` («Estado vigente») y `REFERENCE.md` §6. ⛔ Y lo que NO hay: la propiedad de disyunción para `Derives₀` es **FALSA** (`derives0_no_disjunction_property`).
-> (Este aviso decía que «lo único sólido MEDIDO» era `prf0_soundness` (hoy `prfI_soundness`), en RPP: dejó de serlo el 2026-09-14.)
+> (Este aviso decía que «lo único sólido MEDIDO» era `prf0_soundness` (renombrado a `prfI_soundness` por ADR‑102 de RPP; `ROBINSON_PlusPlus/sondeos/AnclaSoundness.lean`), en RPP: dejó de serlo el 2026-09-14.)
 > ✅ **2026-10-03 · deuda saldada**: los cinco módulos 🧊 que conservaban el texto anterior al borrado de `FOL/MetaRules.lean` (`Soundness0`, `Canonical0`, `Compacity0`, `Rename`, `TheoryFramework/Instances/FOL`) se descongelaron con autorización del propietario, se corrigieron sólo sus comentarios y se volvieron a congelar: «Estado vigente», abajo, y `NEXT-STEPS.md`.
 >
 > **Fuentes:** `cuarentena/README.md` · `AXIOMS.md` ·
 > `../ROBINSON_PlusPlus/doc/AUDITORIA-FOL-2026-09-12.md` · ADR‑114 y ADR‑115 de `../ROBINSON_PlusPlus/DECISIONS.md` (2026-10-02)
 
-**Last updated:** 2026-10-29 — T71 (ADR‑221 de RPP): 70 módulos activos (entra `FOL/EsencialidadSem0.lean`: los cinco semánticos de `Compacity0`, clasificados). Antes, el mismo día — T71 (ADR‑220 de RPP): 69 módulos activos (entra `FOL/Markov0.lean`: el enunciado de la completitud implica Markov para las ecuaciones diofánticas). Antes, 2026-10-28 — T51 (ADR‑218 de RPP): 68 módulos activos (entran los siete de `FOL/Calculus/`, X1 de PeanoRF, y `FOL/SymLit.lean`). Antes, el mismo día — T58 (ADR‑217 de RPP): 60 módulos activos (entran tres de `TheoryFramework`: `Semantics`, `Conservativity` e `Instances/FOLModels`, el contenido que le faltaba). Antes, el mismo día — T72 (ADR‑215 de RPP): 57 módulos activos (entra `FOL/Sentence.lean`, la noción de sentencia). Antes, el mismo día — T19 (ADR‑203 de RPP): 56 módulos activos (entra la hoja `FOL/Esencialidad0.lean`). Antes, 2026-10-27 — T46 (ADR‑194 de RPP): 55 módulos activos (entra la hoja `FOL/Estratos0.lean`). Antes, 2026-10-05 — D7 ejecutada (ADR‑129 de RPP): los símbolos son `List Char` («Estado vigente», una línea nueva bajo la tabla; y las ℵ₀ constantes de LS↑). Antes, 2026-10-03 — la deuda de los cinco módulos 🧊 con textos falsos, SALDADA (`thaw` autorizado, sólo comentarios, re‑congelados). Antes, 2026-10-02 — 🗑️ `FOL/MetaRules.lean` borrado (ADR‑115 de RPP: sus cuatro `axiom` eran refutables): cifras canónicas (0 `axiom`, **54 módulos activos**), aviso, «Estado vigente» (la solidez de `Derives` pasa a lo que hay; `Derives₀` ya no se define por diferencia con `MetaRules`) y la deuda de cinco módulos 🧊 que esperan un `thaw` autorizado; en el cuerpo HISTÓRICO, sólo la fila de `Soundness.lean`. Antes (2026-09-27): 🧊 23 módulos congelados (tres lotes: 5 + 10 + 8), tras N5 (los nombres técnicos, auxiliares) y N7 (`herbrand_of_skolemNF₀`, reforzado con la ecuación): `NEXT-STEPS.md` ❄️. Antes, el mismo día: la auditoría de constructividad y sus decisiones D1–D8: `Classical.choice` en 84 constantes (eran 157) y en 34 titulares (eran 55); Lindenbaum y la extensión de Henkin, sin `Classical.choice`; la tesis del WKL, rectificada; la instancia `fol0System` de `TheoryFramework`, declarada. Antes, el mismo día, P4: el fragmento sin cuantificadores, acotado y DECIDIDO (`QFDecide0`, **55 módulos**). Antes, 🧊 cinco módulos congelados; 18 titulares renombrados por la regla de subíndices (`hauptsatz₀`, `herbrand₀`, `craigₚ`…). Antes (2026-09-26): D3 cerrada: Craig para `⊢₀` con igualdad (`Interpolation0`, **54 módulos**) y Herbrand para `φ`/`Γ` cualesquiera. Antes, D3b: Herbrand para `φ` y `Γ` cualesquiera. Antes, D2/D4/D5/D6/D7 ejecutadas: refactor `absTerm'` (D5), regla de subíndices y sus renombres (T1 = `model_existence_iff₀`, T2 = `IsMemComplete`, `compactness`), vía de `ModelG` y migración a `List Char` CERRADAS, higiene de docstrings. Antes, 🗑️ D1: `Tactics2.lean` borrado ⇒ **53 módulos activos**. Antes, el mismo día: ⭐ entran T4 (`Hauptsatz0` §9) y T6 (`Compacity0` §3): **los seis teoremas del cierre están en el árbol**; aviso de cabecera reescrito (el del 2026-09-12 negaba Corrección, Completitud y Compacidad) y sección «Estado vigente» nueva. Antes (2026-09-23): entra `FOL/Complexity.lean` (encargo PeanoRF §3) y la cifra canónica pasa a **54 módulos**. ⚠️ La marca decía **2026-09-18 15:40** y `[E]` la cazó el mismo día que se movió el cuerpo — que es para lo que está el control.
+**Last updated:** 2026-11-09 — ADR‑262 de RPP: las citas de lo retirado (el módulo de las meta‑reglas y sus axiomas, los ficheros de la cuarentena, las tres librerías y la instancia de dos de ellas), con su marcador; en el aviso, la versión de Lean, que decía v4.31.0 (es v4.35.0 desde el 2026-10-21); y dos notas, sobre la fecha de las cifras canónicas y sobre el «hoy» (del 2026‑09‑13) de una celda del cuerpo histórico. Antes, 2026-10-29 — T71 (ADR‑221 de RPP): 70 módulos activos (entra `FOL/EsencialidadSem0.lean`: los cinco semánticos de `Compacity0`, clasificados). Antes, el mismo día — T71 (ADR‑220 de RPP): 69 módulos activos (entra `FOL/Markov0.lean`: el enunciado de la completitud implica Markov para las ecuaciones diofánticas). Antes, 2026-10-28 — T51 (ADR‑218 de RPP): 68 módulos activos (entran los siete de `FOL/Calculus/`, X1 de PeanoRF, y `FOL/SymLit.lean`). Antes, el mismo día — T58 (ADR‑217 de RPP): 60 módulos activos (entran tres de `TheoryFramework`: `Semantics`, `Conservativity` e `Instances/FOLModels`, el contenido que le faltaba). Antes, el mismo día — T72 (ADR‑215 de RPP): 57 módulos activos (entra `FOL/Sentence.lean`, la noción de sentencia). Antes, el mismo día — T19 (ADR‑203 de RPP): 56 módulos activos (entra la hoja `FOL/Esencialidad0.lean`). Antes, 2026-10-27 — T46 (ADR‑194 de RPP): 55 módulos activos (entra la hoja `FOL/Estratos0.lean`). Antes, 2026-10-05 — D7 ejecutada (ADR‑129 de RPP): los símbolos son `List Char` («Estado vigente», una línea nueva bajo la tabla; y las ℵ₀ constantes de LS↑). Antes, 2026-10-03 — la deuda de los cinco módulos 🧊 con textos falsos, SALDADA (`thaw` autorizado, sólo comentarios, re‑congelados). Antes, 2026-10-02 — 🗑️ `FOL/MetaRules.lean` borrado (ADR‑115 de RPP: sus cuatro `axiom` eran refutables): cifras canónicas (0 `axiom`, **54 módulos activos**), aviso, «Estado vigente» (la solidez de `Derives` pasa a lo que hay; `Derives₀` ya no se define por diferencia con `MetaRules`, borrado) y la deuda de cinco módulos 🧊 que esperan un `thaw` autorizado; en el cuerpo HISTÓRICO, sólo la fila de `Soundness.lean` (fichero borrado). Antes (2026-09-27): 🧊 23 módulos congelados (tres lotes: 5 + 10 + 8), tras N5 (los nombres técnicos, auxiliares) y N7 (`herbrand_of_skolemNF₀`, reforzado con la ecuación): `NEXT-STEPS.md` ❄️. Antes, el mismo día: la auditoría de constructividad y sus decisiones D1–D8: `Classical.choice` en 84 constantes (eran 157) y en 34 titulares (eran 55); Lindenbaum y la extensión de Henkin, sin `Classical.choice`; la tesis del WKL, rectificada; la instancia `fol0System` de `TheoryFramework`, declarada. Antes, el mismo día, P4: el fragmento sin cuantificadores, acotado y DECIDIDO (`QFDecide0`, **55 módulos**). Antes, 🧊 cinco módulos congelados; 18 titulares renombrados por la regla de subíndices (`hauptsatz₀`, `herbrand₀`, `craigₚ`…). Antes (2026-09-26): D3 cerrada: Craig para `⊢₀` con igualdad (`Interpolation0`, **54 módulos**) y Herbrand para `φ`/`Γ` cualesquiera. Antes, D3b: Herbrand para `φ` y `Γ` cualesquiera. Antes, D2/D4/D5/D6/D7 ejecutadas: refactor `absTerm'` (D5), regla de subíndices y sus renombres (T1 = `model_existence_iff₀`, T2 = `IsMemComplete`, `compactness`), vía de `ModelG` y migración a `List Char` CERRADAS, higiene de docstrings. Antes, 🗑️ D1: `Tactics2.lean` borrado ⇒ **53 módulos activos**. Antes, el mismo día: ⭐ entran T4 (`Hauptsatz0` §9) y T6 (`Compacity0` §3): **los seis teoremas del cierre están en el árbol**; aviso de cabecera reescrito (el del 2026-09-12 negaba Corrección, Completitud y Compacidad) y sección «Estado vigente» nueva. Antes (2026-09-23): entra `FOL/Complexity.lean` (encargo PeanoRF §3) y la cifra canónica pasa a **54 módulos**. ⚠️ La marca decía **2026-09-18 15:40** y `[E]` la cazó el mismo día que se movió el cuerpo — que es para lo que está el control.
 **Author**: Julián Calderón Almendros
 
-> 📐 **CIFRAS CANÓNICAS — medidas, no copiadas** (`bash check-doc-sync.bash`, 2026-10-02, tras borrar `FOL/MetaRules.lean`):
+> 📐 **CIFRAS CANÓNICAS — medidas, no copiadas** (`bash check-doc-sync.bash`, 2026-10-02, tras el borrado de `FOL/MetaRules.lean`):
 > **70 módulos activos** (`FOL/` 49 + `FOL/Calculus/` 7 + `FOL/Theorems/` 5 + `TheoryFramework/` 9) ·
 > **0 módulos en `cuarentena/`** · **0 `axiom` de Lean** en el build ·
 > **0 sorry**.
-> (Registro: hasta el 2026-10-02 eran «55» módulos activos, «44» en `FOL/`, y «4» `axiom`, los de `MetaRules`.)
+> (Registro: hasta el 2026-10-02 eran «55» módulos activos, «44» en `FOL/`, y «4» `axiom`, los de `MetaRules` (borrado).)
+> ✏️ 2026-11-09 (ADR‑262 de RPP): la fecha de la primera línea es la del borrado; la cifra de módulos se puso al día el 2026-10-29 (T71, ADR‑221 de RPP), y hoy cuadra con `git ls-files` (49 + 7 + 5 + 9).
 >
 > ⚠️ Esta línea existe para que el control tenga **contra qué comparar**: sin ella,
 > `check-doc-sync.bash` calcula las cifras del árbol, no encuentra dónde contrastarlas e imprime
@@ -98,15 +99,15 @@ en `[propext, Quot.sound]`, `ex_elim_refutable` —con un modelo de dos puntos�
 Classical.choice, Quot.sound]`; no se pueden volver a postular sin hacer inconsistente a Lean); LS↑ a
 cardinal arbitrario (no está en el árbol: con `List Char` —`String` hasta el 2026-10-05— sólo hay ℵ₀ constantes y la 2ª entrega de `ModelG`
 está cerrada); y una instancia de `TheoryFramework` sobre `Derives` (`folSystem` se retiró el
-2026-09-23, cuando su solidez se tenía por falsa —con `raa` postulado, cualquier testigo suyo daba `False`—; desde el 2026-10-02 `derives_soundness` la
+2026-09-23, cuando su solidez se tenía por falsa —con `raa` postulado (hoy retirado), cualquier testigo suyo daba `False`—; desde el 2026-10-02 `derives_soundness` la
 haría posible, pero no se ha declarado: la que hay es la de `Derives₀`, `fol0System`, desde el
 2026-09-27). Hasta el 2026-10-02 este párrafo abría con «la solidez de `Derives` (FALSA con
-`MetaRules`: `inconsistencia_de_cualquier_solidez`)»: lo falso eran las meta‑reglas, y aquel teorema se
-borró con ellas (ADR‑115 de RPP): su enunciado era falso (también entonces) y sólo se «demostraba» con `raa`. Lo que falta: **`NEXT-STEPS.md`**.
+`MetaRules` [borrado]: `inconsistencia_de_cualquier_solidez`)»: lo falso eran las meta‑reglas, y aquel teorema se
+borró con ellas (ADR‑115 de RPP): su enunciado era falso (también entonces) y sólo se «demostraba» con `raa` (retirado). Lo que falta: **`NEXT-STEPS.md`**.
 
 ✅ **Deuda saldada el 2026-10-03: cinco módulos 🧊 CONGELADOS decían lo contrario.** Eran FALSOS
-—ya al escribirse: lo falso era `raa`— y el borrado de `FOL/MetaRules.lean` los dejó a la vista: `FOL/Soundness0.lean` («la solidez de `Derives` es
-FALSA», con la causa en M‑11, y «`Derives` es sintácticamente completo» por `raa`), `FOL/Canonical0.lean`
+—ya al escribirse: lo falso era `raa` (retirado)— y el borrado de `FOL/MetaRules.lean` los dejó a la vista: `FOL/Soundness0.lean` («la solidez de `Derives` es
+FALSA», con la causa en M‑11, y «`Derives` es sintácticamente completo» por `raa` (retirado)), `FOL/Canonical0.lean`
 («sobre `Derives` no puede haberlas: su solidez es FALSA»), `FOL/Compacity0.lean` («la solidez de
 `Derives` es falsa (M‑11)»), `FOL/Rename.lean` («sobre `Derives` es ilegítimo (M‑11: cuatro axiomas lo
 habitan)») y `TheoryFramework/Instances/FOL.lean` («`Derives` sigue SIN instancia, y es correcto: su
@@ -124,7 +125,7 @@ idéntico a HEAD) y se volvieron a congelar en el mismo ciclo. Registro por lín
 | Lean libraries (`lean_lib`) | 4 |
 | Total modules | ~43 |
 | Modules with 0 sorry | ~42 / ~43 |
-| Total sorries | **0** — ⚠️ pero el de `Completeness` se sustituyó por 5 `axiom`, hoy **1** (el 2026‑09‑13 cayeron cuatro: la enumeración y las dos congruencias) |
+| Total sorries | **0** — ⚠️ pero el de `Completeness` (módulo borrado el 2026-09-23) se sustituyó por 5 `axiom`, hoy **1** (el 2026‑09‑13 cayeron cuatro: la enumeración y las dos congruencias; ✏️ 2026-11-09, ADR‑262 de RPP: ese «hoy» es el del 2026‑09‑13, y el último se borró con el módulo) |
 | Build status | ✅ Passing (all 4 libs) |
 | Lean version | v4.28.0 |
 | Naming convention | Mathlib-style (see NAMING-CONVENTIONS.md) |
@@ -137,40 +138,40 @@ idéntico a HEAD) y se volvieron a congelar en el mismo ciclo. Registro por lín
 
 | Module | Theorems | Sorry | Status |
 |--------|----------|-------|--------|
-| `Prelim.lean` | 5 | 0 | ✅ Complete |
+| `Prelim.lean` (ya no existe) | 5 | 0 | ✅ Complete |
 | `FOL.lean` | 0 | 0 | ✅ Complete |
 | `Tactics.lean` | 0 | 0 | ✅ Complete |
 | `Deduction.lean` | 1 | 0 | ✅ Complete |
 | `Semantics.lean` | 13 | 0 | ✅ Complete |
-| ~~`Soundness.lean`~~ | — | — | ⛔ **CUARENTENA** — su teorema se tuvo por FALSO: con `raa` postulado, cualquier testigo suyo daba `False`. ✏️ Desde el 2026-10-02 (`FOL/MetaRules.lean` borrado, ADR‑115 de RPP) su enunciado es un teorema, `derives_soundness`: lo falso era `raa` |
-| `Completeness.lean` | 22 | 0 | ⚠️ **1 `axiom`** — eran 5 (ver `AXIOMS.md`) |
-| ~~`Compacity.lean`~~ | — | — | ⛔ **CUARENTENA — vacuo** |
+| ~~`Soundness.lean`~~ (borrado) | — | — | ⛔ **CUARENTENA** — su teorema se tuvo por FALSO: con `raa` postulado (hoy retirado), cualquier testigo suyo daba `False`. ✏️ Desde el 2026-10-02 (`FOL/MetaRules.lean` borrado, ADR‑115 de RPP) su enunciado es un teorema, `derives_soundness`: lo falso era `raa` (retirado) |
+| `Completeness.lean` (borrado el 2026-09-23) | 22 | 0 | ⚠️ **1 `axiom`** — eran 5 (ver `AXIOMS.md`) |
+| ~~`Compacity.lean`~~ (borrado) | — | — | ⛔ **CUARENTENA — vacuo** |
 | `Theorems/Impl.lean` | 4 | 0 | ✅ Complete |
 | `Theorems/Neg.lean` | 5 | 0 | ✅ Complete |
 | `Theorems/Derived.lean` | 17 | 0 | ✅ Complete |
 | `Theorems/Quantifiers.lean` | 10 | 0 | ✅ Complete |
 | `Theorems/Eq.lean` | ~3 | 0 | ✅ Complete |
 
-> El `sorry` en `Completeness.lean` corresponde al caso de igualdad en la construcción de Henkin (modelo cociente para `Formula.eq`). Es matemáticamente correcto pero formalmente pendiente.
+> El `sorry` en `Completeness.lean` (borrado el 2026-09-23) corresponde al caso de igualdad en la construcción de Henkin (modelo cociente para `Formula.eq`). Es matemáticamente correcto pero formalmente pendiente.
 
-### `FOLPure` — Lógica de Primer Orden sin Igualdad
+### `FOLPure` (retirada el 2026-09-12) — Lógica de Primer Orden sin Igualdad
 
 | Module | Sorry | Status |
 |--------|-------|--------|
 | `FOL.lean`, `Tactics.lean`, `Deduction.lean` | 0 | ✅ |
-| `Semantics.lean`, `Soundness.lean`, `Completeness.lean` | 0 | ✅ |
-| `Classical.lean`, `Compacity.lean` | 0 | ✅ |
+| `Semantics.lean`, `Soundness.lean`, `Completeness.lean` (retirados con la librería) | 0 | ✅ |
+| `Classical.lean`, `Compacity.lean` (retirados con la librería) | 0 | ✅ |
 | `Theorems/Impl.lean`, `Neg.lean`, `Derived.lean`, `Quantifiers.lean` | 0 | ✅ |
 
 ⚠️ **0 sorries — pero eso NO es «demostrado»**: ver `AXIOMS.md`.
 
-### `PropLogic` — Lógica Proposicional (subconjunto sin cuantificadores)
+### `PropLogic` (retirada el 2026-09-12) — Lógica Proposicional (subconjunto sin cuantificadores)
 
 | Module | Sorry | Status |
 |--------|-------|--------|
-| `PL.lean`, `Tactics.lean`, `Deduction.lean` | 0 | ✅ |
-| `Semantics.lean`, `Soundness.lean`, `Completeness.lean` | 0 | ✅ |
-| `Classical.lean`, `Compacity.lean` | 0 | ✅ |
+| `PL.lean`, `Tactics.lean`, `Deduction.lean` (retirados con la librería) | 0 | ✅ |
+| `Semantics.lean`, `Soundness.lean`, `Completeness.lean` (retirados con la librería) | 0 | ✅ |
+| `Classical.lean`, `Compacity.lean` (retirados con la librería) | 0 | ✅ |
 | `Theorems/Impl.lean`, `Neg.lean`, `Derived.lean` | 0 | ✅ |
 
 **0 sorries.**
@@ -186,11 +187,11 @@ Capa de abstracción (`class LogicSystem`) sobre las tres lógicas base.
 | `Properties.lean` | 0 | ✅ |
 | `Relations.lean` | 0 | ✅ |
 | `MetaTheorems.lean` | 0 | ✅ |
-| `Instances/PropLogic.lean` | 0 | ✅ |
-| `Instances/FOLPure.lean` | 0 | ✅ |
+| `Instances/PropLogic.lean` (retirada el 2026-09-12) | 0 | ✅ |
+| `Instances/FOLPure.lean` (retirada el 2026-09-12) | 0 | ✅ |
 | `Instances/FOL.lean` | 1 (heredado) | ⚠️ |
 
-**0 sorries propios.** La instancia `FOL` hereda el sorry de `FOL.Completeness`.
+**0 sorries propios.** La instancia `FOL` hereda el sorry de `FOL.Completeness` (módulo borrado).
 
 ---
 
@@ -205,9 +206,9 @@ Capa de abstracción (`class LogicSystem`) sobre las tres lógicas base.
 
 ## Pending Work
 
-- [ ] **Fase 7**: Proyecto `ROBINSON_PlusPlus` — Axiomas de Peano sobre `FOLPure`/`FOL`.
+- [ ] **Fase 7**: Proyecto `ROBINSON_PlusPlus` — Axiomas de Peano sobre `FOLPure` (retirada) / `FOL`.
 - [ ] **Fase 7**: Función de Cantor, codificación de tuplas y listas.
-- [ ] **Fase 8**: Cerrar el sorry de igualdad en `FOL/Completeness.lean` con el modelo cociente completo.
+- [ ] **Fase 8**: Cerrar el sorry de igualdad en `FOL/Completeness.lean` (borrado) con el modelo cociente completo.
 - [ ] **Fase 8**: Añadir teorías concretas usando `TheoryFramework` (ej. teoría de grupos, teoría de orden).
 
 ---

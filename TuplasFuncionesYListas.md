@@ -1,4 +1,12 @@
-**Last updated:** 2026-05-07 — la de su última revisión con diez líneas nuevas o más (`057515a`; sin contar los cambios de fin de línea), puesta el 2026‑11‑02 (T56, ADR‑245 de RPP), que NO revisó el cuerpo: es deuda de contenido de `[E]`.
+**Last updated:** 2026-11-09 — revisado como HISTÓRICO (ADR‑262 de RPP): la cabecera y las notas posteriores a la marca anterior, comprobadas contra el árbol; el cuerpo es registro de su fecha y no se ha re‑medido. Antes, 2026-05-07 — la de su última revisión con diez líneas nuevas o más (`057515a`; sin contar los cambios de fin de línea), puesta el 2026‑11‑02 (T56, ADR‑245 de RPP), que NO revisó el cuerpo: es deuda de contenido de `[E]`.
+
+> 🗄️ **HISTÓRICO** (✏️ 2026‑11‑09, ADR‑262 de RPP): la especificación de mayo de 2026 del sistema «Minimal» de RPP
+> (`057515a`, 2026‑05‑07; la nota de contexto de abajo, `2d5779a`, es del día siguiente), con el mismo cuerpo que
+> `../ROBINSON_PlusPlus/TuplasFuncionesYListas.md`. No se ha re‑medido. Lo que RPP construyó con ella —los teoremas de
+> sus bloques Block1…Block8, sobre su capa `⊢`, y Ax‑P— se retiró (ADR‑115 de RPP; `ax_p_tfa`, retirado el
+> 2026‑09‑12), y su «sin un principio de inducción generalizado» es de la LISTA de axiomas: los teoremas de Gödel de RPP
+> van sobre T_Prf, con la inducción para toda fórmula. [PLANNING.md](PLANNING.md), al que remite la nota, también es
+> histórico. Lo de abajo es registro; lo vigente, `../ROBINSON_PlusPlus/AXIOMS.md` §0.
 
 > **Nota de Contexto:** Este documento es la especificación formal para el sistema axiomático "Minimal" que se desarrollará como parte del proyecto `ROBINSON_PlusPlus`.
 >

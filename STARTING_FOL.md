@@ -1,6 +1,13 @@
 # Esquema de Inicio: Lógica de Primer Orden (FOL)
 
-**Last updated:** 2026-04-21 — la de su última revisión con diez líneas nuevas o más (`182473b`; sin contar los cambios de fin de línea), puesta el 2026‑11‑02 (T56, ADR‑245 de RPP), que NO revisó el cuerpo: es deuda de contenido de `[E]`.
+**Last updated:** 2026-11-09 — revisado como HISTÓRICO (ADR‑262 de RPP): la cabecera y las notas posteriores a la marca anterior, comprobadas contra el árbol; el cuerpo es registro de su fecha y no se ha re‑medido. Antes, 2026-04-21 — la de su última revisión con diez líneas nuevas o más (`182473b`; sin contar los cambios de fin de línea), puesta el 2026‑11‑02 (T56, ADR‑245 de RPP), que NO revisó el cuerpo: es deuda de contenido de `[E]`.
+
+> 🗄️ **HISTÓRICO** (✏️ 2026‑11‑09, ADR‑262 de RPP): el esquema de arranque de FOL, del 2026‑04‑21 (`182473b`; los
+> commits posteriores sólo le cambiaron los finales de línea y le pusieron la marca): las reglas de `Derives` y las
+> primeras tautologías que FOL iba a demostrar, con lo que entonces estaba «ya implementado». No se ha re‑medido; por
+> ejemplo, ∧ y ∨ no son hoy definiciones, como dice §1.3, sino constructores de `FormulaG` (como ∃), y ¬ y ⇔ sí lo
+> son (`neg`, `iff`). Lo de abajo es registro; lo vigente, [REFERENCE.md](REFERENCE.md) §3 y
+> [CURRENT-STATUS-PROJECT.md](CURRENT-STATUS-PROJECT.md).
 
 Este documento detalla las reglas de inferencia fundamentales y los primeros teoremas que formarán la base de nuestro desarrollo en Lean 4. Servirá como hoja de ruta para la implementación del sistema deductivo.
 

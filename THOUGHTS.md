@@ -1,7 +1,13 @@
 # Thoughts — ProjectName
 
-**Last updated:** 2026-04-20 00:00
+**Last updated:** 2026-11-09 — revisado como HISTÓRICO (ADR‑262 de RPP): la cabecera y las notas posteriores a la marca anterior, comprobadas contra el árbol; el cuerpo es registro de su fecha y no se ha re‑medido. Antes, 2026-04-20 00:00
 **Author**: Julián Calderón Almendros
+
+> 🗄️ **PLANTILLA** (✏️ 2026‑11‑09, ADR‑262 de RPP): es el THOUGHTS.md de la plantilla lean4-project-template —el
+> título «ProjectName», los huecos entre corchetes y las «Lessons Learned» son suyos—, con la fecha y el autor que le
+> puso el arranque de FOL (`3cc59fa`, 2026‑04‑20) y UNA nota del proyecto, la del 2026‑04‑21 (las tácticas, que están
+> hoy en `FOL/Tactics.lean`). Después nadie ha escrito en él: sólo cambiaron sus finales de línea (`800261b`). Lo de
+> abajo es registro; lo vigente, [DECISIONS.md](DECISIONS.md) y [CURRENT-STATUS-PROJECT.md](CURRENT-STATUS-PROJECT.md).
 
 > This is an informal design journal. Record ideas, alternatives considered,
 > open questions, and future directions here. Not normative — purely exploratory.

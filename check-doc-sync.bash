@@ -488,19 +488,19 @@ echo "════ [E] FRESCURA DEL TITULAR — ROJO (objetivo: lo decide git) �
 # español o en cursiva no cuenta); cada documento tiene que fallar por la razón de su tabla. (5) Un TECHO: las dos
 # tablas juntas no pueden tener un documento que no tengan las de la base verificada.
 read -r -d '' E_DEUDA <<'EOF'
-THOUGHTS.md
-auditoria/constructividad-2026-09-27/README.md
+# THOUGHTS.md — SALDADA el 2026-11-09 (ADR-262 de RPP): revisado como HISTÓRICO: su cabecera y sus notas posteriores, comprobadas; el cuerpo es registro de su fecha.
+# auditoria/constructividad-2026-09-27/README.md — SALDADA el 2026-11-09 (ADR-262 de RPP): revisado como HISTÓRICO: su cabecera y sus notas posteriores, comprobadas; el cuerpo es registro de su fecha.
 # ── ✏️ 2026-11-02 (T56, ADR-245 de RPP): la de FORMATO de T39, pagada como en RPP (T24): con la fecha de su última
 #    revisión REAL, nunca la de hoy —la suya, en las tres que la llevaban en español; en las cuatro sin marca, la de su
 #    último commit con diez líneas nuevas o más, sin contar los de fin de línea—, y pasan aquí: su cuerpo no se ha
 #    revisado desde entonces. DECISIONS.md y WORKFLOW.md, revisados ese día, salen con la marca de hoy; PROCESANDO.md
 #    (0 bytes, un resto de la plantilla), borrado.
-AI-GUIDE.md
-NAMING-CONVENTIONS.md
-PLANNING.md
-STARTING_FOL.md
-TuplasFuncionesYListas.md
-cuarentena/README.md
+# AI-GUIDE.md — SALDADA el 2026-11-09 (ADR-262 de RPP): revisado contra el árbol, con su [B] a cero si está en la lista de [B].
+# NAMING-CONVENTIONS.md — SALDADA el 2026-11-09 (ADR-262 de RPP): revisado contra el árbol, con su [B] a cero si está en la lista de [B].
+# PLANNING.md — SALDADA el 2026-11-09 (ADR-262 de RPP): revisado como HISTÓRICO: su cabecera y sus notas posteriores, comprobadas; el cuerpo es registro de su fecha.
+# STARTING_FOL.md — SALDADA el 2026-11-09 (ADR-262 de RPP): revisado como HISTÓRICO: su cabecera y sus notas posteriores, comprobadas; el cuerpo es registro de su fecha.
+# TuplasFuncionesYListas.md — SALDADA el 2026-11-09 (ADR-262 de RPP): revisado como HISTÓRICO: su cabecera y sus notas posteriores, comprobadas; el cuerpo es registro de su fecha.
+# cuarentena/README.md — SALDADA el 2026-11-09 (ADR-262 de RPP): revisado contra el árbol, con su [B] a cero si está en la lista de [B].
 EOF
 read -r -d '' E_DEUDA_FORMATO <<'EOF'
 # ── vacía desde el 2026-11-02 (T56, ADR-245 de RPP): la de T39, pagada (arriba).
