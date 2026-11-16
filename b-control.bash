@@ -45,14 +45,16 @@ B_DOCS=""; for d in $B_DOCS_LISTA; do [ -f "$d" ] && B_DOCS="$B_DOCS $d"; done
 # celda, una fecha, su propio nombre, un verbo corriente, «hace falta», un comentario HTML, un homónimo de Lean, su forma
 # o su posición dentro de la cita; un marcador de la cita VECINA, uno negado o dentro de una ruta; una familia por glob,
 # una abreviatura con barra, una prima, un alias y un directorio que ya no existe— y las reglas de CommonMark. Si no da
-# exactamente lo esperado, no se mide.
+# exactamente lo esperado, no se mide. (✏️ ADR-265: y un lema y una táctica de Lean, vivos, y una táctica que el
+# proyecto declaró, no; un marcador en MAYÚSCULAS acentuadas y otro con negrita; y la negrita no esconde ni la negación,
+# ni «hace falta», ni el sustantivo; y una oración que acaba en negrita corta el marcador.)
 printf '%s\n' vivo_ok vivo_fam_uno "vivo_prima'" > "$B_AUTO/vivos"
-printf 'Lean.Name\tL\nimp_intro\tL\nCoreM.run\tL\nStd.Bounded.LE\tL\nLean.Expr.getUsedConstants\tL\nQuot.sound\tL\nROBINSON_PlusPlus.X.Prf.listInd\tP\nROBINSON_PlusPlus.X.SinWTs.vivo_ok\tP\nautoImplicit\tO\nInit.Classical\tM\n#mi_orden\tT\nROBINSON_PlusPlus.X.Alias.campo_alias\tP\tA\nStd.DirViejo.x\tL\n' > "$B_AUTO/env"
+printf 'Lean.Name\tL\nimp_intro\tL\nCoreM.run\tL\nStd.Bounded.LE\tL\nLean.Expr.getUsedConstants\tL\nQuot.sound\tL\nROBINSON_PlusPlus.X.Prf.listInd\tP\nROBINSON_PlusPlus.X.SinWTs.vivo_ok\tP\nautoImplicit\tO\nInit.Classical\tM\n#mi_orden\tT\nROBINSON_PlusPlus.X.Alias.campo_alias\tP\tA\nStd.DirViejo.x\tL\nif_neg\tL\nexact?\tT\nborrada_tac\tT\n' > "$B_AUTO/env"
 printf '%s\n' 'solo_en_sondeo|sondeos/Sondeo.lean' > "$B_AUTO/sond"
 printf '%s\n' ROBINSON_PlusPlus.Meta.Rosser Meta.Rosser Rosser > "$B_AUTO/mod"
 printf '%s\n' ROBINSON_PlusPlus/Meta/Rosser.lean sondeos/Sondeo.lean doc/registro/x.txt archivo/tag-1 'archivo/tag-1:sondeos/Viejo.lean' \
   check-doc-sync.bash '=cuarentena/retiradas/Viejo.lean' Makefile > "$B_AUTO/rut"
-printf '%s\n' raa Bounded /DirViejo > "$B_AUTO/hist"
+printf '%s\n' raa Bounded /DirViejo borrada_tac imp_intro > "$B_AUTO/hist"
 B_RELLENO=$(printf '%0110d' 0 | tr 0 x)
 printf '%s\n' \
   '`vivo_ok`, `Lean.Name`, `listInd`, `Prf.listInd`, `CoreM`, `getUsedConstants`, `autoImplicit`, `Init.Classical`, `Rosser`.' \
@@ -86,6 +88,13 @@ printf '%s\n' \
   'La base `[propext,' 'gen, muerto_l]` y `muerto_m`.' \
   '```bash orden``` en línea: `muerto_n`.' \
   '`theorem muerto_o (h : P) : Q` y `#print axioms muerto_p`.' \
+  '`if_neg` y `exact?` viven, de Lean; `borrada_tac` no, la declaró el proyecto.' \
+  '`muerto_ac` se RETIRÓ.' \
+  '`muerto_bo` se **BORRARON** con su capa.' \
+  '`muerto_nb` no está **retirado**.' \
+  '`muerto_hf` hace **falta**.' \
+  'Según la **propuesta**, `muerto_pr`.' \
+  '`muerto_sa` fue algo largo y se **retiró.** Ahora `muerto_sb` sigue.' \
   '- un acento suelto: ` sin cerrar' '- `muerto_q` en el ítem siguiente.' \
   'El marcador `<!--` es texto; `` muerto_r `` y \` y `muerto_s`.' \
   '````md' '```' '`muerto_dentro`' '````' \
@@ -94,7 +103,7 @@ printf '%s\n' \
   '```' '`muerto_tras_valla_abierta`' > "$B_AUTO/doc.md"
 B_AUTO_SAL=$(LC_ALL=C awk -f b-citas.awk "$B_AUTO/vivos" "$B_AUTO/env" "$B_AUTO/sond" "$B_AUTO/mod" "$B_AUTO/rut" \
   "$B_AUTO/hist" "$B_AUTO/doc.md" | cut -d'|' -f1,2 | sed 's%^V|.*/doc[.]md:%V|doc.md:%' | LC_ALL=C sort | tr '\n' ';')
-B_AUTO_ESP="B2|Meta/NoExiste.lean;B2|ROBINSON_PlusPlus/Meta/Order;B2|Viejo*.lean;B2|Viejo.lean;B2|archivo/tag-1:sondeos/Nada.lean;B|Borrado.vivo_ok;B|Bounded;B|DirViejo;B|Muerto.cosa.*;B|SinWTs.prf_borrado;B|campo_alias;B|imp_intro;B|muerto_ab;B|muerto_b;B|muerto_c;B|muerto_d;B|muerto_e_;B|muerto_fam_*;B|muerto_h;B|muerto_i;B|muerto_j;B|muerto_k;B|muerto_l;B|muerto_m;B|muerto_n;B|muerto_o;B|muerto_p;B|muerto_prima';B|muerto_q;B|muerto_r;B|muerto_retirado_g;B|muerto_s;B|muerto_t;B|muerto_u;B|muerto_w7;B|muerto_x;B|muerto_y;B|muerto_y1;B|muerto_y2;B|muerto_z1;B|muerto_z2;B|muerto_z3;B|muerto_z4;B|muerto_z5;B|muerto_z6;B|muerto_z7;B|muerto_z8;B|muerto_z9;B|orden_muerta;B|raa;B|solo_en_sondeo;B|teorema_borrado.mk;B|vivo_fam_dos;V|doc.md:54;"
+B_AUTO_ESP="B2|Meta/NoExiste.lean;B2|ROBINSON_PlusPlus/Meta/Order;B2|Viejo*.lean;B2|Viejo.lean;B2|archivo/tag-1:sondeos/Nada.lean;B|Borrado.vivo_ok;B|Bounded;B|DirViejo;B|Muerto.cosa.*;B|SinWTs.prf_borrado;B|borrada_tac;B|campo_alias;B|imp_intro;B|muerto_ab;B|muerto_b;B|muerto_c;B|muerto_d;B|muerto_e_;B|muerto_fam_*;B|muerto_h;B|muerto_hf;B|muerto_i;B|muerto_j;B|muerto_k;B|muerto_l;B|muerto_m;B|muerto_n;B|muerto_nb;B|muerto_o;B|muerto_p;B|muerto_pr;B|muerto_prima';B|muerto_q;B|muerto_r;B|muerto_retirado_g;B|muerto_s;B|muerto_sb;B|muerto_t;B|muerto_u;B|muerto_w7;B|muerto_x;B|muerto_y;B|muerto_y1;B|muerto_y2;B|muerto_z1;B|muerto_z2;B|muerto_z3;B|muerto_z4;B|muerto_z5;B|muerto_z6;B|muerto_z7;B|muerto_z8;B|muerto_z9;B|orden_muerta;B|raa;B|solo_en_sondeo;B|teorema_borrado.mk;B|vivo_fam_dos;V|doc.md:61;"
 if [ "$B_AUTO_SAL" != "$B_AUTO_ESP" ]; then
   echo "  ❌ NO PUDE MEDIR [B]: el autotest de b-citas.awk no da lo esperado; da: $B_AUTO_SAL"
   B_FAIL=1; B_MEDIDO=0

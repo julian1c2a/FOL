@@ -3,8 +3,9 @@
 #
 # Uso: LC_ALL=C awk -f b-citas.awk VIVOS ENV SONDEOS MODULOS RUTAS HIST DOC1.md [DOC2.md …]
 #   VIVOS    un nombre declarado por línea (el nombre entero y su último componente), del proyecto y de cuarentena/;
-#   ENV      «nombre<TAB>clase»: P (constante del proyecto), L (constante de Lean), O (opción), M (módulo de Lean), T (una
-#            orden: un token del analizador que empieza por «#», como `#print` o `#pureza_titulares`); un tercer campo
+#   ENV      «nombre<TAB>clase»: P (constante del proyecto), L (constante de Lean), O (opción), M (módulo de Lean), T (un
+#            token del analizador: una orden, que empieza por «#», como `#print` o `#pureza_titulares`, o una palabra con
+#            forma de identificador, como las tácticas `exact?` o `derive_hyp`; ADR-265); un tercer campo
 #            «A» marca un nombre por un ALIAS del proyecto (`Formula.atom` por `FormulaG.atom`): vale entero o como
 #            sufijo, pero sus componentes no absuelven nombres sueltos;
 #   SONDEOS  «nombre|fichero» por cada declaración de un sondeo (también de los archivados: «etiqueta:sondeos/X.lean»);
@@ -33,7 +34,8 @@
 #     (`imp_intro/gen/raa`) es una abreviatura de nombres: se mira cada uno.
 # QUÉ LA HACE VIVA. Un identificador sin punto: está en VIVOS, o es un componente del nombre de una constante del
 # PROYECTO (un constructor, un campo, un espacio de nombres), un módulo, una opción o vocabulario; o, si el proyecto no
-# lo declaró nunca, de Lean: un componente en Mayúscula (`CoreM`) o el último componente en camelCase (`getUsedConstants`).
+# lo declaró nunca, de Lean: un componente en Mayúscula (`CoreM`), el último componente en camelCase (`getUsedConstants`),
+# el nombre ENTERO de una constante (`if_neg`, `of_decide_eq_false`) o un token del analizador (`exact?`; ADR-265).
 # Con punto: el nombre entero de una constante, un espacio de nombres, un sufijo de dos o tres componentes de una
 # constante (`Prf.listInd`, `Expr.hash`) o un módulo; o un campo sobre algo vivo (`foo.mp`, `Prf.rec`). Un homónimo de
 # Lean (`imp_intro`, `Bounded`) NO absuelve a un nombre que el proyecto declaró. Una FAMILIA (acaba en `_`) vive si algún
@@ -41,7 +43,9 @@
 # orden (`#pureza_titulares`, `#print`): un token del analizador (T); si no lo es, se mira su nombre sin la «#».
 # QUÉ LA ABSUELVE. Un MARCADOR de ESTADO (retirado, borrado, archivado, propuesto, candidato, hipotético, descartado,
 # muerto, histórico, «falta», «pendiente», «por construir», «no existe»…), palabra entera (no dentro de una ruta ni de
-# un compuesto: `librerias-retiradas/` no marca), a 100 bytes o menos, sin cruzar una celda de tabla NI OTRA CITA: el
+# un compuesto: `librerias-retiradas/` no marca), en minúsculas o en MAYÚSCULAS, acentuadas también («se RETIRÓ»), y
+# con la negrita de Markdown en medio («se **borraron**»: sus `*` cuentan como blancos; ADR-265; lo mismo para «hace
+# falta», la negación y el sustantivo de abajo), a 100 bytes o menos, sin cruzar una celda de tabla NI OTRA CITA: el
 # marcador es de la cita (o del grupo de citas unidas sólo por comas, «y», «o» o barras) que tiene al lado, no de una
 # vecina; sobre la línea con las citas en blanco; o, si la declara un sondeo, que la línea nombre ese sondeo
 # (`sondeos/X` o `X.lean`). ⛔ La fecha NO es un marcador, ni los verbos corrientes («necesita», «pide», «exige»,
@@ -58,18 +62,19 @@ BEGIN {
   FINP = "([^-a-z0-9_/\200-\377]|$)"
   # cada palabra entera, con sus terminaciones: «borrador» no es «borrado», ni «faltaban» es «falta»
   MARKW = "((retirad|borrad|eliminad|archivad|descartad|propuest|candidat|hipot(e|\303\251)tic|hist(o|\303\263)ric|muert|desaparecid|obsolet|renombrad|sustituid|reemplazad)(o|a|os|as)"
-  MARKW = MARKW "|legacy|inexistentes?|faltan?|pendientes?|sin materializar|sin medir|no existen?|ya no existen?|tampoco existen?"
-  MARKW = MARKW "|se (borr|retir|elimin|archiv|descart)(o|\303\263|aron)|desapareci(o|\303\263)"
-  MARKW = MARKW "|aqu(i|\303\255) viv(i|\303\255)a|habr(i|\303\255)a que|por (construir|hacer|medir|escribir|demostrar|decidir|probar))"
+  # (entre las palabras de un marcador, uno o más blancos: los `*` de la negrita se vuelven blancos, ver baja; ADR-265)
+  MARKW = MARKW "|legacy|inexistentes?|faltan?|pendientes?|sin +materializar|sin +medir|no +existen?|ya +no +existen?|tampoco +existen?"
+  MARKW = MARKW "|se +(borr|retir|elimin|archiv|descart)(o|\303\263|aron)|desapareci(o|\303\263)"
+  MARKW = MARKW "|aqu(i|\303\255) +viv(i|\303\255)a|habr(i|\303\255)a +que|por +(construir|hacer|medir|escribir|demostrar|decidir|probar))"
   MARK = NOLETRA MARKW FINP "|\342\217\263|\360\237\227\221"
   # «hace falta» (y sus formas) es «se necesita»: no marca nada
-  HACERFALTA = NOLETRA "(hace|hac(i|\303\255)a|hacen|hac(i|\303\255)an|hizo|haciendo|har(a|\303\241)|har(i|\303\255)an?|haga|hagan|hubiera hecho) falta" FINP
+  HACERFALTA = NOLETRA "(hace|hac(i|\303\255)a|hacen|hac(i|\303\255)an|hizo|haciendo|har(a|\303\241)|har(i|\303\255)an?|haga|hagan|hubiera +hecho) +falta" FINP
   # un marcador NEGADO («no está retirado», «nunca fue propuesto») no marca nada
   # (con hasta dos palabras en medio: «no retirado», «no se ha retirado», «no es código muerto», «ya no falta»)
-  NEGADO = NOLETRA "(no|nunca|ni|tampoco)( [^ ]+)?( [^ ]+)? " MARKW FINP
+  NEGADO = NOLETRA "(no|nunca|ni|tampoco)( +[^ ]+)?( +[^ ]+)? +" MARKW FINP
   # un marcador usado como SUSTANTIVO («la propuesta», «por falta de», «el histórico», «los 17 candidatos», «los 2
   # últimos pendientes») no dice nada de la cita
-  NOMBRE = NOLETRA "(el|la|los|las|un|una|unos|unas|del|al|por|su|sus|este|esta|estos|estas)( [0-9]+)?( [^ ]+)? "
+  NOMBRE = NOLETRA "(el|la|los|las|un|una|unos|unas|del|al|por|su|sus|este|esta|estos|estas)( +[0-9]+)?( +[^ ]+)? +"
   NOMBRE = NOMBRE "(propuestas?|pendientes?|candidat(o|a|os|as)|hist(o|\303\263)ric(o|a|os|as)|faltas?)" FINP
   nv = split("Prop Type Sort lean_lib leanOptions globs andSubmodules submodules default_target moreServerArgs", vz, " ")
   for (i = 1; i <= nv; i++) VOCAB[vz[i]] = 1
@@ -186,6 +191,17 @@ function separa(a, b,   t) {
   t = tolower(substr(x, a, b - a + 1)); gsub(/[ \t,\/"'+&]/, "", t); gsub(/\302[\253\273\267]/, "", t)
   return (t == "" || t == "y" || t == "o" || t == "e" || t == "u" || t == "ni" || t == "and" || t == "or")
 }
+# en minúsculas TAMBIÉN las vocales acentuadas, la eñe y la diéresis (`tolower`, en locale C y en mawk, sólo baja
+# ASCII: «RETIRÓ» quedaba «retirÓ»), y los `*` de la negrita, en blanco («se **borraron**»); sin mover las posiciones
+# (cada letra sigue con sus dos bytes; ADR-265)
+function baja(t) {
+  t = tolower(t)
+  gsub(/\303\201/, "\303\241", t); gsub(/\303\211/, "\303\251", t); gsub(/\303\215/, "\303\255", t)
+  gsub(/\303\223/, "\303\263", t); gsub(/\303\232/, "\303\272", t); gsub(/\303\221/, "\303\261", t)
+  gsub(/\303\234/, "\303\274", t)
+  gsub(/\*/, " ", t)
+  return t
+}
 # «hace falta», los marcadores negados y los usados como sustantivo, en blanco, sin mover las posiciones
 function limpia(t) {
   while (match(t, HACERFALTA)) t = substr(t, 1, RSTART - 1) sprintf("%" RLENGTH "s", "") substr(t, RSTART + RLENGTH)
@@ -199,20 +215,22 @@ function limpia(t) {
 # retirados con esa capa: `a`, `b`»)
 function marcado(   a, e, seg, q2, p, off, P, Q, cort) {
   a = GI - W; if (a < LIMI) a = LIMI
-  seg = substr(lb, a, GI - a); cort = 0
+  # (baja ANTES de los cortes: con la negrita en blanco, «se **retiró.** Ahora» corta en su punto; la revisión de
+  # ADR-265 vio que, si no, el marcador de una oración absolvía la cita de la siguiente)
+  seg = baja(substr(lb, a, GI - a)); cort = 0
   q2 = 0; while ((p = index(substr(seg, q2 + 1), "|")) > 0) q2 += p
   while (match(substr(seg, q2 + 1), /[.!?] /)) q2 += RSTART + RLENGTH - 1
   if (q2 > 0) { a += q2; seg = substr(seg, q2 + 1); cort = 1 }
-  seg = limpia(tolower(seg)); off = 0
+  seg = limpia(seg); off = 0
   while (match(substr(seg, off + 1), MARK)) {
     P = a + off + RSTART - 1; Q = P + RLENGTH - 1; off += RSTART + RLENGTH - 1
     if (G1 == 1 || cort || substr(lb, Q + 1, GI - Q - 1) ~ /:[ \t]*$/ || GI - Q - 1 < P - LIMI) return 1
   }
   e = GF + W; if (e > LIMD) e = LIMD
-  seg = substr(lb, GF + 1, e - GF); cort = 0
+  seg = baja(substr(lb, GF + 1, e - GF)); cort = 0
   p = index(seg, "|"); if (p > 0) { seg = substr(seg, 1, p - 1); cort = 1 }
   if (match(seg, /[.!?] /)) { seg = substr(seg, 1, RSTART); cort = 1 }
-  seg = limpia(tolower(seg)); off = 0
+  seg = limpia(seg); off = 0
   while (match(substr(seg, off + 1), MARK)) {
     P = GF + off + RSTART; Q = P + RLENGTH - 1; off += RSTART + RLENGTH - 1
     if (G2 == nsp || cort || P - GF - 1 < SI[G2 + 1] - Q - 1) return 1
@@ -401,6 +419,9 @@ function vive(t,   k2, pre) {
   # un nombre que el proyecto declaró alguna vez (o un directorio que tuvo) sólo lo absuelve el proyecto: un homónimo
   # de Lean no basta (`Bounded`, `Intermediate`)
   if ((t in hist) || (t in histdir) || soloproy) return 0
+  # el nombre ENTERO de una constante de Lean (`if_neg`, `of_decide_eq_false`) o un token del analizador con forma de
+  # identificador (las tácticas: `exact?`, `derive_hyp`); ADR-265
+  if ((t in entero) || (t in orden)) return 1
   if (t ~ /^[A-Z]/ && (t in l1)) return 1
   if (t ~ /^[a-z_][A-Za-z0-9_']*[A-Z]/ && (t in l1ult)) return 1
   return 0

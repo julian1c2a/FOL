@@ -718,15 +718,19 @@ if [ "$B_MEDIDO" = "1" ]; then
   if ! command -v lake >/dev/null 2>&1; then
     echo "  ❌ NO PUDE MEDIR [B]: 'lake' no está en el PATH (el entorno de Lean lo vuelca scripts/VolcarEntorno.lean)."
   elif [ "$SIBLING_OK" = "1" ] && [ -d "$SIBLING/.lake/build" ]; then
-    ( F=$(pwd); cd "$SIBLING" && VOLCADO="$B_ENV_W" lake env lean "$F/scripts/VolcarEntorno.lean" > /dev/null 2>&1 ) && B_VOLCADO=1
+    # (✏️ ADR-265 de RPP: si falla, lo dice; antes era rojo SIN mensaje, y con el `lake` de v4.36 delante en el PATH)
+    ( F=$(pwd); cd "$SIBLING" && VOLCADO="$B_ENV_W" lake env lean "$F/scripts/VolcarEntorno.lean" > /dev/null 2>&1 ) && B_VOLCADO=1 \
+      || echo "  ❌ NO PUDE MEDIR [B]: \`lake env lean\` no pudo volcar el entorno de Lean (¿el \`lake\` del PATH es de otra versión que la de lean-toolchain? es: $(lake --version 2>/dev/null | head -1))."
   elif [ -n "${CI:-}" ]; then
-    VOLCADO="$B_ENV_W" lake env lean scripts/VolcarEntorno.lean > /dev/null 2>&1 && B_VOLCADO=1
+    VOLCADO="$B_ENV_W" lake env lean scripts/VolcarEntorno.lean > /dev/null 2>&1 && B_VOLCADO=1 \
+      || echo "  ❌ NO PUDE MEDIR [B]: \`lake env lean\` no pudo volcar el entorno de Lean (¿el \`lake\` del PATH es de otra versión que la de lean-toolchain? es: $(lake --version 2>/dev/null | head -1))."
   else
     echo "  ❌ NO PUDE MEDIR [B]: sin RPP construido al lado ni la CI, no vuelco el entorno de Lean."
   fi
   if [ "$B_VOLCADO" = "1" ] && { [ "$(wc -l < "$B_ENV" | tr -d ' ')" -lt 50000 ] || ! grep -q '^FOL\.Canonical0\.completeness₀	P$' "$B_ENV" \
-       || ! grep -q '^Init\.Classical	M$' "$B_ENV"; }; then
-    echo "  ❌ NO PUDE MEDIR [B]: el volcado del entorno de Lean salió corto o sin \`completeness₀\` (¿el build no está hecho?)."
+       || ! grep -q '^Init\.Classical	M$' "$B_ENV" || ! grep -q '^derive_hyp	T$' "$B_ENV"; }; then
+    # (✏️ ADR-265 de RPP: y una táctica, `derive_hyp` de FOL/Tactics.lean: el volcado de las palabras que empiezan una sintaxis)
+    echo "  ❌ NO PUDE MEDIR [B]: el volcado del entorno de Lean salió corto o sin \`completeness₀\` o sin la táctica \`derive_hyp\` (¿el build no está hecho?)."
     B_VOLCADO=0
   fi
   [ "$B_VOLCADO" = "1" ] || { B_FAIL=1; B_MEDIDO=0; }
