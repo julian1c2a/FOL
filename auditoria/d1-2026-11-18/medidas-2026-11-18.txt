@@ -1,0 +1,18 @@
+# lake env lean ../FOL/FOL/EsencialidadSem0.lean (desde la raíz de RPP), 2026-11-18, Lean v4.35.0, FOL ci/d1-2026-11-18 sobre 3770333.
+# Salida de lean: 0. Líneas «error»/«warning»: 0. Líneas «depends on»/«does not depend»: 40 (25 de E8–E10, sin cambios, y las 15 de E11).
+# Las de E11, literales:
+'FOL.EsencialidadSem0.E11.nnem_implies_dns' does not depend on any axioms
+'FOL.EsencialidadSem0.E11.dnsFail_of_sigma' does not depend on any axioms
+'FOL.EsencialidadSem0.E11.model_sigma' does not depend on any axioms
+'FOL.EsencialidadSem0.E11.sat_sigma_iff_not_em' does not depend on any axioms
+'FOL.EsencialidadSem0.E11.nnem_iff_unsat_sigma' does not depend on any axioms
+'FOL.EsencialidadSem0.E11.dns_iff_unsatCountable_sigma' does not depend on any axioms
+'FOL.EsencialidadSem0.E11.sigma_MPN' does not depend on any axioms
+'FOL.EsencialidadSem0.E11.infiniteDom_PN' does not depend on any axioms
+'FOL.EsencialidadSem0.E11.fresh_Ssig' does not depend on any axioms
+'FOL.EsencialidadSem0.E11.large_Ssig' does not depend on any axioms
+'FOL.EsencialidadSem0.E11.ls_down_stmt_dns_implies_nnem' does not depend on any axioms
+'FOL.EsencialidadSem0.E11.countable_infinite_stmt_dns_implies_nnem' does not depend on any axioms
+'FOL.EsencialidadSem0.E11.infinite_large_stmt_dns_implies_nnem' does not depend on any axioms
+'FOL.EsencialidadSem0.E11.infinite_large_fresh_stmt_dns_implies_nnem' does not depend on any axioms
+'FOL.EsencialidadSem0.E11.ls_down_stmt_nnem_iff_dns' does not depend on any axioms

@@ -27,6 +27,7 @@ de esos enunciados puede evitar la lógica clásica. Los cinco, clasificados:
 | `compactness` (basta su vuelta) | WLEM, `¬P ∨ ¬¬P` | E8 |
 | `loewenheim_skolem_down`, `countable_infinite_of_infinite` | KSst (el esquema de Kripke para las `P` ¬¬‑estables) y, de él, WKS | E9 |
 | `infinite_model_of_large`, `infinite_model_of_large_fresh` | WLPO para sucesiones decidibles y WKS; juntos, WLEM | E10 |
+| los cuatro que dan modelos numerables (todos menos `compactness`) | con DNS, ¬¬EM: para ellos «¿implica DNS?» y «¿implica ¬¬EM?» son UNA pregunta | E11 |
 
 * **E8** — el testigo de E7, `S_P := {Q ∨ R} ∪ {¬Q | P} ∪ {¬R | ¬P}`. E7 necesitaba su CONSISTENCIA; aquí basta su
   satisfacibilidad FINITA, que sale sin choice, sin solidez y sin la igualdad decidible de `Formula`: una lista trae la
@@ -41,14 +42,23 @@ de esos enunciados puede evitar la lógica clásica. Los cinco, clasificados:
   tiene modelos FINITOS de todo tamaño. En uno INFINITO valen todas las guardas `G k`, así que `r ∨ ¬r` decide
   `∀n ¬β n` (WLPOp). Con el WKS de la numerabilidad (la extracción de E9), WLEM. ⚠️ El palomar es propio: el del núcleo
   (`List.Nodup.length_le_of_subset`) lleva `Classical.choice`.
+* **E11** (D1, ADR‑273 de RPP) — DNS y ¬¬EM son enunciados sobre los modelos de UNA fórmula,
+  `σ := ∀x ¬¬R x ∧ ¬∀x R x`: `¬EM ⟺ σ satisfacible` (`sat_sigma_iff_not_em`, con dominio `Prop`) y
+  `DNS ⟺ σ sin modelo numerable` (`dns_iff_unsatCountable_sigma`). Con un enunciado que vuelva numerable el modelo
+  `Prop × Nat` de `σ`, DNS implica ¬¬EM; ¬¬EM implica DNS siempre.
 
-⚠️ **Lo que NO está compilado** (ADR‑221 de RPP, con su ámbito):
+⚠️ **Lo que NO está compilado** (ADR‑221 y ADR‑273 de RPP, con su ámbito):
 * que WLEM, KSst y WKS no se demuestren sin choice. Lo dan contramodelos de Kripke: en el poset `{0<1, 0<2}` fallan los
   tres, porque WKS ⟺ WLEM en todo marco de Kripke. Es la misma evidencia que la de E7;
 * las cotas por arriba: ninguno de los cinco implica EM (Kripke sobre `{0<1}`), y LS↓ no implica KS (el topos de
-  Sierpinski).
+  Sierpinski);
+* la compacidad no implica Markov para las ecuaciones diofánticas, que sí implica el de la completitud
+  (`FOL.Markov0`); los otros cuatro, tampoco, con un paso sólo esbozado. Es el pegado de `Set` con los conjuntos de un
+  modelo de `T + ¬Con(T)`, con `T` = ZFC y los inaccesibles de los universos (D1, pregunta 1);
+* LS↓ y `countable_infinite_of_infinite` no implican DNS ni ¬¬EM (los haces sobre el espacio de Cantor). Para la
+  compacidad y §3 sigue abierto.
 
-El registro de la exploración, con sus medidas: `auditoria/t71-semanticos-2026-10-29/`. Nada de esto lo consume otro
+El registro de la exploración, con sus medidas: `auditoria/t71-semanticos-2026-10-29/` y `auditoria/d1-2026-11-18/`. Nada de esto lo consume otro
 módulo: es la medida, en el build, con su fila de footprint en RPP.
 -/
 
@@ -679,6 +689,162 @@ example : WLEM :=
 
 end FOL.EsencialidadSem0.E10
 
+namespace FOL.EsencialidadSem0.E11
+
+/-
+E11 · DNS y ¬¬EM, la pregunta 2 de D1 (ADR‑273 de RPP). Las dos son, en lógica pura, enunciados SOBRE MODELOS de UNA
+fórmula, `σ := ∀x ¬¬R x ∧ ¬∀x R x` (clásicamente insatisfacible):
+
+* `¬EM ⟺ σ es satisfacible` (con dominio `Prop` y `R P := P ∨ ¬P`), así que `¬¬EM ⟺ σ no tiene modelo`;
+* `DNS ⟺ σ no tiene modelo NUMERABLE` (la enumeración lleva el `∀d` del dominio a un `∀n`).
+
+Y por eso los cuatro enunciados que dan modelos numerables (LS↓, `countable_infinite_of_infinite` y los dos de §3)
+hacen EQUIVALENTES las dos preguntas: con cualquiera de ellos, DNS implica ¬¬EM (el modelo `Prop × Nat` de `σ`, que
+existe si `¬EM`, se vuelve numerable). ¬¬EM ⟹ DNS vale siempre. Ninguno de los cinco, que se sepa, implica DNS:
+lo que se intentó, y los modelos, en `auditoria/d1-2026-11-18/`.
+-/
+
+open FOL.Metamath.Semantics
+open FOL.Canonical0 (IsSatisfiable)
+open FOL.Compacity0 (CountableDom IsSatisfiableCountable InfiniteDom HasLargeModels)
+open FOL.Eigenvariable (occursFormula)
+open FOL.Fresh0 (cst)
+
+-- ── Los principios ──────────────────────────────────────────────────────────
+/-- El tercio excluso, como UNA proposición: su doble negación, `¬¬EM`, no es la de cada instancia (que es un
+teorema). -/
+abbrev EM : Prop := ∀ P : Prop, Or P (Not P)
+
+/-- El desplazamiento de la doble negación (DNS), para las familias indexadas por `Nat`. -/
+abbrev DNS : Prop := ∀ P : Nat → Prop, (∀ n, Not (Not (P n))) → Not (Not (∀ n, P n))
+
+/-- ¬¬EM ⟹ DNS, en lógica pura: con EM dentro de la doble negación, cada `¬¬P n` da `P n`. -/
+theorem nnem_implies_dns : Not (Not EM) → DNS :=
+  fun hnn P hP hnall => hnn (fun hem => hnall (fun n => (hem (P n)).elim id (fun h => (hP n h).elim)))
+
+-- ── La fórmula σ ────────────────────────────────────────────────────────────
+/-- El átomo `R(x₀)`. -/
+def rF : Formula := Formula.atom ['R'] [Term.var 0]
+
+/-- ⭐ `σ := ∀x ¬¬R x ∧ ¬∀x R x`: clásicamente insatisfacible; un modelo suyo es un fallo de DNS sobre su dominio. -/
+def sigmaF : Formula := Formula.and (Formula.forall (neg (neg rF))) (neg (Formula.forall rF))
+
+/-- La teoría `{σ}`. -/
+def Ssig : Formula → Prop := fun f => f = sigmaF
+
+/-- ⚠️ Patrones DISJUNTOS (con `| [d] => … | _ => …`, solapados, la DEFINICIÓN lleva `propext`). -/
+def relU {D : Type} (R : D → Prop) : List D → Prop
+  | [] => True
+  | d :: _ => R d
+
+/-- El modelo con dominio `D` en el que `R` es el predicado dado. -/
+def MU {D : Type} (d₀ : D) (R : D → Prop) : Model D := ⟨fun _ _ => d₀, fun _ ds => relU R ds⟩
+
+/-- Lo que dice `σ` en un modelo: un fallo de DNS sobre su dominio. -/
+theorem dnsFail_of_sigma {D : Type} (M : Model D) (v : Nat → D) (h : evalFormula M v sigmaF) :
+    And (∀ d, Not (Not (evalFormula M (shiftEnv v d) rF))) (Not (∀ d, evalFormula M (shiftEnv v d) rF)) :=
+  h
+
+/-- Y al revés: un fallo de DNS sobre `D` da un modelo de `{σ}` con dominio `D`. -/
+theorem model_sigma {D : Type} (d₀ : D) (R : D → Prop) (v : Nat → D) (h1 : ∀ d, Not (Not (R d)))
+    (h2 : Not (∀ d, R d)) : ∀ f, Ssig f → evalFormula (MU d₀ R) v f := by
+  intro f hf
+  subst hf
+  exact ⟨h1, h2⟩
+
+-- ── ¬EM ⟺ σ satisfacible; ¬¬EM ⟺ σ sin modelo ───────────────────────────────
+/-- 🏁 **`σ` es satisfacible si y sólo si falla EM**: el modelo es `Prop`, con `R P := P ∨ ¬P`. -/
+theorem sat_sigma_iff_not_em : Iff (IsSatisfiable Ssig) (Not EM) := by
+  constructor
+  · intro ⟨D, M, v, hM⟩ hem
+    obtain ⟨h1, h2⟩ := dnsFail_of_sigma M v (hM sigmaF rfl)
+    exact h2 (fun d => (hem _).elim id (fun h => (h1 d h).elim))
+  · intro hnem
+    exact ⟨Prop, MU True (fun P => Or P (Not P)), fun _ => True,
+      model_sigma True _ _ (fun P hn => hn (Or.inr (fun hp => hn (Or.inl hp)))) (fun h => hnem h)⟩
+
+/-- 🏁 **¬¬EM ⟺ `σ` no tiene modelo.** -/
+theorem nnem_iff_unsat_sigma : Iff (Not (Not EM)) (Not (IsSatisfiable Ssig)) :=
+  ⟨fun hnn hs => hnn (sat_sigma_iff_not_em.mp hs), fun hns hnem => hns (sat_sigma_iff_not_em.mpr hnem)⟩
+
+-- ── DNS ⟺ σ sin modelo numerable ─────────────────────────────────────────────
+/-- 🏁 **DNS ⟺ `σ` no tiene modelo NUMERABLE**: la enumeración lleva el `∀d` del dominio a un `∀n`. -/
+theorem dns_iff_unsatCountable_sigma : Iff DNS (Not (IsSatisfiableCountable Ssig)) := by
+  constructor
+  · intro hdns ⟨D, M, v, ⟨e, he⟩, hM⟩
+    obtain ⟨h1, h2⟩ := dnsFail_of_sigma M v (hM sigmaF rfl)
+    refine hdns (fun n => evalFormula M (shiftEnv v (e n)) rF) (fun n => h1 (e n)) (fun hall => h2 ?_)
+    intro d
+    obtain ⟨n, hn⟩ := he d
+    subst hn
+    exact hall n
+  · intro hns P hP hnall
+    exact hns ⟨Nat, MU 0 P, fun _ => 0, ⟨fun n => n, fun d => ⟨d, rfl⟩⟩, model_sigma 0 P _ hP hnall⟩
+
+-- ── Con ¬EM, σ tiene un modelo INFINITO (y modelos de todo tamaño) ─────────────
+/-- El modelo `Prop × Nat`: la segunda coordenada lo hace infinito. -/
+def MPN : Model (Prod Prop Nat) := MU (True, 0) (fun x => Or x.1 (Not x.1))
+
+theorem sigma_MPN (hnem : Not EM) (v : Nat → Prod Prop Nat) : ∀ f, Ssig f → evalFormula MPN v f :=
+  model_sigma (True, 0) _ v (fun _ hn => hn (Or.inr (fun hp => hn (Or.inl hp))))
+    (fun h => hnem (fun P => h (P, 0)))
+
+theorem infiniteDom_PN : InfiniteDom (Prod Prop Nat) :=
+  ⟨fun n => (True, n), fun _ _ h => congrArg Prod.snd h⟩
+
+/-- `σ` no tiene símbolos de función: la frescura de las `cst` es gratis. -/
+theorem fresh_Ssig : ∀ f, Ssig f → ∀ m, Not (occursFormula (cst m) f) := by
+  intro f hf m
+  subst hf
+  show Not (Or (Or (Or (Or False False) False) False) (Or (Or False False) False))
+  intro h
+  rcases h with (((h | h) | h) | h) | ((h | h) | h) <;> exact h
+
+theorem large_Ssig (hnem : Not EM) : HasLargeModels Ssig :=
+  fun _ => ⟨Prod Prop Nat, MPN, fun _ => (True, 0), sigma_MPN hnem _, fun n => (True, n),
+    fun _ _ _ _ h => congrArg Prod.snd h⟩
+
+-- ── Los cuatro enunciados que dan modelos numerables: con ellos, DNS ⟹ ¬¬EM ───
+/-- 🏁 Con el ENUNCIADO de LS↓, DNS implica ¬¬EM. -/
+theorem ls_down_stmt_dns_implies_nnem (H : LsDownStmt) : DNS → Not (Not EM) :=
+  fun hdns => nnem_iff_unsat_sigma.mpr (fun hs => dns_iff_unsatCountable_sigma.mp hdns (H hs))
+
+/-- 🏁 Con el ENUNCIADO de `countable_infinite_of_infinite`, DNS implica ¬¬EM. -/
+theorem countable_infinite_stmt_dns_implies_nnem (H : CountableInfStmt) : DNS → Not (Not EM) := by
+  intro hdns hnem
+  obtain ⟨D, M, v, ⟨hC, _⟩, hM⟩ :=
+    H (S := Ssig) ⟨Prod Prop Nat, MPN, fun _ => (True, 0), infiniteDom_PN, sigma_MPN hnem _⟩
+  exact dns_iff_unsatCountable_sigma.mp hdns ⟨D, M, v, hC, hM⟩
+
+/-- 🏁 Con el ENUNCIADO de `infinite_model_of_large`, DNS implica ¬¬EM. -/
+theorem infinite_large_stmt_dns_implies_nnem (H : LargeStmt) : DNS → Not (Not EM) := by
+  intro hdns hnem
+  obtain ⟨D, M, v, ⟨hC, _⟩, hM⟩ := H (large_Ssig hnem)
+  exact dns_iff_unsatCountable_sigma.mp hdns ⟨D, M, v, hC, hM⟩
+
+/-- 🏁 Con el ENUNCIADO de `infinite_model_of_large_fresh`, DNS implica ¬¬EM. -/
+theorem infinite_large_fresh_stmt_dns_implies_nnem (H : LargeFreshStmt) : DNS → Not (Not EM) := by
+  intro hdns hnem
+  obtain ⟨D, M, v, ⟨hC, _⟩, hM⟩ := H fresh_Ssig (large_Ssig hnem)
+  exact dns_iff_unsatCountable_sigma.mp hdns ⟨D, M, v, hC, hM⟩
+
+/-- ⭐ Con LS↓, las dos preguntas son UNA: ¬¬EM ⟺ DNS. (Igual con los otros tres; basta uno.) -/
+theorem ls_down_stmt_nnem_iff_dns (H : LsDownStmt) : Iff (Not (Not EM)) DNS :=
+  ⟨nnem_implies_dns, ls_down_stmt_dns_implies_nnem H⟩
+
+-- ⚠️ CONTROLES DE NO VACUIDAD: los teoremas REALES cumplen las hipótesis (y llevan `Classical.choice`); y con la
+-- lógica clásica `σ` no tiene modelo, numerable o no.
+example : DNS → Not (Not EM) := ls_down_stmt_dns_implies_nnem (fun h => FOL.Compacity0.loewenheim_skolem_down h)
+example : DNS → Not (Not EM) :=
+  countable_infinite_stmt_dns_implies_nnem (fun h => FOL.Compacity0.countable_infinite_of_infinite h)
+example : DNS → Not (Not EM) := infinite_large_stmt_dns_implies_nnem (fun h => FOL.Compacity0.infinite_model_of_large h)
+example : DNS → Not (Not EM) :=
+  infinite_large_fresh_stmt_dns_implies_nnem (fun hF hL => FOL.Compacity0.infinite_model_of_large_fresh hF hL)
+example : Not (IsSatisfiable Ssig) := nnem_iff_unsat_sigma.mp (fun h => h Classical.em)
+example : Not (IsSatisfiableCountable Ssig) := dns_iff_unsatCountable_sigma.mp (nnem_implies_dns (fun h => h Classical.em))
+
+end FOL.EsencialidadSem0.E11
+
 #print axioms FOL.EsencialidadSem0.E8.SP_finSat
 #print axioms FOL.EsencialidadSem0.E8.wlem_of_model
 #print axioms FOL.EsencialidadSem0.E8.compactness_mpr_stmt_implies_wlem
@@ -704,3 +870,18 @@ end FOL.EsencialidadSem0.E10
 #print axioms FOL.EsencialidadSem0.E10.wks_wlpop_implies_wlem
 #print axioms FOL.EsencialidadSem0.E10.infinite_large_stmt_implies_wlem
 #print axioms FOL.EsencialidadSem0.E10.infinite_large_fresh_stmt_implies_wlem
+#print axioms FOL.EsencialidadSem0.E11.nnem_implies_dns
+#print axioms FOL.EsencialidadSem0.E11.dnsFail_of_sigma
+#print axioms FOL.EsencialidadSem0.E11.model_sigma
+#print axioms FOL.EsencialidadSem0.E11.sat_sigma_iff_not_em
+#print axioms FOL.EsencialidadSem0.E11.nnem_iff_unsat_sigma
+#print axioms FOL.EsencialidadSem0.E11.dns_iff_unsatCountable_sigma
+#print axioms FOL.EsencialidadSem0.E11.sigma_MPN
+#print axioms FOL.EsencialidadSem0.E11.infiniteDom_PN
+#print axioms FOL.EsencialidadSem0.E11.fresh_Ssig
+#print axioms FOL.EsencialidadSem0.E11.large_Ssig
+#print axioms FOL.EsencialidadSem0.E11.ls_down_stmt_dns_implies_nnem
+#print axioms FOL.EsencialidadSem0.E11.countable_infinite_stmt_dns_implies_nnem
+#print axioms FOL.EsencialidadSem0.E11.infinite_large_stmt_dns_implies_nnem
+#print axioms FOL.EsencialidadSem0.E11.infinite_large_fresh_stmt_dns_implies_nnem
+#print axioms FOL.EsencialidadSem0.E11.ls_down_stmt_nnem_iff_dns
