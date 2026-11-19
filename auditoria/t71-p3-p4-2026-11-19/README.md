@@ -1,6 +1,6 @@
 # T71, preguntas 3 y 4 — el estudio de viabilidad de la 3 y lo hecho de la 4 (2026‑11‑19)
 
-**Last updated:** 2026-11-19 — creado con ADR‑274 de RPP.
+**Last updated:** 2026-11-19 — ADR‑275 de RPP: el plan de §1, HECHO (la nota de §1). Antes, el mismo día — creado con ADR‑274 de RPP.
 
 **Sobre:** FOL `3f86996` y este cambio · Lean v4.35.0 · **Autor:** Julián Calderón Almendros, con Claude ·
 **Decisión:** ADR‑274 de `../../../ROBINSON_PlusPlus/DECISIONS.md` · **Las preguntas:**
@@ -68,6 +68,11 @@ falta es la otra, la de WLEM a la existencia de modelo, y lo que añade la 3: la
     nada (`Lindenbaum0.lean`, línea 284).
 
 ### El plan (si el propietario lo aprueba)
+
+> ✏️ 2026‑11‑19 (ADR‑275 de RPP): **el propietario lo aprobó entero, con los dos sentidos del paso 3, y está HECHO**:
+> `../../FOL/EsencialidadCota0.lean`, 18 teoremas, como mucho `[propext, Quot.sound]` y ninguno con
+> `Classical.choice` (`medidas-cota-2026-11-19.txt`). Compiló a la primera; son 540 líneas (`wc -l`), dentro de la
+> ESTIMACIÓN de 500 a 900. La elevación de las listas, el riesgo que señaló el escéptico, no arrastró nada.
 
 Un módulo nuevo de FOL. Sólo IMPORTA los congelados, sin thaw (el protocolo de `git-lock.bash`: lo nuevo va en otro
 fichero). Cuatro piezas:
@@ -198,4 +203,5 @@ misma `P` dan el mismo `¬¬∃n β n`, pero Markov para uno no lo da para otro.
 |---|---|
 | `p3-huellas.lean.txt` | la medida de §1: `#print axioms` de las 159 constantes de `Lindenbaum0`, `Canonical0`, `HenkinLimit0`, `Compacity0`, `Fresh0` y `Henkin0` (las de `doc/indice.tsv`, sin constructores ni sintaxis) y de las sueltas que usaría el plan |
 | `p3-huellas-salida.txt` | su salida, con el código de salida de `lean` |
+| `medidas-cota-2026-11-19.txt` | la salida de `lake env lean ../FOL/FOL/EsencialidadCota0.lean`, con su código de salida: los 18 teoremas del plan de §1 |
 | `medidas-2026-11-19.txt` | la salida de `lake env lean ../FOL/FOL/EsencialidadSem0.lean`, con su código de salida, y las tres líneas de E12, literales |

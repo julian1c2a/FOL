@@ -1,0 +1,20 @@
+# lake env lean ../FOL/FOL/EsencialidadCota0.lean (desde la raíz de RPP), 2026-11-19, Lean v4.35.0, FOL ci/t71-p3 sobre 5ba5495.
+# Salida de lean: 0. Líneas «error»/«warning»: 0. Líneas «depend»: 18. Con «Classical.choice»: 0.
+'FOL.EsencialidadCota0.buena_limite' depends on axioms: [propext, Quot.sound]
+'FOL.EsencialidadCota0.implN' depends on axioms: [propext]
+'FOL.EsencialidadCota0.orN' does not depend on any axioms
+'FOL.EsencialidadCota0.forallN' depends on axioms: [propext]
+'FOL.EsencialidadCota0.exN' depends on axioms: [propext]
+'FOL.EsencialidadCota0.truthN' depends on axioms: [propext, Quot.sound]
+'FOL.EsencialidadCota0.model_existence_countable_of_wlem' depends on axioms: [propext, Quot.sound]
+'FOL.EsencialidadCota0.model_existence_iff_wlem' depends on axioms: [propext, Quot.sound]
+'FOL.EsencialidadCota0.consistent_of_sat_of_nnem' depends on axioms: [propext, Quot.sound]
+'FOL.EsencialidadCota0.sigma_inconsistent' does not depend on any axioms
+'FOL.EsencialidadCota0.nnem_of_consistency' does not depend on any axioms
+'FOL.EsencialidadCota0.consistency_iff_nnem' depends on axioms: [propext, Quot.sound]
+'FOL.EsencialidadCota0.compactness_of' depends on axioms: [propext, Quot.sound]
+'FOL.EsencialidadCota0.ls_down_of' depends on axioms: [propext, Quot.sound]
+'FOL.EsencialidadCota0.large_fresh_of' depends on axioms: [propext, Quot.sound]
+'FOL.EsencialidadCota0.large_of' depends on axioms: [propext, Quot.sound]
+'FOL.EsencialidadCota0.countable_inf_of' depends on axioms: [propext, Quot.sound]
+'FOL.EsencialidadCota0.cinco_of_wlem_nnem' depends on axioms: [propext, Quot.sound]

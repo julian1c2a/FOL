@@ -507,6 +507,62 @@ FOL.Esencialidad0.ExElimFin.ex_elim_refutable_fin	teorema	FOL.Esencialidad0	¬FO
 FOL.Esencialidad0.ExElimFin.sound_MB	teorema	FOL.Esencialidad0	∀ {Γ : List Formula} {f : Formula}, Γ ⊢ f → ∀ (v : Nat → Bool), FOL.Metamath.Semantics.contextSatisfies FOL.Esencialidad0.ExElimFin.MB v Γ → FOL.Metamath.Semantics.evalFormula FOL.Esencialidad0.ExElimFin.MB v f
 FOL.Esencialidad0.ExElimFin.stable_MB	teorema	FOL.Esencialidad0	∀ (v : Nat → Bool) (f : Formula), ¬¬FOL.Metamath.Semantics.evalFormula FOL.Esencialidad0.ExElimFin.MB v f → FOL.Metamath.Semantics.evalFormula FOL.Esencialidad0.ExElimFin.MB v f
 FOL.Esencialidad0.ExElimFin.vB	def	FOL.Esencialidad0	Nat → Bool
+FOL.EsencialidadCota0.Buena	estructura	FOL.EsencialidadCota0	(Formula → Prop) → Prop
+FOL.EsencialidadCota0.Buena.closed	teorema	FOL.EsencialidadCota0	∀ {T : Formula → Prop}, FOL.EsencialidadCota0.Buena T → ∀ {f : Formula}, FOL.Henkin0.DerivesSet₀ T f → T f
+FOL.EsencialidadCota0.Buena.cons	teorema	FOL.EsencialidadCota0	∀ {T : Formula → Prop}, FOL.EsencialidadCota0.Buena T → FOL.Henkin0.IsConsistent₀ T
+FOL.EsencialidadCota0.Buena.hyp_contra	teorema	FOL.EsencialidadCota0	∀ {T : Formula → Prop}, FOL.EsencialidadCota0.Buena T → ∀ {f : Formula}, T f → T (¬ f) → False
+FOL.EsencialidadCota0.Buena.max	teorema	FOL.EsencialidadCota0	∀ {T : Formula → Prop}, FOL.EsencialidadCota0.Buena T → ∀ (f : Formula), ¬T f → ¬FOL.Henkin0.IsConsistent₀ fun x => T x ∨ x = f
+FOL.EsencialidadCota0.Buena.mk	constructor	FOL.EsencialidadCota0	∀ {T : Formula → Prop}, FOL.Henkin0.IsConsistent₀ T → (∀ {f : Formula}, FOL.Henkin0.DerivesSet₀ T f → T f) → (∀ (f : Formula), ¬T f → ¬FOL.Henkin0.IsConsistent₀ fun x => T x ∨ x = f) → (∀ (A : Formula), ∃ c, T (FOL.Henkin0.henkinAx c A)) → FOL.EsencialidadCota0.Buena T
+FOL.EsencialidadCota0.Buena.mp	teorema	FOL.EsencialidadCota0	∀ {T : Formula → Prop}, FOL.EsencialidadCota0.Buena T → ∀ {A B : Formula}, T (A ⇒ B) → T A → T B
+FOL.EsencialidadCota0.Buena.neg_of_not	teorema	FOL.EsencialidadCota0	∀ {T : Formula → Prop}, FOL.EsencialidadCota0.Buena T → ∀ {f : Formula}, ¬T f → ¬¬T (¬ f)
+FOL.EsencialidadCota0.Buena.or_contra	teorema	FOL.EsencialidadCota0	∀ {T : Formula → Prop}, FOL.EsencialidadCota0.Buena T → ∀ {A B : Formula}, T (A ∨ B) → T (¬ A) → T (¬ B) → False
+FOL.EsencialidadCota0.Buena.rule1	teorema	FOL.EsencialidadCota0	∀ {T : Formula → Prop}, FOL.EsencialidadCota0.Buena T → ∀ {A B : Formula}, (∀ (Γ : List Formula), Γ ⊢₀ A → Γ ⊢₀ B) → T A → T B
+FOL.EsencialidadCota0.Buena.rule2	teorema	FOL.EsencialidadCota0	∀ {T : Formula → Prop}, FOL.EsencialidadCota0.Buena T → ∀ {A B C : Formula}, (∀ (Γ : List Formula), Γ ⊢₀ A → Γ ⊢₀ B → Γ ⊢₀ C) → T A → T B → T C
+FOL.EsencialidadCota0.Buena.thm	teorema	FOL.EsencialidadCota0	∀ {T : Formula → Prop}, FOL.EsencialidadCota0.Buena T → ∀ {A : Formula}, (∀ (Γ : List Formula), Γ ⊢₀ A) → T A
+FOL.EsencialidadCota0.Buena.wit	teorema	FOL.EsencialidadCota0	∀ {T : Formula → Prop}, FOL.EsencialidadCota0.Buena T → ∀ (A : Formula), ∃ c, T (FOL.Henkin0.henkinAx c A)
+FOL.EsencialidadCota0.DomN	def	FOL.EsencialidadCota0	{T : Formula → Prop} → FOL.EsencialidadCota0.Buena T → Type
+FOL.EsencialidadCota0.NN	def	FOL.EsencialidadCota0	(Formula → Prop) → Formula → Prop
+FOL.EsencialidadCota0.andN	teorema	FOL.EsencialidadCota0	∀ {T : Formula → Prop}, FOL.EsencialidadCota0.Buena T → ∀ {A B : Formula}, FOL.EsencialidadCota0.NN T A ∧ FOL.EsencialidadCota0.NN T B ↔ FOL.EsencialidadCota0.NN T (A ∧ B)
+FOL.EsencialidadCota0.buena_limite	teorema	FOL.EsencialidadCota0	∀ {S : Formula → Prop}, FOL.Henkin0.IsConsistent₀ S → FOL.EsencialidadCota0.Buena (FOL.Lindenbaum0.LindenbaumLimit (FOL.HenkinLimit0.henLimit S))
+FOL.EsencialidadCota0.cinco_of_wlem_nnem	teorema	FOL.EsencialidadCota0	FOL.EsencialidadSem0.WLEM → ¬¬FOL.EsencialidadSem0.E11.EM → FOL.EsencialidadSem0.CompactnessStmt ∧ FOL.EsencialidadSem0.LsDownStmt ∧ FOL.EsencialidadSem0.CountableInfStmt ∧ FOL.EsencialidadSem0.LargeStmt ∧ FOL.EsencialidadSem0.LargeFreshStmt
+FOL.EsencialidadCota0.compactness_of	teorema	FOL.EsencialidadCota0	FOL.EsencialidadSem0.WLEM → ¬¬FOL.EsencialidadSem0.E11.EM → FOL.EsencialidadSem0.CompactnessStmt
+FOL.EsencialidadCota0.consQN	def	FOL.EsencialidadCota0	{T : Formula → Prop} → FOL.EsencialidadCota0.Buena T → _root_.Term → Quot (FOL.Canonical0.PointwiseEqv (FOL.EsencialidadCota0.NN T)) → Quot (FOL.Canonical0.PointwiseEqv (FOL.EsencialidadCota0.NN T))
+FOL.EsencialidadCota0.consQN_resp	teorema	FOL.EsencialidadCota0	∀ {T : Formula → Prop} (hB : FOL.EsencialidadCota0.Buena T) (a b : _root_.Term), FOL.EsencialidadCota0.eqvN T a b → ∀ (L : Quot (FOL.Canonical0.PointwiseEqv (FOL.EsencialidadCota0.NN T))), FOL.EsencialidadCota0.consQN hB a L = FOL.EsencialidadCota0.consQN hB b L
+FOL.EsencialidadCota0.consistency_iff_nnem	teorema	FOL.EsencialidadCota0	(∀ {S : Formula → Prop}, FOL.Canonical0.IsSatisfiable S → FOL.Henkin0.IsConsistent₀ S) ↔ ¬¬FOL.EsencialidadSem0.E11.EM
+FOL.EsencialidadCota0.consistent_of_sat_of_nnem	teorema	FOL.EsencialidadCota0	¬¬FOL.EsencialidadSem0.E11.EM → ∀ {S : Formula → Prop}, FOL.Canonical0.IsSatisfiable S → FOL.Henkin0.IsConsistent₀ S
+FOL.EsencialidadCota0.countable_inf_of	teorema	FOL.EsencialidadCota0	FOL.EsencialidadSem0.WLEM → ¬¬FOL.EsencialidadSem0.E11.EM → FOL.EsencialidadSem0.CountableInfStmt
+FOL.EsencialidadCota0.envN	def	FOL.EsencialidadCota0	{T : Formula → Prop} → (hB : FOL.EsencialidadCota0.Buena T) → Nat → FOL.EsencialidadCota0.DomN hB
+FOL.EsencialidadCota0.eqvN	def	FOL.EsencialidadCota0	(Formula → Prop) → _root_.Term → _root_.Term → Prop
+FOL.EsencialidadCota0.eqvN_refl	teorema	FOL.EsencialidadCota0	∀ {T : Formula → Prop}, FOL.EsencialidadCota0.Buena T → ∀ (t : _root_.Term), FOL.EsencialidadCota0.eqvN T t t
+FOL.EsencialidadCota0.eqvN_symm	teorema	FOL.EsencialidadCota0	∀ {T : Formula → Prop}, FOL.EsencialidadCota0.Buena T → ∀ {t u : _root_.Term}, FOL.EsencialidadCota0.eqvN T t u → FOL.EsencialidadCota0.eqvN T u t
+FOL.EsencialidadCota0.eqvN_trans	teorema	FOL.EsencialidadCota0	∀ {T : Formula → Prop}, FOL.EsencialidadCota0.Buena T → ∀ {t u w : _root_.Term}, FOL.EsencialidadCota0.eqvN T t u → FOL.EsencialidadCota0.eqvN T u w → FOL.EsencialidadCota0.eqvN T t w
+FOL.EsencialidadCota0.evalTerm_N	teorema	FOL.EsencialidadCota0	∀ {T : Formula → Prop} (hB : FOL.EsencialidadCota0.Buena T) (t : _root_.Term), FOL.Metamath.Semantics.evalTerm (FOL.EsencialidadCota0.modelN hB) (FOL.EsencialidadCota0.envN hB) t = Quotient.mk (FOL.EsencialidadCota0.setoidN hB) t
+FOL.EsencialidadCota0.evalTerms_N	teorema	FOL.EsencialidadCota0	∀ {T : Formula → Prop} (hB : FOL.EsencialidadCota0.Buena T) (ts : List _root_.Term), FOL.Metamath.Semantics.evalTerms (FOL.EsencialidadCota0.modelN hB) (FOL.EsencialidadCota0.envN hB) ts = List.map (Quotient.mk (FOL.EsencialidadCota0.setoidN hB)) ts
+FOL.EsencialidadCota0.exN	teorema	FOL.EsencialidadCota0	∀ {T : Formula → Prop}, FOL.EsencialidadCota0.Buena T → ∀ {A : Formula}, (∃ t, FOL.EsencialidadCota0.NN T (substFormula 0 t A)) ↔ FOL.EsencialidadCota0.NN T (∃. A)
+FOL.EsencialidadCota0.forallN	teorema	FOL.EsencialidadCota0	∀ {T : Formula → Prop}, FOL.EsencialidadCota0.Buena T → ∀ {A : Formula}, (∀ (t : _root_.Term), FOL.EsencialidadCota0.NN T (substFormula 0 t A)) ↔ FOL.EsencialidadCota0.NN T (∀. A)
+FOL.EsencialidadCota0.func_congrN	teorema	FOL.EsencialidadCota0	∀ {T : Formula → Prop}, FOL.EsencialidadCota0.Buena T → ∀ (f : List Char) {ts1 ts2 : List _root_.Term}, FOL.Canonical0.PointwiseEqv (FOL.EsencialidadCota0.NN T) ts1 ts2 → FOL.EsencialidadCota0.eqvN T (TermG.func f ts1) (TermG.func f ts2)
+FOL.EsencialidadCota0.implN	teorema	FOL.EsencialidadCota0	∀ {T : Formula → Prop}, FOL.EsencialidadCota0.Buena T → ∀ {A B : Formula}, FOL.EsencialidadCota0.NN T A → FOL.EsencialidadCota0.NN T B ↔ FOL.EsencialidadCota0.NN T (A ⇒ B)
+FOL.EsencialidadCota0.large_fresh_of	teorema	FOL.EsencialidadCota0	FOL.EsencialidadSem0.WLEM → ¬¬FOL.EsencialidadSem0.E11.EM → FOL.EsencialidadSem0.LargeFreshStmt
+FOL.EsencialidadCota0.large_of	teorema	FOL.EsencialidadCota0	FOL.EsencialidadSem0.WLEM → ¬¬FOL.EsencialidadSem0.E11.EM → FOL.EsencialidadSem0.LargeStmt
+FOL.EsencialidadCota0.listQN	def	FOL.EsencialidadCota0	{T : Formula → Prop} → (hB : FOL.EsencialidadCota0.Buena T) → List (FOL.EsencialidadCota0.DomN hB) → Quot (FOL.Canonical0.PointwiseEqv (FOL.EsencialidadCota0.NN T))
+FOL.EsencialidadCota0.listQN_mk	teorema	FOL.EsencialidadCota0	∀ {T : Formula → Prop} (hB : FOL.EsencialidadCota0.Buena T) (ts : List _root_.Term), FOL.EsencialidadCota0.listQN hB (List.map (Quotient.mk (FOL.EsencialidadCota0.setoidN hB)) ts) = Quot.mk (FOL.Canonical0.PointwiseEqv (FOL.EsencialidadCota0.NN T)) ts
+FOL.EsencialidadCota0.ls_down_of	teorema	FOL.EsencialidadCota0	FOL.EsencialidadSem0.WLEM → ¬¬FOL.EsencialidadSem0.E11.EM → FOL.EsencialidadSem0.LsDownStmt
+FOL.EsencialidadCota0.modelN	def	FOL.EsencialidadCota0	{T : Formula → Prop} → (hB : FOL.EsencialidadCota0.Buena T) → FOL.Metamath.Semantics.Model (FOL.EsencialidadCota0.DomN hB)
+FOL.EsencialidadCota0.model_existence_countable_of_wlem	teorema	FOL.EsencialidadCota0	FOL.EsencialidadSem0.WLEM → ∀ {S : Formula → Prop}, FOL.Henkin0.IsConsistent₀ S → FOL.Compacity0.IsSatisfiableCountable S
+FOL.EsencialidadCota0.model_existence_iff_wlem	teorema	FOL.EsencialidadCota0	(∀ {S : Formula → Prop}, FOL.Henkin0.IsConsistent₀ S → FOL.Canonical0.IsSatisfiable S) ↔ FOL.EsencialidadSem0.WLEM
+FOL.EsencialidadCota0.model_existence_of_wlem	teorema	FOL.EsencialidadCota0	FOL.EsencialidadSem0.WLEM → ∀ {S : Formula → Prop}, FOL.Henkin0.IsConsistent₀ S → FOL.Canonical0.IsSatisfiable S
+FOL.EsencialidadCota0.nn_map	teorema	FOL.EsencialidadCota0	∀ {P Q : Prop}, (P → Q) → ¬¬P → ¬¬Q
+FOL.EsencialidadCota0.nn_map2	teorema	FOL.EsencialidadCota0	∀ {P Q R : Prop}, (P → Q → R) → ¬¬P → ¬¬Q → ¬¬R
+FOL.EsencialidadCota0.nnem_of_consistency	teorema	FOL.EsencialidadCota0	(∀ {S : Formula → Prop}, FOL.Canonical0.IsSatisfiable S → FOL.Henkin0.IsConsistent₀ S) → ¬¬FOL.EsencialidadSem0.E11.EM
+FOL.EsencialidadCota0.orN	teorema	FOL.EsencialidadCota0	∀ {T : Formula → Prop}, FOL.EsencialidadSem0.WLEM → FOL.EsencialidadCota0.Buena T → ∀ {A B : Formula}, FOL.EsencialidadCota0.NN T A ∨ FOL.EsencialidadCota0.NN T B ↔ FOL.EsencialidadCota0.NN T (A ∨ B)
+FOL.EsencialidadCota0.pointwise_reflN	teorema	FOL.EsencialidadCota0	∀ {T : Formula → Prop}, FOL.EsencialidadCota0.Buena T → ∀ (ts : List _root_.Term), FOL.Canonical0.PointwiseEqv (FOL.EsencialidadCota0.NN T) ts ts
+FOL.EsencialidadCota0.pointwise_symmN	teorema	FOL.EsencialidadCota0	∀ {T : Formula → Prop}, FOL.EsencialidadCota0.Buena T → ∀ {ts1 ts2 : List _root_.Term}, FOL.Canonical0.PointwiseEqv (FOL.EsencialidadCota0.NN T) ts1 ts2 → FOL.Canonical0.PointwiseEqv (FOL.EsencialidadCota0.NN T) ts2 ts1
+FOL.EsencialidadCota0.rel_congrN	teorema	FOL.EsencialidadCota0	∀ {T : Formula → Prop}, FOL.EsencialidadCota0.Buena T → ∀ (p : List Char) {ts1 ts2 : List _root_.Term}, FOL.Canonical0.PointwiseEqv (FOL.EsencialidadCota0.NN T) ts1 ts2 → (FOL.EsencialidadCota0.NN T (FormulaG.atom p ts1) ↔ FOL.EsencialidadCota0.NN T (FormulaG.atom p ts2))
+FOL.EsencialidadCota0.setoidN	def	FOL.EsencialidadCota0	{T : Formula → Prop} → FOL.EsencialidadCota0.Buena T → Setoid _root_.Term
+FOL.EsencialidadCota0.sigma_inconsistent	teorema	FOL.EsencialidadCota0	[FOL.EsencialidadSem0.E11.sigmaF] ⊢₀ ⊥
+FOL.EsencialidadCota0.truthN	teorema	FOL.EsencialidadCota0	∀ {T : Formula → Prop}, FOL.EsencialidadSem0.WLEM → ∀ (hB : FOL.EsencialidadCota0.Buena T) (f : Formula), FOL.Metamath.Semantics.evalFormula (FOL.EsencialidadCota0.modelN hB) (FOL.EsencialidadCota0.envN hB) f ↔ FOL.EsencialidadCota0.NN T f
+FOL.EsencialidadCota0.truthN_lt	teorema	FOL.EsencialidadCota0	∀ {T : Formula → Prop}, FOL.EsencialidadSem0.WLEM → ∀ (hB : FOL.EsencialidadCota0.Buena T) (n : Nat) (f : Formula), FOL.Complexity.formulaComplexity f < n → (FOL.Metamath.Semantics.evalFormula (FOL.EsencialidadCota0.modelN hB) (FOL.EsencialidadCota0.envN hB) f ↔ FOL.EsencialidadCota0.NN T f)
+FOL.EsencialidadCota0.«term_⊢₀*_»	meta·privada	FOL.EsencialidadCota0	Lean.TrailingParserDescr
 FOL.EsencialidadSem0.CompactnessStmt	def	FOL.EsencialidadSem0	Prop
 FOL.EsencialidadSem0.CountableInfStmt	def	FOL.EsencialidadSem0	Prop
 FOL.EsencialidadSem0.E10.GF	def	FOL.EsencialidadSem0	Nat → Formula
