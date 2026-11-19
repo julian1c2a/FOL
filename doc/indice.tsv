@@ -560,6 +560,11 @@ FOL.EsencialidadSem0.E11.relU	def	FOL.EsencialidadSem0	{D : Type} → (D → Pro
 FOL.EsencialidadSem0.E11.sat_sigma_iff_not_em	teorema	FOL.EsencialidadSem0	FOL.Canonical0.IsSatisfiable FOL.EsencialidadSem0.E11.Ssig ↔ ¬FOL.EsencialidadSem0.E11.EM
 FOL.EsencialidadSem0.E11.sigmaF	def	FOL.EsencialidadSem0	Formula
 FOL.EsencialidadSem0.E11.sigma_MPN	teorema	FOL.EsencialidadSem0	¬FOL.EsencialidadSem0.E11.EM → ∀ (v : Nat → Prop × Nat) (f : Formula), FOL.EsencialidadSem0.E11.Ssig f → FOL.Metamath.Semantics.evalFormula FOL.EsencialidadSem0.E11.MPN v f
+FOL.EsencialidadSem0.E12.MPseq	def	FOL.EsencialidadSem0	(Nat → Prop) → Prop
+FOL.EsencialidadSem0.E12.RepWKS	def	FOL.EsencialidadSem0	Prop → (Nat → Prop) → Prop
+FOL.EsencialidadSem0.E12.ksst_iff_rep_mp	teorema	FOL.EsencialidadSem0	FOL.EsencialidadSem0.KSst ↔ ∀ (P : Prop), (¬¬P → P) → ∃ β, FOL.EsencialidadSem0.E12.RepWKS P β ∧ FOL.EsencialidadSem0.E12.MPseq β
+FOL.EsencialidadSem0.E12.wks_mp_implies_ksst	teorema	FOL.EsencialidadSem0	FOL.EsencialidadSem0.WKS → (∀ (β : Nat → Prop), (∀ (n : Nat), β n ∨ ¬β n) → FOL.EsencialidadSem0.E12.MPseq β) → FOL.EsencialidadSem0.KSst
+FOL.EsencialidadSem0.E12.wks_stable_bks	teorema	FOL.EsencialidadSem0	∀ {P : Prop}, (¬¬P → P) → ∀ {β : Nat → Prop}, FOL.EsencialidadSem0.E12.RepWKS P β → ((∃ n, β n) → P) ∧ (P → ¬¬∃ n, β n)
 FOL.EsencialidadSem0.E8.L3	def	FOL.EsencialidadSem0	List Formula
 FOL.EsencialidadSem0.E8.SP_finSat	teorema	FOL.EsencialidadSem0	∀ (P : Prop) (Γ : List Formula), (∀ (f : Formula), f ∈ Γ → FOL.Esencialidad0.E7.SP P f) → FOL.Canonical0.IsSatisfiable fun x => x ∈ Γ
 FOL.EsencialidadSem0.E8.SP_list_split	teorema	FOL.EsencialidadSem0	∀ (P : Prop) (Γ : List Formula), (∀ (f : Formula), f ∈ Γ → FOL.Esencialidad0.E7.SP P f) → P ∨ ∀ (f : Formula), f ∈ Γ → f = FOL.Esencialidad0.E7.Qf ∨ FOL.Esencialidad0.E7.Rf ∨ f = ¬ FOL.Esencialidad0.E7.Rf

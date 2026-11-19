@@ -1,0 +1,161 @@
+# lake env lean de p3-huellas.lean.txt (como .lean), desde la raíz de RPP, 2026-11-19, Lean v4.35.0, FOL 3f86996.
+# Salida de lean: 0. Líneas «error»: 0. Constantes medidas: 159.
+'FOL.Canonical0.IsMemComplete' does not depend on any axioms
+'FOL.Canonical0.IsSatisfiable' does not depend on any axioms
+'FOL.Canonical0.PointwiseEqv' does not depend on any axioms
+'FOL.Canonical0.QuotientDomain' depends on axioms: [propext, Classical.choice, Quot.sound]
+'FOL.Canonical0.canonicalEnv' depends on axioms: [propext, Classical.choice, Quot.sound]
+'FOL.Canonical0.canonicalModel' depends on axioms: [propext, Classical.choice, Quot.sound]
+'FOL.Canonical0.completeness₀' depends on axioms: [propext, Classical.choice, Quot.sound]
+'FOL.Canonical0.consQ' depends on axioms: [propext, Classical.choice, Quot.sound]
+'FOL.Canonical0.consQ_resp' depends on axioms: [propext, Classical.choice, Quot.sound]
+'FOL.Canonical0.derives0_complete_iff' depends on axioms: [propext, Classical.choice, Quot.sound]
+'FOL.Canonical0.derives0_em' depends on axioms: [propext, Classical.choice, Quot.sound]
+'FOL.Canonical0.derives0_peirce' depends on axioms: [propext, Classical.choice, Quot.sound]
+'FOL.Canonical0.derivesSet0_map' does not depend on any axioms
+'FOL.Canonical0.derivesSet0_map2' depends on axioms: [propext]
+'FOL.Canonical0.evalTerm_canonical' depends on axioms: [propext, Classical.choice, Quot.sound]
+'FOL.Canonical0.evalTerms_canonical' depends on axioms: [propext, Classical.choice, Quot.sound]
+'FOL.Canonical0.eval_pullback_formula' does not depend on any axioms
+'FOL.Canonical0.eval_pullback_term' does not depend on any axioms
+'FOL.Canonical0.eval_pullback_terms' does not depend on any axioms
+'FOL.Canonical0.listQuot' depends on axioms: [propext, Classical.choice, Quot.sound]
+'FOL.Canonical0.listQuot_mk' depends on axioms: [propext, Classical.choice, Quot.sound]
+'FOL.Canonical0.max_cons_and' depends on axioms: [propext, Classical.choice, Quot.sound]
+'FOL.Canonical0.max_cons_complete' depends on axioms: [propext, Classical.choice, Quot.sound]
+'FOL.Canonical0.max_cons_ex' depends on axioms: [propext, Classical.choice, Quot.sound]
+'FOL.Canonical0.max_cons_forall' depends on axioms: [propext, Classical.choice, Quot.sound]
+'FOL.Canonical0.max_cons_impl_iff' depends on axioms: [propext, Classical.choice, Quot.sound]
+'FOL.Canonical0.max_cons_neg' depends on axioms: [propext, Classical.choice, Quot.sound]
+'FOL.Canonical0.max_cons_or' depends on axioms: [propext, Classical.choice, Quot.sound]
+'FOL.Canonical0.model_existence_lemma₀' depends on axioms: [propext, Classical.choice, Quot.sound]
+'FOL.Canonical0.pointwiseEqv_refl' depends on axioms: [propext, Classical.choice, Quot.sound]
+'FOL.Canonical0.pointwiseEqv_symm' depends on axioms: [propext, Classical.choice, Quot.sound]
+'FOL.Canonical0.pullback' does not depend on any axioms
+'FOL.Canonical0.satisfiable_of_shift' does not depend on any axioms
+'FOL.Canonical0.termEqv' does not depend on any axioms
+'FOL.Canonical0.termEqv_func_congr' depends on axioms: [propext, Classical.choice, Quot.sound]
+'FOL.Canonical0.termEqv_refl' depends on axioms: [propext, Classical.choice, Quot.sound]
+'FOL.Canonical0.termEqv_rel_congr' depends on axioms: [propext, Classical.choice, Quot.sound]
+'FOL.Canonical0.termEqv_symm' depends on axioms: [propext, Classical.choice, Quot.sound]
+'FOL.Canonical0.termEqv_trans' depends on axioms: [propext, Classical.choice, Quot.sound]
+'FOL.Canonical0.termSetoid' depends on axioms: [propext, Classical.choice, Quot.sound]
+'FOL.Canonical0.truth_lemma_lt' depends on axioms: [propext, Classical.choice, Quot.sound]
+'FOL.Canonical0.truth_lemma₀' depends on axioms: [propext, Classical.choice, Quot.sound]
+'FOL.Compacity0.CountableDom' does not depend on any axioms
+'FOL.Compacity0.HasLargeModels' does not depend on any axioms
+'FOL.Compacity0.InfiniteDom' does not depend on any axioms
+'FOL.Compacity0.IsSatisfiableCountable' does not depend on any axioms
+'FOL.Compacity0.compactness' depends on axioms: [propext, Classical.choice, Quot.sound]
+'FOL.Compacity0.consistency_of_satisfiable₀' depends on axioms: [propext, Classical.choice, Quot.sound]
+'FOL.Compacity0.countable_infinite_of_infinite' depends on axioms: [propext, Classical.choice, Quot.sound]
+'FOL.Compacity0.countable_of_shift' does not depend on any axioms
+'FOL.Compacity0.evalFormula_updateCsts' does not depend on any axioms
+'FOL.Compacity0.evalTerm_updateCsts' does not depend on any axioms
+'FOL.Compacity0.hasLargeModels_empty' does not depend on any axioms
+'FOL.Compacity0.hasLargeModels_shift' depends on axioms: [propext]
+'FOL.Compacity0.infTheory' does not depend on any axioms
+'FOL.Compacity0.infTheory_finSat' depends on axioms: [propext, Quot.sound]
+'FOL.Compacity0.infiniteDom_nat' does not depend on any axioms
+'FOL.Compacity0.infinite_model_of_large' depends on axioms: [propext, Classical.choice, Quot.sound]
+'FOL.Compacity0.infinite_model_of_large_fresh' depends on axioms: [propext, Classical.choice, Quot.sound]
+'FOL.Compacity0.loewenheim_skolem_down' depends on axioms: [propext, Classical.choice, Quot.sound]
+'FOL.Compacity0.model_existence_countable₀' depends on axioms: [propext, Classical.choice, Quot.sound]
+'FOL.Compacity0.model_existence_iff₀' depends on axioms: [propext, Classical.choice, Quot.sound]
+'FOL.Compacity0.neqAx' does not depend on any axioms
+'FOL.Compacity0.not_hasLargeModels_one' does not depend on any axioms
+'FOL.Compacity0.not_infiniteDom_unit' does not depend on any axioms
+'FOL.Compacity0.updateCsts' does not depend on any axioms
+'FOL.Fresh0.cst' does not depend on any axioms
+'FOL.Fresh0.cst_bound_formula' depends on axioms: [propext, Quot.sound]
+'FOL.Fresh0.cst_bound_list' depends on axioms: [propext, Quot.sound]
+'FOL.Fresh0.cst_bound_sym' depends on axioms: [propext, Quot.sound]
+'FOL.Fresh0.cst_bound_term' depends on axioms: [propext, Quot.sound]
+'FOL.Fresh0.cst_bound_terms' depends on axioms: [propext, Quot.sound]
+'FOL.Fresh0.cst_inj' does not depend on any axioms
+'FOL.Fresh0.cst_length' does not depend on any axioms
+'FOL.Fresh0.cst_ne_shift' does not depend on any axioms
+'FOL.Fresh0.cst_zero_ne' does not depend on any axioms
+'FOL.Fresh0.derivesSet0_shift' depends on axioms: [propext, Quot.sound]
+'FOL.Fresh0.derivesSet0_shift_inv' depends on axioms: [propext, Quot.sound]
+'FOL.Fresh0.exists_fresh' depends on axioms: [propext, Quot.sound]
+'FOL.Fresh0.instFreshSymListChar' does not depend on any axioms
+'FOL.Fresh0.not_occurs_shiftFormula' does not depend on any axioms
+'FOL.Fresh0.not_occurs_shiftTerm' does not depend on any axioms
+'FOL.Fresh0.not_occurs_shiftTerms' does not depend on any axioms
+'FOL.Fresh0.shift' does not depend on any axioms
+'FOL.Fresh0.shiftTheory' does not depend on any axioms
+'FOL.Fresh0.shiftTheory_consistent₀' depends on axioms: [propext, Quot.sound]
+'FOL.Fresh0.shiftTheory_fresh' does not depend on any axioms
+'FOL.Fresh0.shift_inj' does not depend on any axioms
+'FOL.Fresh0.unshift' depends on axioms: [propext]
+'FOL.Fresh0.unshift_shift' depends on axioms: [propext]
+'FOL.Henkin0.DerivesSet₀' does not depend on any axioms
+'FOL.Henkin0.IsConsistent₀' does not depend on any axioms
+'FOL.Henkin0.abs_neg_witness' depends on axioms: [propext, Quot.sound]
+'FOL.Henkin0.ctx_split' does not depend on any axioms
+'FOL.Henkin0.henkinAx' does not depend on any axioms
+'FOL.Henkin0.henkin_step_consistent₀' depends on axioms: [propext, Quot.sound]
+'FOL.Henkin0.henkin_step_derives' depends on axioms: [propext, Quot.sound]
+'FOL.Henkin0.neg_impl_left' does not depend on any axioms
+'FOL.Henkin0.neg_impl_right' does not depend on any axioms
+'FOL.HenkinLimit0.bnd' does not depend on any axioms
+'FOL.HenkinLimit0.bndTerm' does not depend on any axioms
+'FOL.HenkinLimit0.bndTerm_spec' depends on axioms: [propext]
+'FOL.HenkinLimit0.bndTerms' does not depend on any axioms
+'FOL.HenkinLimit0.bndTerms_spec' depends on axioms: [propext]
+'FOL.HenkinLimit0.bnd_spec' depends on axioms: [propext]
+'FOL.HenkinLimit0.cst_ne_of_size' does not depend on any axioms
+'FOL.HenkinLimit0.hen' depends on axioms: [propext, Quot.sound]
+'FOL.HenkinLimit0.henLimit' depends on axioms: [propext, Quot.sound]
+'FOL.HenkinLimit0.henLimit_consistent₀' depends on axioms: [propext, Quot.sound]
+'FOL.HenkinLimit0.henLimit_finite' depends on axioms: [propext, Quot.sound]
+'FOL.HenkinLimit0.henLimit_witness' depends on axioms: [propext, Quot.sound]
+'FOL.HenkinLimit0.hen_consistent' depends on axioms: [propext, Quot.sound]
+'FOL.HenkinLimit0.hen_fresh' depends on axioms: [propext, Quot.sound]
+'FOL.HenkinLimit0.hen_fresh_at' depends on axioms: [propext, Quot.sound]
+'FOL.HenkinLimit0.hen_mono' depends on axioms: [propext, Quot.sound]
+'FOL.HenkinLimit0.hidx' depends on axioms: [propext, Quot.sound]
+'FOL.HenkinLimit0.hidx_ge' depends on axioms: [propext, Quot.sound]
+'FOL.HenkinLimit0.hidx_ge_of_le' depends on axioms: [propext, Quot.sound]
+'FOL.HenkinLimit0.hidx_mono' depends on axioms: [propext, Quot.sound]
+'FOL.HenkinLimit0.hidx_step' depends on axioms: [propext, Quot.sound]
+'FOL.HenkinLimit0.not_occurs_henkinAx' does not depend on any axioms
+'FOL.HenkinLimit0.not_occurs_substFormula' does not depend on any axioms
+'FOL.HenkinLimit0.not_occurs_substTerm' does not depend on any axioms
+'FOL.HenkinLimit0.not_occurs_substTerms' does not depend on any axioms
+'FOL.HenkinLimit0.occursTerm_lift' does not depend on any axioms
+'FOL.HenkinLimit0.occursTerms_lift' does not depend on any axioms
+'FOL.HenkinLimit0.shiftTheory_sub_henLimit' depends on axioms: [propext, Quot.sound]
+'FOL.Lindenbaum0.IsHenkin' does not depend on any axioms
+'FOL.Lindenbaum0.IsMaximalConsistent₀' does not depend on any axioms
+'FOL.Lindenbaum0.LindenbaumLimit' depends on axioms: [propext, Quot.sound]
+'FOL.Lindenbaum0.LindenbaumStep' depends on axioms: [propext, Quot.sound]
+'FOL.Lindenbaum0.derivesSet0_elim_impl' depends on axioms: [propext]
+'FOL.Lindenbaum0.derivesSet0_hyp' does not depend on any axioms
+'FOL.Lindenbaum0.derivesSet0_intro_impl' does not depend on any axioms
+'FOL.Lindenbaum0.derivesSet0_weakening' does not depend on any axioms
+'FOL.Lindenbaum0.henkin_completion₀' depends on axioms: [propext, Quot.sound]
+'FOL.Lindenbaum0.lindenbaum_lemma₀' depends on axioms: [propext, Quot.sound]
+'FOL.Lindenbaum0.lindenbaum_limit_bound' depends on axioms: [propext, Quot.sound]
+'FOL.Lindenbaum0.lindenbaum_limit_closed' depends on axioms: [propext, Quot.sound]
+'FOL.Lindenbaum0.lindenbaum_limit_consistent' depends on axioms: [propext, Quot.sound]
+'FOL.Lindenbaum0.lindenbaum_limit_max' depends on axioms: [propext, Quot.sound]
+'FOL.Lindenbaum0.lindenbaum_step_consistent' depends on axioms: [propext, Quot.sound]
+'FOL.Lindenbaum0.lindenbaum_step_mono' depends on axioms: [propext, Quot.sound]
+'FOL.Lindenbaum0.lindenbaum_step_subset' depends on axioms: [propext, Quot.sound]
+'FOL.Lindenbaum0.max_cons_bot' does not depend on any axioms
+'FOL.Lindenbaum0.max_cons_contains' depends on axioms: [propext, Classical.choice, Quot.sound]
+'FOL.Lindenbaum0.max_cons_impl' depends on axioms: [propext, Classical.choice, Quot.sound]
+'FOL.Esencialidad0.E2.sound_stable' depends on axioms: [propext, Quot.sound]
+'FOL.Metamath.Enumeration.natToTerm_surj' depends on axioms: [propext, Quot.sound]
+'Quotient.exists_rep' does not depend on any axioms
+'FOL.Metamath.Semantics.eval_substFormula_ext' depends on axioms: [propext, Quot.sound]
+'FOL.Rename.rename_rename_formula' depends on axioms: [propext]
+'FOL.Fresh0.shiftTheory_fresh' does not depend on any axioms
+'FOL.Canonical0.satisfiable_of_shift' does not depend on any axioms
+'FOL.Compacity0.countable_of_shift' does not depend on any axioms
+'FOL.Metamath.Soundness0.derives0_soundness' depends on axioms: [propext, Classical.choice, Quot.sound]
+'FOL.Compacity0.consistency_of_satisfiable₀' depends on axioms: [propext, Classical.choice, Quot.sound]
+'FOL.Lindenbaum0.lindenbaum_limit_closed' depends on axioms: [propext, Quot.sound]
+'FOL.HenkinLimit0.henLimit_witness' depends on axioms: [propext, Quot.sound]

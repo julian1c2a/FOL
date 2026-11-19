@@ -1,0 +1,6 @@
+# lake env lean ../FOL/FOL/EsencialidadSem0.lean (desde la raíz de RPP), 2026-11-19, Lean v4.35.0, FOL ci/t71-p3-p4 sobre 3f86996.
+# Salida de lean: 0. Líneas «error»/«warning»: 0. Líneas «depend»: 43 (25 de E8–E10 y 15 de E11, sin cambios, y las 3 de E12).
+# Las de E12, literales:
+'FOL.EsencialidadSem0.E12.ksst_iff_rep_mp' does not depend on any axioms
+'FOL.EsencialidadSem0.E12.wks_mp_implies_ksst' does not depend on any axioms
+'FOL.EsencialidadSem0.E12.wks_stable_bks' does not depend on any axioms

@@ -28,6 +28,7 @@ de esos enunciados puede evitar la lógica clásica. Los cinco, clasificados:
 | `loewenheim_skolem_down`, `countable_infinite_of_infinite` | KSst (el esquema de Kripke para las `P` ¬¬‑estables) y, de él, WKS | E9 |
 | `infinite_model_of_large`, `infinite_model_of_large_fresh` | WLPO para sucesiones decidibles y WKS; juntos, WLEM | E10 |
 | los cuatro que dan modelos numerables (todos menos `compactness`) | con DNS, ¬¬EM: para ellos «¿implica DNS?» y «¿implica ¬¬EM?» son UNA pregunta | E11 |
+| (lógica pura, la pregunta 4 de T71) | KSst ⟺ toda `P` estable tiene un representante de WKS con Markov | E12 |
 
 * **E8** — el testigo de E7, `S_P := {Q ∨ R} ∪ {¬Q | P} ∪ {¬R | ¬P}`. E7 necesitaba su CONSISTENCIA; aquí basta su
   satisfacibilidad FINITA, que sale sin choice, sin solidez y sin la igualdad decidible de `Formula`: una lista trae la
@@ -46,8 +47,10 @@ de esos enunciados puede evitar la lógica clásica. Los cinco, clasificados:
   `σ := ∀x ¬¬R x ∧ ¬∀x R x`: `¬EM ⟺ σ satisfacible` (`sat_sigma_iff_not_em`, con dominio `Prop`) y
   `DNS ⟺ σ sin modelo numerable` (`dns_iff_unsatCountable_sigma`). Con un enunciado que vuelva numerable el modelo
   `Prop × Nat` de `σ`, DNS implica ¬¬EM; ¬¬EM implica DNS siempre.
+* **E12** (ADR‑274 de RPP) — la pregunta 4 de T71, reducida: KSst ⟺ toda `P` estable tiene un representante de
+  WKS (una sucesión decidible nula si y sólo si `¬P`) que cumple Markov (`ksst_iff_rep_mp`).
 
-⚠️ **Lo que NO está compilado** (ADR‑221 y ADR‑273 de RPP, con su ámbito):
+⚠️ **Lo que NO está compilado** (ADR‑221, ADR‑273 y ADR‑274 de RPP, con su ámbito):
 * que WLEM, KSst y WKS no se demuestren sin choice. Lo dan contramodelos de Kripke: en el poset `{0<1, 0<2}` fallan los
   tres, porque WKS ⟺ WLEM en todo marco de Kripke. Es la misma evidencia que la de E7;
 * las cotas por arriba: ninguno de los cinco implica EM (Kripke sobre `{0<1}`), y LS↓ no implica KS (el topos de
@@ -58,7 +61,8 @@ de esos enunciados puede evitar la lógica clásica. Los cinco, clasificados:
 * LS↓ y `countable_infinite_of_infinite` no implican DNS ni ¬¬EM (los haces sobre el espacio de Cantor). Para la
   compacidad y §3 sigue abierto.
 
-El registro de la exploración, con sus medidas: `auditoria/t71-semanticos-2026-10-29/` y `auditoria/d1-2026-11-18/`. Nada de esto lo consume otro
+El registro de la exploración, con sus medidas: `auditoria/t71-semanticos-2026-10-29/`, `auditoria/d1-2026-11-18/` y
+`auditoria/t71-p3-p4-2026-11-19/`. Nada de esto lo consume otro
 módulo: es la medida, en el build, con su fila de footprint en RPP.
 -/
 
@@ -845,6 +849,60 @@ example : Not (IsSatisfiableCountable Ssig) := dns_iff_unsatCountable_sigma.mp (
 
 end FOL.EsencialidadSem0.E11
 
+namespace FOL.EsencialidadSem0.E12
+
+/-
+E12 · La pregunta 4 de T71 (¿KSst es estrictamente más fuerte que WKS sin Markov?), REDUCIDA en lógica pura (ADR‑274
+de RPP). Una `P` estable tiene representantes de WKS: sucesiones decidibles `β` con `¬P ⟺ ∀n ¬β n`. KSst dice
+EXACTAMENTE que alguno de ellos cumple Markov (`ksst_iff_rep_mp`). Así la pregunta es si WKS da, para cada `P`
+estable, un representante con Markov. Con Markov para todas las sucesiones decidibles, sí (`wks_mp_implies_ksst`).
+Nuestro WKS es el «WWKS» de Moschovakis y el KS⁻ de Dragálin (la bi‑implicación sola); para una `P` estable implica
+el WKS de Kripke, Myhill y Troelstra, el BKS⁻ de van Atten (`wks_stable_bks`).
+-/
+
+/-- Markov para UNA sucesión. -/
+abbrev MPseq (β : Nat → Prop) : Prop := Not (Not (∃ n, β n)) → ∃ n, β n
+
+/-- Un representante de WKS para `P`: una sucesión decidible que es nula si y sólo si `¬P`. -/
+abbrev RepWKS (P : Prop) (β : Nat → Prop) : Prop :=
+  And (∀ n, Or (β n) (Not (β n))) (Iff (Not P) (∀ n, Not (β n)))
+
+/-- 🏁 **KSst ⟺ toda `P` estable tiene un representante de WKS que cumple Markov.** -/
+theorem ksst_iff_rep_mp :
+    Iff KSst (∀ P : Prop, (Not (Not P) → P) → ∃ β : Nat → Prop, And (RepWKS P β) (MPseq β)) := by
+  constructor
+  · intro h P hst
+    obtain ⟨β, hd, hiff⟩ := h P hst
+    refine ⟨β, ⟨hd, fun hnP n hb => hnP (hiff.mpr ⟨n, hb⟩),
+      fun hall hP => (hiff.mp hP).elim (fun n hn => hall n hn)⟩, fun hnn => ?_⟩
+    exact hiff.mp (hst (fun hnP => hnn (fun hex => hnP (hiff.mpr hex))))
+  · intro h P hst
+    obtain ⟨β, ⟨hd, hiff⟩, hmp⟩ := h P hst
+    refine ⟨β, hd, fun hP => hmp (fun hne => hiff.mpr (fun n hn => hne ⟨n, hn⟩) hP), fun hex => ?_⟩
+    obtain ⟨n, hn⟩ := hex
+    exact hst (fun hnP => hiff.mp hnP n hn)
+
+/-- Con Markov para TODAS las sucesiones decidibles, WKS da KSst (la vuelta de E9, `ksst_implies_wks`, es incondicional). -/
+theorem wks_mp_implies_ksst (hW : WKS) (hMP : ∀ β : Nat → Prop, (∀ n, Or (β n) (Not (β n))) → MPseq β) :
+    KSst :=
+  ksst_iff_rep_mp.mpr (fun P _ => (hW P).elim (fun β hβ => ⟨β, hβ, hMP β hβ.1⟩))
+
+/-- Para una `P` ESTABLE, un representante de WKS cumple el BKS⁻ de van Atten: `∃n β n → P` y `P → ¬¬∃n β n`. -/
+theorem wks_stable_bks {P : Prop} (hst : Not (Not P) → P) {β : Nat → Prop} (h : RepWKS P β) :
+    And ((∃ n, β n) → P) (P → Not (Not (∃ n, β n))) :=
+  ⟨fun ⟨n, hn⟩ => hst (fun hnP => h.2.mp hnP n hn),
+    fun hP hne => h.2.mpr (fun n hn => hne ⟨n, hn⟩) hP⟩
+
+-- ⚠️ CONTROL DE NO VACUIDAD: con la lógica clásica, la condición de la derecha se cumple (y lleva `Classical.choice`).
+example : ∀ P : Prop, (Not (Not P) → P) → ∃ β : Nat → Prop, And (RepWKS P β) (MPseq β) :=
+  fun P _ => (Classical.em P).elim
+    (fun hP => ⟨fun _ => True, ⟨fun _ => Or.inl trivial, fun hnP => absurd hP hnP, fun hall => absurd trivial (hall 0)⟩,
+      fun _ => ⟨0, trivial⟩⟩)
+    (fun hnP => ⟨fun _ => False, ⟨fun _ => Or.inr id, fun _ _ h => h, fun _ => hnP⟩,
+      fun hnn => absurd (fun ⟨_, h⟩ => h) hnn⟩)
+
+end FOL.EsencialidadSem0.E12
+
 #print axioms FOL.EsencialidadSem0.E8.SP_finSat
 #print axioms FOL.EsencialidadSem0.E8.wlem_of_model
 #print axioms FOL.EsencialidadSem0.E8.compactness_mpr_stmt_implies_wlem
@@ -885,3 +943,6 @@ end FOL.EsencialidadSem0.E11
 #print axioms FOL.EsencialidadSem0.E11.infinite_large_stmt_dns_implies_nnem
 #print axioms FOL.EsencialidadSem0.E11.infinite_large_fresh_stmt_dns_implies_nnem
 #print axioms FOL.EsencialidadSem0.E11.ls_down_stmt_nnem_iff_dns
+#print axioms FOL.EsencialidadSem0.E12.ksst_iff_rep_mp
+#print axioms FOL.EsencialidadSem0.E12.wks_mp_implies_ksst
+#print axioms FOL.EsencialidadSem0.E12.wks_stable_bks
