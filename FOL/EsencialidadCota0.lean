@@ -18,14 +18,17 @@ import FOL.EsencialidadSem0
 # `FOL.EsencialidadCota0` — la COTA POR ARRIBA de los semánticos: WLEM + ¬¬EM bastan (la pregunta 3 de T71, ADR‑275 de RPP)
 
 `FOL.EsencialidadSem0` mide lo que los ENUNCIADOS de los cinco semánticos de `Compacity0` implican (WLEM, KSst, WKS).
-Aquí, la otra dirección: con WLEM y ¬¬EM como hipótesis, y sin `Classical.choice`, se demuestran.
+Aquí, la otra dirección: con WLEM y ¬¬EM como hipótesis, y sin `Classical.choice`, se demuestran. (Los `example`
+de control del final sí lo llevan, a propósito: comprueban que las dos hipótesis caben juntas.)
 
 * **§1–§4 · El modelo canónico DOBLEMENTE NEGADO.** Sobre el límite concreto de Lindenbaum sobre el de Henkin, que es
   consistente, cerrado por derivación y maximal sin decidir nada (`Buena`), el dominio son los términos módulo
   `¬¬T(t = u)` y los átomos valen `¬¬T(R t̄)`. El lema de la verdad, `M ⊨ f ⟺ ¬¬T f` (`truthN`), sólo usa WLEM en el
-  `∨` (De Morgan). En el `∃`, el testigo de Henkin sale fuera de la doble negación (`henLimit_witness`).
+  `∨` (De Morgan). En el `∃`, la constante de Henkin (el `∃ c`) sale fuera de la doble negación; lo que va dentro es
+  `¬¬T(A[c])` (`henLimit_witness`).
 * **§5 · La existencia de modelo ⟺ WLEM** (`model_existence_iff_wlem`). La vuelta es E7 de `FOL.Esencialidad0`.
-  Herbelin y Kirst (TYPES 2023) lo publicaron en Rocq; aquí, en el cálculo y la semántica de FOL.
+  Herbelin y Kirst (TYPES 2023) publicaron el resultado; aquí está en el cálculo y la semántica de FOL. Que su cálculo
+  sea el mismo no consta: sólo se leyó su resumen.
 * **§6 · «Lo satisfacible es consistente» ⟺ ¬¬EM** (`consistency_iff_nnem`). Hacia la izquierda, la solidez para
   modelos estables (`sound_stable`). Hacia la derecha, la `σ` de E11 de `EsencialidadSem0`, que es satisfacible si
   `¬EM` y deriva `⊥` (`sigma_inconsistent`).
@@ -33,8 +36,13 @@ Aquí, la otra dirección: con WLEM y ¬¬EM como hipótesis, y sin `Classical.c
   rehechas sobre §5 y §6. El propietario pidió la compacidad, LS↓ y `countable_infinite_of_infinite`; los dos de §3
   salen de paso, porque `countable_infinite_of_infinite` pasa por ellos.
 
-Con E8 y E10 (que los cinco implican WLEM), los cinco quedan entre WLEM y WLEM + ¬¬EM. Si la compacidad implica ¬¬EM
-sigue abierto (D1). El estudio de viabilidad, la bibliografía y el veredicto del escéptico:
+**Dónde quedan**, con lo que `EsencialidadSem0` mide por abajo:
+
+* la compacidad (E8) y los dos de §3 (E10) implican WLEM, así que quedan entre WLEM y WLEM + ¬¬EM;
+* LS↓ y `countable_infinite_of_infinite` sólo implican KSst y WKS (E9), por debajo de WLEM, así que quedan entre KSst y
+  WLEM + ¬¬EM.
+
+Si la compacidad implica ¬¬EM sigue abierto (D1). El estudio de viabilidad, la bibliografía y el veredicto del escéptico:
 `auditoria/t71-p3-p4-2026-11-19/`. Nada de esto lo consume otro módulo: es la medida, con sus filas de footprint en
 RPP.
 -/
@@ -392,7 +400,8 @@ theorem truthN_lt (hW : WLEM) (hB : Buena T) (n : Nat) : ∀ f, formulaComplexit
       rw [h_eq]
       exact exN hB
 
-/-- ⭐⭐⭐ **El lema de la verdad, doblemente negado**: `M ⊨ f ⟺ ¬¬T f`, con WLEM como única hipótesis. -/
+/-- ⭐⭐⭐ **El lema de la verdad, doblemente negado**: `M ⊨ f ⟺ ¬¬T f`, con WLEM como única hipótesis además de que
+`T` sea `Buena`. -/
 theorem truthN (hW : WLEM) (hB : Buena T) (f : Formula) :
     Iff (evalFormula (modelN hB) (envN hB) f) (NN T f) :=
   truthN_lt hW hB (formulaComplexity f + 1) f (Nat.lt_succ_self _)
@@ -460,8 +469,8 @@ theorem nnem_of_consistency (H : ∀ {S : Formula → Prop}, IsSatisfiable S →
     | head => rfl
     | tail _ h => exact absurd h List.not_mem_nil, sigma_inconsistent⟩)
 
-/-- 🏁 **«Lo satisfacible es consistente» EQUIVALE a ¬¬EM.** Es el `Classical.choice` de
-`Compacity0.consistency_of_satisfiable₀`, medido. -/
+/-- 🏁 **«Lo satisfacible es consistente» EQUIVALE a ¬¬EM.** El enunciado de `Compacity0.consistency_of_satisfiable₀`
+es el de la izquierda: el `Classical.choice` de su prueba no se puede quitar sin ¬¬EM. -/
 theorem consistency_iff_nnem :
     Iff (∀ {S : Formula → Prop}, IsSatisfiable S → IsConsistent₀ S) (Not (Not EM)) :=
   ⟨fun H => nnem_of_consistency H, fun hN => consistent_of_sat_of_nnem hN⟩
@@ -505,8 +514,8 @@ theorem countable_inf_of (hW : WLEM) (hN : Not (Not EM)) : CountableInfStmt := b
   obtain ⟨D, M, v, ⟨e, he⟩, hM⟩ := h
   exact large_of hW hN (fun _ => ⟨D, M, v, hM, e, fun i j _ _ hij => he i j hij⟩)
 
-/-- 🏁🏁 **WLEM + ¬¬EM bastan para los CINCO**, sin `Classical.choice`. Con E8 y E10 (que los cinco implican WLEM),
-quedan entre WLEM y WLEM + ¬¬EM. -/
+/-- 🏁🏁 **WLEM + ¬¬EM bastan para los CINCO**, sin `Classical.choice`. Por abajo (`EsencialidadSem0`): la compacidad
+y los dos de §3 implican WLEM (E8, E10); LS↓ y `countable_infinite_of_infinite`, sólo KSst (E9). -/
 theorem cinco_of_wlem_nnem (hW : WLEM) (hN : Not (Not EM)) :
     And CompactnessStmt (And LsDownStmt (And CountableInfStmt (And LargeStmt LargeFreshStmt))) :=
   ⟨compactness_of hW hN, ls_down_of hW hN, countable_inf_of hW hN, large_of hW hN, large_fresh_of hW hN⟩
@@ -515,8 +524,9 @@ theorem cinco_of_wlem_nnem (hW : WLEM) (hN : Not (Not EM)) :
 -- `Classical.choice`); y las conclusiones son los enunciados reales (las identidades de tipos de `EsencialidadSem0`).
 example : WLEM := fun P => (Classical.em P).elim (fun h => Or.inr (fun hn => hn h)) Or.inl
 example : Not (Not EM) := fun h => h Classical.em
-example : CompactnessStmt :=
-  compactness_of (fun P => (Classical.em P).elim (fun h => Or.inr (fun hn => hn h)) Or.inl) (fun h => h Classical.em)
+example : And CompactnessStmt (And LsDownStmt (And CountableInfStmt (And LargeStmt LargeFreshStmt))) :=
+  cinco_of_wlem_nnem (fun P => (Classical.em P).elim (fun h => Or.inr (fun hn => hn h)) Or.inl)
+    (fun h => h Classical.em)
 
 end FOL.EsencialidadCota0
 

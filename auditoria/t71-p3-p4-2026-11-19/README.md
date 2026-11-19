@@ -70,9 +70,16 @@ falta es la otra, la de WLEM a la existencia de modelo, y lo que añade la 3: la
 ### El plan (si el propietario lo aprueba)
 
 > ✏️ 2026‑11‑19 (ADR‑275 de RPP): **el propietario lo aprobó entero, con los dos sentidos del paso 3, y está HECHO**:
-> `../../FOL/EsencialidadCota0.lean`, 18 teoremas, como mucho `[propext, Quot.sound]` y ninguno con
-> `Classical.choice` (`medidas-cota-2026-11-19.txt`). Compiló a la primera; son 540 líneas (`wc -l`), dentro de la
-> ESTIMACIÓN de 500 a 900. La elevación de las listas, el riesgo que señaló el escéptico, no arrastró nada.
+> `../../FOL/EsencialidadCota0.lean`: los 18 titulares (las constantes con `#print axioms`; hay más lemas auxiliares),
+> como mucho `[propext, Quot.sound]` y ninguno con `Classical.choice` (`medidas-cota-2026-11-19.txt`). El fichero tiene
+> 540 líneas (`wc -l`, con comentarios y los `#print`); la ESTIMACIÓN, de 500 a 900, era de líneas de prueba y no se
+> midió en esos términos. La elevación de las listas, el riesgo que señaló el escéptico, no arrastró nada. Que compilara
+> sin cambios desde la primera redacción lo dice el autor: la medida sólo guarda la salida final.
+> ⚠️ El segundo escéptico (2026‑11‑19, sobre el módulo) refutó una frase, que aquí abajo, en «Lo que respondería»,
+> decía «los cinco quedan entre WLEM y WLEM + ¬¬EM». Es así sólo para tres: LS↓ y `countable_infinite_of_infinite`
+> implican KSst (E9), no WLEM. Señaló además cinco huecos de redacción (Rocq, «a la primera», «18 teoremas», la
+> hipótesis `Buena`, y que el `Classical.choice` de `consistency_of_satisfiable₀` es su enunciado, no su prueba) y un
+> control que faltaba (los cinco, no sólo la compacidad). Todo se arregló en el módulo.
 
 Un módulo nuevo de FOL. Sólo IMPORTA los congelados, sin thaw (el protocolo de `git-lock.bash`: lo nuevo va en otro
 fichero). Cuatro piezas:
@@ -107,7 +114,9 @@ fichero). Cuatro piezas:
    * LS↓ y `countable_infinite_of_infinite`, el alcance decidido;
    * los dos de §3, si salen con lo mismo.
 
-**Lo que respondería:** los cinco quedan entre WLEM (E8, E10: lo implican) y WLEM + ¬¬EM (los implica). La
+**Lo que respondería:** la compacidad y los dos de §3 quedan entre WLEM (E8, E10: lo implican) y WLEM + ¬¬EM (los
+implica); LS↓ y `countable_infinite_of_infinite`, entre KSst (E9) y WLEM + ¬¬EM (✏️ corregido el mismo día: decía «los
+cinco» entre WLEM y WLEM + ¬¬EM). La
 compacidad ⟹ ¬¬EM sigue abierta (D1). Es el hueco exacto, y no está en la ruta: (3) pide ¬¬EM porque el camino pasa
 por la consistencia, pero la compacidad podría no pasar por ahí.
 
@@ -203,5 +212,5 @@ misma `P` dan el mismo `¬¬∃n β n`, pero Markov para uno no lo da para otro.
 |---|---|
 | `p3-huellas.lean.txt` | la medida de §1: `#print axioms` de las 159 constantes de `Lindenbaum0`, `Canonical0`, `HenkinLimit0`, `Compacity0`, `Fresh0` y `Henkin0` (las de `doc/indice.tsv`, sin constructores ni sintaxis) y de las sueltas que usaría el plan |
 | `p3-huellas-salida.txt` | su salida, con el código de salida de `lean` |
-| `medidas-cota-2026-11-19.txt` | la salida de `lake env lean ../FOL/FOL/EsencialidadCota0.lean`, con su código de salida: los 18 teoremas del plan de §1 |
+| `medidas-cota-2026-11-19.txt` | la salida de `lake env lean ../FOL/FOL/EsencialidadCota0.lean`, con su código de salida: los 18 titulares del plan de §1 |
 | `medidas-2026-11-19.txt` | la salida de `lake env lean ../FOL/FOL/EsencialidadSem0.lean`, con su código de salida, y las tres líneas de E12, literales |
